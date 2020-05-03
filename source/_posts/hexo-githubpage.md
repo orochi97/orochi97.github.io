@@ -1,6 +1,9 @@
 ---
 title: Hexo结合Github Page注意点
 date: 2020-05-03 17:30:27
+categories:
+- 开发
+- 前端
 tags: 
  - hexo
  - blog
@@ -40,6 +43,12 @@ username 指的是个人或者组织的名字。如下图第一个红框是用�
 
 - 打开 hexo 项目下的 _config.yml，进行下图设置，git的地址就是使用的工程地址。
 {% asset_img img5.png _config.yml %}
+
+### 2、CNAME
+
+- 上面的工程 setting 部分，实际上就是在工程根目录创建了一份CNAME名字的文件，没有后缀的文件类型。里面的内容为设置的那个二级域名，也就是原来是访问 username.github.io 地址的，就会跳到自定义的域名。
+
+- 为了防止每次部署都会清除掉该文件，从而要重复设置，可以将 CNAME 文件防止到 source 文件里，到时会依样拷贝过去。
 
 ----
 
