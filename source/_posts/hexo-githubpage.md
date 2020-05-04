@@ -7,6 +7,7 @@ categories:
 tags: 
  - hexo
  - blog
+comments: true
 ---
 
 新手记录一些使用 hexo 和 Github Page 搭建个人空间遇到的。
