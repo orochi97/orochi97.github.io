@@ -354,13 +354,23 @@ body {
   background-size: cover;
   z-index: -1;
 }
+#avatar {
+  width: 100px;
+  height: 100px;
+  background: center #000;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  background-size: cover;
+  margin: 10px auto;
+  border-radius: 50% 50%;
+}
 #header-title {
   text-align: center;
   height: 40px;
   position: absolute;
-  top: 50%;
+  top: 20%;
   left: 0;
-  margin-top: -20px;
+  -margin-top: -20px;
 }
 #logo,
 #subtitle {
@@ -368,16 +378,19 @@ body {
   color: #fff;
   font-weight: 300;
   text-shadow: 0 1px 4px rgba(0,0,0,0.3);
+  color: #000;
 }
 #logo {
   font-size: 40px;
   line-height: 40px;
   letter-spacing: 2px;
+  text-shadow: 2px 2px 2px #808080, -2px -2px 2px #808080, -2px 2px 2px #808080, 2px -2px 2px #808080;
 }
 #subtitle {
   font-size: 16px;
   line-height: 16px;
   letter-spacing: 1px;
+  font-weight: 400;
 }
 #subtitle-wrap {
   margin-top: 16px;
@@ -389,7 +402,7 @@ body {
 .nav-icon,
 .main-nav-link {
   float: left;
-  color: #fff;
+  color: #000;
   opacity: 0.6;
   text-decoration: none;
   text-shadow: 0 1px rgba(0,0,0,0.2);
@@ -415,7 +428,7 @@ body {
   cursor: pointer;
 }
 .main-nav-link {
-  font-weight: 300;
+  font-weight: 500;
   letter-spacing: 1px;
 }
 @media screen and (max-width: 479px) {
@@ -509,6 +522,7 @@ body {
 }
 .article-inner {
   overflow: hidden;
+  background-color: #c7edcc;
 }
 .article-meta:before,
 .article-meta:after {
@@ -604,6 +618,9 @@ a.article-title:hover {
   height: auto;
   display: block;
   margin: auto;
+  border-radius: 5px;
+  -webkit-box-shadow: 0px 5px 8px #808080, 5px 0px 8px #808080;
+  box-shadow: 0px 5px 8px #808080, 5px 0px 8px #808080;
 }
 .article-entry iframe {
   border: none;
