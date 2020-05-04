@@ -4,7 +4,7 @@
 
 # Site
 title: '凝雪密境'
-subtitle: '天空圣域'
+subtitle: 'A boring space of a interesting man'
 description: '卡卡希的吐槽圣地'
 keywords:
 author: ChrisIori
@@ -93,7 +93,7 @@ ignore:
 # Extensions
 ## Plugins: https://hexo.io/plugins/
 ## Themes: https://hexo.io/themes/
-theme: landscape
+theme: landscape-custom
 
 # Deployment
 ## Docs: https://hexo.io/docs/deployment.html
