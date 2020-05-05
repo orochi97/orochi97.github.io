@@ -363,6 +363,23 @@ body {
   background-size: cover;
   margin: 10px auto;
   border-radius: 50% 50%;
+  display: -webkit-box;
+  display: -moz-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: box;
+  display: flex;
+  -webkit-box-pack: center;
+  -moz-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  -webkit-box-align: center;
+  -moz-box-align: center;
+  -ms-flex-align: center;
+  -webkit-align-items: center;
+  align-items: center;
+  cursor: pointer;
 }
 #header-title {
   text-align: center;
@@ -516,6 +533,150 @@ body {
 .search-form-submit:hover,
 .search-form-submit:focus {
   color: #777;
+}
+.container {
+  width: 100px;
+  height: 100px;
+  position: absolute;
+  display: none;
+}
+.run {
+  display: block;
+animatieo
+  -webkit-animation: round 2s linear 1;
+  -moz-animation: round 2s linear 1;
+  -ms-animation: round 2s linear 1;
+  animation: round 2s linear 1;
+}
+.ball {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border-radius: 50% 50%;
+}
+.wind {
+  border: 3px solid #0f0;
+  left: 50%;
+  top: 20px;
+  -webkit-transform: translateX(-50%);
+  -moz-transform: translateX(-50%);
+  -ms-transform: translateX(-50%);
+  transform: translateX(-50%);
+  -webkit-box-shadow: 0px 0px 8px #0f0, 0px 0px 8px #0f0, 0px 0px 8px #0f0, 0px 0px 8px #0f0;
+  box-shadow: 0px 0px 8px #0f0, 0px 0px 8px #0f0, 0px 0px 8px #0f0, 0px 0px 8px #0f0;
+}
+.fire {
+  border: 3px solid #ff4500;
+  right: 20px;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+  -moz-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+  -webkit-box-shadow: 0px 0px 8px #ff4500, 0px 0px 8px #ff4500, 0px 0px 8px #ff4500, 0px 0px 8px #ff4500;
+  box-shadow: 0px 0px 8px #ff4500, 0px 0px 8px #ff4500, 0px 0px 8px #ff4500, 0px 0px 8px #ff4500;
+}
+.water {
+  border: 3px solid #1e90ff;
+  left: 50%;
+  bottom: 20px;
+  -webkit-transform: translateX(-50%);
+  -moz-transform: translateX(-50%);
+  -ms-transform: translateX(-50%);
+  transform: translateX(-50%);
+  -webkit-box-shadow: 0px 0px 8px #1e90ff, 0px 0px 8px #1e90ff, 0px 0px 8px #1e90ff, 0px 0px 8px #1e90ff;
+  box-shadow: 0px 0px 8px #1e90ff, 0px 0px 8px #1e90ff, 0px 0px 8px #1e90ff, 0px 0px 8px #1e90ff;
+}
+.soil {
+  border: 3px solid #daa520;
+  left: 20px;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+  -moz-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+  -webkit-box-shadow: 0px 0px 8px #daa520, 0px 0px 8px #daa520, 0px 0px 8px #daa520, 0px 0px 8px #daa520;
+  box-shadow: 0px 0px 8px #daa520, 0px 0px 8px #daa520, 0px 0px 8px #daa520, 0px 0px 8px #daa520;
+}
+@-moz-keyframes round {
+  from {
+    -webkit-transform: rotate(0deg);
+    -moz-transform: rotate(0deg);
+    -ms-transform: rotate(0deg);
+    transform: rotate(0deg);
+    width: 100px;
+    height: 100px;
+    opacity: 1;
+  }
+  to {
+    -webkit-transform: rotate(360deg);
+    -moz-transform: rotate(360deg);
+    -ms-transform: rotate(360deg);
+    transform: rotate(360deg);
+    width: 500px;
+    height: 500px;
+    opacity: 0.1;
+  }
+}
+@-webkit-keyframes round {
+  from {
+    -webkit-transform: rotate(0deg);
+    -moz-transform: rotate(0deg);
+    -ms-transform: rotate(0deg);
+    transform: rotate(0deg);
+    width: 100px;
+    height: 100px;
+    opacity: 1;
+  }
+  to {
+    -webkit-transform: rotate(360deg);
+    -moz-transform: rotate(360deg);
+    -ms-transform: rotate(360deg);
+    transform: rotate(360deg);
+    width: 500px;
+    height: 500px;
+    opacity: 0.1;
+  }
+}
+@-o-keyframes round {
+  from {
+    -webkit-transform: rotate(0deg);
+    -moz-transform: rotate(0deg);
+    -ms-transform: rotate(0deg);
+    transform: rotate(0deg);
+    width: 100px;
+    height: 100px;
+    opacity: 1;
+  }
+  to {
+    -webkit-transform: rotate(360deg);
+    -moz-transform: rotate(360deg);
+    -ms-transform: rotate(360deg);
+    transform: rotate(360deg);
+    width: 500px;
+    height: 500px;
+    opacity: 0.1;
+  }
+}
+@keyframes round {
+  from {
+    -webkit-transform: rotate(0deg);
+    -moz-transform: rotate(0deg);
+    -ms-transform: rotate(0deg);
+    transform: rotate(0deg);
+    width: 100px;
+    height: 100px;
+    opacity: 1;
+  }
+  to {
+    -webkit-transform: rotate(360deg);
+    -moz-transform: rotate(360deg);
+    -ms-transform: rotate(360deg);
+    transform: rotate(360deg);
+    width: 500px;
+    height: 500px;
+    opacity: 0.1;
+  }
 }
 .article {
   margin: 50px 0;
