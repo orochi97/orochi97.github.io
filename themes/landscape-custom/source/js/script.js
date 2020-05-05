@@ -134,4 +134,12 @@
 
     $container.removeClass('mobile-nav-on');
   });
+
+  var $ball = $('#avatar > .container')
+  $('#avatar').on('click', function(){
+    $ball.addClass('run')
+  });
+  $ball.on("webkitAnimationEnd", function(){
+    $ball.removeClass('run')
+  })
 })(jQuery);
