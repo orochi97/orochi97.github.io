@@ -542,11 +542,10 @@ body {
 }
 .run {
   display: block;
-animatieo
-  -webkit-animation: round 2s linear 1;
-  -moz-animation: round 2s linear 1;
-  -ms-animation: round 2s linear 1;
-  animation: round 2s linear 1;
+  -webkit-animation: round 1s linear 1;
+  -moz-animation: round 1s linear 1;
+  -ms-animation: round 1s linear 1;
+  animation: round 1s linear 1;
 }
 .ball {
   position: absolute;
@@ -555,46 +554,46 @@ animatieo
   border-radius: 50% 50%;
 }
 .wind {
-  border: 3px solid #0f0;
   left: 50%;
   top: 20px;
   -webkit-transform: translateX(-50%);
   -moz-transform: translateX(-50%);
   -ms-transform: translateX(-50%);
   transform: translateX(-50%);
+  border: 3px solid #0f0;
   -webkit-box-shadow: 0px 0px 8px #0f0, 0px 0px 8px #0f0, 0px 0px 8px #0f0, 0px 0px 8px #0f0;
   box-shadow: 0px 0px 8px #0f0, 0px 0px 8px #0f0, 0px 0px 8px #0f0, 0px 0px 8px #0f0;
 }
 .fire {
-  border: 3px solid #ff4500;
   right: 20px;
   top: 50%;
   -webkit-transform: translateY(-50%);
   -moz-transform: translateY(-50%);
   -ms-transform: translateY(-50%);
   transform: translateY(-50%);
+  border: 3px solid #ff4500;
   -webkit-box-shadow: 0px 0px 8px #ff4500, 0px 0px 8px #ff4500, 0px 0px 8px #ff4500, 0px 0px 8px #ff4500;
   box-shadow: 0px 0px 8px #ff4500, 0px 0px 8px #ff4500, 0px 0px 8px #ff4500, 0px 0px 8px #ff4500;
 }
 .water {
-  border: 3px solid #1e90ff;
   left: 50%;
   bottom: 20px;
   -webkit-transform: translateX(-50%);
   -moz-transform: translateX(-50%);
   -ms-transform: translateX(-50%);
   transform: translateX(-50%);
+  border: 3px solid #1e90ff;
   -webkit-box-shadow: 0px 0px 8px #1e90ff, 0px 0px 8px #1e90ff, 0px 0px 8px #1e90ff, 0px 0px 8px #1e90ff;
   box-shadow: 0px 0px 8px #1e90ff, 0px 0px 8px #1e90ff, 0px 0px 8px #1e90ff, 0px 0px 8px #1e90ff;
 }
 .soil {
-  border: 3px solid #daa520;
   left: 20px;
   top: 50%;
   -webkit-transform: translateY(-50%);
   -moz-transform: translateY(-50%);
   -ms-transform: translateY(-50%);
   transform: translateY(-50%);
+  border: 3px solid #daa520;
   -webkit-box-shadow: 0px 0px 8px #daa520, 0px 0px 8px #daa520, 0px 0px 8px #daa520, 0px 0px 8px #daa520;
   box-shadow: 0px 0px 8px #daa520, 0px 0px 8px #daa520, 0px 0px 8px #daa520, 0px 0px 8px #daa520;
 }
