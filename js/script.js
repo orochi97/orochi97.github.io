@@ -135,11 +135,36 @@
     $container.removeClass('mobile-nav-on');
   });
 
-  var $ball = $('#avatar > .container')
+  var $ball = $('#avatar > .container');
   $('#avatar').on('click', function(){
-    $ball.addClass('run')
+    $ball.addClass('run');
   });
-  $ball.on("webkitAnimationEnd", function(){
-    $ball.removeClass('run')
-  })
+  $ball.on('webkitAnimationEnd', function(){
+    $ball.removeClass('run');
+  });
+
+  const { cip, cname } = window.returnCitySN
+  $.ajax({
+    //请求方式
+    type : 'POST',
+    //请求的媒体类型
+    contentType: 'application/json;charset=UTF-8',
+    //请求地址
+    url : 'https://www.cchealthier.com/api/view',
+    //数据，json字符串
+    data : JSON.stringify({
+      cip,
+      cname,
+      url: location.href
+    }),
+    //请求成功
+    success : function(result) {
+      console.log(result);
+    },
+    //请求失败，包含具体的错误信息
+    error : function(e){
+      console.log(e.status);
+      console.log(e.responseText);
+    }
+  });
 })(jQuery);
