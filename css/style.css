@@ -542,10 +542,10 @@ body {
 }
 .run {
   display: block;
-  -webkit-animation: round 1s linear 1;
-  -moz-animation: round 1s linear 1;
-  -ms-animation: round 1s linear 1;
-  animation: round 1s linear 1;
+  -webkit-animation: round 0.5s linear 1;
+  -moz-animation: round 0.5s linear 1;
+  -ms-animation: round 0.5s linear 1;
+  animation: round 0.5s linear 1;
 }
 .ball {
   position: absolute;
