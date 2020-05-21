@@ -5,17 +5,29 @@
   
 
   
-  <title>凝雪密境</title>
+  <title>js的继承方式 | 凝雪密境</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="卡卡希的吐槽圣地">
-<meta property="og:type" content="website">
-<meta property="og:title" content="凝雪密境">
-<meta property="og:url" content="http://blog.cchealthier.com/index.html">
+  <meta name="description" content="1、原型链继承1234567891011121314151617181920212223242526272829303132333435363738function SuperType(type) &amp;#123;	this.property &#x3D; true	this.colors &#x3D; [&#39;red&#39;, &#39;blue&#39;]	this.type &#x3D; type&amp;#125;SuperType.prototype.g">
+<meta property="og:type" content="article">
+<meta property="og:title" content="js的继承方式">
+<meta property="og:url" content="http://blog.cchealthier.com/2020/05/21/js-inherit/index.html">
 <meta property="og:site_name" content="凝雪密境">
-<meta property="og:description" content="卡卡希的吐槽圣地">
+<meta property="og:description" content="1、原型链继承1234567891011121314151617181920212223242526272829303132333435363738function SuperType(type) &amp;#123;	this.property &#x3D; true	this.colors &#x3D; [&#39;red&#39;, &#39;blue&#39;]	this.type &#x3D; type&amp;#125;SuperType.prototype.g">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://blog.cchealthier.com/2020/05/21/js-inherit/%E5%8E%9F%E5%9E%8B%E9%93%BE%E7%BB%A7%E6%89%BF.PNG">
+<meta property="og:image" content="http://blog.cchealthier.com/2020/05/21/js-inherit/%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0%E7%BB%A7%E6%89%BF.PNG">
+<meta property="og:image" content="http://blog.cchealthier.com/2020/05/21/js-inherit/%E7%BB%84%E5%90%88%E7%BB%A7%E6%89%BF.PNG">
+<meta property="og:image" content="http://blog.cchealthier.com/2020/05/21/js-inherit/%E5%8E%9F%E5%9E%8B%E5%BC%8F%E7%BB%A7%E6%89%BF.PNG">
+<meta property="og:image" content="http://blog.cchealthier.com/2020/05/21/js-inherit/%E5%AF%84%E7%94%9F%E5%BC%8F%E7%BB%A7%E6%89%BF.PNG">
+<meta property="og:image" content="http://blog.cchealthier.com/2020/05/21/js-inherit/%E5%AF%84%E7%94%9F%E7%BB%84%E5%90%88%E5%BC%8F%E7%BB%A7%E6%89%BF-1.PNG">
+<meta property="og:image" content="http://blog.cchealthier.com/2020/05/21/js-inherit/%E5%AF%84%E7%94%9F%E7%BB%84%E5%90%88%E5%BC%8F%E7%BB%A7%E6%89%BF-2.PNG">
+<meta property="og:image" content="http://blog.cchealthier.com/2020/05/21/js-inherit/%E5%AF%84%E7%94%9F%E7%BB%84%E5%90%88%E5%BC%8F%E7%BB%A7%E6%89%BF-3.PNG">
+<meta property="og:image" content="http://blog.cchealthier.com/2020/05/21/js-inherit/%E5%AF%84%E7%94%9F%E7%BB%84%E5%90%88%E5%BC%8F%E7%BB%A7%E6%89%BF-4.PNG">
+<meta property="article:published_time" content="2020-05-21T15:26:20.000Z">
+<meta property="article:modified_time" content="2020-05-21T16:05:09.900Z">
 <meta property="article:author" content="ChrisIori">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://blog.cchealthier.com/2020/05/21/js-inherit/%E5%8E%9F%E5%9E%8B%E9%93%BE%E7%BB%A7%E6%89%BF.PNG">
   
     <link rel="alternate" href="/atom.xml" title="凝雪密境" type="application/atom+xml">
   
@@ -78,9 +90,7 @@
   </div>
 </header>
       <div class="outer">
-        <section id="main">
-  
-    <article id="post-js-inherit" class="article article-type-post" itemscope itemprop="blogPost">
+        <section id="main"><article id="post-js-inherit" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2020/05/21/js-inherit/" class="article-date">
   <time datetime="2020-05-21T15:26:20.000Z" itemprop="datePublished">2020-05-21</time>
@@ -97,8 +107,8 @@
       <header class="article-header">
         
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/05/21/js-inherit/">js的继承方式</a>
+    <h1 class="article-title" itemprop="name">
+      js的继承方式
     </h1>
   
 
@@ -147,225 +157,19 @@
     </footer>
   </div>
   
-</article>
-
-
+    
+<nav id="article-nav">
   
-    <article id="post-mood" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/05/14/mood/" class="article-date">
-  <time datetime="2020-05-14T15:55:33.000Z" itemprop="datePublished">2020-05-14</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E9%9A%8F%E6%83%B3/">随想</a>►<a class="article-category-link" href="/categories/%E9%9A%8F%E6%83%B3/%E5%BF%83%E6%83%85/">心情</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/05/14/mood/">空间起源</a>
-    </h1>
+    <a href="/2020/05/14/mood/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">空间起源</div>
+    </a>
   
+</nav>
 
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>&emsp;&emsp;好记性不如烂笔头。从小听到大，真的很有道理。但其实小时候仗着记忆力好，就懒得动笔。无论是记作业还是上课记笔记。当然所谓的好记忆其实那一瞬间，犹如内存，断电就没了。随着年纪增大，可能记忆力变差，可能经历的事多，确实遗忘的东西变多了。所以琢磨着找个地方给记下来。当然这种地方很多，自己搭建一个纯属好（第四声）玩。记录一些心情随想，所见所闻，所接触到的开发技术，烹饪煮食。<br>&emsp;&emsp;另外一个就是照片，以前老是觉得在于精不在于多，明明身处随时随地可照相的时代。后来在看一些地方旅游照片的时候，发现自己喜欢的街头巷尾照片太少了，就感觉缺失了那一环一样。以后也多给拍下来。<br>&emsp;&emsp;放两张偶然拍的自己觉得好的照片。</p>
-<img src="/2020/05/14/mood/suzhou.JPG" class="" title="苏州公车站">
-</br>
-</br>
-</br>
-<img src="/2020/05/14/mood/taibei.JPG" class="" title="台北淡水捷运站">
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://blog.cchealthier.com/2020/05/14/mood/" data-id="ckagyvxjd0006mwuk9m9y96pb" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
   
 </article>
-
-
-  
-    <article id="post-buyu" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/05/03/buyu/" class="article-date">
-  <time datetime="2020-05-03T12:15:41.000Z" itemprop="datePublished">2020-05-03</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E7%83%B9%E9%A5%AA/">烹饪</a>►<a class="article-category-link" href="/categories/%E7%83%B9%E9%A5%AA/%E4%BC%A0%E7%BB%9F/">传统</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/05/03/buyu/">“bu”鱼</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>5.1那天家里寄了些生鲜小鱼，用传统的“bu”法，我也不知这个是什么做法，用普通话怎么念。</p>
-<h3 id="做法"><a href="#做法" class="headerlink" title="做法"></a>做法</h3><p>取一铁盆，加水没过鱼，倒入酱油，撒上盐，量全凭自己把握。滚 15~20 分钟即可。期间注意翻身，以免粘锅和受热不均匀。</p>
-<img src="/2020/05/03/buyu/fish.png" class="" title="fish">
-<br />
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://blog.cchealthier.com/2020/05/03/buyu/" data-id="ckagyvxim0000mwuk31hjg33h" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/cook/" rel="tag">cook</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/fish/" rel="tag">fish</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-hexo-githubpage" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/05/03/hexo-githubpage/" class="article-date">
-  <time datetime="2020-05-03T09:30:27.000Z" itemprop="datePublished">2020-05-03</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/05/03/hexo-githubpage/">Hexo结合Github Page注意点</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>新手记录一些使用 hexo 和 Github Page 搭建个人空间遇到的。<br>其实不难，只是为了找个地方记录下来，方便后面可能的再次搭建。</p>
-<h2 id="一、Github-Page"><a href="#一、Github-Page" class="headerlink" title="一、Github Page"></a>一、Github Page</h2><h3 id="1、使用-username-github-io"><a href="#1、使用-username-github-io" class="headerlink" title="1、使用 username.github.io"></a>1、使用 username.github.io</h3><p>如果想通过 username.github.io 就访问到相应的静态页面，那么必须有一个 username.github.io 名字的项目。<br>username 指的是个人或者组织的名字。如下图第一个红框是用户的名字，则第二个红框处必须一模一样。</p>
-<img src="/2020/05/03/hexo-githubpage/img1.png" class="" title="github_page">
-
-<h3 id="2、使用-username-github-io-projectName"><a href="#2、使用-username-github-io-projectName" class="headerlink" title="2、使用 username.github.io/projectName"></a>2、使用 username.github.io/projectName</h3><p>主的 username.github.io 域名只对应一个项目，其他项目就通过 username.github.io/项目名 来访问。</p>
-<h3 id="3、使用自定义域名"><a href="#3、使用自定义域名" class="headerlink" title="3、使用自定义域名"></a>3、使用自定义域名</h3><p>由于是直接在阿里云买的域名，所以对应的阿里云的操作，其他平台不确定。</p>
-<ul>
-<li><p>首先购买一个域名，进入域名服务</p>
-<img src="/2020/05/03/hexo-githubpage/img2.png" class="" title="阿里云域名">
-</li>
-<li><p>添加下图两道记录，1的ip是 ping 2 的域名出来</p>
-<img src="/2020/05/03/hexo-githubpage/img3.png" class="" title="阿里云域名2">
-</li>
-<li><p>进入 github 项目，右上方的 setting，到下图的地方设置相应域名。这个博客域名是买的域名的二级域名。</p>
-<img src="/2020/05/03/hexo-githubpage/img4.png" class="" title="custom_domain">
-
-</li>
-</ul>
-<h2 id="二、Hexo"><a href="#二、Hexo" class="headerlink" title="二、Hexo"></a>二、Hexo</h2><h3 id="1、设置-config-yml"><a href="#1、设置-config-yml" class="headerlink" title="1、设置_config.yml"></a>1、设置_config.yml</h3><ul>
-<li>打开 hexo 项目下的 _config.yml，进行下图设置，git的地址就是使用的工程地址。<img src="/2020/05/03/hexo-githubpage/img5.png" class="" title="_config.yml">
-
-</li>
-</ul>
-<h3 id="2、CNAME"><a href="#2、CNAME" class="headerlink" title="2、CNAME"></a>2、CNAME</h3><ul>
-<li><p>上面的工程 setting 部分，实际上就是在工程根目录创建了一份CNAME名字的文件，没有后缀的文件类型。里面的内容为设置的那个二级域名，也就是原来是访问 username.github.io 地址的，就会跳到自定义的域名。</p>
-</li>
-<li><p>为了防止每次部署都会清除掉该文件，从而要重复设置，可以将 CNAME 文件防止到 source 文件里，到时会依样拷贝过去。</p>
-</li>
-</ul>
-<hr>
-<p>相关传送门：<br><a href="https://hexo.io/zh-cn/" target="_blank" rel="noopener">Hexo</a><br><a href="https://pages.github.com/" target="_blank" rel="noopener">Github Page</a></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://blog.cchealthier.com/2020/05/03/hexo-githubpage/" data-id="ckagyvxj90004mwuk25gv40nq" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/blog/" rel="tag">blog</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/hexo/" rel="tag">hexo</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-hello-world" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/05/03/hello-world/" class="article-date">
-  <time datetime="2020-05-03T08:31:29.600Z" itemprop="datePublished">2020-05-03</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/05/03/hello-world/">Hello World</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html" target="_blank" rel="noopener">Deployment</a></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://blog.cchealthier.com/2020/05/03/hello-world/" data-id="ckagyvxj00001mwuk0rt9cumt" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-
 
 </section>
         
