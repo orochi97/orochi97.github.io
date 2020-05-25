@@ -52,7 +52,7 @@
       
       
         <h2 id="subtitle-wrap">
-          <a href="/" id="subtitle">A boring space of a interesting man</a>
+          <a href="/" id="subtitle">A boring space of an interesting man</a>
         </h2>
       
     </div>
@@ -79,6 +79,48 @@
 </header>
       <div class="outer">
         <section id="main">
+  
+    <article id="post-new-object" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/05/25/new-object/" class="article-date">
+  <time datetime="2020-05-25T15:59:18.000Z" itemprop="datePublished">2020-05-25</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/05/25/new-object/">js new 一个对象干了什么事</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <br>
+
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Person</span>(<span class="params">name, age</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">this</span>.name = name</span><br><span class="line">  <span class="keyword">this</span>.age = age</span><br><span class="line">&#125;</span><br><span class="line">Person.prototype.attr = <span class="string">'human'</span></span><br><span class="line"><span class="keyword">const</span> man1 = <span class="keyword">new</span> Person(<span class="string">'123'</span>, <span class="number">18</span>)</span><br><span class="line"><span class="built_in">console</span>.log(man1.name)</span><br><span class="line"><span class="built_in">console</span>.log(man1.age)</span><br><span class="line"><span class="built_in">console</span>.log(man1.attr)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">_new</span>(<span class="params">Constructor, ...param</span>) </span>&#123;</span><br><span class="line">  <span class="comment">// 新建一个对象</span></span><br><span class="line">  <span class="keyword">const</span> obj = &#123;&#125; <span class="comment">// Object.create(null)</span></span><br><span class="line">  <span class="comment">// 建立继承关系，__proto__指向构造函数原型，获得原型属性与方法</span></span><br><span class="line">  <span class="comment">// 这里获得 attr 属性</span></span><br><span class="line">  obj.__proto__ = Constructor.prototype</span><br><span class="line">  <span class="comment">// 开始执行这个构造函数，就是这个构造函数的this方法属性挂到这个新对象上</span></span><br><span class="line">  <span class="comment">// 这里就是把 name 和 age 挂上去</span></span><br><span class="line">  <span class="keyword">const</span> ret = Constructor.call(obj, ...param)</span><br><span class="line">  <span class="comment">// const ret = Constructor.apply(obj, param)</span></span><br><span class="line">  <span class="comment">// 若构造函数中没有返回值或返回值是基本类型（Number、String、Boolean）的值，则返回新实例对象；</span></span><br><span class="line">  <span class="comment">// 若返回值是引用类型的值，则实际返回值为这个引用类型。</span></span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">typeof</span> ret === <span class="string">'object'</span> ? ret : obj</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">const</span> man2 = _new(Person, <span class="string">'456'</span>, <span class="number">20</span>)</span><br><span class="line"><span class="built_in">console</span>.log(man2.name)</span><br><span class="line"><span class="built_in">console</span>.log(man2.age)</span><br><span class="line"><span class="built_in">console</span>.log(man2.attr)</span><br></pre></td></tr></table></figure>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://blog.cchealthier.com/2020/05/25/new-object/" data-id="ckamomuz40006b8ukf8x80keg" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
   
     <article id="post-js-inherit" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
@@ -141,7 +183,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.cchealthier.com/2020/05/21/js-inherit/" data-id="ckagyvxjb0005mwuk2hry61i1" class="article-share-link">Share</a>
+      <a data-url="http://blog.cchealthier.com/2020/05/21/js-inherit/" data-id="ckamomuz00004b8uk0z165a73" class="article-share-link">Share</a>
       
       
     </footer>
@@ -187,7 +229,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.cchealthier.com/2020/05/14/mood/" data-id="ckagyvxjd0006mwuk9m9y96pb" class="article-share-link">Share</a>
+      <a data-url="http://blog.cchealthier.com/2020/05/14/mood/" data-id="ckamomuz20005b8ukghseh2o4" class="article-share-link">Share</a>
       
       
     </footer>
@@ -231,7 +273,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.cchealthier.com/2020/05/03/buyu/" data-id="ckagyvxim0000mwuk31hjg33h" class="article-share-link">Share</a>
+      <a data-url="http://blog.cchealthier.com/2020/05/03/buyu/" data-id="ckamomuym0000b8uk0njh1gsl" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/cook/" rel="tag">cook</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/fish/" rel="tag">fish</a></li></ul>
@@ -304,7 +346,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.cchealthier.com/2020/05/03/hexo-githubpage/" data-id="ckagyvxj90004mwuk25gv40nq" class="article-share-link">Share</a>
+      <a data-url="http://blog.cchealthier.com/2020/05/03/hexo-githubpage/" data-id="ckamomuz90009b8uk3dyy8qvt" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/blog/" rel="tag">blog</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/hexo/" rel="tag">hexo</a></li></ul>
@@ -355,7 +397,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.cchealthier.com/2020/05/03/hello-world/" data-id="ckagyvxj00001mwuk0rt9cumt" class="article-share-link">Share</a>
+      <a data-url="http://blog.cchealthier.com/2020/05/03/hello-world/" data-id="ckamomuyt0001b8ukbf0x58o6" class="article-share-link">Share</a>
       
       
     </footer>
@@ -417,6 +459,10 @@
       <ul>
         
           <li>
+            <a href="/2020/05/25/new-object/">js new 一个对象干了什么事</a>
+          </li>
+        
+          <li>
             <a href="/2020/05/21/js-inherit/">js的继承方式</a>
           </li>
         
@@ -430,10 +476,6 @@
         
           <li>
             <a href="/2020/05/03/hexo-githubpage/">Hexo结合Github Page注意点</a>
-          </li>
-        
-          <li>
-            <a href="/2020/05/03/hello-world/">Hello World</a>
           </li>
         
       </ul>

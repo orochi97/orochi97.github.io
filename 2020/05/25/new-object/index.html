@@ -5,22 +5,19 @@
   
 
   
-  <title>空间起源 | 凝雪密境</title>
+  <title>js new 一个对象干了什么事 | 凝雪密境</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="&amp;emsp;&amp;emsp;好记性不如烂笔头。从小听到大，真的很有道理。但其实小时候仗着记忆力好，就懒得动笔。无论是记作业还是上课记笔记。当然所谓的好记忆其实那一瞬间，犹如内存，断电就没了。随着年纪增大，可能记忆力变差，可能经历的事多，确实遗忘的东西变多了。所以琢磨着找个地方给记下来。当然这种地方很多，自己搭建一个纯属好（第四声）玩。记录一些心情随想，所见所闻，所接触到的开发技术，烹饪煮食。&amp;emsp">
+  <meta name="description" content="12345678910111213141516171819202122232425262728function Person(name, age) &amp;#123;  this.name &#x3D; name  this.age &#x3D; age&amp;#125;Person.prototype.attr &#x3D; &#39;human&#39;const man1 &#x3D; new Person(&#39;123&#39;, 18)console.log(m">
 <meta property="og:type" content="article">
-<meta property="og:title" content="空间起源">
-<meta property="og:url" content="http://blog.cchealthier.com/2020/05/14/mood/index.html">
+<meta property="og:title" content="js new 一个对象干了什么事">
+<meta property="og:url" content="http://blog.cchealthier.com/2020/05/25/new-object/index.html">
 <meta property="og:site_name" content="凝雪密境">
-<meta property="og:description" content="&amp;emsp;&amp;emsp;好记性不如烂笔头。从小听到大，真的很有道理。但其实小时候仗着记忆力好，就懒得动笔。无论是记作业还是上课记笔记。当然所谓的好记忆其实那一瞬间，犹如内存，断电就没了。随着年纪增大，可能记忆力变差，可能经历的事多，确实遗忘的东西变多了。所以琢磨着找个地方给记下来。当然这种地方很多，自己搭建一个纯属好（第四声）玩。记录一些心情随想，所见所闻，所接触到的开发技术，烹饪煮食。&amp;emsp">
+<meta property="og:description" content="12345678910111213141516171819202122232425262728function Person(name, age) &amp;#123;  this.name &#x3D; name  this.age &#x3D; age&amp;#125;Person.prototype.attr &#x3D; &#39;human&#39;const man1 &#x3D; new Person(&#39;123&#39;, 18)console.log(m">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://blog.cchealthier.com/2020/05/14/mood/suzhou.JPG">
-<meta property="og:image" content="http://blog.cchealthier.com/2020/05/14/mood/taibei.JPG">
-<meta property="article:published_time" content="2020-05-14T15:55:33.000Z">
-<meta property="article:modified_time" content="2020-05-16T12:07:07.000Z">
+<meta property="article:published_time" content="2020-05-25T15:59:18.000Z">
+<meta property="article:modified_time" content="2020-05-25T16:03:27.499Z">
 <meta property="article:author" content="ChrisIori">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://blog.cchealthier.com/2020/05/14/mood/suzhou.JPG">
   
     <link rel="alternate" href="/atom.xml" title="凝雪密境" type="application/atom+xml">
   
@@ -83,14 +80,14 @@
   </div>
 </header>
       <div class="outer">
-        <section id="main"><article id="post-mood" class="article article-type-post" itemscope itemprop="blogPost">
+        <section id="main"><article id="post-new-object" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2020/05/14/mood/" class="article-date">
-  <time datetime="2020-05-14T15:55:33.000Z" itemprop="datePublished">2020-05-14</time>
+    <a href="/2020/05/25/new-object/" class="article-date">
+  <time datetime="2020-05-25T15:59:18.000Z" itemprop="datePublished">2020-05-25</time>
 </a>
     
   <div class="article-category">
-    <a class="article-category-link" href="/categories/%E9%9A%8F%E6%83%B3/">随想</a>►<a class="article-category-link" href="/categories/%E9%9A%8F%E6%83%B3/%E5%BF%83%E6%83%85/">心情</a>
+    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a>
   </div>
 
   </div>
@@ -101,7 +98,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      空间起源
+      js new 一个对象干了什么事
     </h1>
   
 
@@ -109,17 +106,13 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>&emsp;&emsp;好记性不如烂笔头。从小听到大，真的很有道理。但其实小时候仗着记忆力好，就懒得动笔。无论是记作业还是上课记笔记。当然所谓的好记忆其实那一瞬间，犹如内存，断电就没了。随着年纪增大，可能记忆力变差，可能经历的事多，确实遗忘的东西变多了。所以琢磨着找个地方给记下来。当然这种地方很多，自己搭建一个纯属好（第四声）玩。记录一些心情随想，所见所闻，所接触到的开发技术，烹饪煮食。<br>&emsp;&emsp;另外一个就是照片，以前老是觉得在于精不在于多，明明身处随时随地可照相的时代。后来在看一些地方旅游照片的时候，发现自己喜欢的街头巷尾照片太少了，就感觉缺失了那一环一样。以后也多给拍下来。<br>&emsp;&emsp;放两张偶然拍的自己觉得好的照片。</p>
-<img src="/2020/05/14/mood/suzhou.JPG" class="" title="苏州公车站">
-</br>
-</br>
-</br>
-<img src="/2020/05/14/mood/taibei.JPG" class="" title="台北淡水捷运站">
+        <br>
 
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Person</span>(<span class="params">name, age</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">this</span>.name = name</span><br><span class="line">  <span class="keyword">this</span>.age = age</span><br><span class="line">&#125;</span><br><span class="line">Person.prototype.attr = <span class="string">'human'</span></span><br><span class="line"><span class="keyword">const</span> man1 = <span class="keyword">new</span> Person(<span class="string">'123'</span>, <span class="number">18</span>)</span><br><span class="line"><span class="built_in">console</span>.log(man1.name)</span><br><span class="line"><span class="built_in">console</span>.log(man1.age)</span><br><span class="line"><span class="built_in">console</span>.log(man1.attr)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">_new</span>(<span class="params">Constructor, ...param</span>) </span>&#123;</span><br><span class="line">  <span class="comment">// 新建一个对象</span></span><br><span class="line">  <span class="keyword">const</span> obj = &#123;&#125; <span class="comment">// Object.create(null)</span></span><br><span class="line">  <span class="comment">// 建立继承关系，__proto__指向构造函数原型，获得原型属性与方法</span></span><br><span class="line">  <span class="comment">// 这里获得 attr 属性</span></span><br><span class="line">  obj.__proto__ = Constructor.prototype</span><br><span class="line">  <span class="comment">// 开始执行这个构造函数，就是这个构造函数的this方法属性挂到这个新对象上</span></span><br><span class="line">  <span class="comment">// 这里就是把 name 和 age 挂上去</span></span><br><span class="line">  <span class="keyword">const</span> ret = Constructor.call(obj, ...param)</span><br><span class="line">  <span class="comment">// const ret = Constructor.apply(obj, param)</span></span><br><span class="line">  <span class="comment">// 若构造函数中没有返回值或返回值是基本类型（Number、String、Boolean）的值，则返回新实例对象；</span></span><br><span class="line">  <span class="comment">// 若返回值是引用类型的值，则实际返回值为这个引用类型。</span></span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">typeof</span> ret === <span class="string">'object'</span> ? ret : obj</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">const</span> man2 = _new(Person, <span class="string">'456'</span>, <span class="number">20</span>)</span><br><span class="line"><span class="built_in">console</span>.log(man2.name)</span><br><span class="line"><span class="built_in">console</span>.log(man2.age)</span><br><span class="line"><span class="built_in">console</span>.log(man2.attr)</span><br></pre></td></tr></table></figure>
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.cchealthier.com/2020/05/14/mood/" data-id="ckamomuz20005b8ukghseh2o4" class="article-share-link">Share</a>
+      <a data-url="http://blog.cchealthier.com/2020/05/25/new-object/" data-id="ckamomuz40006b8ukf8x80keg" class="article-share-link">Share</a>
       
       
     </footer>
@@ -128,19 +121,10 @@
     
 <nav id="article-nav">
   
-    <a href="/2020/05/21/js-inherit/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Newer</strong>
-      <div class="article-nav-title">
-        
-          js的继承方式
-        
-      </div>
-    </a>
   
-  
-    <a href="/2020/05/03/buyu/" id="article-nav-older" class="article-nav-link-wrap">
+    <a href="/2020/05/21/js-inherit/" id="article-nav-older" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Older</strong>
-      <div class="article-nav-title">“bu”鱼</div>
+      <div class="article-nav-title">js的继承方式</div>
     </a>
   
 </nav>
