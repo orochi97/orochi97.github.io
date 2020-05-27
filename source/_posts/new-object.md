@@ -1,5 +1,5 @@
 ---
-title: js new 一个对象干了什么事
+title: JS new 一个对象干了什么事
 date: 2020-05-25 23:59:18
 categories:
 - 开发
