@@ -80,6 +80,50 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-js-performance" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/05/28/js-performance/" class="article-date">
+  <time datetime="2020-05-28T15:56:30.000Z" itemprop="datePublished">2020-05-28</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/05/28/js-performance/">JS性能优化探讨</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="一、最核心一点，减少http请求，3次握手，冷启动，成本昂贵"><a href="#一、最核心一点，减少http请求，3次握手，冷启动，成本昂贵" class="headerlink" title="一、最核心一点，减少http请求，3次握手，冷启动，成本昂贵"></a>一、最核心一点，减少http请求，3次握手，冷启动，成本昂贵</h3><p><strong>1、</strong>合并小js文件<br><strong>2、</strong>使用雪碧图<br><strong>3、</strong>小图转换成base64放到代码里<br><strong>4、</strong>设置缓存</p>
+<h3 id="二、加快响应"><a href="#二、加快响应" class="headerlink" title="二、加快响应"></a>二、加快响应</h3><p><strong>1、</strong>CDN<br><strong>2、</strong>减少DNS查询次数<br><strong>3、</strong>提前加载，延迟加载<br><strong>4、</strong>首页最小内容显示，将样式表置顶渲染页面，将js放到底部不阻塞页面渲染。</p>
+<h3 id="三、资源层面"><a href="#三、资源层面" class="headerlink" title="三、资源层面"></a>三、资源层面</h3><p><strong>1、</strong>能用不那么高清图片，就用体积小的图片<br><strong>2、</strong>压缩业务代码<br><strong>3、</strong>压缩减少或不要cookie，每次请求头都会带上<br><strong>4、</strong>把静态资源放在另外一个域名，根据域名划分内容。<br>浏览器一般对同一个域的下载连接数有所限制，按照域名划分下载内容可以浏览器增大并行下载连接。<br>但是注意控制域名使用在2-4个之间，不然dns查询也是个问题。<br>一般网站规划会将静态资源放在类似于static.example.com，动态内容放在<a href="http://www.example.com上。" target="_blank" rel="noopener">www.example.com上。</a><br>这样做还有一个好处是可以在静态的域名上避免使用cookie。页面内容使用无cookie域名<br><strong>5、</strong>使用小且可缓存的favicon.ico网站图标文件favicon.ico。<br>不管你服务器有还是没有，浏览器都会去尝试请求这个图标。所以我们要确保这个图标存在文件尽量小，最好小于1k设置一个长的过期时间</p>
+<h3 id="四、代码层面"><a href="#四、代码层面" class="headerlink" title="四、代码层面"></a>四、代码层面</h3><p><strong>1、</strong>html尽量减少dom（document.getElementsByTagName(‘*’).length）<br><strong>2、</strong>避免CSS表达式，CSS表达式的问题在于它被重新计算的次数远比我们想象的要多，不仅在网页绘制或大小改变时计算，即使我们滚动屏幕或者移动鼠标的时候也在计算，因此我们还是尽量避免使用它来防止使用不当而造成的性能损耗。<br><strong>3、</strong>减少对dom的操作<br><strong>4、</strong>用<link>代替@import，避免使用@import的原因很简单，因为它相当于将css放在网页内容底部。<br><strong>5、</strong>使用智能事件处理<br>这里说智能的事件处理需要开发者对事件处理有更深入的了解，通过不同的方式尽量少去触发事件，如果必要就尽早的去处理事件。比如一个div中10个按钮都需要事件句柄，那么我们可以将事件放在div上，在事件冒泡过程中捕获该事件然后判断事件来源。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://blog.cchealthier.com/2020/05/28/js-performance/" data-id="ckaqyzo8i000awgukds8xbn8k" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-eventloop" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2020/05/27/eventloop/" class="article-date">
@@ -120,7 +164,7 @@
 <br>
 
 <h3 id="絮"><a href="#絮" class="headerlink" title="絮"></a>絮</h3><p>知道js的循环机制和宏任务微任务的概念后，就可以知道vue的$nextTick原理，为什么在改变变量后，$nextTick的回调里可以保证dom已经更新完毕。来个简陋版的模拟。</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 模拟vue nextTick</span></span><br><span class="line"><span class="comment">// 存储所有$nextTick的回调，变量的set修改后通知dom更新的，与$nextTick的回调进入同个微队列</span></span><br><span class="line"><span class="keyword">const</span> callbacks = []</span><br><span class="line"><span class="comment">// 微队列的触发载体，这里是Promise.resolve()</span></span><br><span class="line"><span class="comment">// vue是先找Promise.resolve，没有就找setTimeout</span></span><br><span class="line"><span class="keyword">let</span> run = <span class="literal">null</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">next</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  callbacks.forEach(<span class="function">(<span class="params">cb</span>) =&gt;</span> &#123;</span><br><span class="line">    cb()</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 这里的change可以看成修改了变量，里面的回调就是与nextTick的回调如出一辙</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">change</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  nextTick(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="comment">// 这里面是同步</span></span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'update dom -- 1'</span>)</span><br><span class="line">    <span class="keyword">const</span> child = <span class="built_in">document</span>.createElement(<span class="string">'div'</span>)</span><br><span class="line">    child.id = <span class="string">'new'</span></span><br><span class="line">    <span class="built_in">document</span>.getElementById(<span class="string">'box'</span>).appendChild(child)</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'update dom'</span>)</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'update dom -- 2'</span>)</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">nextTick</span>(<span class="params">cb</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">if</span>(!run) &#123;</span><br><span class="line">  	<span class="comment">// 初始化下个队列</span></span><br><span class="line">    run = <span class="built_in">Promise</span>.resolve()</span><br><span class="line">    <span class="comment">// 把next方法放在下个队列运行</span></span><br><span class="line">    <span class="comment">// 看上面的next函数，是把callbacks的函数遍历执行</span></span><br><span class="line">    run.then(next)</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// nextTick的回调加入数组等着，遍历触发里面的每个函数</span></span><br><span class="line">  <span class="comment">// 由于是同步，所以其实只是一个微任务，</span></span><br><span class="line">  callbacks.push(cb)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 调用了第一次nextTick</span></span><br><span class="line">nextTick(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">	<span class="comment">// 表示该次微队列任务开始</span></span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'nextTick -- 1'</span>)</span><br><span class="line">&#125;)</span><br><span class="line"><span class="built_in">Promise</span>.resolve().then(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'then -- '</span>)</span><br><span class="line">&#125;)</span><br><span class="line"><span class="comment">// 修改变量，更改了dom</span></span><br><span class="line">change()</span><br><span class="line"><span class="comment">// 同步任务，最早打印，但此时没有new元素</span></span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">'script -- '</span>, <span class="built_in">document</span>.getElementById(<span class="string">'new'</span>))</span><br><span class="line"><span class="comment">// 调用了第二次nextTick</span></span><br><span class="line">nextTick(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">	<span class="comment">// 在修改变量之后调nextTick，已有new元素</span></span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'nextTick -- 2'</span>, <span class="built_in">document</span>.getElementById(<span class="string">'new'</span>))</span><br><span class="line">&#125;)</span><br><span class="line"><span class="comment">// nextTick -- 2 之所以在 then -- 前打印，是因为回调都放在callbacks里，同步触发了</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 模拟vue nextTick</span></span><br><span class="line"><span class="comment">// 存储所有$nextTick的回调，变量的set修改后通知dom更新的，与$nextTick的回调进入同个微队列</span></span><br><span class="line"><span class="keyword">const</span> callbacks = []</span><br><span class="line"><span class="comment">// 微队列的触发载体，这里是Promise.resolve()</span></span><br><span class="line"><span class="comment">// vue是先找Promise.resolve，没有就找setTimeout</span></span><br><span class="line"><span class="keyword">let</span> run = <span class="literal">null</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">next</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  callbacks.forEach(<span class="function">(<span class="params">cb</span>) =&gt;</span> &#123;</span><br><span class="line">    cb()</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 这里的change可以看成修改了变量，里面的回调就是与nextTick的回调如出一辙</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">change</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  nextTick(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="comment">// 这里面是同步</span></span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'update dom -- 1'</span>)</span><br><span class="line">    <span class="keyword">const</span> child = <span class="built_in">document</span>.createElement(<span class="string">'div'</span>)</span><br><span class="line">    child.id = <span class="string">'new'</span></span><br><span class="line">    <span class="built_in">document</span>.getElementById(<span class="string">'box'</span>).appendChild(child)</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'update dom'</span>)</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'update dom -- 2'</span>)</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">nextTick</span>(<span class="params">cb</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">if</span>(!run) &#123;</span><br><span class="line">    <span class="comment">// 初始化下个队列</span></span><br><span class="line">    run = <span class="built_in">Promise</span>.resolve()</span><br><span class="line">    <span class="comment">// 把next方法放在下个队列运行</span></span><br><span class="line">    <span class="comment">// 看上面的next函数，是把callbacks的函数遍历执行</span></span><br><span class="line">    run.then(next)</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// nextTick的回调加入数组等着，遍历触发里面的每个函数</span></span><br><span class="line">  <span class="comment">// 由于是同步，所以其实只是一个微任务，</span></span><br><span class="line">  callbacks.push(cb)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 调用了第一次nextTick</span></span><br><span class="line">nextTick(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="comment">// 表示该次微队列任务开始</span></span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'nextTick -- 1'</span>)</span><br><span class="line">&#125;)</span><br><span class="line"><span class="built_in">Promise</span>.resolve().then(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'then -- '</span>)</span><br><span class="line">&#125;)</span><br><span class="line"><span class="comment">// 修改变量，更改了dom</span></span><br><span class="line">change()</span><br><span class="line"><span class="comment">// 同步任务，最早打印，但此时没有new元素</span></span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">'script -- '</span>, <span class="built_in">document</span>.getElementById(<span class="string">'new'</span>))</span><br><span class="line"><span class="comment">// 调用了第二次nextTick</span></span><br><span class="line">nextTick(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="comment">// 在修改变量之后调nextTick，已有new元素</span></span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'nextTick -- 2'</span>, <span class="built_in">document</span>.getElementById(<span class="string">'new'</span>))</span><br><span class="line">&#125;)</span><br><span class="line"><span class="comment">// nextTick -- 2 之所以在 then -- 前打印，是因为回调都放在callbacks里，同步触发了</span></span><br></pre></td></tr></table></figure>
 <br>
 <img src="/2020/05/27/eventloop/next.PNG" class="" title="next">
 <br>
@@ -128,7 +172,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.cchealthier.com/2020/05/27/eventloop/" data-id="ckaqyepx10006s0uk45ao1exy" class="article-share-link">Share</a>
+      <a data-url="http://blog.cchealthier.com/2020/05/27/eventloop/" data-id="ckaqyzo8a0005wguk7ul899b0" class="article-share-link">Share</a>
       
       
     </footer>
@@ -170,7 +214,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.cchealthier.com/2020/05/25/new-object/" data-id="ckaqyepxo000us0uk4lbwfpbn" class="article-share-link">Share</a>
+      <a data-url="http://blog.cchealthier.com/2020/05/25/new-object/" data-id="ckaqyzo8l000dwguk63nmaga7" class="article-share-link">Share</a>
       
       
     </footer>
@@ -198,7 +242,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2020/05/21/js-inherit/">js的继承方式</a>
+      <a class="article-title" href="/2020/05/21/js-inherit/">JS的继承方式</a>
     </h1>
   
 
@@ -241,7 +285,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.cchealthier.com/2020/05/21/js-inherit/" data-id="ckaqyepwr0001s0uk1nd1esh0" class="article-share-link">Share</a>
+      <a data-url="http://blog.cchealthier.com/2020/05/21/js-inherit/" data-id="ckaqyzo8d0006wguk2e0jglzc" class="article-share-link">Share</a>
       
       
     </footer>
@@ -287,7 +331,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.cchealthier.com/2020/05/14/mood/" data-id="ckaqyepxn000ts0uk4vjl1bdy" class="article-share-link">Share</a>
+      <a data-url="http://blog.cchealthier.com/2020/05/14/mood/" data-id="ckaqyzo8g0009wgukdsax2a7n" class="article-share-link">Share</a>
       
       
     </footer>
@@ -331,7 +375,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.cchealthier.com/2020/05/03/buyu/" data-id="ckaqyepwj0000s0uk8sbjcpaj" class="article-share-link">Share</a>
+      <a data-url="http://blog.cchealthier.com/2020/05/03/buyu/" data-id="ckaqyzo7p0000wguk7c9s4vqh" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/cook/" rel="tag">cook</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/fish/" rel="tag">fish</a></li></ul>
@@ -404,7 +448,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.cchealthier.com/2020/05/03/hexo-githubpage/" data-id="ckaqyepwy0005s0ukenyy2d5e" class="article-share-link">Share</a>
+      <a data-url="http://blog.cchealthier.com/2020/05/03/hexo-githubpage/" data-id="ckaqyzo820004wguk2zihchjv" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/blog/" rel="tag">blog</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/hexo/" rel="tag">hexo</a></li></ul>
@@ -455,7 +499,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.cchealthier.com/2020/05/03/hello-world/" data-id="ckaqyepww0004s0ukepvo1dq5" class="article-share-link">Share</a>
+      <a data-url="http://blog.cchealthier.com/2020/05/03/hello-world/" data-id="ckaqyzo7w0001wguk68ldakjc" class="article-share-link">Share</a>
       
       
     </footer>
@@ -517,6 +561,10 @@
       <ul>
         
           <li>
+            <a href="/2020/05/28/js-performance/">JS性能优化探讨</a>
+          </li>
+        
+          <li>
             <a href="/2020/05/27/eventloop/">JS 事件循环</a>
           </li>
         
@@ -525,15 +573,11 @@
           </li>
         
           <li>
-            <a href="/2020/05/21/js-inherit/">js的继承方式</a>
+            <a href="/2020/05/21/js-inherit/">JS的继承方式</a>
           </li>
         
           <li>
             <a href="/2020/05/14/mood/">空间起源</a>
-          </li>
-        
-          <li>
-            <a href="/2020/05/03/buyu/">“bu”鱼</a>
           </li>
         
       </ul>

@@ -5,17 +5,17 @@
   
 
   
-  <title>JS new 一个对象干了什么事 | 凝雪密境</title>
+  <title>JS性能优化探讨 | 凝雪密境</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="12345678910111213141516171819202122232425262728function Person(name, age) &amp;#123;  this.name &#x3D; name  this.age &#x3D; age&amp;#125;Person.prototype.attr &#x3D; &#39;human&#39;const man1 &#x3D; new Person(&#39;123&#39;, 18)console.log(m">
+  <meta name="description" content="一、最核心一点，减少http请求，3次握手，冷启动，成本昂贵1、合并小js文件2、使用雪碧图3、小图转换成base64放到代码里4、设置缓存 二、加快响应1、CDN2、减少DNS查询次数3、提前加载，延迟加载4、首页最小内容显示，将样式表置顶渲染页面，将js放到底部不阻塞页面渲染。 三、资源层面1、能用不那么高清图片，就用体积小的图片2、压缩业务代码3、压缩减少或不要cookie，每次请求头都会带">
 <meta property="og:type" content="article">
-<meta property="og:title" content="JS new 一个对象干了什么事">
-<meta property="og:url" content="http://blog.cchealthier.com/2020/05/25/new-object/index.html">
+<meta property="og:title" content="JS性能优化探讨">
+<meta property="og:url" content="http://blog.cchealthier.com/2020/05/28/js-performance/index.html">
 <meta property="og:site_name" content="凝雪密境">
-<meta property="og:description" content="12345678910111213141516171819202122232425262728function Person(name, age) &amp;#123;  this.name &#x3D; name  this.age &#x3D; age&amp;#125;Person.prototype.attr &#x3D; &#39;human&#39;const man1 &#x3D; new Person(&#39;123&#39;, 18)console.log(m">
+<meta property="og:description" content="一、最核心一点，减少http请求，3次握手，冷启动，成本昂贵1、合并小js文件2、使用雪碧图3、小图转换成base64放到代码里4、设置缓存 二、加快响应1、CDN2、减少DNS查询次数3、提前加载，延迟加载4、首页最小内容显示，将样式表置顶渲染页面，将js放到底部不阻塞页面渲染。 三、资源层面1、能用不那么高清图片，就用体积小的图片2、压缩业务代码3、压缩减少或不要cookie，每次请求头都会带">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2020-05-25T15:59:18.000Z">
-<meta property="article:modified_time" content="2020-05-27T14:48:17.667Z">
+<meta property="article:published_time" content="2020-05-28T15:56:30.000Z">
+<meta property="article:modified_time" content="2020-05-28T16:04:08.040Z">
 <meta property="article:author" content="ChrisIori">
 <meta name="twitter:card" content="summary">
   
@@ -80,10 +80,10 @@
   </div>
 </header>
       <div class="outer">
-        <section id="main"><article id="post-new-object" class="article article-type-post" itemscope itemprop="blogPost">
+        <section id="main"><article id="post-js-performance" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2020/05/25/new-object/" class="article-date">
-  <time datetime="2020-05-25T15:59:18.000Z" itemprop="datePublished">2020-05-25</time>
+    <a href="/2020/05/28/js-performance/" class="article-date">
+  <time datetime="2020-05-28T15:56:30.000Z" itemprop="datePublished">2020-05-28</time>
 </a>
     
   <div class="article-category">
@@ -98,7 +98,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      JS new 一个对象干了什么事
+      JS性能优化探讨
     </h1>
   
 
@@ -106,13 +106,15 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <br>
+        <h3 id="一、最核心一点，减少http请求，3次握手，冷启动，成本昂贵"><a href="#一、最核心一点，减少http请求，3次握手，冷启动，成本昂贵" class="headerlink" title="一、最核心一点，减少http请求，3次握手，冷启动，成本昂贵"></a>一、最核心一点，减少http请求，3次握手，冷启动，成本昂贵</h3><p><strong>1、</strong>合并小js文件<br><strong>2、</strong>使用雪碧图<br><strong>3、</strong>小图转换成base64放到代码里<br><strong>4、</strong>设置缓存</p>
+<h3 id="二、加快响应"><a href="#二、加快响应" class="headerlink" title="二、加快响应"></a>二、加快响应</h3><p><strong>1、</strong>CDN<br><strong>2、</strong>减少DNS查询次数<br><strong>3、</strong>提前加载，延迟加载<br><strong>4、</strong>首页最小内容显示，将样式表置顶渲染页面，将js放到底部不阻塞页面渲染。</p>
+<h3 id="三、资源层面"><a href="#三、资源层面" class="headerlink" title="三、资源层面"></a>三、资源层面</h3><p><strong>1、</strong>能用不那么高清图片，就用体积小的图片<br><strong>2、</strong>压缩业务代码<br><strong>3、</strong>压缩减少或不要cookie，每次请求头都会带上<br><strong>4、</strong>把静态资源放在另外一个域名，根据域名划分内容。<br>浏览器一般对同一个域的下载连接数有所限制，按照域名划分下载内容可以浏览器增大并行下载连接。<br>但是注意控制域名使用在2-4个之间，不然dns查询也是个问题。<br>一般网站规划会将静态资源放在类似于static.example.com，动态内容放在<a href="http://www.example.com上。" target="_blank" rel="noopener">www.example.com上。</a><br>这样做还有一个好处是可以在静态的域名上避免使用cookie。页面内容使用无cookie域名<br><strong>5、</strong>使用小且可缓存的favicon.ico网站图标文件favicon.ico。<br>不管你服务器有还是没有，浏览器都会去尝试请求这个图标。所以我们要确保这个图标存在文件尽量小，最好小于1k设置一个长的过期时间</p>
+<h3 id="四、代码层面"><a href="#四、代码层面" class="headerlink" title="四、代码层面"></a>四、代码层面</h3><p><strong>1、</strong>html尽量减少dom（document.getElementsByTagName(‘*’).length）<br><strong>2、</strong>避免CSS表达式，CSS表达式的问题在于它被重新计算的次数远比我们想象的要多，不仅在网页绘制或大小改变时计算，即使我们滚动屏幕或者移动鼠标的时候也在计算，因此我们还是尽量避免使用它来防止使用不当而造成的性能损耗。<br><strong>3、</strong>减少对dom的操作<br><strong>4、</strong>用<link>代替@import，避免使用@import的原因很简单，因为它相当于将css放在网页内容底部。<br><strong>5、</strong>使用智能事件处理<br>这里说智能的事件处理需要开发者对事件处理有更深入的了解，通过不同的方式尽量少去触发事件，如果必要就尽早的去处理事件。比如一个div中10个按钮都需要事件句柄，那么我们可以将事件放在div上，在事件冒泡过程中捕获该事件然后判断事件来源。</p>
 
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Person</span>(<span class="params">name, age</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">this</span>.name = name</span><br><span class="line">  <span class="keyword">this</span>.age = age</span><br><span class="line">&#125;</span><br><span class="line">Person.prototype.attr = <span class="string">'human'</span></span><br><span class="line"><span class="keyword">const</span> man1 = <span class="keyword">new</span> Person(<span class="string">'123'</span>, <span class="number">18</span>)</span><br><span class="line"><span class="built_in">console</span>.log(man1.name)</span><br><span class="line"><span class="built_in">console</span>.log(man1.age)</span><br><span class="line"><span class="built_in">console</span>.log(man1.attr)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">_new</span>(<span class="params">Constructor, ...param</span>) </span>&#123;</span><br><span class="line">  <span class="comment">// 新建一个对象</span></span><br><span class="line">  <span class="keyword">const</span> obj = &#123;&#125; <span class="comment">// Object.create(null)</span></span><br><span class="line">  <span class="comment">// 建立继承关系，__proto__指向构造函数原型，获得原型属性与方法</span></span><br><span class="line">  <span class="comment">// 这里获得 attr 属性</span></span><br><span class="line">  obj.__proto__ = Constructor.prototype</span><br><span class="line">  <span class="comment">// 开始执行这个构造函数，就是这个构造函数的this方法属性挂到这个新对象上</span></span><br><span class="line">  <span class="comment">// 这里就是把 name 和 age 挂上去</span></span><br><span class="line">  <span class="keyword">const</span> ret = Constructor.call(obj, ...param)</span><br><span class="line">  <span class="comment">// const ret = Constructor.apply(obj, param)</span></span><br><span class="line">  <span class="comment">// 若构造函数中没有返回值或返回值是基本类型（Number、String、Boolean）的值，则返回新实例对象；</span></span><br><span class="line">  <span class="comment">// 若返回值是引用类型的值，则实际返回值为这个引用类型。</span></span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">typeof</span> ret === <span class="string">'object'</span> ? ret : obj</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">const</span> man2 = _new(Person, <span class="string">'456'</span>, <span class="number">20</span>)</span><br><span class="line"><span class="built_in">console</span>.log(man2.name)</span><br><span class="line"><span class="built_in">console</span>.log(man2.age)</span><br><span class="line"><span class="built_in">console</span>.log(man2.attr)</span><br></pre></td></tr></table></figure>
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.cchealthier.com/2020/05/25/new-object/" data-id="ckaqyzo8l000dwguk63nmaga7" class="article-share-link">Share</a>
+      <a data-url="http://blog.cchealthier.com/2020/05/28/js-performance/" data-id="ckaqyzo8i000awgukds8xbn8k" class="article-share-link">Share</a>
       
       
     </footer>
@@ -121,19 +123,10 @@
     
 <nav id="article-nav">
   
-    <a href="/2020/05/27/eventloop/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Newer</strong>
-      <div class="article-nav-title">
-        
-          JS 事件循环
-        
-      </div>
-    </a>
   
-  
-    <a href="/2020/05/21/js-inherit/" id="article-nav-older" class="article-nav-link-wrap">
+    <a href="/2020/05/27/eventloop/" id="article-nav-older" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Older</strong>
-      <div class="article-nav-title">JS的继承方式</div>
+      <div class="article-nav-title">JS 事件循环</div>
     </a>
   
 </nav>
