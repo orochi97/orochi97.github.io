@@ -1,5 +1,5 @@
 ---
-title: js的继承方式
+title: JS的继承方式
 date: 2020-05-21 23:26:20
 categories:
 - 开发

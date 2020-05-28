@@ -193,7 +193,7 @@ function change() {
 
 function nextTick(cb) {
   if(!run) {
-  	// 初始化下个队列
+    // 初始化下个队列
     run = Promise.resolve()
     // 把next方法放在下个队列运行
     // 看上面的next函数，是把callbacks的函数遍历执行
@@ -206,7 +206,7 @@ function nextTick(cb) {
 
 // 调用了第一次nextTick
 nextTick(() => {
-	// 表示该次微队列任务开始
+  // 表示该次微队列任务开始
   console.log('nextTick -- 1')
 })
 Promise.resolve().then(() => {
@@ -218,7 +218,7 @@ change()
 console.log('script -- ', document.getElementById('new'))
 // 调用了第二次nextTick
 nextTick(() => {
-	// 在修改变量之后调nextTick，已有new元素
+  // 在修改变量之后调nextTick，已有new元素
   console.log('nextTick -- 2', document.getElementById('new'))
 })
 // nextTick -- 2 之所以在 then -- 前打印，是因为回调都放在callbacks里，同步触发了
