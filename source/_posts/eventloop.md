@@ -1,6 +1,7 @@
 ---
 title: JS 事件循环
 date: 2020-05-27 22:45:46
+updated: 2020-06-22 00:15:24
 categories:
 - 开发
 - 前端
@@ -226,3 +227,11 @@ nextTick(() => {
 <br>
 {% asset_img next.PNG next %}
 <br>
+
+#### 补充
+
+宿主环境提供的叫宏任务，由语言标准提供的叫微任务。
+
+宏任务每次执行一个的原因：浏览器为了能够使得JS内部task与DOM任务能够有序的执行，会在一个task执行结束后，在下一个 task 执行开始前，对页面进行重新渲染 （task->渲染->task->...）
+
+参考：https://segmentfault.com/a/1190000014940904?utm_source=tag-newest
