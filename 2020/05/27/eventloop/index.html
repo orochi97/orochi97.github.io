@@ -18,7 +18,7 @@
 <meta property="og:image" content="http://blog.cchealthier.com/2020/05/27/eventloop/node.PNG">
 <meta property="og:image" content="http://blog.cchealthier.com/2020/05/27/eventloop/next.PNG">
 <meta property="article:published_time" content="2020-05-27T14:45:46.000Z">
-<meta property="article:modified_time" content="2020-05-28T15:54:21.613Z">
+<meta property="article:modified_time" content="2020-06-21T16:15:24.000Z">
 <meta property="article:author" content="ChrisIori">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http://blog.cchealthier.com/2020/05/27/eventloop/web.PNG">
@@ -129,10 +129,14 @@
 <img src="/2020/05/27/eventloop/next.PNG" class="" title="next">
 <br>
 
+<h4 id="补充"><a href="#补充" class="headerlink" title="补充"></a>补充</h4><p>宿主环境提供的叫宏任务，由语言标准提供的叫微任务。</p>
+<p>宏任务每次执行一个的原因：浏览器为了能够使得JS内部task与DOM任务能够有序的执行，会在一个task执行结束后，在下一个 task 执行开始前，对页面进行重新渲染 （task-&gt;渲染-&gt;task-&gt;…）</p>
+<p>参考：<a href="https://segmentfault.com/a/1190000014940904?utm_source=tag-newest" target="_blank" rel="noopener">https://segmentfault.com/a/1190000014940904?utm_source=tag-newest</a></p>
+
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.cchealthier.com/2020/05/27/eventloop/" data-id="ckautdhjr0004awukgozfc8ub" class="article-share-link">Share</a>
+      <a data-url="http://blog.cchealthier.com/2020/05/27/eventloop/" data-id="ckbpacryl0001l4uk51ewgavn" class="article-share-link">Share</a>
       
       
     </footer>
@@ -198,7 +202,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a></li></ul>
     </div>
   </div>
 
@@ -209,6 +213,10 @@
     <h3 class="widget-title">最新文章</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2020/06/22/ssl-lts/">ssl-lts 协议过程</a>
+          </li>
         
           <li>
             <a href="/2020/05/31/html-resource/">HTML几个资源异步属性</a>
@@ -224,10 +232,6 @@
         
           <li>
             <a href="/2020/05/28/js-performance/">JS性能优化探讨</a>
-          </li>
-        
-          <li>
-            <a href="/2020/05/27/eventloop/">JS 事件循环</a>
           </li>
         
       </ul>
