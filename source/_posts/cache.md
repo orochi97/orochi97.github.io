@@ -34,7 +34,7 @@ Etag可以看成根据文件算出的哈希，唯一的，文件一改肯定就�
 设定一个期限很大的强缓存，如 max-age=31536000 (一年)。文件通过打包工具生成出来都带上哈希。只要文件内容不改哈希就不改，请求的地址就不改，命中强缓存。改了内容自然连请求地址都改了，就会返回新文件。
 
 #### 代码的角度，
-看到的资料几乎都是服务端的，比如node的express可以在请求资源的返回里设置请求头
+看到的资料几乎都是服务端的，比如node的express可以在请求资源的返回里设置响应头
 ```js
 app.get('/foo.js', function (req, res) {
   res.set({
@@ -86,5 +86,5 @@ module.exports = {
 **hash、chunkhash、contenthash**
 
 __hash：__利用整个工程内容来计算，所以改一点点全部都改。
-__chunkhash：__计算的单独chunk（这个是webpack的概念，相当于每个要输出的文件，一个entry对应一个chunk）的哈希。
+__chunkhash：__计算的单独chunk（这个是webpack的概念，相当于每个要输出的文件，一般一个entry对应一个chunk）的哈希。
 __contenthash：__在使用抽离的css插件的时候，抽离的css文件会与引用它的js共用一份chunkhash，那js一改css也得改。当然反过来也是。此时用contenthash就只针对该份文件内容做哈希，就不会互相影响到了。
