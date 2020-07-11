@@ -10,17 +10,17 @@ categories:
 
 ```js
 function SuperType(type) {
-	this.property = true
-	this.colors = ['red', 'blue']
-	this.type = type
+  this.property = true
+  this.colors = ['red', 'blue']
+  this.type = type
 }
 SuperType.prototype.getSuperValue = function() {
-	console.log(this.property)
+  console.log(this.property)
 }
 
 function SubType(type) {
-	this.subproperty = false
-	this.subtype = type
+  this.subproperty = false
+  this.subtype = type
 }
 
 // 如果这里是 SubType.prototype = SuSuperTypebType.prototype
@@ -28,7 +28,7 @@ function SubType(type) {
 SubType.prototype = new SuperType('super')
 
 SubType.prototype.getSubValue = function() {
-	console.log(this.subproperty)
+  console.log(this.subproperty)
 }
 
 const instance = new SubType('one')
@@ -55,18 +55,18 @@ console.log(instance2.colors, instance2.type, instance2.subtype)
 
 ```js
 function SuperType(type) {
-	this.property = true
-	this.colors = ['red', 'blue']
-	this.type = type
+  this.property = true
+  this.colors = ['red', 'blue']
+  this.type = type
 }
 SuperType.prototype.getSuperValue = function() {
-	console.log(this.property)
+  console.log(this.property)
 }
 
 function SubType(type) {
-	SuperType.call(this, type)
-	// 为了确保不被父级的属性覆盖，可以在这之后再赋值子类的属性
-	this.subproperty = true
+  SuperType.call(this, type)
+  // 为了确保不被父级的属性覆盖，可以在这之后再赋值子类的属性
+  this.subproperty = true
 }
 
 const instance1 = new SubType('one')
@@ -91,18 +91,18 @@ console.log(instance2.colors, instance2.type)
 
 ```js
 function SuperType(type) {
-	this.property = 'true111'
-	this.colors = ['red', 'blue']
-	this.type = type
+  this.property = 'true111'
+  this.colors = ['red', 'blue']
+  this.type = type
 }
 SuperType.prototype.getSuperValue = function() {
-	console.log(this.property)
+  console.log(this.property)
 }
 
 function SubType(type) {
-	SuperType.call(this, type) // 调用一次
-	// 为了确保不被父级的属性覆盖，可以在这之后再赋值子类的属性
-	this.subproperty = true
+  SuperType.call(this, type) // 调用一次
+  // 为了确保不被父级的属性覆盖，可以在这之后再赋值子类的属性
+  this.subproperty = true
 }
 
 SubType.prototype = new SuperType() // 调用两次
@@ -131,14 +131,14 @@ console.log(instance2.colors, instance2.type)
 ```js
 // 缺点：引用类型属性依然是共享的
 function object(o) {
-	function F(){}
-	F.prototype = o
-	return new F()
+  function F(){}
+  F.prototype = o
+  return new F()
 }
 
 const person = {
-	name: 'xiaoming',
-	colors: ['1', '2']
+  name: 'xiaoming',
+  colors: ['1', '2']
 }
 
 const p1 = object(person)
@@ -152,9 +152,9 @@ console.log(p1.colors, p2.colors)
 
 // 等同于
 const p3 = Object.create(person, {
-	name1: {
-		value: 'xiaohong'
-	}
+  name1: {
+    value: 'xiaohong'
+  }
 })
 
 console.log(p1, p2, p3, p3.name)
@@ -166,24 +166,24 @@ console.log(p1, p2, p3, p3.name)
 
 ```js
 function object(o) {
-	function F(){}
-	F.prototype = o
-	return new F()
+  function F(){}
+  F.prototype = o
+  return new F()
 }
 
 // 包了一层，定义了个方法增强对象，
 // 缺点是函数没法服用，引用类型属性依然是共享的
 function createObject(o) {
-	const clone = object(o)
-	clone.say = function() {
-		console.log(this.colors)
-	}
-	return clone
+  const clone = object(o)
+  clone.say = function() {
+    console.log(this.colors)
+  }
+  return clone
 }
 
 const person = {
-	name: 'xiaoming',
-	colors: ['1', '2']
+  name: 'xiaoming',
+  colors: ['1', '2']
 }
 
 const p1 = createObject(person)
@@ -204,17 +204,17 @@ p2.say()
 
 ```js
 function SuperType(type) {
-	this.name = 'true111'
-	this.colors = ['red', 'blue']
+  this.name = 'true111'
+  this.colors = ['red', 'blue']
 }
 SuperType.prototype.getSuperValue = function() {
-	console.log(this.colors)
+  console.log(this.colors)
 }
 
 function SubType(name, age) {
-	SuperType.call(this, name) // 调用一次
-	// 为了确保不被父级的属性覆盖，可以在这之后再赋值子类的属性
-	this.age = age
+  SuperType.call(this, name) // 调用一次
+  // 为了确保不被父级的属性覆盖，可以在这之后再赋值子类的属性
+  this.age = age
 }
 
 SubType.prototype = new SuperType() // 调用两次
@@ -235,14 +235,14 @@ console.log('~2~', s1, s2)
 // 一组是自身属性下，一组是原型链指向父类实例的
 
 function inherit(newType, superType) {
-	newType.prototype = Object.create(superType.prototype)
-	newType.prototype.constructor = newType
+  newType.prototype = Object.create(superType.prototype)
+  newType.prototype.constructor = newType
 }
 
 function NewType(name, age) {
-	SuperType.call(this, name) // 调用一次
-	// 为了确保不被父级的属性覆盖，可以在这之后再赋值子类的属性
-	this.age = age
+  SuperType.call(this, name) // 调用一次
+  // 为了确保不被父级的属性覆盖，可以在这之后再赋值子类的属性
+  this.age = age
 }
 
 inherit(NewType, SuperType)
