@@ -135,6 +135,7 @@
     $container.removeClass('mobile-nav-on');
   });
 
+  // 点击头像的旋转小球
   var $ball = $('#avatar > .container');
   $('#avatar').on('click', function(){
     $ball.addClass('run');
