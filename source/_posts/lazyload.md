@@ -7,14 +7,15 @@ categories:
 ---
 
 图片我这里是随便找了十张图片，起名 0~9 的名字，方便获取。
-懒加载：原理就是先放一批空图片占位，当图片进入可视区，再来赋予图片src值，让其显示。
-预加载：提前请求一批图片资源。下载缓存里。到真的渲染图片时候就可以快速获取到图片。用 new Image() 来请求资源，就不用先创建dom。
-分批加载：设定一个距离值，在滑动到距离底部小于这个距离值，则请求下一批图片。
 
-这三者应该可以混合用也可以分开用
+**懒加载：**原理就是先放一批空图片占位，当图片进入可视区，再来赋予图片src值，让其显示。
+**预加载：**提前请求一批图片资源。下载缓存里。到真的渲染图片时候就可以快速获取到图片。用 new Image() 来请求资源，就不用先创建dom。
+**分批加载：**设定一个距离值，在滑动到距离底部小于这个距离值，则请求下一批图片。
 
-```html
-<!DOCTYPE">
+分批加载可以与其他两者混用，懒加载与预加载应该不混用了，一个减低服务器压力，一个是增加服务器压力换取体验。
+
+```xml
+<!DOCTYPE>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>lazyload</title>
@@ -73,7 +74,7 @@ window.onload = function () {
     return getImg(5).then((imgs) =>{
       imgs.forEach((img) => {
         const url = `./img/${img}.JPG`
-        // 先预加载
+        // 先预加载，演示一下，不然这里懒加载没什么意义了，都是发了请求
         // 用一个img对象来先对资源进行请求
         const imgObj = new Image()
         imgObj.src = url
@@ -116,8 +117,7 @@ window.onload = function () {
 }
 </script>
 <div id="box">
-  <ul>
-  </ul>
+  <ul></ul>
 </div>
 </body>
 </html>
