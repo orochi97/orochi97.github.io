@@ -12,7 +12,7 @@ function Person() {}
 const p = new Person()
 ```
 
-#### 一、 typeof 
+## 一、 typeof 
 
 ```js
 console.log(typeof []) // object
@@ -48,7 +48,7 @@ __host object：__宿主对象，由宿主环境提供的对象，用于完善 E
 不过如果不需要判断得那么精细，那也够用了。而且这个可以直接 typeof 一个没有定义过的变量，会返回undefined。或许有些地方也可以利用起来。
 另，可以看下 [segmentfault](https://segmentfault.com/q/1010000011846328) 大佬对于 `typeof(null) === 'object'` 的回答。
 
-#### 二、 constructor
+## 二、 constructor
 
 ```js
 console.log([].constructor.name) // Array
@@ -74,7 +74,7 @@ console.log(p.constructor.name) // Person
 
 需要注意的是实例 p 返回的是 Person 这个原型。
 
-#### 三、 instanceof
+## 三、 instanceof
 
 先看 [定义](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/instanceof)。从名字上看，该变量是否为某原型的实例。
 
@@ -130,7 +130,7 @@ console.log(num instanceof Number) // true
 **个人理解：**这里的 num 是 Number 的一个实例，但其实它是对象。实例首先肯定是个对象。比如 1 '' true，都是基础类型。上面的方法是站在真正的实例对象来判断，是一个简单化步骤的方法。
 但标准里面说的，还有调用内部方法与内部属性，当判断到不是对象，其实就返回 false 了。**这里与 typeof 联系起来，typeof 不是 object 的，用 instanceof 都是 false 了**。
 
-#### 四、 Object.prototype.toString.call
+## 四、 Object.prototype.toString.call
 
 ```js
 console.log(Object.prototype.toString.call([])) // [object Array]
@@ -159,6 +159,9 @@ console.log([1,2,3,4].toString()) // 1,2,3,4
 简而言之，分两种，一种是对象内置了 `Symbol.toStringTag` 这个属性，来返回 `[object ${tag}]` tag 部分的值。
 另外一种是没有这个内置属性，但是 [语言标准tc39](https://tc39.es/ecma262/#sec-object.prototype.tostring) 为其指定了返回 tag，比如：Array String 等这几个老面孔。
 这也就意味着可以自定义自己的tag。
+
+{% asset_img Object.prototype.toString.PNG Object.prototype.toString %}
+<br/>
 
 ```js
 console.log(Promise.prototype[Symbol.toStringTag]) // Promise
