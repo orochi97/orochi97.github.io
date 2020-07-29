@@ -42,7 +42,7 @@ categories:
 </style>
 <body>
 <script type="text/javascript">
-// 简单防抖
+// 简单节流
 function throttle(fn, time) {
   let timer
   return (ev) => {

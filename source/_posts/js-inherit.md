@@ -172,7 +172,7 @@ function object(o) {
 }
 
 // 包了一层，定义了个方法增强对象，
-// 缺点是函数没法服用，引用类型属性依然是共享的
+// 缺点是函数没法复用，引用类型属性依然是共享的
 function createObject(o) {
   const clone = object(o)
   clone.say = function() {
