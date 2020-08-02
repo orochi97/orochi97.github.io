@@ -15,9 +15,10 @@
 <meta property="og:description" content="前置 12function Person() &amp;#123;&amp;#125;const p &#x3D; new Person()  一、 typeof12345678910111213141516console.log(typeof []) &#x2F;&#x2F; objectconsole.log(typeof &amp;#123;&amp;#125;) &#x2F;&#x2F; objectconsole.log(typeof function()&amp;#123;">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://blog.cchealthier.com/2020/07/25/variable-type/typeof.PNG">
+<meta property="og:image" content="http://blog.cchealthier.com/2020/07/25/variable-type/typeof2.PNG">
 <meta property="og:image" content="http://blog.cchealthier.com/2020/07/25/variable-type/Object.prototype.toString.PNG">
 <meta property="article:published_time" content="2020-07-25T09:44:02.000Z">
-<meta property="article:modified_time" content="2020-07-26T08:25:00.976Z">
+<meta property="article:modified_time" content="2020-08-02T14:54:24.000Z">
 <meta property="article:author" content="ChrisIori">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http://blog.cchealthier.com/2020/07/25/variable-type/typeof.PNG">
@@ -117,6 +118,9 @@
 <p>区分不了更精细的对象，比如数组和后面三个也被判断为对象。虽说数组和函数也是对象的一种。但函数都有自己的姓名。<br>参考了 <a href="http://www.w3help.org/zh-cn/causes/SD9028" target="_blank" rel="noopener">w3help</a> 上的资料来看，标准如此：</p>
 <img src="/2020/07/25/variable-type/typeof.PNG" class="" title="typeof">
 
+<p>最新的 <a href="https://tc39.es/ecma262/#sec-typeof-operator" target="_blank" rel="noopener">标准</a> 图是这样子：</p>
+<img src="/2020/07/25/variable-type/typeof2.PNG" class="" title="typeof">
+
 <p><strong>PS：</strong><br><strong>native object：</strong>原生对象，ECMAScript 实现中，并非由宿主环境，而是完全由本规范定义其语义的对象。这些引用类型在运行过程中需要通过new来创建所需的实例对象。如：Object、Array、Date、RegExp、Function、Boolean、Number、String。（听起来就是语言标准自带的）<br><strong>built-in object：</strong>内置对象，由 ECMAScript 实现提供，独立于宿主环境的对象，ECMAScript 程序开始执行时就存在。内置对象是本地对象的子集。包含：Global和Math、JSON。<br><strong>host object：</strong>宿主对象，由宿主环境提供的对象，用于完善 ECMAScript 执行环境，如 Window 和 Document。</p>
 <p>看起来数组属于 <strong>native object</strong>，同时没有 <strong>implement [[Call]]</strong> （没有这个内置属性？），所以返回会是个对象。</p>
 <p>不过如果不需要判断得那么精细，那也够用了。而且这个可以直接 typeof 一个没有定义过的变量，会返回undefined。或许有些地方也可以利用起来。<br>另，可以看下 <a href="https://segmentfault.com/q/1010000011846328" target="_blank" rel="noopener">segmentfault</a> 大佬对于 <code>typeof(null) === &#39;object&#39;</code> 的回答。</p>
@@ -148,7 +152,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.cchealthier.com/2020/07/25/variable-type/" data-id="ckd7hsx93000sacukcrjk7cp9" class="article-share-link">Share</a>
+      <a data-url="http://blog.cchealthier.com/2020/07/25/variable-type/" data-id="ckdd7hf6v001f4sukhc8ea006" class="article-share-link">Share</a>
       
       
     </footer>
