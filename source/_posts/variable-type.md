@@ -1,6 +1,7 @@
 ---
 title: 判断变量类型的几个方法
 date: 2020-07-25 17:44:02
+updated: 2020-08-02 22:54:24
 categories:
 - 开发
 - 前端
@@ -37,6 +38,10 @@ console.log(typeof p) // object
 参考了 [w3help](http://www.w3help.org/zh-cn/causes/SD9028) 上的资料来看，标准如此：
 
 {% asset_img typeof.PNG typeof %}
+
+最新的 [标准](https://tc39.es/ecma262/#sec-typeof-operator) 图是这样子：
+
+{% asset_img typeof2.PNG typeof %}
 
 **PS：**
 __native object：__原生对象，ECMAScript 实现中，并非由宿主环境，而是完全由本规范定义其语义的对象。这些引用类型在运行过程中需要通过new来创建所需的实例对象。如：Object、Array、Date、RegExp、Function、Boolean、Number、String。（听起来就是语言标准自带的）
