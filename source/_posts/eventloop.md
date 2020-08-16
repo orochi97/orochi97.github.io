@@ -1,7 +1,7 @@
 ---
 title: JS 事件循环
 date: 2020-05-27 22:45:46
-updated: 2020-06-22 00:15:24
+updated: 2020-08-16 21:46:24
 categories:
 - 开发
 - 前端
@@ -162,70 +162,6 @@ process.nextTick(() => {
 ```
 <br>
 {% asset_img node.PNG node %}
-<br>
-
-### 絮
-知道js的循环机制和宏任务微任务的概念后，就可以知道vue的$nextTick原理，为什么在改变变量后，$nextTick的回调里可以保证dom已经更新完毕。来个简陋版的模拟。
-```js
-// 模拟vue nextTick
-// 存储所有$nextTick的回调，变量的set修改后通知dom更新的，与$nextTick的回调进入同个微队列
-const callbacks = []
-// 微队列的触发载体，这里是Promise.resolve()
-// vue是先找Promise.resolve，没有就找setTimeout
-let run = null
-
-function next() {
-  callbacks.forEach((cb) => {
-    cb()
-  })
-}
-// 这里的change可以看成修改了变量，里面的回调就是与nextTick的回调如出一辙
-function change() {
-  nextTick(() => {
-    // 这里面是同步
-    console.log('update dom -- 1')
-    const child = document.createElement('div')
-    child.id = 'new'
-    document.getElementById('box').appendChild(child)
-    console.log('update dom')
-    console.log('update dom -- 2')
-  })
-}
-
-function nextTick(cb) {
-  if(!run) {
-    // 初始化下个队列
-    run = Promise.resolve()
-    // 把next方法放在下个队列运行
-    // 看上面的next函数，是把callbacks的函数遍历执行
-    run.then(next)
-  }
-  // nextTick的回调加入数组等着，遍历触发里面的每个函数
-  // 由于是同步，所以其实只是一个微任务，
-  callbacks.push(cb)
-}
-
-// 调用了第一次nextTick
-nextTick(() => {
-  // 表示该次微队列任务开始
-  console.log('nextTick -- 1')
-})
-Promise.resolve().then(() => {
-  console.log('then -- ')
-})
-// 修改变量，更改了dom
-change()
-// 同步任务，最早打印，但此时没有new元素
-console.log('script -- ', document.getElementById('new'))
-// 调用了第二次nextTick
-nextTick(() => {
-  // 在修改变量之后调nextTick，已有new元素
-  console.log('nextTick -- 2', document.getElementById('new'))
-})
-// nextTick -- 2 之所以在 then -- 前打印，是因为回调都放在callbacks里，同步触发了
-```
-<br>
-{% asset_img next.PNG next %}
 <br>
 
 #### 补充
