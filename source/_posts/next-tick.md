@@ -1,7 +1,9 @@
 ---
 title: vue的nextTick解析
 date: 2020-08-16 21:20:00
-tags:
+categories:
+- 开发
+- 前端
 ---
 
 用过 vue 的同学应该都知道，双向绑定中，更改了数据会去更新dom，但不是马上更新的。
