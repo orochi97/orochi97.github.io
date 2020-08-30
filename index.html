@@ -80,6 +80,165 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-puppeteer" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/08/30/puppeteer/" class="article-date">
+  <time datetime="2020-08-30T09:48:13.000Z" itemprop="datePublished">2020-08-30</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/08/30/puppeteer/">玩一玩puppeteer</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><a href="https://zhaoqize.github.io/puppeteer-api-zh_CN/" target="_blank" rel="noopener">puppeteer</a>官网上写着：</p>
+<blockquote>
+<p>Puppeteer 是一个 Node 库，它提供了一个高级 API 来通过 DevTools 协议控制 Chromium 或 Chrome。Puppeteer 默认以 headless 模式运行，但是可以通过修改配置文件运行“有头”模式。</p>
+</blockquote>
+<p>其实就是个浏览器，给了许多方法让我们可以控制这个浏览器，比如打开某某网页，输入什么字符，点击哪个按钮。看起来就像是用程序来模拟人工的行为。<br>这样就表示了它可以用来自动化测试。搭配 jest 或 mocha 之类的测试框架，进行e2e测试，模拟一个人去访问网站，进行一些操作。<br>当然不止这一个方案，还有 <a href="http://www.selenium.org.cn/" target="_blank" rel="noopener">selenium</a> 和在这之上的 <a href="https://nightwatchjs.org/" target="_blank" rel="noopener">night-watch</a>，也是干 web 自动化测试的活。</p>
+<p>我们项目上使用它来跑自动化测试的，我自己用它来做爬虫，奸笑~<br>可能也不叫爬虫，就是上新闻网站扫一下热搜，到图片库搜点图片之类的。</p>
+<h3 id="安装："><a href="#安装：" class="headerlink" title="安装："></a>安装：</h3><p>安装是个蛋疼的事，因为这个用到chromium，这玩意在谷歌仓库。所以如果不能科学上网，那就只能修改为淘宝源。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">env puppeteer_download_host=https://npm.taobao.org/mirrors npm i puppeteer</span><br><span class="line"></span><br><span class="line">npm config <span class="built_in">set</span> puppeteer_download_host  https://npm.taobao.org/mirrors</span><br><span class="line">npm i puppeteer</span><br></pre></td></tr></table></figure>
+<p>年代久远，记得都是可以的。不保证时效性…</p>
+<p>我们项目一开始使用它来截图</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> puppeteer = <span class="built_in">require</span>(<span class="string">'puppeteer'</span>)</span><br><span class="line">;<span class="function">(<span class="params"><span class="keyword">async</span> (</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> browser = <span class="keyword">await</span> puppeteer.launch(&#123;</span><br><span class="line">    headless: <span class="literal">true</span> <span class="comment">// 无头就是不要弹出浏览器</span></span><br><span class="line">  &#125;)</span><br><span class="line">  <span class="keyword">const</span> page = <span class="keyword">await</span> browser.newPage()</span><br><span class="line">  <span class="keyword">await</span> page.goto(<span class="string">'https://www.baidu.com'</span>)</span><br><span class="line">  <span class="keyword">await</span> page.setViewport(&#123;</span><br><span class="line">    width: <span class="number">1200</span>,</span><br><span class="line">    height: <span class="number">800</span></span><br><span class="line">  &#125;)</span><br><span class="line">  <span class="keyword">await</span> page.screenshot(&#123;</span><br><span class="line">    path: <span class="string">'puppeteer.png'</span>,</span><br><span class="line">    fullPage: <span class="literal">true</span></span><br><span class="line">  &#125;)</span><br><span class="line">  <span class="keyword">await</span> browser.close()</span><br><span class="line">&#125;)()</span><br></pre></td></tr></table></figure>
+<p>来看下用它来搜百度热搜，之所以对 puppeteer 感兴趣，就是同事写了一篇这个教程，里面就是演示了爬热搜。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> puppeteer = <span class="built_in">require</span>(<span class="string">'puppeteer'</span>)</span><br><span class="line">;<span class="function">(<span class="params"><span class="keyword">async</span> (</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> browser = <span class="keyword">await</span> puppeteer.launch(&#123;</span><br><span class="line">    headless: <span class="literal">true</span> <span class="comment">// 无头就是不要弹出浏览器</span></span><br><span class="line">  &#125;)</span><br><span class="line">  <span class="keyword">const</span> page = <span class="keyword">await</span> browser.newPage()</span><br><span class="line">  <span class="keyword">await</span> page.goto(<span class="string">'http://top.baidu.com/buzz?b=1&amp;fr=topindex'</span>, &#123;</span><br><span class="line">    timeout: <span class="number">0</span>, <span class="comment">// 设置超时时间为0</span></span><br><span class="line">    waitUntil: <span class="string">'domcontentloaded'</span> <span class="comment">// 有多个状态可设置，这里设置为 dom 渲染完成</span></span><br><span class="line">  &#125;)</span><br><span class="line">  <span class="comment">// 有时候网速卡，加载慢，容易超时报错，所以上面把超时时间去掉</span></span><br><span class="line">  <span class="comment">// 同时网页渲染也需要时间，可以等一下，</span></span><br><span class="line">  <span class="comment">// 比如 await page.waitFor(1000) 等待1000ms</span></span><br><span class="line">  <span class="comment">// 比如我之前爬图片的时候，都知道图片是相当耗时的</span></span><br><span class="line">  <span class="comment">// 所以我写成等图片的 dom 可见即可，可见包括了它已经被赋予 src，不需要等到图片下载并渲染完成</span></span><br><span class="line">  <span class="comment">// 然后获取其 src，再通过别的方法下载</span></span><br><span class="line">  <span class="comment">// await page.waitForSelector(dom, &#123; visible: true, timeout: 0 &#125;)</span></span><br><span class="line">  <span class="keyword">const</span> list = <span class="keyword">await</span> page.evaluate(<span class="function">(<span class="params">dom</span>) =&gt;</span> &#123;  <span class="comment">// 爬取内容</span></span><br><span class="line">    <span class="comment">// 这个 dom 需要去网站上看实际结构，很好找，跟 jQuery 一样</span></span><br><span class="line">    <span class="keyword">const</span> $doms = <span class="built_in">document</span>.querySelectorAll(<span class="string">'.mainBody .keyword a'</span>)</span><br><span class="line">    <span class="keyword">const</span> list = <span class="built_in">Array</span>.from($doms).map(<span class="function">(<span class="params">$dom</span>) =&gt;</span> &#123;</span><br><span class="line">      <span class="keyword">return</span> &#123;</span><br><span class="line">        href: $dom.href,</span><br><span class="line">        text: $dom.innerText</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;)</span><br><span class="line">    <span class="keyword">return</span> list</span><br><span class="line">  &#125;)</span><br><span class="line">  <span class="comment">// 这个 list 就记录了热搜的标题和网址</span></span><br><span class="line">  <span class="keyword">await</span> page.close()</span><br><span class="line">  <span class="keyword">await</span> browser.close()</span><br><span class="line">&#125;)()</span><br></pre></td></tr></table></figure>
+
+<p>对网页的抓取还有这个<a href="https://github.com/cheeriojs/cheerio/wiki/Chinese-README" target="_blank" rel="noopener">cheerio</a>，在 node 里面像 jQuery 一样获取dom。<br>不过好像对单页面的网站比较麻烦。因为是抓了整个网页内容下来，再来分析页面。那对于 SPA 抓下来也是一个容器一个js，没有实体dom。所以具体看用途啦。</p>
+<p>puppeteer还有很多牛的功能，这里只是用到了冰山一角，还能做更多有趣的事。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://blog.cchealthier.com/2020/08/30/puppeteer/" data-id="ckegze72t000s9kuk974wdyw0" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-shenzhen-guanhucun" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/08/30/shenzhen-guanhucun/" class="article-date">
+  <time datetime="2020-08-30T09:30:49.000Z" itemprop="datePublished">2020-08-30</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%97%85%E8%A1%8C/">旅行</a>►<a class="article-category-link" href="/categories/%E6%97%85%E8%A1%8C/%E8%AE%B0%E5%BD%95/">记录</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/08/30/shenzhen-guanhucun/">在海边</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>最近去了一趟深圳大鹏官湖村。典型的海边小镇，地方不大，沙滩挺大。有一个路口在滤镜加持下，居然有点像灌篮高手片头里，樱木在车站前的经典场景。</p>
+<img src="/2020/08/30/shenzhen-guanhucun/guanhucun1.jpg" class="" title="guanhucun1">
+
+</br>
+</br>
+</br>
+
+<img src="/2020/08/30/shenzhen-guanhucun/guanhucun2.jpg" class="" title="guanhucun2">
+
+</br>
+</br>
+</br>
+
+<img src="/2020/08/30/shenzhen-guanhucun/guanhucun3.jpg" class="" title="guanhucun3">
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://blog.cchealthier.com/2020/08/30/shenzhen-guanhucun/" data-id="ckegze72u000u9kuk7bdg8i8l" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-promise-api" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/08/30/promise-api/" class="article-date">
+  <time datetime="2020-08-30T02:10:37.000Z" itemprop="datePublished">2020-08-30</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/08/30/promise-api/">Promise的几个api用法</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Promise" target="_blank" rel="noopener">Promise</a> 应该大家都很熟悉了。大部分的库也都用上了Promise。<br>这文章主要记录下 Promise.all、Promise.allSettled、Promise.race 这几个的用法。</p>
+<p><strong>Promise.all：</strong><br>参数是一个数组，数组元素是各个Promise。要数组里面所有的 Promise 都返回成功，那这个 Promise.all 的结果才会是成功。成功返回数组，就是元素成功的结果集合。失败的话返回单值，是元素里第一个失败的结果。</p>
+<p><strong>Promise.allSettled：</strong><br>跟 Promise.all 参数一样，是一个数组，数组元素是各个Promise。不同的是这个不会因为数组元素的成败来返回成功失败。返回的是个数组，记录着元素 Promise 的各个结果，包括成败。</p>
+<p>先准备四个小函数，然后再混起来用：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">PromiseSuccess0</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function">(<span class="params">resolve</span>) =&gt;</span> &#123;</span><br><span class="line">    setTimeout(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">      resolve(<span class="string">'PromiseSuccess0'</span>)</span><br><span class="line">    &#125;, <span class="number">0</span>)</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">PromiseSuccess1000</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function">(<span class="params">resolve</span>) =&gt;</span> &#123;</span><br><span class="line">    setTimeout(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">      resolve(<span class="string">'PromiseSuccess1000'</span>)</span><br><span class="line">    &#125;, <span class="number">1000</span>)</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">PromiseError2000</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function">(<span class="params">resolve, reject</span>) =&gt;</span> &#123;</span><br><span class="line">    setTimeout(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">      reject(<span class="string">'PromiseError2000'</span>)</span><br><span class="line">    &#125;, <span class="number">2000</span>)</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">PromiseError3000</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function">(<span class="params">resolve, reject</span>) =&gt;</span> &#123;</span><br><span class="line">    setTimeout(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">      reject(<span class="string">'PromiseError3000'</span>)</span><br><span class="line">    &#125;, <span class="number">3000</span>)</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">Promise</span>.all([PromiseSuccess0(), PromiseError3000(), PromiseError2000()])</span><br><span class="line"> .then(<span class="function">(<span class="params">data</span>) =&gt;</span> &#123;</span><br><span class="line">   <span class="built_in">console</span>.log(<span class="string">'success all-1: '</span>, data)</span><br><span class="line"> &#125;)</span><br><span class="line"> .catch(<span class="function">(<span class="params">error</span>) =&gt;</span> &#123;</span><br><span class="line">   <span class="built_in">console</span>.error(<span class="string">'error all-1: '</span>, error)</span><br><span class="line">    <span class="comment">// error all-1:  PromiseError2000</span></span><br><span class="line"> &#125;)</span><br><span class="line"></span><br><span class="line"><span class="built_in">Promise</span>.all([PromiseSuccess0(), PromiseSuccess1000()])</span><br><span class="line"> .then(<span class="function">(<span class="params">data</span>) =&gt;</span> &#123;</span><br><span class="line">   <span class="built_in">console</span>.log(<span class="string">'success all-2: '</span>, data)</span><br><span class="line">    <span class="comment">// success all-2:  (2) ["PromiseSuccess0", "PromiseSuccess1000"]</span></span><br><span class="line"> &#125;)</span><br><span class="line"> .catch(<span class="function">(<span class="params">error</span>) =&gt;</span> &#123;</span><br><span class="line">   <span class="built_in">console</span>.error(<span class="string">'error all-2: '</span>, error)</span><br><span class="line"> &#125;)</span><br><span class="line"></span><br><span class="line"><span class="built_in">Promise</span>.allSettled([PromiseError2000(), PromiseSuccess1000()])</span><br><span class="line">  .then(<span class="function">(<span class="params">data</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'success allSettled: '</span>, data)</span><br><span class="line">    <span class="comment">// success allSettled:  </span></span><br><span class="line">    <span class="comment">// (2) [&#123;…&#125;, &#123;…&#125;]</span></span><br><span class="line">    <span class="comment">// 0: &#123;status: "rejected", reason: "PromiseError2000"&#125;</span></span><br><span class="line">    <span class="comment">// 1: &#123;status: "fulfilled", value: "PromiseSuccess1000"&#125;</span></span><br><span class="line">  &#125;)</span><br><span class="line">  .catch(<span class="function">(<span class="params">error</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="built_in">console</span>.error(<span class="string">'error allSettled: '</span>, error)</span><br><span class="line">  &#125;)</span><br></pre></td></tr></table></figure>
+
+<p><strong>Promise.race</strong><br>顾名思义，竞赛。参数依然是个元素为 Promise 的数组。会返回第一个跑完的元素结果。话不多说，上码：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">load1000</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function">(<span class="params">resolve</span>) =&gt;</span> &#123;</span><br><span class="line">    setTimeout(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">      resolve(<span class="string">'load1000'</span>)</span><br><span class="line">    &#125;, <span class="number">1000</span>)</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">load3000</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function">(<span class="params">resolve</span>) =&gt;</span> &#123;</span><br><span class="line">    setTimeout(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">      resolve(<span class="string">'load3000'</span>)</span><br><span class="line">    &#125;, <span class="number">3000</span>)</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">errorTimer</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line"> <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function">(<span class="params">resolve, reject</span>) =&gt;</span> &#123;</span><br><span class="line">   setTimeout(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">     reject(<span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">'timeout'</span>))</span><br><span class="line">   &#125;, <span class="number">2000</span>)</span><br><span class="line"> &#125;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">Promise</span>.race([load1000(), errorTimer()])</span><br><span class="line"> .then(<span class="function">(<span class="params">data</span>) =&gt;</span> &#123;</span><br><span class="line">   <span class="built_in">console</span>.log(<span class="string">'success race-1: '</span>, data)</span><br><span class="line">   <span class="comment">// success race-1:  load1000</span></span><br><span class="line"> &#125;)</span><br><span class="line"> .catch(<span class="function">(<span class="params">error</span>) =&gt;</span> &#123;</span><br><span class="line">   <span class="built_in">console</span>.error(<span class="string">'error race-1: '</span>, error)</span><br><span class="line"> &#125;)</span><br><span class="line"></span><br><span class="line"><span class="built_in">Promise</span>.race([load3000(), errorTimer()])</span><br><span class="line"> .then(<span class="function">(<span class="params">data</span>) =&gt;</span> &#123;</span><br><span class="line">   <span class="built_in">console</span>.log(<span class="string">'success race-2: '</span>, data)</span><br><span class="line"> &#125;)</span><br><span class="line"> .catch(<span class="function">(<span class="params">error</span>) =&gt;</span> &#123;</span><br><span class="line">   <span class="built_in">console</span>.error(<span class="string">'error race-2: '</span>, error)</span><br><span class="line">   <span class="comment">// error race-2:  Error: timeout</span></span><br><span class="line"> &#125;)</span><br></pre></td></tr></table></figure>
+<p>具体的使用场景可以是，比如下载个东西，给其设定个时间限定，超过这个时间就报错。稍微封装一下：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">addTimer</span>(<span class="params">fn, time</span>) </span>&#123;</span><br><span class="line"> <span class="keyword">const</span> errorTimer = <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function">(<span class="params">resolve, reject</span>) =&gt;</span> &#123;</span><br><span class="line">   setTimeout(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">     reject(<span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">'timeout'</span>))</span><br><span class="line">   &#125;, time)</span><br><span class="line"> &#125;)</span><br><span class="line"> <span class="keyword">return</span> <span class="built_in">Promise</span>.race([fn(), errorTimer])</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">addTimer(load1000, <span class="number">2000</span>)</span><br><span class="line"> .then(<span class="function">(<span class="params">data</span>) =&gt;</span> &#123;</span><br><span class="line">   <span class="built_in">console</span>.log(<span class="string">'success addTimer: '</span>, data)</span><br><span class="line"> &#125;)</span><br><span class="line"> .catch(<span class="function">(<span class="params">error</span>) =&gt;</span> &#123;</span><br><span class="line">   <span class="built_in">console</span>.error(<span class="string">'error addTimer: '</span>, error)</span><br><span class="line"> &#125;)</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://blog.cchealthier.com/2020/08/30/promise-api/" data-id="ckegze72o000m9kuk44tgdyyn" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-webpackJsonp" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2020/08/16/webpackJsonp/" class="article-date">
@@ -123,7 +282,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.cchealthier.com/2020/08/16/webpackJsonp/" data-id="ckdx6ilv80010c4uk7uip9gq1" class="article-share-link">Share</a>
+      <a data-url="http://blog.cchealthier.com/2020/08/16/webpackJsonp/" data-id="ckegze743002f9kuk71rh8xzx" class="article-share-link">Share</a>
       
       
     </footer>
@@ -176,7 +335,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.cchealthier.com/2020/08/16/next-tick/" data-id="ckdx6ilut000kc4uk3aw94go6" class="article-share-link">Share</a>
+      <a data-url="http://blog.cchealthier.com/2020/08/16/next-tick/" data-id="ckegze74m002l9kuk0zha0mcq" class="article-share-link">Share</a>
       
       
     </footer>
@@ -220,7 +379,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.cchealthier.com/2020/07/29/vertical-middle/" data-id="ckdx6ilv4000xc4ukbaq68x34" class="article-share-link">Share</a>
+      <a data-url="http://blog.cchealthier.com/2020/07/29/vertical-middle/" data-id="ckegze73200129kuk2jcqden0" class="article-share-link">Share</a>
       
       
     </footer>
@@ -262,7 +421,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.cchealthier.com/2020/07/26/vue-life/" data-id="ckdx6ilw50023c4uk45pcdlln" class="article-share-link">Share</a>
+      <a data-url="http://blog.cchealthier.com/2020/07/26/vue-life/" data-id="ckegze73800159kuk33ri09ep" class="article-share-link">Share</a>
       
       
     </footer>
@@ -340,7 +499,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.cchealthier.com/2020/07/25/variable-type/" data-id="ckdx6ilv3000vc4ukdfu788z5" class="article-share-link">Share</a>
+      <a data-url="http://blog.cchealthier.com/2020/07/25/variable-type/" data-id="ckegze744002g9kukgpjp5dp1" class="article-share-link">Share</a>
       
       
     </footer>
@@ -390,7 +549,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.cchealthier.com/2020/07/25/traversal-property/" data-id="ckdx6ilv1000sc4uk8jmodkfm" class="article-share-link">Share</a>
+      <a data-url="http://blog.cchealthier.com/2020/07/25/traversal-property/" data-id="ckegze72y000x9kuk5js6cy40" class="article-share-link">Share</a>
       
       
     </footer>
@@ -436,156 +595,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.cchealthier.com/2020/07/12/lazyload/" data-id="ckdx6ilus000ic4uk2cjt3uzq" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-callapplybind" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/07/09/callapplybind/" class="article-date">
-  <time datetime="2020-07-09T14:58:38.000Z" itemprop="datePublished">2020-07-09</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/07/09/callapplybind/">自己实现call，apply，bind</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>这三个都是改变函数里的 this 指向<br>第一个参数都是用来替换 this 的对象，后面是原来函数的参数，不定个数<br>当第一个参数为 null 或 undefined，则里面 this 指向 window</p>
-<p>call，apply用法一样，区别在于</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">func.call(obj, a, b, c, ...) <span class="comment">// 后面的参数是一个一个</span></span><br><span class="line">func.apply(obj, []) <span class="comment">// 后面的参数是一个数组</span></span><br><span class="line"><span class="comment">// 这里有个帅气的找出数组最大值</span></span><br><span class="line"><span class="built_in">Math</span>.max.apply(<span class="literal">null</span>, [<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>])</span><br></pre></td></tr></table></figure>
-<p>bind 比较特别，返回的是个函数，不执行</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 后面的参数也是一个一个，同时会被锁住，成为原函数的前几个参数</span></span><br><span class="line"><span class="keyword">const</span> newFn = bind.call(obj, a, b, c, ...)</span><br><span class="line"><span class="comment">// 再调用的时候，参数为原函数的第n+1个参数</span></span><br><span class="line">newFn(e, f, g, ...)</span><br></pre></td></tr></table></figure>
-
-<h3 id="上码"><a href="#上码" class="headerlink" title="上码"></a>上码</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> name = <span class="string">'windowname'</span></span><br><span class="line"><span class="keyword">var</span> age = <span class="string">'windowage'</span>  </span><br><span class="line"><span class="keyword">const</span> boy = &#123;</span><br><span class="line">  name: <span class="string">'xiaoming'</span>,</span><br><span class="line">  age: <span class="number">18</span>,</span><br><span class="line">  show (a, b, c) &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">`<span class="subst">$&#123;<span class="keyword">this</span>.name&#125;</span> is <span class="subst">$&#123;<span class="keyword">this</span>.age&#125;</span>`</span>, a, b, c)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">const</span> girl = &#123;</span><br><span class="line">  name: <span class="string">'xiaohong'</span>,</span><br><span class="line">  age: <span class="number">16</span></span><br><span class="line">&#125;</span><br><span class="line">boy.show(<span class="number">7</span>, <span class="number">8</span>, <span class="number">9</span>) <span class="comment">// xiaoming is 18 7 8 9</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 先来正常的结果</span></span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">'------------------- 对比 -------------------'</span>)</span><br><span class="line">boy.show.call(girl, <span class="number">17</span>, <span class="number">18</span>, <span class="number">19</span>, <span class="number">10</span>) <span class="comment">// xiaohong is 16 17 18 19</span></span><br><span class="line">boy.show.apply(girl, [<span class="number">27</span>, <span class="number">28</span>, <span class="number">29</span>, <span class="number">20</span>]) <span class="comment">// xiaohong is 16 27 28 29</span></span><br><span class="line">boy.show.call(<span class="literal">null</span>, <span class="number">17</span>, <span class="number">18</span>, <span class="number">19</span>, <span class="number">10</span>) <span class="comment">// windowname is windowage 17 18 19</span></span><br><span class="line">boy.show.apply(<span class="literal">undefined</span>, [<span class="number">27</span>, <span class="number">28</span>, <span class="number">29</span>, <span class="number">20</span>]) <span class="comment">// windowname is windowage 27 28 29</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> bindFn1 = boy.show.bind(girl, <span class="number">17</span>, <span class="number">18</span>, <span class="number">19</span>, <span class="number">10</span>)</span><br><span class="line">bindFn1() <span class="comment">// xiaohong is 16 17 18 19</span></span><br><span class="line">bindFn1(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>) <span class="comment">// xiaohong is 16 17 18 19</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> bindFn2 = boy.show.bind(girl, <span class="number">27</span>)</span><br><span class="line">bindFn2() <span class="comment">// xiaohong is 16 27 undefined undefined</span></span><br><span class="line">bindFn2(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>) <span class="comment">// xiaohong is 16 27 1 2</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> bindFn3 = boy.show.bind(<span class="literal">null</span>, <span class="number">27</span>)</span><br><span class="line">bindFn3() <span class="comment">// windowname is windowage 27 undefined undefined</span></span><br><span class="line">bindFn3(<span class="number">12</span>, <span class="number">13</span>, <span class="number">14</span>) <span class="comment">// windowname is windowage 27 12 13</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">'------------------- 分割线 -------------------'</span>)</span><br><span class="line"><span class="comment">// 通俗来讲就是哪个对象调用了函数，this就指向谁，当前面没有谁调用则是window</span></span><br><span class="line"><span class="comment">// 绑定对象赋予一个字段为函数，来调用这个函数</span></span><br><span class="line"><span class="comment">// 当绑定对象为 null 或者 undefined，则让这个函数单独运行，自然 this 会指向window</span></span><br><span class="line"><span class="comment">// 随机数的为了不要不小心覆盖到绑定对象原来的属性</span></span><br><span class="line"><span class="comment">// 不能绑定后对象多了个新属性，要删掉多出来的字段函数，雁过不留痕</span></span><br><span class="line"><span class="built_in">Function</span>.prototype._call = <span class="function"><span class="keyword">function</span>(<span class="params">context, ...param</span>) </span>&#123;</span><br><span class="line">  <span class="comment">// 随便的随机名字</span></span><br><span class="line">  <span class="keyword">const</span> functionName = <span class="built_in">Math</span>.floor(<span class="built_in">Math</span>.random() * <span class="number">100000</span>)</span><br><span class="line">  <span class="keyword">let</span> result</span><br><span class="line">  <span class="keyword">if</span> (context) &#123;</span><br><span class="line">    context[functionName] = <span class="keyword">this</span></span><br><span class="line">    result = context[functionName](...param)</span><br><span class="line">    <span class="keyword">delete</span> context[functionName]</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    result = <span class="keyword">this</span>(...param)</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> result</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 当不能用 ES6 的解构时候，就用字符串拼接起来，然后用 eval 触发</span></span><br><span class="line"><span class="built_in">Function</span>.prototype._call2 = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> functionName = <span class="built_in">Math</span>.floor(<span class="built_in">Math</span>.random() * <span class="number">100000</span>)</span><br><span class="line">  <span class="keyword">const</span> params = []</span><br><span class="line">  <span class="keyword">let</span> _context</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">1</span>, l = <span class="built_in">arguments</span>.length; i &lt; l; i++) &#123;</span><br><span class="line">    params.push(<span class="built_in">arguments</span>[i])</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span> (<span class="built_in">arguments</span>[<span class="number">0</span>]) &#123;</span><br><span class="line">    _context = <span class="built_in">arguments</span>[<span class="number">0</span>]</span><br><span class="line">    _context[functionName] = <span class="keyword">this</span></span><br><span class="line">    paramStr = <span class="string">`_context[functionName](<span class="subst">$&#123;params.join(<span class="string">', '</span>)&#125;</span>)`</span></span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    _context = <span class="keyword">this</span></span><br><span class="line">    paramStr = <span class="string">`_context(<span class="subst">$&#123;params.join(<span class="string">', '</span>)&#125;</span>)`</span></span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">const</span> result = <span class="built_in">eval</span>(paramStr)</span><br><span class="line">  <span class="keyword">delete</span> _context[functionName]</span><br><span class="line">  <span class="keyword">return</span> result</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">Function</span>.prototype._apply = <span class="function"><span class="keyword">function</span>(<span class="params">context, arr</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> functionName = <span class="built_in">Math</span>.floor(<span class="built_in">Math</span>.random() * <span class="number">100000</span>)</span><br><span class="line">  <span class="keyword">let</span> result</span><br><span class="line">  <span class="keyword">if</span> (context) &#123;</span><br><span class="line">    context[functionName] = <span class="keyword">this</span></span><br><span class="line">    result = context[functionName](...arr)</span><br><span class="line">    <span class="keyword">delete</span> context[functionName]</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    result = <span class="keyword">this</span>(...arr)</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> result</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">Function</span>.prototype._bind = <span class="function"><span class="keyword">function</span>(<span class="params">context, ...oldParam</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> fn = <span class="keyword">this</span></span><br><span class="line">  <span class="keyword">if</span> (context) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="function">(<span class="params">...newParam</span>) =&gt;</span> &#123;</span><br><span class="line">      <span class="keyword">const</span> functionName = <span class="built_in">Math</span>.floor(<span class="built_in">Math</span>.random() * <span class="number">100000</span>)</span><br><span class="line">      context[functionName] = fn</span><br><span class="line">      <span class="keyword">const</span> result = context[functionName](...oldParam, ...newParam)</span><br><span class="line">      <span class="keyword">delete</span> context[functionName]</span><br><span class="line">      <span class="keyword">return</span> result</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> <span class="function">(<span class="params">...newParam</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> fn(...oldParam, ...newParam)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">boy.show._call(girl, <span class="number">17</span>, <span class="number">18</span>, <span class="number">19</span>, <span class="number">10</span>)</span><br><span class="line">boy.show._apply(girl, [<span class="number">27</span>, <span class="number">28</span>, <span class="number">29</span>, <span class="number">20</span>])</span><br><span class="line">boy.show._call(<span class="literal">null</span>, <span class="number">17</span>, <span class="number">18</span>, <span class="number">19</span>, <span class="number">10</span>)</span><br><span class="line">boy.show._apply(<span class="literal">undefined</span>, [<span class="number">27</span>, <span class="number">28</span>, <span class="number">29</span>, <span class="number">20</span>])</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> _bindFn1 = boy.show._bind(girl, <span class="number">17</span>, <span class="number">18</span>, <span class="number">19</span>, <span class="number">10</span>)</span><br><span class="line">_bindFn1()</span><br><span class="line">_bindFn1(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> _bindFn2 = boy.show._bind(girl, <span class="number">27</span>)</span><br><span class="line">_bindFn2()</span><br><span class="line">_bindFn2(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> _bindFn3 = boy.show._bind(<span class="literal">null</span>, <span class="number">27</span>)</span><br><span class="line">_bindFn3()</span><br><span class="line">_bindFn3(<span class="number">12</span>, <span class="number">13</span>, <span class="number">14</span>)</span><br></pre></td></tr></table></figure>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://blog.cchealthier.com/2020/07/09/callapplybind/" data-id="ckdx6ilue0005c4uk09l51vvo" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-cache" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/07/02/cache/" class="article-date">
-  <time datetime="2020-07-02T15:32:38.000Z" itemprop="datePublished">2020-07-02</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/07/02/cache/">关于缓存的几个关键词</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>缓存可以看成浏览器开辟了一个区域来放缓存的东西。有些放在内存有些放在硬盘。<br>从缓存返回的状态码为304。缓存分两种</p>
-<h4 id="强缓存："><a href="#强缓存：" class="headerlink" title="强缓存："></a>强缓存：</h4><p>设定一个期限，期限的重复访问都会去缓存获取，有两个字符来表示这个期限：<br><strong>http1</strong>的是<strong>Expires</strong>，Expires: Wed, 22 Oct 2018 08:41:00 GMT表示资源会在 Wed, 22 Oct 2018 08:41:00 GMT 后过期，需要再次请求。<br><strong>http1.1</strong>的是<strong>Cache-Control</strong>，当Cache-Control:max-age=300，表示5分钟缓存时间。还有其他几个值。直接看另外一个比较有影响的：no-cache。这个看做就是不强缓存，继续去判断协商缓存。</p>
-<p>Cache-Control优先级高于Expires，现在基本都是http1.1，Expires也就是兼容用。</p>
-<h4 id="协商缓存："><a href="#协商缓存：" class="headerlink" title="协商缓存："></a>协商缓存：</h4><p>首次访问资源，响应头会返回标识符（<strong>Last-Modified/ETag</strong>），下次访问请求头会带上标识符（<strong>If-Modified-Since/If-None-Match</strong>），去服务器查询是否启用缓存。也就是请求还是要发，但是至少东西是省发了。</p>
-<p>响应头和请求头的缓存标识符字段名不一样，但值一样。</p>
-<p>Last-Modified和If-Modified-Since，就是资源最后修改时间，发送到服务器去判断有没有更新，无则返回304。<br>缺点就很明显，如果文件有被打开或者别的什么改动了时间，那缓存失效。同时最低也是精确到秒，一秒内的改动判断不出来。</p>
-<p>ETag和If-None-Match<br>Etag可以看成根据文件算出的哈希，唯一的，文件一改肯定就改。<br>缺点就是要消耗资源去计算。</p>
-<p>当然ETag明显精度高于Last-Modified，所以优先级也是ETag高。</p>
-<h4 id="应用中的策略"><a href="#应用中的策略" class="headerlink" title="应用中的策略"></a>应用中的策略</h4><p>设定一个期限很大的强缓存，如 max-age=31536000 (一年)。文件通过打包工具生成出来都带上哈希。只要文件内容不改哈希就不改，请求的地址就不改，命中强缓存。改了内容自然连请求地址都改了，就会返回新文件。</p>
-<h4 id="代码的角度，"><a href="#代码的角度，" class="headerlink" title="代码的角度，"></a>代码的角度，</h4><p>看到的资料几乎都是服务端的，比如node的express可以在请求资源的返回里设置响应头</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">app.get(<span class="string">'/foo.js'</span>, <span class="function"><span class="keyword">function</span> (<span class="params">req, res</span>) </span>&#123;</span><br><span class="line">  res.set(&#123;</span><br><span class="line">    <span class="string">'Content-Type'</span>: <span class="string">'text/javascript'</span>,</span><br><span class="line">    <span class="string">'Cache-Control'</span>: <span class="string">'no-cache'</span>,</span><br><span class="line">    <span class="string">'ETag'</span>: <span class="string">'12345'</span></span><br><span class="line">  &#125;)</span><br><span class="line">  res.sendFile(<span class="string">'foo.js'</span>)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-<p>当然每个都这样搞未免太麻烦了，在静态资源那里可以统一设置</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> options = &#123;</span><br><span class="line">  dotfiles: <span class="string">'ignore'</span>,</span><br><span class="line">  etag: <span class="literal">false</span>,</span><br><span class="line">  extensions: [<span class="string">'htm'</span>, <span class="string">'html'</span>],</span><br><span class="line">  index: <span class="literal">false</span>,</span><br><span class="line">  maxAge: <span class="string">'1d'</span>,</span><br><span class="line">  redirect: <span class="literal">false</span>,</span><br><span class="line">  setHeaders: <span class="function"><span class="keyword">function</span> (<span class="params">res, path, stat</span>) </span>&#123;</span><br><span class="line">    res.set(<span class="string">'x-timestamp'</span>, <span class="built_in">Date</span>.now())</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">app.use(express.static(<span class="string">'public'</span>, options))</span><br></pre></td></tr></table></figure>
-<p>上面是默认设置，自己也可以修改。</p>
-<p>至于前端的设置，似乎只有</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">http-equiv</span>=<span class="string">"expires"</span> <span class="attr">content</span>=<span class="string">"Wed, 20 Jun 2007 22:33:00 GMT"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">http-equiv</span>=<span class="string">"cache-control"</span> <span class="attr">content</span>=<span class="string">"no-cache"</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<p>尝试设置为强缓存好像没生效。而且这还是只是针对该份html，其他的资源似乎无能为力，可能也是了解不够。</p>
-<h4 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h4><p>上面提到的利用打包工具来做这个哈希名字的事，首先想到的当然是webpack</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">  output:&#123;</span><br><span class="line">    path:path.join(__dirname, <span class="string">'/dist/js'</span>),</span><br><span class="line">    filename: <span class="string">'[name].[chunkhash].js'</span>,</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>都知道输出文件名字可配置成带哈希字符的，也就是上面的 [chunkhash] 部分，这里有三个值可以写：<br><strong>hash、chunkhash、contenthash</strong></p>
-<p><strong>hash：</strong>利用整个工程内容来计算，所以改一点点全部都改。<br><strong>chunkhash：</strong>计算的单独chunk（这个是webpack的概念，相当于每个要输出的文件，一般一个entry对应一个chunk）的哈希。<br><strong>contenthash：</strong>在使用抽离的css插件的时候，抽离的css文件会与引用它的js共用一份chunkhash，那js一改css也得改。当然反过来也是。此时用contenthash就只针对该份文件内容做哈希，就不会互相影响到了。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://blog.cchealthier.com/2020/07/02/cache/" data-id="ckdx6ilu70001c4uk1urk721l" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-ssl-lts" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/06/22/ssl-lts/" class="article-date">
-  <time datetime="2020-06-21T16:08:00.000Z" itemprop="datePublished">2020-06-22</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/http%E5%8D%8F%E8%AE%AE/">http协议</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/06/22/ssl-lts/">ssl-lts 协议过程</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>资料来源于网上，自己大概归纳一下，部分文字照抄，省得到处找。</p>
-<img src="/2020/06/22/ssl-lts/SSL&TLS%E8%BF%87%E7%A8%8B.PNG" class="" title="SSL&amp;TLS">
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://blog.cchealthier.com/2020/06/22/ssl-lts/" data-id="ckdx6iluy000nc4ukgasc6veb" class="article-share-link">Share</a>
+      <a data-url="http://blog.cchealthier.com/2020/07/12/lazyload/" data-id="ckegze72m000j9kuk76jq6did" class="article-share-link">Share</a>
       
       
     </footer>
@@ -610,7 +620,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">分类</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/http%E5%8D%8F%E8%AE%AE/">http协议</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%83%B9%E9%A5%AA/">烹饪</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%83%B9%E9%A5%AA/%E4%BC%A0%E7%BB%9F/">传统</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%9A%8F%E6%83%B3/">随想</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%9A%8F%E6%83%B3/%E5%BF%83%E6%83%85/">心情</a></li></ul></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/http%E5%8D%8F%E8%AE%AE/">http协议</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%97%85%E8%A1%8C/">旅行</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%97%85%E8%A1%8C/%E8%AE%B0%E5%BD%95/">记录</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%83%B9%E9%A5%AA/">烹饪</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%83%B9%E9%A5%AA/%E4%BC%A0%E7%BB%9F/">传统</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%9A%8F%E6%83%B3/">随想</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%9A%8F%E6%83%B3/%E5%BF%83%E6%83%85/">心情</a></li></ul></li></ul>
     </div>
   </div>
 
@@ -652,23 +662,23 @@
       <ul>
         
           <li>
+            <a href="/2020/08/30/puppeteer/">玩一玩puppeteer</a>
+          </li>
+        
+          <li>
+            <a href="/2020/08/30/shenzhen-guanhucun/">在海边</a>
+          </li>
+        
+          <li>
+            <a href="/2020/08/30/promise-api/">Promise的几个api用法</a>
+          </li>
+        
+          <li>
             <a href="/2020/08/16/webpackJsonp/">webpack通过webpackJsonp来连接多文件依赖</a>
           </li>
         
           <li>
             <a href="/2020/08/16/next-tick/">vue的nextTick解析</a>
-          </li>
-        
-          <li>
-            <a href="/2020/07/29/vertical-middle/">垂直居中的几个方法</a>
-          </li>
-        
-          <li>
-            <a href="/2020/07/26/vue-life/">vue生命周期</a>
-          </li>
-        
-          <li>
-            <a href="/2020/07/25/variable-type/">判断变量类型的几个方法</a>
           </li>
         
       </ul>
