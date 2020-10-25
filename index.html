@@ -80,6 +80,54 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-algorithm" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/10/21/algorithm/" class="article-date">
+  <time datetime="2020-10-21T15:51:13.000Z" itemprop="datePublished">2020-10-21</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E7%AE%97%E6%B3%95/">算法</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/10/21/algorithm/">记录一些基础算法</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>开始补充一些算法和数据结构的知识</p>
+<h3 id="冒泡排序"><a href="#冒泡排序" class="headerlink" title="冒泡排序"></a>冒泡排序</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> arr = [<span class="number">162</span>, <span class="number">6</span>, <span class="number">3</span>, <span class="number">8</span>, <span class="number">90</span>, <span class="number">234</span>, <span class="number">5</span>, <span class="number">7</span>, <span class="number">31</span>, <span class="number">45</span>, <span class="number">12</span>, <span class="number">1</span>, <span class="number">98</span>, <span class="number">23</span>, <span class="number">87</span>, <span class="number">40</span>]</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">sort</span>(<span class="params">arr</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> len = arr.length - <span class="number">1</span></span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> x = <span class="number">0</span>, y = len; x &lt; y; x++) &#123;</span><br><span class="line">    <span class="comment">// 把第一个跟后面那个对比，如果比后面的数大，就交换位置，到最后就可以确定最大的数在最后</span></span><br><span class="line">    <span class="comment">// 也就是在 length 的位置</span></span><br><span class="line">    <span class="comment">// 在第一轮的时候，x=1，也就是遍历到倒数第二个就好，因为取到 i+1 的数</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>, l = len - x; i &lt; l; i++) &#123;</span><br><span class="line">      <span class="keyword">const</span> first = arr[i], second = arr[i+<span class="number">1</span>]</span><br><span class="line">      <span class="keyword">if</span> (first &gt; second) &#123;</span><br><span class="line">        [arr[i], arr[i+<span class="number">1</span>]] = [second, first]</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 假设没有第一层，最大的数已经在最后，那么第二轮就是要在剩下的数找到最大，并放到倒数第二位置</span></span><br><span class="line">    <span class="comment">// 也就是在 length-1 的位置</span></span><br><span class="line">    <span class="comment">// 此时 x=2，因为依然是当轮最后数（第二轮为length-1）的前一个</span></span><br><span class="line">    <span class="comment">// for (var i = 0, l = arr.length - 2; i &lt; l; i++) &#123;</span></span><br><span class="line">    <span class="comment">//  if (arr[i] &gt; arr[i+1]) &#123;</span></span><br><span class="line">    <span class="comment">//    [arr[i], arr[i+1]] = [arr[i+1], arr[i]]</span></span><br><span class="line">    <span class="comment">//  &#125;</span></span><br><span class="line">    <span class="comment">// &#125;</span></span><br><span class="line">    <span class="comment">// 第三轮 x=3</span></span><br><span class="line">    <span class="comment">// for (var i = 0, l = arr.length - 3; i &lt; l; i++) &#123;</span></span><br><span class="line">    <span class="comment">//  if (arr[i] &gt; arr[i+1]) &#123;</span></span><br><span class="line">    <span class="comment">//    [arr[i], arr[i+1]] = [arr[i+1], arr[i]]</span></span><br><span class="line">    <span class="comment">//  &#125;</span></span><br><span class="line">    <span class="comment">// &#125;</span></span><br><span class="line">    <span class="comment">// 第四轮 x=4</span></span><br><span class="line">    <span class="comment">// for (var i = 0, l = arr.length - 4; i &lt; l; i++) &#123;</span></span><br><span class="line">    <span class="comment">//  if (arr[i] &gt; arr[i+1]) &#123;</span></span><br><span class="line">    <span class="comment">//    [arr[i], arr[i+1]] = [arr[i+1], arr[i]]</span></span><br><span class="line">    <span class="comment">//  &#125;</span></span><br><span class="line">    <span class="comment">// &#125;</span></span><br><span class="line">    <span class="comment">// 所以循环个遍，就成了外面一层的循环</span></span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> arr</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">console</span>.log(sort(arr))</span><br></pre></td></tr></table></figure>
+
+<h3 id="二分法"><a href="#二分法" class="headerlink" title="二分法"></a>二分法</h3><p>就是在一个有序的序列中迅速找到要找的那个数的索引。一个一个遍历当然也可以找到，但是不确定性导致复杂度。<br>二分法就是中间砍一刀，这样数列就成了两半。看看中间值是不是，是那就刚好了。不是的话，判断目标数是在前一半还是后一半，如此这般的循环即可。</p>
+<p>这种思想应该在现实生活中还是经常用到的，比如<code>git bisect</code>（<a href="http://www.ruanyifeng.com/blog/2018/12/git-bisect.html" target="_blank" rel="noopener">看看大佬的介绍</a>）。<br>以及，让我想起以前 TVB 的《超级无敌掌门人》里面有个游戏叫“超级无敌开口中”，轮流在在100里面瞎说一个数，中了就受罚。特别是轮到说最后一个必中的数字时那种视死如归的神情，超搞笑。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">getRandomNum</span>(<span class="params">numMin, numMax</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="built_in">Math</span>.round( <span class="built_in">Math</span>.random()*(numMax-numMin) + numMin )</span><br><span class="line">&#125;  </span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">getArr</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> arr = []</span><br><span class="line">  <span class="keyword">for</span>(<span class="keyword">let</span> i = <span class="number">1</span>, l = <span class="number">100</span>; i &lt;= l; i++) &#123;</span><br><span class="line">    arr.push(i)</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> arr</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 随机生成 1 ~ 100 中的某数</span></span><br><span class="line"><span class="keyword">const</span> num = getRandomNum(<span class="number">1</span>, <span class="number">100</span>)</span><br><span class="line"><span class="comment">// 生成 1 - 100 的数组</span></span><br><span class="line"><span class="keyword">const</span> arr = getArr()</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">binarySearch</span>(<span class="params">num, arr</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">let</span> start = arr.length</span><br><span class="line">  <span class="keyword">let</span> end = <span class="number">0</span></span><br><span class="line">  <span class="keyword">const</span> getHalf = <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">let</span> length = start + end</span><br><span class="line">    <span class="keyword">return</span> (length % <span class="number">2</span> === <span class="number">0</span>) ? (length / <span class="number">2</span>) : (length + <span class="number">1</span>) / <span class="number">2</span></span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 取中值</span></span><br><span class="line">  <span class="keyword">let</span> half = getHalf()</span><br><span class="line">  <span class="keyword">let</span> current = arr[half]</span><br><span class="line">  <span class="keyword">while</span> (current !== num) &#123;</span><br><span class="line">    <span class="keyword">if</span> (current &gt; num) &#123;</span><br><span class="line">      start = half</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (current &lt; num) &#123;</span><br><span class="line">      end = half</span><br><span class="line">    &#125;</span><br><span class="line">    half = getHalf()</span><br><span class="line">    current = arr[half]</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> half</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">const</span> idx = binarySearch(num, arr)</span><br><span class="line"><span class="built_in">console</span>.log(idx, arr[idx], num)</span><br></pre></td></tr></table></figure>
+
+<h3 id="斐波那契数列"><a href="#斐波那契数列" class="headerlink" title="斐波那契数列"></a>斐波那契数列</h3><p>具体的数学意义就不说了，我也不懂，总而言之是满足这样的一个数列：F(0)=0，F(1)=1，F(n)=F(n - 1)+F(n - 2)（n ≥ 3，n ∈ N*）</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 第一反应就是递归，最简单最明晰。但效率最低，其实就是每次算出来的值没存起来，导致每个 n 位的值传进去都要重新递归的算</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">fibonacci</span>(<span class="params">n</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">if</span>(n === <span class="number">0</span> || n === <span class="number">1</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> n</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> fibonacci(n<span class="number">-1</span>) + fibonacci(n<span class="number">-2</span>)</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 改进一些，是个数列自然就可以用个数组来存</span></span><br><span class="line"><span class="comment">// 把之前获得 n 位的值存起来，下次要拿就直接取就好</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">fibonacci2</span>(<span class="params">n</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">if</span>(n === <span class="number">0</span> || n === <span class="number">1</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> n</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">const</span> arr = [<span class="number">0</span>, <span class="number">1</span>]</span><br><span class="line">  <span class="keyword">for</span>(<span class="keyword">let</span> i = <span class="number">2</span>; i &lt;= n; i++) &#123;</span><br><span class="line">    arr[i] = arr[i<span class="number">-1</span>] + arr[i<span class="number">-2</span>]</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> arr[n]</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 改进一些，其实每次都是需要上两位就可以了，不需要用整个数组来存全部</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">fibonacci3</span>(<span class="params">n</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">if</span>(n === <span class="number">0</span> || n === <span class="number">1</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> n</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">let</span> lastOne = <span class="number">1</span> <span class="comment">// n-1</span></span><br><span class="line">  <span class="keyword">let</span> lastTwo = <span class="number">0</span> <span class="comment">// n-2</span></span><br><span class="line">  <span class="keyword">for</span>(<span class="keyword">let</span> i = <span class="number">2</span>; i &lt;= n; i++) &#123;</span><br><span class="line">    <span class="keyword">var</span> current = lastOne + lastTwo</span><br><span class="line">    <span class="comment">// n-2 和 n-1 分别获取后一位的值</span></span><br><span class="line">    lastTwo = lastOne</span><br><span class="line">    lastOne = current</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> current</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 第一种递归的方法，在浏览器 40 以后基本快跑不出来了</span></span><br><span class="line"><span class="comment">// 第三种还是比第二种快那么些许</span></span><br><span class="line"><span class="built_in">console</span>.time(<span class="string">'fibonacci'</span>)</span><br><span class="line"><span class="built_in">console</span>.log(fibonacci(<span class="number">40</span>))</span><br><span class="line"><span class="built_in">console</span>.timeEnd(<span class="string">'fibonacci'</span>)</span><br></pre></td></tr></table></figure>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://blog.cchealthier.com/2020/10/21/algorithm/" data-id="ckgokwi9n0000h4uk4m0gd1z5" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-puppeteer" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2020/08/30/puppeteer/" class="article-date">
@@ -126,7 +174,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.cchealthier.com/2020/08/30/puppeteer/" data-id="ckegze72t000s9kuk974wdyw0" class="article-share-link">Share</a>
+      <a data-url="http://blog.cchealthier.com/2020/08/30/puppeteer/" data-id="ckgokwibv001bh4uk6slldrwp" class="article-share-link">Share</a>
       
       
     </footer>
@@ -179,7 +227,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.cchealthier.com/2020/08/30/shenzhen-guanhucun/" data-id="ckegze72u000u9kuk7bdg8i8l" class="article-share-link">Share</a>
+      <a data-url="http://blog.cchealthier.com/2020/08/30/shenzhen-guanhucun/" data-id="ckgokwibx001eh4uk93ie6wfh" class="article-share-link">Share</a>
       
       
     </footer>
@@ -229,7 +277,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.cchealthier.com/2020/08/30/promise-api/" data-id="ckegze72o000m9kuk44tgdyyn" class="article-share-link">Share</a>
+      <a data-url="http://blog.cchealthier.com/2020/08/30/promise-api/" data-id="ckgokwibo0015h4uk9kx19tfm" class="article-share-link">Share</a>
       
       
     </footer>
@@ -282,7 +330,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.cchealthier.com/2020/08/16/webpackJsonp/" data-id="ckegze743002f9kuk71rh8xzx" class="article-share-link">Share</a>
+      <a data-url="http://blog.cchealthier.com/2020/08/16/webpackJsonp/" data-id="ckgokwic9001th4uk59ho630b" class="article-share-link">Share</a>
       
       
     </footer>
@@ -335,7 +383,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.cchealthier.com/2020/08/16/next-tick/" data-id="ckegze74m002l9kuk0zha0mcq" class="article-share-link">Share</a>
+      <a data-url="http://blog.cchealthier.com/2020/08/16/next-tick/" data-id="ckgokwibk0010h4ukelqscvhz" class="article-share-link">Share</a>
       
       
     </footer>
@@ -379,7 +427,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.cchealthier.com/2020/07/29/vertical-middle/" data-id="ckegze73200129kuk2jcqden0" class="article-share-link">Share</a>
+      <a data-url="http://blog.cchealthier.com/2020/07/29/vertical-middle/" data-id="ckgokwic4001oh4uk8pc541lw" class="article-share-link">Share</a>
       
       
     </footer>
@@ -421,7 +469,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.cchealthier.com/2020/07/26/vue-life/" data-id="ckegze73800159kuk33ri09ep" class="article-share-link">Share</a>
+      <a data-url="http://blog.cchealthier.com/2020/07/26/vue-life/" data-id="ckgokwic6001qh4ukhf1neile" class="article-share-link">Share</a>
       
       
     </footer>
@@ -499,7 +547,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.cchealthier.com/2020/07/25/variable-type/" data-id="ckegze744002g9kukgpjp5dp1" class="article-share-link">Share</a>
+      <a data-url="http://blog.cchealthier.com/2020/07/25/variable-type/" data-id="ckgokwic2001lh4ukdbwscfwj" class="article-share-link">Share</a>
       
       
     </footer>
@@ -549,53 +597,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.cchealthier.com/2020/07/25/traversal-property/" data-id="ckegze72y000x9kuk5js6cy40" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-lazyload" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/07/12/lazyload/" class="article-date">
-  <time datetime="2020-07-11T16:48:49.000Z" itemprop="datePublished">2020-07-12</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/07/12/lazyload/">简单实现图片懒加载、预加载、分批加载</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>图片我这里是随便找了十张图片，起名 0~9 的名字，方便获取。</p>
-<p><strong>懒加载：</strong>原理就是先放一批空图片占位，当图片进入可视区，再来赋予图片src值，让其显示。<br><strong>预加载：</strong>提前请求一批图片资源。下载缓存里。到真的渲染图片时候就可以快速获取到图片。用 new Image() 来请求资源，就不用先创建dom。<br><strong>分批加载：</strong>设定一个距离值，在滑动到距离底部小于这个距离值，则请求下一批图片。</p>
-<p>分批加载可以与其他两者混用，懒加载与预加载应该不混用了，一个减低服务器压力，一个是增加服务器压力换取体验。</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">http-equiv</span>=<span class="string">"Content-Type"</span> <span class="attr">content</span>=<span class="string">"text/html; charset=utf-8"</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">title</span>&gt;</span>lazyload<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">style</span> <span class="attr">type</span>=<span class="string">"text/css"</span>&gt;</span></span><br><span class="line"><span class="css">  <span class="selector-id">#box</span> &#123;</span></span><br><span class="line">    width: 100%;</span><br><span class="line">    background: black;</span><br><span class="line">    border-radius: 10px;</span><br><span class="line">  &#125;</span><br><span class="line">  ul &#123;</span><br><span class="line">    padding: 0;</span><br><span class="line">    margin: 0;</span><br><span class="line">  &#125;</span><br><span class="line">  li &#123;</span><br><span class="line">    margin: 5px;</span><br><span class="line">    background: gray;</span><br><span class="line">    text-align: center;</span><br><span class="line">  &#125;</span><br><span class="line">  img &#123;</span><br><span class="line">    height: 300px;</span><br><span class="line">    width: auto;</span><br><span class="line">  &#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">"text/javascript"</span>&gt;</span></span><br><span class="line"><span class="actionscript"><span class="comment">// 简单节流</span></span></span><br><span class="line"><span class="actionscript"><span class="function"><span class="keyword">function</span> <span class="title">throttle</span><span class="params">(fn, time)</span> </span>&#123;</span></span><br><span class="line"><span class="javascript">  <span class="keyword">let</span> timer</span></span><br><span class="line"><span class="javascript">  <span class="keyword">return</span> <span class="function">(<span class="params">ev</span>) =&gt;</span> &#123;</span></span><br><span class="line">    if (timer) &#123;</span><br><span class="line"><span class="actionscript">      <span class="keyword">return</span></span></span><br><span class="line">    &#125;</span><br><span class="line"><span class="javascript">    timer = setTimeout(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span></span><br><span class="line"><span class="actionscript">      timer = <span class="literal">null</span></span></span><br><span class="line">      fn(ev)</span><br><span class="line">    &#125;, time)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="actionscript"><span class="function"><span class="keyword">function</span> <span class="title">getNum</span><span class="params">(numMin, numMax)</span> </span>&#123;</span></span><br><span class="line"><span class="javascript">  <span class="keyword">return</span> <span class="built_in">Math</span>.round( <span class="built_in">Math</span>.random()*(numMax-numMin) + numMin );</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="actionscript"><span class="function"><span class="keyword">function</span> <span class="title">getImg</span> <span class="params">(len)</span> </span>&#123;</span></span><br><span class="line"><span class="actionscript">  <span class="keyword">const</span> arr = []</span></span><br><span class="line"><span class="javascript">  <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; len; i++) &#123;</span></span><br><span class="line">    arr.push(getNum(0, 9))</span><br><span class="line">  &#125;</span><br><span class="line"><span class="actionscript">  <span class="comment">// 模拟异步获取图片资源</span></span></span><br><span class="line"><span class="javascript">  <span class="keyword">return</span> <span class="built_in">Promise</span>.resolve(arr)</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="javascript"><span class="built_in">window</span>.onload = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span></span><br><span class="line"><span class="javascript">  <span class="keyword">const</span> $ui = <span class="built_in">document</span>.querySelector(<span class="string">'#box ul'</span>)</span></span><br><span class="line"><span class="actionscript">  <span class="keyword">const</span> loading = <span class="string">'./img/loading.gif'</span></span></span><br><span class="line"><span class="actionscript">  <span class="keyword">const</span> distance = <span class="number">20</span></span></span><br><span class="line"><span class="actionscript">  <span class="function"><span class="keyword">function</span> <span class="title">initImg</span><span class="params">()</span> </span>&#123;</span></span><br><span class="line"><span class="javascript">    <span class="keyword">return</span> getImg(<span class="number">5</span>).then(<span class="function">(<span class="params">imgs</span>) =&gt;</span>&#123;</span></span><br><span class="line"><span class="javascript">      imgs.forEach(<span class="function">(<span class="params">img</span>) =&gt;</span> &#123;</span></span><br><span class="line"><span class="javascript">        <span class="keyword">const</span> url = <span class="string">`./img/<span class="subst">$&#123;img&#125;</span>.JPG`</span></span></span><br><span class="line"><span class="actionscript">        <span class="comment">// 先预加载，演示一下，不然这里懒加载没什么意义了，都是发了请求</span></span></span><br><span class="line"><span class="actionscript">        <span class="comment">// 用一个img对象来先对资源进行请求</span></span></span><br><span class="line"><span class="actionscript">        <span class="keyword">const</span> imgObj = <span class="keyword">new</span> Image()</span></span><br><span class="line">        imgObj.src = url</span><br><span class="line"><span class="actionscript">        <span class="comment">// 创建图片dom</span></span></span><br><span class="line"><span class="javascript">        <span class="keyword">const</span> $li = <span class="built_in">document</span>.createElement(<span class="string">'li'</span>)</span></span><br><span class="line">        $ui.appendChild($li)</span><br><span class="line"><span class="javascript">        <span class="keyword">const</span> $img = <span class="built_in">document</span>.createElement(<span class="string">'img'</span>)</span></span><br><span class="line">        $img.src = loading</span><br><span class="line"><span class="javascript">        $img.dataset.src = <span class="string">`./img/<span class="subst">$&#123;img&#125;</span>.JPG`</span></span></span><br><span class="line">        $li.appendChild($img)</span><br><span class="line">      &#125;)</span><br><span class="line">    &#125;)    </span><br><span class="line">  &#125;</span><br><span class="line"><span class="actionscript">  <span class="function"><span class="keyword">function</span> <span class="title">checkImg</span><span class="params">()</span> </span>&#123;</span></span><br><span class="line"><span class="javascript">    <span class="keyword">const</span> $imgs = <span class="built_in">document</span>.querySelectorAll(<span class="string">'#box li img'</span>)</span></span><br><span class="line"><span class="javascript">    $imgs.forEach(<span class="function">(<span class="params">dom</span>) =&gt;</span> &#123;</span></span><br><span class="line"><span class="actionscript">      <span class="keyword">const</span> dataSrc = dom.getAttribute(<span class="string">'data-src'</span>)</span></span><br><span class="line"><span class="actionscript">      <span class="comment">// 此top为该元素距离窗口顶部距离，</span></span></span><br><span class="line"><span class="actionscript">      <span class="comment">// 所以直接判断该值是否小于窗口可视区的值，即在可视区内</span></span></span><br><span class="line"><span class="actionscript">      <span class="keyword">const</span> &#123; top &#125; = dom.getBoundingClientRect()</span></span><br><span class="line"><span class="actionscript">      <span class="comment">// 先判断有没有data-src，防止不断修改图片src</span></span></span><br><span class="line"><span class="javascript">      <span class="keyword">if</span> (dataSrc &amp;&amp; (top &lt; <span class="built_in">window</span>.innerHeight)) &#123;</span></span><br><span class="line">        dom.src = dataSrc</span><br><span class="line"><span class="actionscript">        dom.removeAttribute(<span class="string">'data-src'</span>)</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;</span><br><span class="line"><span class="javascript">  <span class="built_in">window</span>.addEventListener(<span class="string">'scroll'</span>, throttle(<span class="function"><span class="keyword">function</span>(<span class="params">ev</span>) </span>&#123;</span></span><br><span class="line"><span class="actionscript">    <span class="comment">// 距离底部还有20px</span></span></span><br><span class="line"><span class="javascript">    <span class="keyword">const</span> &#123; scrollTop, clientHeight, offsetHeight &#125; = <span class="built_in">document</span>.documentElement</span></span><br><span class="line">    if (offsetHeight - ( scrollTop + clientHeight ) &lt; distance) &#123;</span><br><span class="line">      initImg()</span><br><span class="line">    &#125;</span><br><span class="line">    checkImg()</span><br><span class="line">  &#125;, 200))</span><br><span class="line"><span class="actionscript">  <span class="comment">// 进行首次的资源获取</span></span></span><br><span class="line"><span class="javascript">  initImg().then(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span></span><br><span class="line">    checkImg()</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">"box"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">ul</span>&gt;</span><span class="tag">&lt;/<span class="name">ul</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>除此之外还有个 api 专门来处理这种可视回调的<a href="https://developer.mozilla.org/zh-CN/docs/Web/API/IntersectionObserver" target="_blank" rel="noopener">IntersectionObserver</a>。<br>具体可参阅下<a href="http://www.ruanyifeng.com/blog/2016/11/intersectionobserver_api.html" target="_blank" rel="noopener">阮老师的文章</a>。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://blog.cchealthier.com/2020/07/12/lazyload/" data-id="ckegze72m000j9kuk76jq6did" class="article-share-link">Share</a>
+      <a data-url="http://blog.cchealthier.com/2020/07/25/traversal-property/" data-id="ckgokwic0001jh4uk3n1c4ojs" class="article-share-link">Share</a>
       
       
     </footer>
@@ -620,7 +622,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">分类</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/http%E5%8D%8F%E8%AE%AE/">http协议</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%97%85%E8%A1%8C/">旅行</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%97%85%E8%A1%8C/%E8%AE%B0%E5%BD%95/">记录</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%83%B9%E9%A5%AA/">烹饪</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%83%B9%E9%A5%AA/%E4%BC%A0%E7%BB%9F/">传统</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%9A%8F%E6%83%B3/">随想</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%9A%8F%E6%83%B3/%E5%BF%83%E6%83%85/">心情</a></li></ul></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/http%E5%8D%8F%E8%AE%AE/">http协议</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/%E7%AE%97%E6%B3%95/">算法</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%97%85%E8%A1%8C/">旅行</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%97%85%E8%A1%8C/%E8%AE%B0%E5%BD%95/">记录</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%83%B9%E9%A5%AA/">烹饪</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%83%B9%E9%A5%AA/%E4%BC%A0%E7%BB%9F/">传统</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%9A%8F%E6%83%B3/">随想</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%9A%8F%E6%83%B3/%E5%BF%83%E6%83%85/">心情</a></li></ul></li></ul>
     </div>
   </div>
 
@@ -649,7 +651,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a></li></ul>
     </div>
   </div>
 
@@ -660,6 +662,10 @@
     <h3 class="widget-title">最新文章</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2020/10/21/algorithm/">记录一些基础算法</a>
+          </li>
         
           <li>
             <a href="/2020/08/30/puppeteer/">玩一玩puppeteer</a>
@@ -675,10 +681,6 @@
         
           <li>
             <a href="/2020/08/16/webpackJsonp/">webpack通过webpackJsonp来连接多文件依赖</a>
-          </li>
-        
-          <li>
-            <a href="/2020/08/16/next-tick/">vue的nextTick解析</a>
           </li>
         
       </ul>
