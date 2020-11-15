@@ -80,6 +80,51 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-search" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/11/15/search/" class="article-date">
+  <time datetime="2020-11-15T02:41:59.000Z" itemprop="datePublished">2020-11-15</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E7%AE%97%E6%B3%95/">算法</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/11/15/search/">深度优先遍历(DFS)-栈和广度优先遍历(BFS)-队列的理解</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>JS版本的，概念什么的就不赘述了。参考了这位大佬的<a href="https://segmentfault.com/a/1190000018706578" target="_blank" rel="noopener">文章（JS算法之深度优先遍历(DFS)和广度优先遍历(BFS)）</a>。<br>在这里记录下自己的理解，为啥一个是栈，一个是队列。看码：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">"box"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">ul</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">li</span>&gt;</span><span class="tag">&lt;<span class="name">div</span>&gt;</span><span class="tag">&lt;<span class="name">p</span>&gt;</span><span class="tag">&lt;/<span class="name">p</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span><span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">li</span>&gt;</span><span class="tag">&lt;<span class="name">img</span> /&gt;</span><span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">li</span>&gt;</span><span class="tag">&lt;<span class="name">a</span>&gt;</span><span class="tag">&lt;/<span class="name">a</span>&gt;</span><span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">ul</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span>&gt;</span>1<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span>&gt;</span><span class="tag">&lt;<span class="name">span</span>&gt;</span><span class="tag">&lt;<span class="name">strong</span>&gt;</span><span class="tag">&lt;/<span class="name">strong</span>&gt;</span><span class="tag">&lt;/<span class="name">span</span>&gt;</span><span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span>&gt;</span>3<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">button</span>&gt;</span><span class="tag">&lt;<span class="name">strong</span>&gt;</span><span class="tag">&lt;/<span class="name">strong</span>&gt;</span><span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 深度优先，用的是栈，同一边进出，后入先出</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">deepFirstSearch</span>(<span class="params">node</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> nodes = []</span><br><span class="line">  <span class="keyword">if</span> (node != <span class="literal">null</span>) &#123;</span><br><span class="line">    <span class="keyword">var</span> stack = []</span><br><span class="line">    stack.push(node) <span class="comment">// 第一个元素无论 push 还是 unshift 都一样，这里只是为了相呼应。</span></span><br><span class="line">    <span class="keyword">while</span>(stack.length != <span class="number">0</span>) &#123;</span><br><span class="line">      <span class="comment">// 最核心的差别在这里了</span></span><br><span class="line">      <span class="comment">// 第一次进来：是[$box]，弹出来后都是为空</span></span><br><span class="line">      <span class="comment">// 第二次进来: [button, div, ul]，然后 ul 被 pop 出去，收进结果数组 nodes 里</span></span><br><span class="line">      <span class="keyword">var</span> item = stack.pop()</span><br><span class="line">      nodes.push(item)</span><br><span class="line">      <span class="keyword">var</span> children = item.children</span><br><span class="line">      <span class="keyword">for</span> (<span class="keyword">var</span> i = children.length - <span class="number">1</span>; i &gt;= <span class="number">0</span>; i--) &#123;</span><br><span class="line">        <span class="comment">// 这一步也是一样，把每个子节点放进去待遍历数组</span></span><br><span class="line">        <span class="comment">// 把 $box 的子节点放进待选数组，此时是 [button, div, ul]</span></span><br><span class="line">        <span class="comment">// 第一次 while 进来都是一样</span></span><br><span class="line">        <span class="comment">// 这里先收集左边还是右边的子级意义都是一样的</span></span><br><span class="line">        <span class="comment">// 这里是从先把 button 放进来，ul 最后，等下 pop 出去就是 ul 最先</span></span><br><span class="line">        stack.push(children[i])</span><br><span class="line">        <span class="comment">// 点出 ul 的子级，收进 stack 的最后，下次 while 进来，pop 就会是 ul 的子级，也即是 li</span></span><br><span class="line">        <span class="comment">// 然后再继续下去，还是会把 ul 的子级的子级，也就是 div，收进 stack 最后</span></span><br><span class="line">        <span class="comment">// 也就是不断的子级优先，达成深挖</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> nodes</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 广度优先，用的是队列，一边进另一边出，先入先出</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">breadthFirstSearch</span>(<span class="params">node</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> nodes = []</span><br><span class="line">  <span class="keyword">if</span> (node != <span class="literal">null</span>) &#123;</span><br><span class="line">    <span class="keyword">var</span> queue = []</span><br><span class="line">    <span class="comment">// 第一次进来：是[$box]，弹出来后都是为空</span></span><br><span class="line">    <span class="comment">// 第二次进来：[button, div, ul]，然后 button 被 unshift 出去，收进结果数组 nodes 里</span></span><br><span class="line">    <span class="comment">// 第三次进来：[div, ul, strong]，然后 div 被 unshift 出去，收进结果数组 nodes 里</span></span><br><span class="line">    <span class="comment">// 第四次进来：[ul, strong, p, p, p]，然后 ul 被 unshift 出去，收进结果数组 nodes 里</span></span><br><span class="line">    <span class="comment">// 可以看出跟深度的差别，点出子级都是排进待选数组的最后</span></span><br><span class="line">    <span class="comment">// 但是深度是栈pop，加塞在数组最后的子级优先</span></span><br><span class="line">    <span class="comment">// 广度是队列unshift，一起放进数组的兄弟级优先</span></span><br><span class="line">    queue.unshift(node)</span><br><span class="line">    <span class="keyword">while</span>(queue.length != <span class="number">0</span>) &#123;</span><br><span class="line">      <span class="keyword">var</span> item = queue.shift()</span><br><span class="line">      nodes.push(item)</span><br><span class="line">      <span class="keyword">var</span> children = item.children</span><br><span class="line">      <span class="keyword">for</span> (<span class="keyword">var</span> i = children.length - <span class="number">1</span>; i &gt;= <span class="number">0</span>; i--) &#123;</span><br><span class="line">        queue.push(children[i])</span><br><span class="line">        <span class="comment">// 对应上面第二次进来：点出 button 的子级，也就是 strong，收进 queue 的最后</span></span><br><span class="line">        <span class="comment">// 但对 unshift 的结果没影响，下次 while 进来，unshift 依然是 div</span></span><br><span class="line">        <span class="comment">// 对应上面第三次进来：点出 div 的子级，也就是 p，收进 queue 的最后</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> nodes</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可以看出，就是在遍历时候暂存的数据结构不一样。<br><strong>深度优先</strong>，就是一直深挖，孩子的孩子的孩子…。<br><strong>广度优先</strong>，就是兄弟兄弟兄弟孩子兄弟…。需要注意的是，同级的就算兄弟。意思是相对于根级为孙子辈，就算不是同个父级，也算是兄弟级。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://blog.cchealthier.com/2020/11/15/search/" data-id="ckhim8ek9000we8ukh4z80lgh" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-algorithm" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2020/10/21/algorithm/" class="article-date">
@@ -118,7 +163,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.cchealthier.com/2020/10/21/algorithm/" data-id="ckgokwi9n0000h4uk4m0gd1z5" class="article-share-link">Share</a>
+      <a data-url="http://blog.cchealthier.com/2020/10/21/algorithm/" data-id="ckhim8ee80000e8uk2gdv4ev6" class="article-share-link">Share</a>
       
       
     </footer>
@@ -174,7 +219,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.cchealthier.com/2020/08/30/puppeteer/" data-id="ckgokwibv001bh4uk6slldrwp" class="article-share-link">Share</a>
+      <a data-url="http://blog.cchealthier.com/2020/08/30/puppeteer/" data-id="ckhim8el10013e8ukazpg69sv" class="article-share-link">Share</a>
       
       
     </footer>
@@ -227,7 +272,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.cchealthier.com/2020/08/30/shenzhen-guanhucun/" data-id="ckgokwibx001eh4uk93ie6wfh" class="article-share-link">Share</a>
+      <a data-url="http://blog.cchealthier.com/2020/08/30/shenzhen-guanhucun/" data-id="ckhim8ekg000ze8uk1zuu99kj" class="article-share-link">Share</a>
       
       
     </footer>
@@ -277,7 +322,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.cchealthier.com/2020/08/30/promise-api/" data-id="ckgokwibo0015h4uk9kx19tfm" class="article-share-link">Share</a>
+      <a data-url="http://blog.cchealthier.com/2020/08/30/promise-api/" data-id="ckhim8els001de8ukd0gs5jda" class="article-share-link">Share</a>
       
       
     </footer>
@@ -330,7 +375,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.cchealthier.com/2020/08/16/webpackJsonp/" data-id="ckgokwic9001th4uk59ho630b" class="article-share-link">Share</a>
+      <a data-url="http://blog.cchealthier.com/2020/08/16/webpackJsonp/" data-id="ckhim8enx002oe8ukggtz8ybz" class="article-share-link">Share</a>
       
       
     </footer>
@@ -383,7 +428,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.cchealthier.com/2020/08/16/next-tick/" data-id="ckgokwibk0010h4ukelqscvhz" class="article-share-link">Share</a>
+      <a data-url="http://blog.cchealthier.com/2020/08/16/next-tick/" data-id="ckhim8ek0000ue8ukf8g5hwlo" class="article-share-link">Share</a>
       
       
     </footer>
@@ -427,7 +472,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.cchealthier.com/2020/07/29/vertical-middle/" data-id="ckgokwic4001oh4uk8pc541lw" class="article-share-link">Share</a>
+      <a data-url="http://blog.cchealthier.com/2020/07/29/vertical-middle/" data-id="ckhim8elk001ae8ukb0tcg8tw" class="article-share-link">Share</a>
       
       
     </footer>
@@ -469,7 +514,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.cchealthier.com/2020/07/26/vue-life/" data-id="ckgokwic6001qh4ukhf1neile" class="article-share-link">Share</a>
+      <a data-url="http://blog.cchealthier.com/2020/07/26/vue-life/" data-id="ckhim8elx001fe8ukax7dgq63" class="article-share-link">Share</a>
       
       
     </footer>
@@ -547,57 +592,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.cchealthier.com/2020/07/25/variable-type/" data-id="ckgokwic2001lh4ukdbwscfwj" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-traversal-property" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/07/25/traversal-property/" class="article-date">
-  <time datetime="2020-07-25T04:00:18.000Z" itemprop="datePublished">2020-07-25</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/07/25/traversal-property/">遍历属性的几个方法</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>这里列出五个</p>
-<ul>
-<li>for in</li>
-<li>Object.keys</li>
-<li>Object.getOwnPropertyNames</li>
-<li>Object.getOwnPropertySymbols</li>
-<li>Reflect.ownKeys</li>
-</ul>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">Object</span>.prototype.allattr = <span class="literal">true</span></span><br><span class="line"><span class="built_in">Object</span>.prototype.allFn = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 普通对象</span></span><br><span class="line"><span class="keyword">const</span> obj1 = &#123;</span><br><span class="line">  a: <span class="number">1</span>,</span><br><span class="line">  b: <span class="number">2</span>,</span><br><span class="line">  [<span class="built_in">Symbol</span>(<span class="string">'c'</span>)]: <span class="number">3</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">Object</span>.defineProperty(obj1, <span class="string">'d'</span>, &#123;</span><br><span class="line">  enumerable: <span class="literal">false</span>,</span><br><span class="line">  value: <span class="number">4</span></span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 原型对象</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Obj2</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">this</span>.a = <span class="number">1</span></span><br><span class="line">  <span class="keyword">this</span>[<span class="built_in">Symbol</span>(<span class="string">'b'</span>)] = <span class="number">1</span></span><br><span class="line">&#125;</span><br><span class="line">Obj2.prototype.c = <span class="number">2</span></span><br><span class="line">Obj2.prototype.d = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;&#125;</span><br><span class="line">Obj2.e = <span class="number">1</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 对象实例</span></span><br><span class="line"><span class="keyword">const</span> obj3 = <span class="keyword">new</span> Obj2()</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">show</span>(<span class="params">obj</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">let</span> arr = []</span><br><span class="line">  <span class="comment">// 会打出原型的属性，可以用 hasOwnProperty 去除</span></span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">const</span> attr <span class="keyword">in</span> obj) &#123;</span><br><span class="line">    arr.push(attr)</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'--- for in ---'</span>, arr)</span><br><span class="line"></span><br><span class="line">  arr = []</span><br><span class="line">  <span class="comment">// 不会打出原型的属性，相当于 for in 用 hasOwnProperty 去除</span></span><br><span class="line">  <span class="built_in">Object</span>.keys(obj).forEach(<span class="function">(<span class="params">attr</span>) =&gt;</span> &#123;</span><br><span class="line">    arr.push(attr)</span><br><span class="line">  &#125;)</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'--- Object.keys ---'</span>, arr)</span><br><span class="line"></span><br><span class="line">  arr = []</span><br><span class="line">  <span class="comment">// 上面两个只打出可枚举的，这个不可枚举也可以打出来，不会打出原型的属性</span></span><br><span class="line">  <span class="built_in">Object</span>.getOwnPropertyNames(obj).forEach(<span class="function">(<span class="params">attr</span>) =&gt;</span> &#123;</span><br><span class="line">    arr.push(attr)</span><br><span class="line">  &#125;)</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'--- Object.getOwnPropertyNames ---'</span>, arr)</span><br><span class="line"></span><br><span class="line">  arr = []</span><br><span class="line">  <span class="comment">// 打出 Symbols 属性</span></span><br><span class="line">  <span class="built_in">Object</span>.getOwnPropertySymbols(obj).forEach(<span class="function">(<span class="params">attr</span>) =&gt;</span> &#123;</span><br><span class="line">    arr.push(attr)</span><br><span class="line">  &#125;)</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'--- Object.getOwnPropertySymbols ---'</span>, arr)</span><br><span class="line"></span><br><span class="line">  arr = []</span><br><span class="line">  <span class="comment">// Reflect.ownKeys = Object.getOwnPropertyNames + Object.getOwnPropertySymbols</span></span><br><span class="line">  <span class="built_in">Reflect</span>.ownKeys(obj).forEach(<span class="function">(<span class="params">attr</span>) =&gt;</span> &#123;</span><br><span class="line">    arr.push(attr)</span><br><span class="line">  &#125;)</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'--- Reflect.ownKeys ---'</span>, arr)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">show(obj1)</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">'%c --------------- 分割线 ---------------'</span>, <span class="string">'background:#aaa;color:red'</span>)</span><br><span class="line">show(Obj2)</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">'%c --------------- 分割线 ---------------'</span>, <span class="string">'background:#aaa;color:red'</span>)</span><br><span class="line">show(obj3)</span><br></pre></td></tr></table></figure>
-<br/>
-<img src="/2020/07/25/traversal-property/traversal-property.PNG" class="" title="遍历对象属性">
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://blog.cchealthier.com/2020/07/25/traversal-property/" data-id="ckgokwic0001jh4uk3n1c4ojs" class="article-share-link">Share</a>
+      <a data-url="http://blog.cchealthier.com/2020/07/25/variable-type/" data-id="ckhim8el70015e8uk8xekft4x" class="article-share-link">Share</a>
       
       
     </footer>
@@ -651,7 +646,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a></li></ul>
     </div>
   </div>
 
@@ -662,6 +657,10 @@
     <h3 class="widget-title">最新文章</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2020/11/15/search/">深度优先遍历(DFS)-栈和广度优先遍历(BFS)-队列的理解</a>
+          </li>
         
           <li>
             <a href="/2020/10/21/algorithm/">记录一些基础算法</a>
@@ -677,10 +676,6 @@
         
           <li>
             <a href="/2020/08/30/promise-api/">Promise的几个api用法</a>
-          </li>
-        
-          <li>
-            <a href="/2020/08/16/webpackJsonp/">webpack通过webpackJsonp来连接多文件依赖</a>
           </li>
         
       </ul>

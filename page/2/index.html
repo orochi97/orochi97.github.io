@@ -80,6 +80,56 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-traversal-property" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/07/25/traversal-property/" class="article-date">
+  <time datetime="2020-07-25T04:00:18.000Z" itemprop="datePublished">2020-07-25</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/07/25/traversal-property/">遍历属性的几个方法</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>这里列出五个</p>
+<ul>
+<li>for in</li>
+<li>Object.keys</li>
+<li>Object.getOwnPropertyNames</li>
+<li>Object.getOwnPropertySymbols</li>
+<li>Reflect.ownKeys</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">Object</span>.prototype.allattr = <span class="literal">true</span></span><br><span class="line"><span class="built_in">Object</span>.prototype.allFn = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 普通对象</span></span><br><span class="line"><span class="keyword">const</span> obj1 = &#123;</span><br><span class="line">  a: <span class="number">1</span>,</span><br><span class="line">  b: <span class="number">2</span>,</span><br><span class="line">  [<span class="built_in">Symbol</span>(<span class="string">'c'</span>)]: <span class="number">3</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">Object</span>.defineProperty(obj1, <span class="string">'d'</span>, &#123;</span><br><span class="line">  enumerable: <span class="literal">false</span>,</span><br><span class="line">  value: <span class="number">4</span></span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 原型对象</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Obj2</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">this</span>.a = <span class="number">1</span></span><br><span class="line">  <span class="keyword">this</span>[<span class="built_in">Symbol</span>(<span class="string">'b'</span>)] = <span class="number">1</span></span><br><span class="line">&#125;</span><br><span class="line">Obj2.prototype.c = <span class="number">2</span></span><br><span class="line">Obj2.prototype.d = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;&#125;</span><br><span class="line">Obj2.e = <span class="number">1</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 对象实例</span></span><br><span class="line"><span class="keyword">const</span> obj3 = <span class="keyword">new</span> Obj2()</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">show</span>(<span class="params">obj</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">let</span> arr = []</span><br><span class="line">  <span class="comment">// 会打出原型的属性，可以用 hasOwnProperty 去除</span></span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">const</span> attr <span class="keyword">in</span> obj) &#123;</span><br><span class="line">    arr.push(attr)</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'--- for in ---'</span>, arr)</span><br><span class="line"></span><br><span class="line">  arr = []</span><br><span class="line">  <span class="comment">// 不会打出原型的属性，相当于 for in 用 hasOwnProperty 去除</span></span><br><span class="line">  <span class="built_in">Object</span>.keys(obj).forEach(<span class="function">(<span class="params">attr</span>) =&gt;</span> &#123;</span><br><span class="line">    arr.push(attr)</span><br><span class="line">  &#125;)</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'--- Object.keys ---'</span>, arr)</span><br><span class="line"></span><br><span class="line">  arr = []</span><br><span class="line">  <span class="comment">// 上面两个只打出可枚举的，这个不可枚举也可以打出来，不会打出原型的属性</span></span><br><span class="line">  <span class="built_in">Object</span>.getOwnPropertyNames(obj).forEach(<span class="function">(<span class="params">attr</span>) =&gt;</span> &#123;</span><br><span class="line">    arr.push(attr)</span><br><span class="line">  &#125;)</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'--- Object.getOwnPropertyNames ---'</span>, arr)</span><br><span class="line"></span><br><span class="line">  arr = []</span><br><span class="line">  <span class="comment">// 打出 Symbols 属性</span></span><br><span class="line">  <span class="built_in">Object</span>.getOwnPropertySymbols(obj).forEach(<span class="function">(<span class="params">attr</span>) =&gt;</span> &#123;</span><br><span class="line">    arr.push(attr)</span><br><span class="line">  &#125;)</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'--- Object.getOwnPropertySymbols ---'</span>, arr)</span><br><span class="line"></span><br><span class="line">  arr = []</span><br><span class="line">  <span class="comment">// Reflect.ownKeys = Object.getOwnPropertyNames + Object.getOwnPropertySymbols</span></span><br><span class="line">  <span class="built_in">Reflect</span>.ownKeys(obj).forEach(<span class="function">(<span class="params">attr</span>) =&gt;</span> &#123;</span><br><span class="line">    arr.push(attr)</span><br><span class="line">  &#125;)</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'--- Reflect.ownKeys ---'</span>, arr)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">show(obj1)</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">'%c --------------- 分割线 ---------------'</span>, <span class="string">'background:#aaa;color:red'</span>)</span><br><span class="line">show(Obj2)</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">'%c --------------- 分割线 ---------------'</span>, <span class="string">'background:#aaa;color:red'</span>)</span><br><span class="line">show(obj3)</span><br></pre></td></tr></table></figure>
+<br/>
+<img src="/2020/07/25/traversal-property/traversal-property.PNG" class="" title="遍历对象属性">
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://blog.cchealthier.com/2020/07/25/traversal-property/" data-id="ckhim8eo0002pe8uk40u49n9a" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-lazyload" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2020/07/12/lazyload/" class="article-date">
@@ -116,7 +166,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.cchealthier.com/2020/07/12/lazyload/" data-id="ckgokwibh000vh4uk8n794xds" class="article-share-link">Share</a>
+      <a data-url="http://blog.cchealthier.com/2020/07/12/lazyload/" data-id="ckhim8eiy000he8uk3zmq1cc1" class="article-share-link">Share</a>
       
       
     </footer>
@@ -163,7 +213,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.cchealthier.com/2020/07/09/callapplybind/" data-id="ckgokwia9000eh4ukcvgjcsul" class="article-share-link">Share</a>
+      <a data-url="http://blog.cchealthier.com/2020/07/09/callapplybind/" data-id="ckhim8ej7000ke8uk3n5r8yip" class="article-share-link">Share</a>
       
       
     </footer>
@@ -224,7 +274,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.cchealthier.com/2020/07/02/cache/" data-id="ckgokwicc001vh4uk5udre2r6" class="article-share-link">Share</a>
+      <a data-url="http://blog.cchealthier.com/2020/07/02/cache/" data-id="ckhim8efx0003e8uk5ykqa5m7" class="article-share-link">Share</a>
       
       
     </footer>
@@ -265,7 +315,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.cchealthier.com/2020/06/22/ssl-lts/" data-id="ckgokwiby001gh4uk08w5cv1p" class="article-share-link">Share</a>
+      <a data-url="http://blog.cchealthier.com/2020/06/22/ssl-lts/" data-id="ckhim8ekv0010e8uk20fb45l2" class="article-share-link">Share</a>
       
       
     </footer>
@@ -306,7 +356,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.cchealthier.com/2020/05/31/html-resource/" data-id="ckgokwib7000mh4uk0zgj0rib" class="article-share-link">Share</a>
+      <a data-url="http://blog.cchealthier.com/2020/05/31/html-resource/" data-id="ckhim8eid000ce8ukbt7y06rm" class="article-share-link">Share</a>
       
       
     </footer>
@@ -362,7 +412,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.cchealthier.com/2020/05/31/protocol/" data-id="ckgokwibp0018h4uk47lp967a" class="article-share-link">Share</a>
+      <a data-url="http://blog.cchealthier.com/2020/05/31/protocol/" data-id="ckhim8elf0018e8ukbtpkenr2" class="article-share-link">Share</a>
       
       
     </footer>
@@ -441,7 +491,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.cchealthier.com/2020/05/31/database/" data-id="ckgokwiaa000fh4uk4zqv6it8" class="article-share-link">Share</a>
+      <a data-url="http://blog.cchealthier.com/2020/05/31/database/" data-id="ckhim8egm0006e8uk77yieedx" class="article-share-link">Share</a>
       
       
     </footer>
@@ -485,7 +535,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.cchealthier.com/2020/05/28/js-performance/" data-id="ckgokwibf000th4uk97ja6yop" class="article-share-link">Share</a>
+      <a data-url="http://blog.cchealthier.com/2020/05/28/js-performance/" data-id="ckhim8ejf000me8uk0ibvf4wp" class="article-share-link">Share</a>
       
       
     </footer>
@@ -541,49 +591,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.cchealthier.com/2020/05/27/eventloop/" data-id="ckgokwib8000nh4uk7tmzh35v" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-new-object" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/05/25/new-object/" class="article-date">
-  <time datetime="2020-05-25T15:59:18.000Z" itemprop="datePublished">2020-05-25</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/05/25/new-object/">JS new 一个对象干了什么事</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <br>
-
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Person</span>(<span class="params">name, age</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">this</span>.name = name</span><br><span class="line">  <span class="keyword">this</span>.age = age</span><br><span class="line">&#125;</span><br><span class="line">Person.prototype.attr = <span class="string">'human'</span></span><br><span class="line"><span class="keyword">const</span> man1 = <span class="keyword">new</span> Person(<span class="string">'123'</span>, <span class="number">18</span>)</span><br><span class="line"><span class="built_in">console</span>.log(man1.name)</span><br><span class="line"><span class="built_in">console</span>.log(man1.age)</span><br><span class="line"><span class="built_in">console</span>.log(man1.attr)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">_new</span>(<span class="params">Constructor, ...param</span>) </span>&#123;</span><br><span class="line">  <span class="comment">// 新建一个对象</span></span><br><span class="line">  <span class="keyword">const</span> obj = &#123;&#125; <span class="comment">// Object.create(null)</span></span><br><span class="line">  <span class="comment">// 建立继承关系，__proto__指向构造函数原型，获得原型属性与方法</span></span><br><span class="line">  <span class="comment">// 这里获得 attr 属性</span></span><br><span class="line">  obj.__proto__ = Constructor.prototype</span><br><span class="line">  <span class="comment">// 开始执行这个构造函数，就是这个构造函数的this方法属性挂到这个新对象上</span></span><br><span class="line">  <span class="comment">// 这里就是把 name 和 age 挂上去</span></span><br><span class="line">  <span class="keyword">const</span> ret = Constructor.call(obj, ...param)</span><br><span class="line">  <span class="comment">// const ret = Constructor.apply(obj, param)</span></span><br><span class="line">  <span class="comment">// 若构造函数中没有返回值或返回值是基本类型（Number、String、Boolean）的值，则返回新实例对象；</span></span><br><span class="line">  <span class="comment">// 若返回值是引用类型的值，则实际返回值为这个引用类型。</span></span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">typeof</span> ret === <span class="string">'object'</span> ? ret : obj</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">const</span> man2 = _new(Person, <span class="string">'456'</span>, <span class="number">20</span>)</span><br><span class="line"><span class="built_in">console</span>.log(man2.name)</span><br><span class="line"><span class="built_in">console</span>.log(man2.age)</span><br><span class="line"><span class="built_in">console</span>.log(man2.attr)</span><br></pre></td></tr></table></figure>
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://blog.cchealthier.com/2020/05/25/new-object/" data-id="ckgokwibm0013h4ukh2ndbnjp" class="article-share-link">Share</a>
+      <a data-url="http://blog.cchealthier.com/2020/05/27/eventloop/" data-id="ckhim8ein000ee8uk2afi2f3t" class="article-share-link">Share</a>
       
       
     </footer>
@@ -637,7 +645,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a></li></ul>
     </div>
   </div>
 
@@ -648,6 +656,10 @@
     <h3 class="widget-title">最新文章</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2020/11/15/search/">深度优先遍历(DFS)-栈和广度优先遍历(BFS)-队列的理解</a>
+          </li>
         
           <li>
             <a href="/2020/10/21/algorithm/">记录一些基础算法</a>
@@ -663,10 +675,6 @@
         
           <li>
             <a href="/2020/08/30/promise-api/">Promise的几个api用法</a>
-          </li>
-        
-          <li>
-            <a href="/2020/08/16/webpackJsonp/">webpack通过webpackJsonp来连接多文件依赖</a>
           </li>
         
       </ul>
