@@ -80,6 +80,50 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-js-performance" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/05/28/js-performance/" class="article-date">
+  <time datetime="2020-05-28T15:56:30.000Z" itemprop="datePublished">2020-05-28</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/05/28/js-performance/">JS性能优化探讨</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="一、最核心一点，减少http请求，3次握手，冷启动，成本昂贵"><a href="#一、最核心一点，减少http请求，3次握手，冷启动，成本昂贵" class="headerlink" title="一、最核心一点，减少http请求，3次握手，冷启动，成本昂贵"></a>一、最核心一点，减少http请求，3次握手，冷启动，成本昂贵</h3><p><strong>1、</strong>合并小js文件<br><strong>2、</strong>使用雪碧图<br><strong>3、</strong>小图转换成base64放到代码里<br><strong>4、</strong>设置缓存</p>
+<h3 id="二、加快响应"><a href="#二、加快响应" class="headerlink" title="二、加快响应"></a>二、加快响应</h3><p><strong>1、</strong>CDN<br><strong>2、</strong>减少DNS查询次数<br><strong>3、</strong>提前加载，延迟加载<br><strong>4、</strong>首页最小内容显示，将样式表置顶渲染页面，将js放到底部不阻塞页面渲染。</p>
+<h3 id="三、资源层面"><a href="#三、资源层面" class="headerlink" title="三、资源层面"></a>三、资源层面</h3><p><strong>1、</strong>能用不那么高清图片，就用体积小的图片<br><strong>2、</strong>压缩业务代码<br><strong>3、</strong>压缩减少或不要cookie，每次请求头都会带上<br><strong>4、</strong>把静态资源放在另外一个域名，根据域名划分内容。<br>浏览器一般对同一个域的下载连接数有所限制，按照域名划分下载内容可以浏览器增大并行下载连接。<br>但是注意控制域名使用在2-4个之间，不然dns查询也是个问题。<br>一般网站规划会将静态资源放在类似于static.example.com，动态内容放在<a href="http://www.example.com上。" target="_blank" rel="noopener">www.example.com上。</a><br>这样做还有一个好处是可以在静态的域名上避免使用cookie。页面内容使用无cookie域名<br><strong>5、</strong>使用小且可缓存的favicon.ico网站图标文件favicon.ico。<br>不管你服务器有还是没有，浏览器都会去尝试请求这个图标。所以我们要确保这个图标存在文件尽量小，最好小于1k设置一个长的过期时间</p>
+<h3 id="四、代码层面"><a href="#四、代码层面" class="headerlink" title="四、代码层面"></a>四、代码层面</h3><p><strong>1、</strong>html尽量减少dom（document.getElementsByTagName(‘*’).length）<br><strong>2、</strong>避免CSS表达式，CSS表达式的问题在于它被重新计算的次数远比我们想象的要多，不仅在网页绘制或大小改变时计算，即使我们滚动屏幕或者移动鼠标的时候也在计算，因此我们还是尽量避免使用它来防止使用不当而造成的性能损耗。<br><strong>3、</strong>减少对dom的操作<br><strong>4、</strong>用<link>代替@import，避免使用@import的原因很简单，因为它相当于将css放在网页内容底部。<br><strong>5、</strong>使用智能事件处理<br>这里说智能的事件处理需要开发者对事件处理有更深入的了解，通过不同的方式尽量少去触发事件，如果必要就尽早的去处理事件。比如一个div中10个按钮都需要事件句柄，那么我们可以将事件放在div上，在事件冒泡过程中捕获该事件然后判断事件来源。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://blog.cchealthier.com/2020/05/28/js-performance/" data-id="cki3c445w001agoukdgz68x3g" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-eventloop" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2020/05/27/eventloop/" class="article-date">
@@ -126,7 +170,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.cchealthier.com/2020/05/27/eventloop/" data-id="cki2mm529000f88uk4q6542xa" class="article-share-link">Share</a>
+      <a data-url="http://blog.cchealthier.com/2020/05/27/eventloop/" data-id="cki3c444k000fgouk4f5z15oj" class="article-share-link">Share</a>
       
       
     </footer>
@@ -168,7 +212,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.cchealthier.com/2020/05/25/new-object/" data-id="cki2mm53q001988ukh1vl824t" class="article-share-link">Share</a>
+      <a data-url="http://blog.cchealthier.com/2020/05/25/new-object/" data-id="cki3c445j000vgoukdbx2fx21" class="article-share-link">Share</a>
       
       
     </footer>
@@ -239,7 +283,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.cchealthier.com/2020/05/21/js-inherit/" data-id="cki2mm52c000i88uk7kg8885q" class="article-share-link">Share</a>
+      <a data-url="http://blog.cchealthier.com/2020/05/21/js-inherit/" data-id="cki3c445b000ogoukakh07fkw" class="article-share-link">Share</a>
       
       
     </footer>
@@ -285,7 +329,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.cchealthier.com/2020/05/14/mood/" data-id="cki2mm53s001a88ukcl767ck7" class="article-share-link">Share</a>
+      <a data-url="http://blog.cchealthier.com/2020/05/14/mood/" data-id="cki3c445g000tgouk2c4kbbge" class="article-share-link">Share</a>
       
       
     </footer>
@@ -329,7 +373,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.cchealthier.com/2020/05/03/buyu/" data-id="cki2mm51k000088uk9842dkce" class="article-share-link">Share</a>
+      <a data-url="http://blog.cchealthier.com/2020/05/03/buyu/" data-id="cki3c443w0001gouk37lm6jeg" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/cook/" rel="tag">cook</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/fish/" rel="tag">fish</a></li></ul>
@@ -402,7 +446,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.cchealthier.com/2020/05/03/hexo-githubpage/" data-id="cki2mm52k000l88ukekwed513" class="article-share-link">Share</a>
+      <a data-url="http://blog.cchealthier.com/2020/05/03/hexo-githubpage/" data-id="cki3c4459000mgouk9anp104z" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/blog/" rel="tag">blog</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/hexo/" rel="tag">hexo</a></li></ul>
@@ -453,7 +497,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.cchealthier.com/2020/05/03/hello-world/" data-id="cki2mm52g000j88uk7zd420nd" class="article-share-link">Share</a>
+      <a data-url="http://blog.cchealthier.com/2020/05/03/hello-world/" data-id="cki3c445e000rgouk40qh1eux" class="article-share-link">Share</a>
       
       
     </footer>
@@ -520,6 +564,10 @@
       <ul>
         
           <li>
+            <a href="/2020/11/29/api-defference/">几个相似（splice slice，substr substring）方法的区别</a>
+          </li>
+        
+          <li>
             <a href="/2020/11/22/webpack-config/">webpack的配置</a>
           </li>
         
@@ -533,10 +581,6 @@
         
           <li>
             <a href="/2020/08/30/puppeteer/">玩一玩puppeteer</a>
-          </li>
-        
-          <li>
-            <a href="/2020/08/30/shenzhen-guanhucun/">在海边</a>
           </li>
         
       </ul>
