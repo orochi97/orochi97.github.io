@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>webpack的配置 | 凝雪密境</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="webpack也用了好久，想来短期内前端暂时也离不开它。虽然现在很多框架都集成了，但难免还是会遇到需要自己配置的时候。在这里记录下一些基础配置。以下基于 webpack5，不过一般差别不大 123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657">
+<meta property="og:type" content="article">
+<meta property="og:title" content="webpack的配置">
+<meta property="og:url" content="http://blog.cchealthier.com/2020/11/22/webpack-config/index.html">
+<meta property="og:site_name" content="凝雪密境">
+<meta property="og:description" content="webpack也用了好久，想来短期内前端暂时也离不开它。虽然现在很多框架都集成了，但难免还是会遇到需要自己配置的时候。在这里记录下一些基础配置。以下基于 webpack5，不过一般差别不大 123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-11-22T14:27:35.000Z">
+<meta property="article:modified_time" content="2020-11-29T04:29:43.000Z">
+<meta property="article:author" content="ChrisIori">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="凝雪密境" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.ico">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">凝雪密境</a>
+      </h1>
+      
+        <div id="avatar" style="background-image: url( /avatar.jpg )">
+          <div class="container">
+            <div class="ball wind"></div>
+            <div class="ball fire"></div>
+            <div class="ball water"></div>
+            <div class="ball soil"></div>
+          </div>
+        </div>
+      
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">A boring space of an interesting man</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://blog.cchealthier.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-webpack-config" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/11/22/webpack-config/" class="article-date">
+  <time datetime="2020-11-22T14:27:35.000Z" itemprop="datePublished">2020-11-22</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      webpack的配置
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>webpack也用了好久，想来短期内前端暂时也离不开它。虽然现在很多框架都集成了，但难免还是会遇到需要自己配置的时候。在这里记录下一些基础配置。<br>以下基于 webpack5，不过一般差别不大</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> path = <span class="built_in">require</span>(<span class="string">'path'</span>)</span><br><span class="line"><span class="keyword">const</span> &#123; execSync &#125; = <span class="built_in">require</span>(<span class="string">'child_process'</span>)</span><br><span class="line"><span class="keyword">const</span> webpack = <span class="built_in">require</span>(<span class="string">'webpack'</span>)</span><br><span class="line"><span class="keyword">const</span> Customplugin = <span class="built_in">require</span>(<span class="string">'./custom-plugin'</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 默认也会覆盖，不过我习惯删了，windows不支持命令的话，可以改用 fs 模块</span></span><br><span class="line">execSync(<span class="string">`rm -rf build`</span>)</span><br><span class="line"></span><br><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">  context: process.cwd(), <span class="comment">// 当前上下文，一般也不用配置</span></span><br><span class="line">  mode: <span class="string">'development'</span>, <span class="comment">// 打包模式，production模式自动压缩混淆</span></span><br><span class="line">   <span class="comment">// source-map 类型 </span></span><br><span class="line">   <span class="comment">// https://webpack.js.org/configuration/devtool/#root</span></span><br><span class="line">  devtool: <span class="literal">false</span>,</span><br><span class="line">   <span class="comment">// 编译信息，一般也不需要那么多，可以精细配置 </span></span><br><span class="line">   <span class="comment">// https://webpack.js.org/configuration/stats/#root</span></span><br><span class="line">  stats: <span class="string">'none'</span>,</span><br><span class="line">  entry:  &#123; </span><br><span class="line">    a: __dirname + <span class="string">'/a.js'</span>,</span><br><span class="line">    b: __dirname + <span class="string">'/b.js'</span>,</span><br><span class="line">    c: __dirname + <span class="string">'/c.js'</span></span><br><span class="line">  &#125;, <span class="comment">// 指定文件入口</span></span><br><span class="line">  output: &#123;</span><br><span class="line">    path: __dirname + <span class="string">'/build'</span>,<span class="comment">// 打包后的文件存放的地方</span></span><br><span class="line">    filename: <span class="string">'[name].js'</span><span class="comment">// 打包后输出文件的文件名，比如上面打出来就会是 a.js b.js c.js</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="comment">// externals：不打包某些库 https://webpack.js.org/configuration/externals/#externals</span></span><br><span class="line">  optimization: &#123;</span><br><span class="line">     <span class="comment">// 抽出公共js，贼复杂，一般用默认的就可以了 </span></span><br><span class="line">     <span class="comment">// https://webpack.js.org/plugins/split-chunks-plugin/#root</span></span><br><span class="line">    splitChunks: &#123;</span><br><span class="line">      chunks: <span class="string">'all'</span>,</span><br><span class="line">      <span class="comment">// minChunks: 3,</span></span><br><span class="line">      <span class="comment">// minSize: 0,</span></span><br><span class="line">      cacheGroups: &#123;</span><br><span class="line">        <span class="keyword">default</span>: &#123;</span><br><span class="line">          priority: <span class="number">1</span>,</span><br><span class="line">          reuseExistingChunk: <span class="literal">true</span>,</span><br><span class="line">          enforce: <span class="literal">true</span></span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="built_in">module</span>: &#123;</span><br><span class="line">    rules: [</span><br><span class="line">      &#123; <span class="comment">// 添加自定义 loader</span></span><br><span class="line">        loader: <span class="string">'./custom-loader.js'</span>,</span><br><span class="line">        options: &#123;</span><br><span class="line">          param: <span class="number">1</span></span><br><span class="line">        &#125;</span><br><span class="line">      &#125;,</span><br><span class="line">      &#123;</span><br><span class="line">        test: <span class="regexp">/\.js$/</span>,</span><br><span class="line">        exclude: <span class="regexp">/node_modules/</span>,</span><br><span class="line">        use: <span class="string">'babel-loader'</span>,</span><br><span class="line">        options: &#123;</span><br><span class="line">          cacheDirectory: <span class="literal">true</span>,</span><br><span class="line">          presets: [<span class="string">'@babel/preset-env'</span>],</span><br><span class="line">          plugins: [<span class="string">'@babel/transform-runtime'</span>]</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;,</span><br><span class="line">      &#123;</span><br><span class="line">        use: [</span><br><span class="line">          <span class="string">'style-loader'</span>,</span><br><span class="line">          &#123;</span><br><span class="line">            loader: <span class="string">'css-loader'</span>,</span><br><span class="line">            options: &#123;</span><br><span class="line">              importLoaders: <span class="number">1</span></span><br><span class="line">            &#125;</span><br><span class="line">          &#125;,</span><br><span class="line">          &#123;</span><br><span class="line">            loader: <span class="string">'less-loader'</span>,</span><br><span class="line">            options: &#123;</span><br><span class="line">              noIeCompat: <span class="literal">true</span></span><br><span class="line">            &#125;</span><br><span class="line">          &#125;</span><br><span class="line">        ]</span><br><span class="line">      &#125;</span><br><span class="line">    ]</span><br><span class="line">  &#125;, </span><br><span class="line">  plugins: [</span><br><span class="line">    <span class="keyword">new</span> webpack.DefinePlugin(&#123;</span><br><span class="line">      <span class="string">'process.env.NODE_ENV'</span>: <span class="string">'"development"'</span>,</span><br><span class="line">    &#125;),</span><br><span class="line">    <span class="keyword">new</span> Customplugin(&#123; <span class="attr">params</span>: <span class="number">1</span> &#125;) <span class="comment">// 添加自定义 plugin</span></span><br><span class="line">  ],</span><br><span class="line">  resolve: &#123; <span class="comment">// 配置一系列搜索资源的规则</span></span><br><span class="line">    alias: &#123; <span class="comment">// 起别名，方便资源引用</span></span><br><span class="line">      @src: path.resolve(process.cwd(), <span class="string">'src'</span>)</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="comment">// 引用的文件可以不加后缀，会找这些后缀的文件</span></span><br><span class="line">    extensions: [<span class="string">'.wasm'</span>, <span class="string">'.mjs'</span>, <span class="string">'.js'</span>, <span class="string">'.json'</span>],</span><br><span class="line">    <span class="comment">// 告诉 webpack 搜索哪些文件夹，可以用绝对路径写死</span></span><br><span class="line">    modules: [<span class="string">'node_modules'</span>],</span><br><span class="line">    <span class="comment">// 从npm包导入时，例如import * as D3 from 'd3'，此选项将确定package.json选中其中的哪些字段</span></span><br><span class="line">    mainFields: [<span class="string">'browser'</span>, <span class="string">'module'</span>, <span class="string">'main'</span>],</span><br><span class="line">    <span class="comment">// 解析目录时要使用的文件名，一般都是 index 了，不要瞎改</span></span><br><span class="line">    mainFiles: [<span class="string">'index'</span>]</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>自定义loader：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> loaderUtils = <span class="built_in">require</span>(<span class="string">'loader-utils'</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">// https://webpack.js.org/api/loaders/</span></span><br><span class="line"><span class="built_in">module</span>.exports = <span class="function"><span class="keyword">function</span> (<span class="params">content, map, meta</span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="keyword">this</span>.data.value) <span class="comment">// 123，具体场景看文档</span></span><br><span class="line">  <span class="comment">// 用 loaderUtils 解析这个 loader 的参数</span></span><br><span class="line">  <span class="keyword">const</span> options = loaderUtils.getOptions(<span class="keyword">this</span>)</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 最后要以一个模块的导出形式</span></span><br><span class="line">  content = <span class="string">`module.exports = function () &#123; <span class="subst">$&#123;content&#125;</span> &#125;`</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// 同步</span></span><br><span class="line">  <span class="keyword">this</span>.callback(<span class="literal">null</span>, content, map, meta)</span><br><span class="line">  <span class="keyword">return</span><span class="comment">// 当调用 callback() 时总是返回 undefined</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// 同步</span></span><br><span class="line">  <span class="comment">// return content</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// 异步</span></span><br><span class="line">  <span class="comment">// const callback = this.async()</span></span><br><span class="line">  <span class="comment">// callback(null, result, map, meta)</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 可以定义一个 pitch 方法，要写在 loader 方法下面，但是会先于 loader 方法执行</span></span><br><span class="line"><span class="built_in">module</span>.exports.pitch = <span class="function"><span class="keyword">function</span>(<span class="params">remainingRequest, precedingRequest, data</span>) </span>&#123;</span><br><span class="line">  data.value = <span class="number">123</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>自定义plugin：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> pluginName = <span class="string">'CustomPlugin'</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// https://webpack.js.org/api/plugins/</span></span><br><span class="line"><span class="comment">// 写成 ES5 prototype 形式也可以，一定要有 apply 方法</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">CustomPlugin</span> </span>&#123;</span><br><span class="line">  <span class="keyword">constructor</span> (options) &#123;</span><br><span class="line">    <span class="keyword">this</span>.options = options</span><br><span class="line">  &#125;</span><br><span class="line">  apply(compiler) &#123;</span><br><span class="line">    <span class="comment">// compiler 和 compilation 有很多生命周期钩子</span></span><br><span class="line">    compiler.hooks.run.tap(pluginName, compilation =&gt; &#123;</span><br><span class="line">      <span class="built_in">console</span>.log(<span class="string">'The webpack build process is starting!!!'</span>)</span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">module</span>.exports = CustomPlugin</span><br></pre></td></tr></table></figure>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://blog.cchealthier.com/2020/11/22/webpack-config/" data-id="cki2mm54i001w88uk7ifz9vnk" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2020/11/15/search/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">深度优先遍历(DFS)-栈和广度优先遍历(BFS)-队列的理解</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/http%E5%8D%8F%E8%AE%AE/">http协议</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/%E7%AE%97%E6%B3%95/">算法</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%97%85%E8%A1%8C/">旅行</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%97%85%E8%A1%8C/%E8%AE%B0%E5%BD%95/">记录</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%83%B9%E9%A5%AA/">烹饪</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%83%B9%E9%A5%AA/%E4%BC%A0%E7%BB%9F/">传统</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%9A%8F%E6%83%B3/">随想</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%9A%8F%E6%83%B3/%E5%BF%83%E6%83%85/">心情</a></li></ul></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/blog/" rel="tag">blog</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cook/" rel="tag">cook</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fish/" rel="tag">fish</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/blog/" style="font-size: 10px;">blog</a> <a href="/tags/cook/" style="font-size: 10px;">cook</a> <a href="/tags/fish/" style="font-size: 10px;">fish</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/11/22/webpack-config/">webpack的配置</a>
+          </li>
+        
+          <li>
+            <a href="/2020/11/15/search/">深度优先遍历(DFS)-栈和广度优先遍历(BFS)-队列的理解</a>
+          </li>
+        
+          <li>
+            <a href="/2020/10/21/algorithm/">记录一些基础算法</a>
+          </li>
+        
+          <li>
+            <a href="/2020/08/30/puppeteer/">玩一玩puppeteer</a>
+          </li>
+        
+          <li>
+            <a href="/2020/08/30/shenzhen-guanhucun/">在海边</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 ChrisIori<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//cdn.staticfile.org/jquery/2.0.3/jquery.min.js"></script>
+<script src="//pv.sohu.com/cityjson?ie=utf-8"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>

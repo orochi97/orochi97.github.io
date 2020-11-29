@@ -144,7 +144,7 @@
 <img src="/2020/07/25/variable-type/Object.prototype.toString.PNG" class="" title="Object.prototype.toString">
 <br/>
 
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">console</span>.log(<span class="built_in">Promise</span>.prototype[<span class="built_in">Symbol</span>.toStringTag]) <span class="comment">// Promise</span></span><br><span class="line"><span class="built_in">console</span>.log(<span class="built_in">Array</span>.prototype[<span class="built_in">Symbol</span>.toStringTag]) <span class="comment">// undefined</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Tag</span>(<span class="params"></span>) </span>&#123;&#125;</span><br><span class="line">Tag.prototype[<span class="built_in">Symbol</span>.toStringTag] = <span class="string">'newTag'</span></span><br><span class="line"><span class="keyword">const</span> t = <span class="keyword">new</span> Tag</span><br><span class="line"><span class="built_in">console</span>.log(<span class="built_in">Object</span>.prototype.toString.call(t)) <span class="comment">// [object newTag]</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Tag1</span>(<span class="params"></span>) </span>&#123;&#125;</span><br><span class="line">Tag1.prototype[<span class="built_in">Symbol</span>.toStringTag] = &#123;&#125;</span><br><span class="line"><span class="keyword">const</span> t1 = <span class="keyword">new</span> Tag1</span><br><span class="line"><span class="built_in">console</span>.log(<span class="built_in">Object</span>.prototype.toString.call(t1)) <span class="comment">// [object Object]</span></span><br><span class="line"><span class="comment">// 从上面 tc39 的介绍14，15，16来看，当 [Symbol.toStringTag] 不为 string，则将内置 tag 设置为 Object</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">console</span>.log(<span class="built_in">Promise</span>.prototype[<span class="built_in">Symbol</span>.toStringTag]) <span class="comment">// Promise</span></span><br><span class="line"><span class="built_in">console</span>.log(<span class="built_in">Array</span>.prototype[<span class="built_in">Symbol</span>.toStringTag]) <span class="comment">// undefined</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Tag</span>(<span class="params"></span>) </span>&#123;&#125;</span><br><span class="line">Tag.prototype[<span class="built_in">Symbol</span>.toStringTag] = <span class="string">'newTag'</span></span><br><span class="line"><span class="keyword">const</span> t = <span class="keyword">new</span> Tag()</span><br><span class="line"><span class="built_in">console</span>.log(<span class="built_in">Object</span>.prototype.toString.call(t)) <span class="comment">// [object newTag]</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Tag1</span>(<span class="params"></span>) </span>&#123;&#125;</span><br><span class="line">Tag1.prototype[<span class="built_in">Symbol</span>.toStringTag] = &#123;&#125;</span><br><span class="line"><span class="keyword">const</span> t1 = <span class="keyword">new</span> Tag1()</span><br><span class="line"><span class="built_in">console</span>.log(<span class="built_in">Object</span>.prototype.toString.call(t1)) <span class="comment">// [object Object]</span></span><br><span class="line"><span class="comment">// 从上面 tc39 的介绍14，15，16来看，当 [Symbol.toStringTag] 不为 string，则将内置 tag 设置为 Object</span></span><br></pre></td></tr></table></figure>
 
 <p>里面还涉及其他知识，可以参阅 <a href="https://zhuanlan.zhihu.com/p/118793721" target="_blank" rel="noopener">知乎</a> 和 <a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Symbol/toStringTag" target="_blank" rel="noopener">MDN-Symbol.toStringTag</a>、<a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Object/toString" target="_blank" rel="noopener">MDN-toString</a>。</p>
 <p>码后感：几个判断类型方法，居然有这么多细节点在里面。平时可能用了就用了，都不知道其中原理。真是路漫漫啊。。。</p>
@@ -152,7 +152,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.cchealthier.com/2020/07/25/variable-type/" data-id="ckhim8el70015e8uk8xekft4x" class="article-share-link">Share</a>
+      <a data-url="http://blog.cchealthier.com/2020/07/25/variable-type/" data-id="cki2mm54c001o88uk9fcv9isb" class="article-share-link">Share</a>
       
       
     </footer>
@@ -231,6 +231,10 @@
       <ul>
         
           <li>
+            <a href="/2020/11/22/webpack-config/">webpack的配置</a>
+          </li>
+        
+          <li>
             <a href="/2020/11/15/search/">深度优先遍历(DFS)-栈和广度优先遍历(BFS)-队列的理解</a>
           </li>
         
@@ -244,10 +248,6 @@
         
           <li>
             <a href="/2020/08/30/shenzhen-guanhucun/">在海边</a>
-          </li>
-        
-          <li>
-            <a href="/2020/08/30/promise-api/">Promise的几个api用法</a>
           </li>
         
       </ul>
