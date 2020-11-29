@@ -23,7 +23,7 @@ function SubType(type) {
   this.subtype = type
 }
 
-// 如果这里是 SubType.prototype = SuSuperTypebType.prototype
+// 如果这里是 SubType.prototype = SuperType.prototype
 // 则 this.property 值为 undefined
 SubType.prototype = new SuperType('super')
 

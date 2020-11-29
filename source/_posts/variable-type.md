@@ -174,12 +174,12 @@ console.log(Array.prototype[Symbol.toStringTag]) // undefined
 
 function Tag() {}
 Tag.prototype[Symbol.toStringTag] = 'newTag'
-const t = new Tag
+const t = new Tag()
 console.log(Object.prototype.toString.call(t)) // [object newTag]
 
 function Tag1() {}
 Tag1.prototype[Symbol.toStringTag] = {}
-const t1 = new Tag1
+const t1 = new Tag1()
 console.log(Object.prototype.toString.call(t1)) // [object Object]
 // 从上面 tc39 的介绍14，15，16来看，当 [Symbol.toStringTag] 不为 string，则将内置 tag 设置为 Object
 ```
