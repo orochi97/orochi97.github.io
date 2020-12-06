@@ -80,6 +80,147 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-autumn" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/12/06/autumn/" class="article-date">
+  <time datetime="2020-12-06T04:09:51.000Z" itemprop="datePublished">2020-12-06</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%97%85%E8%A1%8C/">旅行</a>►<a class="article-category-link" href="/categories/%E6%97%85%E8%A1%8C/%E8%AE%B0%E5%BD%95/">记录</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/12/06/autumn/">我言秋日胜春朝</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>10月11月交界去了趟北京，看看红叶枫叶。不得不说，北方就是比南方有秋意。毕竟广东没秋天，哈哈。</p>
+<img src="/2020/12/06/autumn/beijing1.jpg" class="" title="beijing1">
+
+</br>
+</br>
+</br>
+
+<img src="/2020/12/06/autumn/beijing2.jpg" class="" title="beijing2">
+
+</br>
+</br>
+</br>
+
+<img src="/2020/12/06/autumn/beijing3.jpg" class="" title="beijing3">
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://blog.cchealthier.com/2020/12/06/autumn/" data-id="ckid8vc2q00008cuk9jng0ae8" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-webpack-speed" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/12/06/webpack-speed/" class="article-date">
+  <time datetime="2020-12-06T02:34:40.000Z" itemprop="datePublished">2020-12-06</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/12/06/webpack-speed/">webpack 的快</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>现在啥都离不开性能。性能其实就是讲快的问题。一般 webpack 的快，都是讲它的构建（打包）的速度，但其实也可以有辅助运行时候的快的。<br>简单记录一下。</p>
+<h3 id="构建速度"><a href="#构建速度" class="headerlink" title="构建速度"></a>构建速度</h3><h4 id="一、缓存"><a href="#一、缓存" class="headerlink" title="一、缓存"></a>一、缓存</h4><p>基本上只要讲到快的肯定都有缓存。</p>
+<ol>
+<li><p><a href="https://webpack.js.org/configuration/other-options/#cache" target="_blank" rel="noopener">webpack5 的持久化缓存</a></p>
+</li>
+<li><p>各类 loader 自带的缓存功能（比如 babel-loader的 cacheDirectory: true）</p>
+</li>
+<li><p>cache-loader</p>
+</li>
+<li><p>hard-source-webpack-plugin</p>
+</li>
+<li><p><a href="https://webpack.js.org/plugins/dll-plugin" target="_blank" rel="noopener">DllPlugin 和 DllReferencePlugin</a></p>
+</li>
+</ol>
+<p>前面四个是编译一次后产生缓存，也就是用以第二次缓存。<br>最后一个 Dll 是把一些不常变化的先打包好，然后引进来就可以了，不要每次都花时间构建。另类缓存。</p>
+<h4 id="二、加速文件查找"><a href="#二、加速文件查找" class="headerlink" title="二、加速文件查找"></a>二、加速文件查找</h4><ol>
+<li><p>对文件进行编译，那文件多少，找文件也是个耗时的工作。webpack 配置的 resolve 字段，就是用来告诉查找规则。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">  resolve: &#123; <span class="comment">// 配置一系列搜索资源的规则</span></span><br><span class="line">    alias: &#123; <span class="comment">// 起别名，相当于转换成绝对路径了，所以比相对路径快</span></span><br><span class="line">      @src: path.resolve(process.cwd(), <span class="string">'src'</span>)</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="comment">// 引用的文件可以不加后缀，会找这些后缀的文件，引用文件详细到后缀名最快了</span></span><br><span class="line">    <span class="comment">// 但是一般也习惯不写后缀名，但这字段不要太多吧</span></span><br><span class="line">    extensions: [<span class="string">'.wasm'</span>, <span class="string">'.mjs'</span>, <span class="string">'.js'</span>, <span class="string">'.json'</span>],</span><br><span class="line">    <span class="comment">// 明确告诉 webpack 搜索哪个依赖文件，可以用绝对路径写死</span></span><br><span class="line">    modules: [<span class="string">'node_modules'</span>]</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>以及 loader 配置里的 <code>include</code> 和 <code>exclude</code> 来告诉 webpack 哪些需要编译哪些不需要，不干活当然最省时间。</p>
+</li>
+</ol>
+<h4 id="三、多进程打包"><a href="#三、多进程打包" class="headerlink" title="三、多进程打包"></a>三、多进程打包</h4><ol>
+<li><p>happypack（作者都推荐用 thread-loader 了。。。）</p>
+</li>
+<li><p><a href="https://webpack.js.org/loaders/thread-loader/" target="_blank" rel="noopener">thread-loader</a></p>
+</li>
+</ol>
+<h3 id="运行速度"><a href="#运行速度" class="headerlink" title="运行速度"></a>运行速度</h3><h4 id="一、缓存-1"><a href="#一、缓存-1" class="headerlink" title="一、缓存"></a>一、缓存</h4><p>还是避不开缓存，这个结合《<a href="2020/07/02/cache/">关于缓存的几个关键词</a>》最下面内容来看。就是跟浏览器的缓存策略搭配起来。</p>
+<h4 id="二、花样减少代码"><a href="#二、花样减少代码" class="headerlink" title="二、花样减少代码"></a>二、花样减少代码</h4><ol>
+<li><p>压缩代码，现在 prodcution 模式，webpack 会自定开启混淆压缩功能了。（当然也可以自己<a href="https://webpack.js.org/configuration/optimization/" target="_blank" rel="noopener">配置压缩功能</a>）</p>
+</li>
+<li><p>减去不被触及的代码，<a href="https://webpack.js.org/guides/tree-shaking" target="_blank" rel="noopener">Tree Shaking</a>，但我想还是尽量不要写这种代码吧，Tree Shaking 也不是百分百靠谱。</p>
+</li>
+<li><p>按需加载，配合 ES6 的 <code>import export</code>，webpack就会处理了。没有用到的模块就不打包进来。</p>
+</li>
+</ol>
+<p><strong>注意：</strong>这里提一下，require 也可以使用，但并不是浏览器支持 require，而是 webpack 对其做了方法处理。<br>无论是 import 还是 require，最终都会变成 <code>__webpack_require__</code>。使用 require 就没有按需这种功效了。代码都会全部打进去。<br>而且因为 import 语法原因，所以需要放在最上面声明，是静态解析，所以才能分析出哪些要不要。（其实这部分是 babel 干的活）<br>当然 require 也有用处，代码虽然都打进来，但是不会一开始就运行（调用 require 了才会），也就是省去一开始的解析时间，最关键的还是，可以条件引入：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">getModule</span>(<span class="params">flag</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (flag) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">require</span>(<span class="string">'./a.js'</span>)</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> <span class="built_in">require</span>(<span class="string">'./b.js'</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol start="4">
+<li><p>抽出公共js，虽然大部分工程都会打成一个 js，但有些还是会有多份，就可能存在重复代码，然后这个相当复杂的 <a href="https://webpack.js.org/plugins/split-chunks-plugin" target="_blank" rel="noopener">SplitChunksPlugin</a> （<a href="https://webpack.js.org/plugins/commons-chunk-plugin/" target="_blank" rel="noopener">CommonsChunkPlugin</a>的升级版，不过这家伙已经是时代的眼泪了）就出场了。可以抽出公共组件，可以很精细地配置，当然官网说他们的默认配置最优了，没什么事就不要瞎改了。</p>
+</li>
+<li><p>异步加载，这个就跟上面那个有千丝的关系。我们运行性能讲究一个最小展示，可以看下<a href="/2020/05/28/js-performance/">JS性能优化探讨</a>里的加快响应。<br>有些功能不一定会被点到，那这部分功能就可以延后初始化。那相关的 js 就可以延迟加载。也即是动态加载，对应上面说的 import 是静态加载。使用 webpack 的语法 <a href="https://webpack.js.org/guides/code-splitting/#dynamic-imports" target="_blank" rel="noopener">import()</a>。这个跟 require 不同，不会被打包进去，而是抽多一份 js 出来。延迟去下载。</p>
+</li>
+<li><p>合并js文件，这个就跟上面那两个有万缕的关系。抽的 js 太多就会增多 http 请求，这是最耗性能的，走多一次 http 的消耗可能比一次请求多点内容更消耗，当然 http2 的多路复用另说。<br><a href="https://webpack.js.org/plugins/limit-chunk-count-plugin/" target="_blank" rel="noopener">LimitChunkCountPlugin</a> 和 <a href="https://webpack.js.org/plugins/min-chunk-size-plugin/" target="_blank" rel="noopener">MinChunkSizePlugin</a>（LimitChunkCountPlugin功能多一点，没具体使用过） 用于合并小 js 文件。实际场景中，我们就曾在使用 monaco-editor（vscode的网页版）的时候，打包出来有很多细碎的 js，然后用了 MinChunkSizePlugin 把小 js 文件给合成一份。</p>
+</li>
+</ol>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://blog.cchealthier.com/2020/12/06/webpack-speed/" data-id="ckid8vc7x00368cukb3jaeu29" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-api-defference" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2020/11/29/api-defference/" class="article-date">
@@ -131,7 +272,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.cchealthier.com/2020/11/29/api-defference/" data-id="cki3c443n0000gouk2fdfdfgo" class="article-share-link">Share</a>
+      <a data-url="http://blog.cchealthier.com/2020/11/29/api-defference/" data-id="ckid8vc3h00088cuk2rpohmqg" class="article-share-link">Share</a>
       
       
     </footer>
@@ -177,7 +318,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.cchealthier.com/2020/11/22/webpack-config/" data-id="cki3c44860025goukgsmz4msg" class="article-share-link">Share</a>
+      <a data-url="http://blog.cchealthier.com/2020/11/22/webpack-config/" data-id="ckid8vc6d002q8cuk2kc9azhk" class="article-share-link">Share</a>
       
       
     </footer>
@@ -222,7 +363,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.cchealthier.com/2020/11/15/search/" data-id="cki3c447q0022gouk9zao5snz" class="article-share-link">Share</a>
+      <a data-url="http://blog.cchealthier.com/2020/11/15/search/" data-id="ckid8vc4i00138cuk76cng2l7" class="article-share-link">Share</a>
       
       
     </footer>
@@ -270,7 +411,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.cchealthier.com/2020/10/21/algorithm/" data-id="cki3c444m000ggoukddi2csxg" class="article-share-link">Share</a>
+      <a data-url="http://blog.cchealthier.com/2020/10/21/algorithm/" data-id="ckid8vc3800038cukcoau3wfz" class="article-share-link">Share</a>
       
       
     </footer>
@@ -326,7 +467,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.cchealthier.com/2020/08/30/puppeteer/" data-id="cki3c448d002bgouk418ldaga" class="article-share-link">Share</a>
+      <a data-url="http://blog.cchealthier.com/2020/08/30/puppeteer/" data-id="ckid8vc66002l8cukcdnnh6yc" class="article-share-link">Share</a>
       
       
     </footer>
@@ -379,7 +520,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.cchealthier.com/2020/08/30/shenzhen-guanhucun/" data-id="cki3c445y001cgouk81ug2w6l" class="article-share-link">Share</a>
+      <a data-url="http://blog.cchealthier.com/2020/08/30/shenzhen-guanhucun/" data-id="ckid8vc4f00108cukcxx1dwn2" class="article-share-link">Share</a>
       
       
     </footer>
@@ -429,7 +570,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.cchealthier.com/2020/08/30/promise-api/" data-id="cki3c445n0011gouk1ilr8s5q" class="article-share-link">Share</a>
+      <a data-url="http://blog.cchealthier.com/2020/08/30/promise-api/" data-id="ckid8vc45000t8cukfn1tbrl2" class="article-share-link">Share</a>
       
       
     </footer>
@@ -482,104 +623,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.cchealthier.com/2020/08/16/webpackJsonp/" data-id="cki3c448b0029goukdrry8b7i" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-next-tick" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/08/16/next-tick/" class="article-date">
-  <time datetime="2020-08-16T13:20:00.000Z" itemprop="datePublished">2020-08-16</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/08/16/next-tick/">vue的nextTick解析</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>用过 vue 的同学应该都知道，双向绑定中，更改了数据会去更新dom，但不是马上更新的。<br>直接跟在修改数据后，拿到的 dom 还是旧的。<br>vue有个<code>this.$nextTick</code>用法，用这个的回调可以保证拿到更新后的dom。</p>
-<p>直接看看 <a href="https://github.com/vuejs/vue/blob/dev/src/core/util/next-tick.js" target="_blank" rel="noopener">next-tick</a> 源码</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; noop &#125; <span class="keyword">from</span> <span class="string">'shared/util'</span></span><br><span class="line"><span class="keyword">import</span> &#123; handleError &#125; <span class="keyword">from</span> <span class="string">'./error'</span></span><br><span class="line"><span class="keyword">import</span> &#123; isIE, isIOS, isNative &#125; <span class="keyword">from</span> <span class="string">'./env'</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">let</span> isUsingMicroTask = <span class="literal">false</span></span><br><span class="line"><span class="keyword">const</span> callbacks = []</span><br><span class="line"><span class="keyword">let</span> pending = <span class="literal">false</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 清异步队列，全部执行</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">flushCallbacks</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  pending = <span class="literal">false</span></span><br><span class="line">  <span class="keyword">const</span> copies = callbacks.slice(<span class="number">0</span>)</span><br><span class="line">  callbacks.length = <span class="number">0</span></span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; copies.length; i++) &#123;</span><br><span class="line">    copies[i]()</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">let</span> timerFunc</span><br><span class="line"><span class="keyword">if</span> (<span class="keyword">typeof</span> <span class="built_in">Promise</span> !== <span class="string">'undefined'</span> &amp;&amp; isNative(<span class="built_in">Promise</span>)) &#123;</span><br><span class="line">  <span class="comment">// 判断有没有 promise 且有没有被重写过，</span></span><br><span class="line">  <span class="comment">// promise完好无损就使用 promise 做异步队列的触发，设置使用微任务标志为true</span></span><br><span class="line">  <span class="keyword">const</span> p = <span class="built_in">Promise</span>.resolve()</span><br><span class="line">  timerFunc = <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    p.then(flushCallbacks)</span><br><span class="line">    <span class="keyword">if</span> (isIOS) setTimeout(noop)</span><br><span class="line">  &#125;</span><br><span class="line">  isUsingMicroTask = <span class="literal">true</span></span><br><span class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span> (!isIE &amp;&amp; <span class="keyword">typeof</span> MutationObserver !== <span class="string">'undefined'</span> &amp;&amp; (</span><br><span class="line">  isNative(MutationObserver) ||</span><br><span class="line">  <span class="comment">// PhantomJS and iOS 7.x</span></span><br><span class="line">  <span class="comment">// 特殊场景用MutationObserver</span></span><br><span class="line">  MutationObserver.toString() === <span class="string">'[object MutationObserverConstructor]'</span></span><br><span class="line">)) &#123;</span><br><span class="line">  <span class="comment">// Use MutationObserver where native Promise is not available,</span></span><br><span class="line">  <span class="comment">// e.g. PhantomJS, iOS7, Android 4.4</span></span><br><span class="line">  <span class="comment">// (#6466 MutationObserver is unreliable in IE11)</span></span><br><span class="line">  <span class="keyword">let</span> counter = <span class="number">1</span></span><br><span class="line">  <span class="keyword">const</span> observer = <span class="keyword">new</span> MutationObserver(flushCallbacks)</span><br><span class="line">  <span class="keyword">const</span> textNode = <span class="built_in">document</span>.createTextNode(<span class="built_in">String</span>(counter))</span><br><span class="line">  observer.observe(textNode, &#123;</span><br><span class="line">    characterData: <span class="literal">true</span></span><br><span class="line">  &#125;)</span><br><span class="line">  timerFunc = <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    counter = (counter + <span class="number">1</span>) % <span class="number">2</span></span><br><span class="line">    textNode.data = <span class="built_in">String</span>(counter)</span><br><span class="line">  &#125;</span><br><span class="line">  isUsingMicroTask = <span class="literal">true</span></span><br><span class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span> (<span class="keyword">typeof</span> setImmediate !== <span class="string">'undefined'</span> &amp;&amp; isNative(setImmediate)) &#123;</span><br><span class="line">  <span class="comment">// Fallback to setImmediate.</span></span><br><span class="line">  <span class="comment">// Techinically it leverages the (macro) task queue,</span></span><br><span class="line">  <span class="comment">// but it is still a better choice than setTimeout.</span></span><br><span class="line">  <span class="comment">// 再不济看看有没有 setImmediate，虽然也是宏任务，但总比 setTimeout 强</span></span><br><span class="line">  timerFunc = <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    setImmediate(flushCallbacks)</span><br><span class="line">  &#125;</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">  <span class="comment">// Fallback to setTimeout.</span></span><br><span class="line">  <span class="comment">// 实在没办法了，setTimeout 兜底</span></span><br><span class="line">  timerFunc = <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    setTimeout(flushCallbacks, <span class="number">0</span>)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// nextTick 具体操作所在，其他队列方法也是用这个，比如 data 改动后通知 dom 修改，也是用这个</span></span><br><span class="line"><span class="comment">// 即 vue 里面的响应式，不是实时更新的，而是存在一个队列，在下一回合进行任务更新。不然太耗损性能</span></span><br><span class="line"><span class="comment">// 也就是解释了，在修改了 data 之后，dom 是没有马上更新，而在 $nextTick 的回调后，则可以看到 dom 更新</span></span><br><span class="line"><span class="comment">// 原因就在于同样的异步任务，$nextTick 的回调，是在 dom 修改的操作后面，所以 $nextTick 能看到 dom 更新</span></span><br><span class="line"><span class="comment">// 以下以 this.$nextTick(()=&gt;&#123;&#125;) 为例子，cb 为回调，ctx 为 vue 实例</span></span><br><span class="line"><span class="keyword">export</span> <span class="function"><span class="keyword">function</span> <span class="title">nextTick</span> (<span class="params">cb?: Function, ctx?: Object</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">let</span> _resolve</span><br><span class="line">  <span class="comment">// 把任务塞进异步队列</span></span><br><span class="line">  callbacks.push(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="comment">// 有回调就触发回调</span></span><br><span class="line">    <span class="keyword">if</span> (cb) &#123;</span><br><span class="line">      <span class="keyword">try</span> &#123;</span><br><span class="line">        cb.call(ctx)</span><br><span class="line">      &#125; <span class="keyword">catch</span> (e) &#123;</span><br><span class="line">        handleError(e, ctx, <span class="string">'nextTick'</span>)</span><br><span class="line">      &#125; </span><br><span class="line">      <span class="comment">// 这里注意，结合下面来看</span></span><br><span class="line">      <span class="comment">//用 promise 的 resolve 触发，把 vue 实例当成参数传进去</span></span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (_resolve) &#123;</span><br><span class="line">      _resolve(ctx)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;)</span><br><span class="line">  <span class="comment">// 在清任务 flushCallbacks 里赋值 pending 为 false</span></span><br><span class="line">  <span class="comment">// 目的为了 timerFunc 在周期内只触发一次</span></span><br><span class="line">  <span class="comment">// 执行 timerFunc，让其下一周期执行清异步队列任务</span></span><br><span class="line">  <span class="keyword">if</span> (!pending) &#123;</span><br><span class="line">    pending = <span class="literal">true</span></span><br><span class="line">    timerFunc()</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 当没有回调且 Promise 正常</span></span><br><span class="line">  <span class="comment">// $nextTick 返回的是一个 promise，触发时机与上面有回调一样</span></span><br><span class="line">  <span class="keyword">if</span> (!cb &amp;&amp; <span class="keyword">typeof</span> <span class="built_in">Promise</span> !== <span class="string">'undefined'</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function"><span class="params">resolve</span> =&gt;</span> &#123;</span><br><span class="line">      _resolve = resolve</span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>除了常规的回调用法之外，还可以这样用</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">this</span>.$nextTick().then( vue实例 =&gt; &#123; <span class="built_in">console</span>.log(vue实例 === <span class="keyword">this</span>) &#125;) <span class="comment">// =&gt; true</span></span><br></pre></td></tr></table></figure>
-
-<p>如果不传入回调，则返回promise，因为是 promise，也可以直接就 await 等待。参考<a href="https://cn.vuejs.org/v2/guide/reactivity.html#%E5%BC%82%E6%AD%A5%E6%9B%B4%E6%96%B0%E9%98%9F%E5%88%97" target="_blank" rel="noopener">官网</a>。</p>
-<p>接着来个简陋版简单模拟一下这个 nextTick 的实现。这其中还涉及到<a href="/2020/05/27/eventloop/">事件循环</a>的知识。</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 模拟vue nextTick</span></span><br><span class="line"><span class="comment">// 存储所有$nextTick的回调，变量的set修改后通知dom更新的，与$nextTick的回调进入同个微队列</span></span><br><span class="line"><span class="keyword">const</span> callbacks = []</span><br><span class="line"><span class="comment">// 微队列的触发载体，这里是Promise.resolve()</span></span><br><span class="line"><span class="comment">// vue是先找Promise.resolve，没有就找setTimeout</span></span><br><span class="line"><span class="keyword">let</span> run = <span class="literal">null</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">next</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  callbacks.forEach(<span class="function">(<span class="params">cb</span>) =&gt;</span> &#123;</span><br><span class="line">    cb()</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 这里的change可以看成修改了变量，里面的回调就是与nextTick的回调如出一辙</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">change</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  nextTick(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="comment">// 这里面是同步</span></span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'update dom -- 1'</span>)</span><br><span class="line">    <span class="keyword">const</span> child = <span class="built_in">document</span>.createElement(<span class="string">'div'</span>)</span><br><span class="line">    child.id = <span class="string">'new'</span></span><br><span class="line">    <span class="built_in">document</span>.getElementById(<span class="string">'box'</span>).appendChild(child)</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'update dom'</span>)</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'update dom -- 2'</span>)</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">nextTick</span>(<span class="params">cb</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">if</span>(!run) &#123;</span><br><span class="line">    <span class="comment">// 初始化下个队列</span></span><br><span class="line">    run = <span class="built_in">Promise</span>.resolve()</span><br><span class="line">    <span class="comment">// 把next方法放在下个队列运行</span></span><br><span class="line">    <span class="comment">// 看上面的next函数，是把callbacks的函数遍历执行</span></span><br><span class="line">    run.then(next)</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// nextTick的回调加入数组等着，遍历触发里面的每个函数</span></span><br><span class="line">  <span class="comment">// 由于是同步，所以其实只是一个微任务，</span></span><br><span class="line">  callbacks.push(cb)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 调用了第一次nextTick</span></span><br><span class="line">nextTick(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="comment">// 表示该次微队列任务开始</span></span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'nextTick -- 1'</span>)</span><br><span class="line">&#125;)</span><br><span class="line"><span class="built_in">Promise</span>.resolve().then(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'then -- '</span>)</span><br><span class="line">&#125;)</span><br><span class="line"><span class="comment">// 修改变量，更改了dom</span></span><br><span class="line">change()</span><br><span class="line"><span class="comment">// 同步任务，最早打印，但此时没有new元素</span></span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">'script -- '</span>, <span class="built_in">document</span>.getElementById(<span class="string">'new'</span>))</span><br><span class="line"><span class="comment">// 调用了第二次nextTick</span></span><br><span class="line">nextTick(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="comment">// 在修改变量之后调nextTick，已有new元素</span></span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'nextTick -- 2'</span>, <span class="built_in">document</span>.getElementById(<span class="string">'new'</span>))</span><br><span class="line">&#125;)</span><br><span class="line"><span class="comment">// nextTick -- 2 之所以在 then -- 前打印，是因为回调都放在callbacks里，同步触发了</span></span><br></pre></td></tr></table></figure>
-
-<br>
-<img src="/2020/08/16/next-tick/next.PNG" class="" title="next">
-<br>
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://blog.cchealthier.com/2020/08/16/next-tick/" data-id="cki3c445r0016gouk0dbacj6n" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-vertical-middle" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/07/29/vertical-middle/" class="article-date">
-  <time datetime="2020-07-29T14:30:18.000Z" itemprop="datePublished">2020-07-29</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/07/29/vertical-middle/">垂直居中的几个方法</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>四种方法，先在外面放四个容器, 赋予 “.container” 类。让其子元素居中，先赋予 “.box” 类，水平居中。</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">xmlns</span>=<span class="string">"http://www.w3.org/1999/xhtml"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">http-equiv</span>=<span class="string">"Content-Type"</span> <span class="attr">content</span>=<span class="string">"text/html; charset=utf-8"</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">title</span>&gt;</span>baidu<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">style</span> <span class="attr">type</span>=<span class="string">"text/css"</span>&gt;</span></span><br><span class="line"><span class="css"><span class="selector-class">.container</span> &#123;</span></span><br><span class="line">  width: 22%;</span><br><span class="line">  height: 300px;</span><br><span class="line">  float: left;</span><br><span class="line"><span class="css">  <span class="selector-tag">background-color</span>: <span class="selector-id">#abcdef</span>;</span></span><br><span class="line">  margin: 0 10px;</span><br><span class="line">  position: relative;</span><br><span class="line">&#125;</span><br><span class="line"><span class="css"><span class="selector-class">.box</span> &#123;</span></span><br><span class="line">  width: 100px;</span><br><span class="line">  height: 100px;</span><br><span class="line">  background-color: red;</span><br><span class="line">  text-align: center;</span><br><span class="line">&#125;</span><br><span class="line"><span class="xml"><span class="comment">&lt;!-- 绝对定位大法，设置为绝对定位，四个方向位移为0，外边距设为auto --&gt;</span></span></span><br><span class="line"><span class="css"><span class="selector-class">.middle1</span> &#123;</span></span><br><span class="line">  position: absolute;</span><br><span class="line">  left: 0;</span><br><span class="line">  right: 0;</span><br><span class="line">  top: 0;</span><br><span class="line">  bottom: 0;</span><br><span class="line">  margin: auto;</span><br><span class="line">&#125;</span><br><span class="line"><span class="xml"><span class="comment">&lt;!-- flex弹性布局，特别容易完成这个事 --&gt;</span></span></span><br><span class="line"><span class="css"><span class="selector-class">.middle2</span> &#123;</span></span><br><span class="line">  display: flex;</span><br><span class="line">  justify-content: center;</span><br><span class="line">  align-items: center;</span><br><span class="line">&#125;</span><br><span class="line"><span class="xml"><span class="comment">&lt;!-- 利用表格居中，注意的是还要多一层table-cell，真正居中是在table-cell --&gt;</span></span></span><br><span class="line"><span class="css"><span class="selector-class">.middle3</span> &#123;</span></span><br><span class="line">  display: table-cell;</span><br><span class="line">  vertical-align: middle;</span><br><span class="line">  background-color: initial;</span><br><span class="line">&#125;</span><br><span class="line"><span class="css"><span class="selector-class">.block</span> &#123;</span></span><br><span class="line">  display: inline-block;</span><br><span class="line">&#125;</span><br><span class="line"><span class="xml"><span class="comment">&lt;!-- 绝对定位加translate大法，水平垂直位移50%，translate里面的50%是相对于自己的，所以不知宽高也可以使用 --&gt;</span></span></span><br><span class="line"><span class="css"><span class="selector-class">.middle4</span> &#123;</span></span><br><span class="line">  position: absolute;</span><br><span class="line">  left: 50%;</span><br><span class="line">  top: 50%;</span><br><span class="line">  transform: translateX(-50%) translateY(-50%);</span><br><span class="line">&#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"container"</span>&gt;</span><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"box middle1"</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"container middle2"</span>&gt;</span><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"box"</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"container"</span> <span class="attr">style</span>=<span class="string">"display: table;"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"box middle3"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span> <span class="attr">class</span>=<span class="string">"box block"</span>&gt;</span><span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"container"</span>&gt;</span><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"box middle4"</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>总结：个人觉得，首先 <a href="http://www.ruanyifeng.com/blog/2015/07/flex-grammar.html" target="_blank" rel="noopener">flex</a> 布局最方便也最帅气。然后绝对定位加 <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/transform-function/translate" target="_blank" rel="noopener">translate</a> 也好理解。至于第一种绝对定位加四个方向位移为0，其实不太理解其原理~ = =！</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://blog.cchealthier.com/2020/07/29/vertical-middle/" data-id="cki3c448r002ogoukfzi1ebh4" class="article-share-link">Share</a>
+      <a data-url="http://blog.cchealthier.com/2020/08/16/webpackJsonp/" data-id="ckid8vc7y00378cuk24ys0hyf" class="article-share-link">Share</a>
       
       
     </footer>
@@ -633,7 +677,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a></li></ul>
     </div>
   </div>
 
@@ -646,6 +690,14 @@
       <ul>
         
           <li>
+            <a href="/2020/12/06/autumn/">我言秋日胜春朝</a>
+          </li>
+        
+          <li>
+            <a href="/2020/12/06/webpack-speed/">webpack 的快</a>
+          </li>
+        
+          <li>
             <a href="/2020/11/29/api-defference/">几个相似（splice slice，substr substring）方法的区别</a>
           </li>
         
@@ -655,14 +707,6 @@
         
           <li>
             <a href="/2020/11/15/search/">深度优先遍历(DFS)-栈和广度优先遍历(BFS)-队列的理解</a>
-          </li>
-        
-          <li>
-            <a href="/2020/10/21/algorithm/">记录一些基础算法</a>
-          </li>
-        
-          <li>
-            <a href="/2020/08/30/puppeteer/">玩一玩puppeteer</a>
           </li>
         
       </ul>
