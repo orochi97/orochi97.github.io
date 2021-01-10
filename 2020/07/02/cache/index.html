@@ -30,7 +30,7 @@
   
 <link rel="stylesheet" href="/css/style.css">
 
-<meta name="generator" content="Hexo 4.2.0"></head>
+<meta name="generator" content="Hexo 5.3.0"></head>
 
 <body>
   <div id="container">
@@ -52,10 +52,6 @@
           </div>
         </div>
       
-      
-        <h2 id="subtitle-wrap">
-          <a href="/" id="subtitle">A boring space of an interesting man</a>
-        </h2>
       
     </div>
     <div id="header-inner" class="inner">
@@ -116,22 +112,22 @@
 <p>当然ETag明显精度高于Last-Modified，所以优先级也是ETag高。</p>
 <h4 id="应用中的策略"><a href="#应用中的策略" class="headerlink" title="应用中的策略"></a>应用中的策略</h4><p>设定一个期限很大的强缓存，如 max-age=31536000 (一年)。文件通过打包工具生成出来都带上哈希。只要文件内容不改哈希就不改，请求的地址就不改，命中强缓存。改了内容自然连请求地址都改了，就会返回新文件。</p>
 <h4 id="代码的角度，"><a href="#代码的角度，" class="headerlink" title="代码的角度，"></a>代码的角度，</h4><p>看到的资料几乎都是服务端的，比如node的express可以在请求资源的返回里设置响应头</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">app.get(<span class="string">'/foo.js'</span>, <span class="function"><span class="keyword">function</span> (<span class="params">req, res</span>) </span>&#123;</span><br><span class="line">  res.set(&#123;</span><br><span class="line">    <span class="string">'Content-Type'</span>: <span class="string">'text/javascript'</span>,</span><br><span class="line">    <span class="string">'Cache-Control'</span>: <span class="string">'no-cache'</span>,</span><br><span class="line">    <span class="string">'ETag'</span>: <span class="string">'12345'</span></span><br><span class="line">  &#125;)</span><br><span class="line">  res.sendFile(<span class="string">'foo.js'</span>)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">app.get(<span class="string">&#x27;/foo.js&#x27;</span>, <span class="function"><span class="keyword">function</span> (<span class="params">req, res</span>) </span>&#123;</span><br><span class="line">  res.set(&#123;</span><br><span class="line">    <span class="string">&#x27;Content-Type&#x27;</span>: <span class="string">&#x27;text/javascript&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;Cache-Control&#x27;</span>: <span class="string">&#x27;no-cache&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;ETag&#x27;</span>: <span class="string">&#x27;12345&#x27;</span></span><br><span class="line">  &#125;)</span><br><span class="line">  res.sendFile(<span class="string">&#x27;foo.js&#x27;</span>)</span><br><span class="line">&#125;)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 <p>当然每个都这样搞未免太麻烦了，在静态资源那里可以统一设置</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> options = &#123;</span><br><span class="line">  dotfiles: <span class="string">'ignore'</span>,</span><br><span class="line">  etag: <span class="literal">false</span>,</span><br><span class="line">  extensions: [<span class="string">'htm'</span>, <span class="string">'html'</span>],</span><br><span class="line">  index: <span class="literal">false</span>,</span><br><span class="line">  maxAge: <span class="string">'1d'</span>,</span><br><span class="line">  redirect: <span class="literal">false</span>,</span><br><span class="line">  setHeaders: <span class="function"><span class="keyword">function</span> (<span class="params">res, path, stat</span>) </span>&#123;</span><br><span class="line">    res.set(<span class="string">'x-timestamp'</span>, <span class="built_in">Date</span>.now())</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">app.use(express.static(<span class="string">'public'</span>, options))</span><br></pre></td></tr></table></figure>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> options = &#123;</span><br><span class="line">  dotfiles: <span class="string">&#x27;ignore&#x27;</span>,</span><br><span class="line">  etag: <span class="literal">false</span>,</span><br><span class="line">  extensions: [<span class="string">&#x27;htm&#x27;</span>, <span class="string">&#x27;html&#x27;</span>],</span><br><span class="line">  index: <span class="literal">false</span>,</span><br><span class="line">  maxAge: <span class="string">&#x27;1d&#x27;</span>,</span><br><span class="line">  redirect: <span class="literal">false</span>,</span><br><span class="line">  setHeaders: <span class="function"><span class="keyword">function</span> (<span class="params">res, path, stat</span>) </span>&#123;</span><br><span class="line">    res.set(<span class="string">&#x27;x-timestamp&#x27;</span>, <span class="built_in">Date</span>.now())</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">app.use(express.static(<span class="string">&#x27;public&#x27;</span>, options))</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 <p>上面是默认设置，自己也可以修改。</p>
 <p>至于前端的设置，似乎只有</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">http-equiv</span>=<span class="string">"expires"</span> <span class="attr">content</span>=<span class="string">"Wed, 20 Jun 2007 22:33:00 GMT"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">http-equiv</span>=<span class="string">"cache-control"</span> <span class="attr">content</span>=<span class="string">"no-cache"</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">http-equiv</span>=<span class="string">&quot;expires&quot;</span> <span class="attr">content</span>=<span class="string">&quot;Wed, 20 Jun 2007 22:33:00 GMT&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">http-equiv</span>=<span class="string">&quot;cache-control&quot;</span> <span class="attr">content</span>=<span class="string">&quot;no-cache&quot;</span>&gt;</span></span><br></pre></td></tr></table></figure>
 <p>尝试设置为强缓存好像没生效。而且这还是只是针对该份html，其他的资源似乎无能为力，可能也是了解不够。</p>
 <h4 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h4><p>上面提到的利用打包工具来做这个哈希名字的事，首先想到的当然是webpack</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">  output:&#123;</span><br><span class="line">    path:path.join(__dirname, <span class="string">'/dist/js'</span>),</span><br><span class="line">    filename: <span class="string">'[name].[chunkhash].js'</span>,</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">  output:&#123;</span><br><span class="line">    path:path.join(__dirname, <span class="string">&#x27;/dist/js&#x27;</span>),</span><br><span class="line">    filename: <span class="string">&#x27;[name].[chunkhash].js&#x27;</span>,</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>都知道输出文件名字可配置成带哈希字符的，也就是上面的 [chunkhash] 部分，这里有三个值可以写：<br><strong>hash、chunkhash、contenthash</strong></p>
 <p><strong>hash：</strong>利用整个工程内容来计算，所以改一点点全部都改。<br><strong>chunkhash：</strong>计算的单独chunk（这个是webpack的概念，相当于每个要输出的文件，一般一个entry对应一个chunk）的哈希。<br><strong>contenthash：</strong>在使用抽离的css插件的时候，抽离的css文件会与引用它的js共用一份chunkhash，那js一改css也得改。当然反过来也是。此时用contenthash就只针对该份文件内容做哈希，就不会互相影响到了。</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.cchealthier.com/2020/07/02/cache/" data-id="ckid8vc3t000g8cukg2bu0v73" class="article-share-link">Share</a>
+      <a data-url="http://blog.cchealthier.com/2020/07/02/cache/" data-id="ckjr7kec4000328ukhsgqha39" class="article-share-link">Share</a>
       
       
     </footer>
@@ -197,7 +193,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a></li></ul>
     </div>
   </div>
 
@@ -208,6 +204,10 @@
     <h3 class="widget-title">最新文章</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2021/01/09/performance-api/">前端性能监控</a>
+          </li>
         
           <li>
             <a href="/2020/12/06/autumn/">我言秋日胜春朝</a>
@@ -225,10 +225,6 @@
             <a href="/2020/11/22/webpack-config/">webpack的配置</a>
           </li>
         
-          <li>
-            <a href="/2020/11/15/search/">深度优先遍历(DFS)-栈和广度优先遍历(BFS)-队列的理解</a>
-          </li>
-        
       </ul>
     </div>
   </div>
@@ -241,7 +237,7 @@
   
   <div class="outer">
     <div id="footer-info" class="inner">
-      &copy; 2020 ChrisIori<br>
+      &copy; 2021 ChrisIori<br>
       Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
     </div>
   </div>

@@ -7,12 +7,12 @@
   
   <title>JS new 一个对象干了什么事 | 凝雪密境</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="12345678910111213141516171819202122232425262728function Person(name, age) &amp;#123;  this.name &#x3D; name  this.age &#x3D; age&amp;#125;Person.prototype.attr &#x3D; &#39;human&#39;const man1 &#x3D; new Person(&#39;123&#39;, 18)console.log(m">
+  <meta name="description" content="12345678910111213141516171819202122232425262728function Person(name, age) &amp;#123;  this.name &#x3D; name  this.age &#x3D; age&amp;#125;Person.prototype.attr &#x3D; &amp;#x27;human&amp;#x27;const man1 &#x3D; new Person(&amp;#x27;123&amp;#x2">
 <meta property="og:type" content="article">
 <meta property="og:title" content="JS new 一个对象干了什么事">
 <meta property="og:url" content="http://blog.cchealthier.com/2020/05/25/new-object/index.html">
 <meta property="og:site_name" content="凝雪密境">
-<meta property="og:description" content="12345678910111213141516171819202122232425262728function Person(name, age) &amp;#123;  this.name &#x3D; name  this.age &#x3D; age&amp;#125;Person.prototype.attr &#x3D; &#39;human&#39;const man1 &#x3D; new Person(&#39;123&#39;, 18)console.log(m">
+<meta property="og:description" content="12345678910111213141516171819202122232425262728function Person(name, age) &amp;#123;  this.name &#x3D; name  this.age &#x3D; age&amp;#125;Person.prototype.attr &#x3D; &amp;#x27;human&amp;#x27;const man1 &#x3D; new Person(&amp;#x27;123&amp;#x2">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2020-05-25T15:59:18.000Z">
 <meta property="article:modified_time" content="2020-05-27T14:48:17.667Z">
@@ -30,7 +30,7 @@
   
 <link rel="stylesheet" href="/css/style.css">
 
-<meta name="generator" content="Hexo 4.2.0"></head>
+<meta name="generator" content="Hexo 5.3.0"></head>
 
 <body>
   <div id="container">
@@ -52,10 +52,6 @@
           </div>
         </div>
       
-      
-        <h2 id="subtitle-wrap">
-          <a href="/" id="subtitle">A boring space of an interesting man</a>
-        </h2>
       
     </div>
     <div id="header-inner" class="inner">
@@ -108,11 +104,11 @@
       
         <br>
 
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Person</span>(<span class="params">name, age</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">this</span>.name = name</span><br><span class="line">  <span class="keyword">this</span>.age = age</span><br><span class="line">&#125;</span><br><span class="line">Person.prototype.attr = <span class="string">'human'</span></span><br><span class="line"><span class="keyword">const</span> man1 = <span class="keyword">new</span> Person(<span class="string">'123'</span>, <span class="number">18</span>)</span><br><span class="line"><span class="built_in">console</span>.log(man1.name)</span><br><span class="line"><span class="built_in">console</span>.log(man1.age)</span><br><span class="line"><span class="built_in">console</span>.log(man1.attr)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">_new</span>(<span class="params">Constructor, ...param</span>) </span>&#123;</span><br><span class="line">  <span class="comment">// 新建一个对象</span></span><br><span class="line">  <span class="keyword">const</span> obj = &#123;&#125; <span class="comment">// Object.create(null)</span></span><br><span class="line">  <span class="comment">// 建立继承关系，__proto__指向构造函数原型，获得原型属性与方法</span></span><br><span class="line">  <span class="comment">// 这里获得 attr 属性</span></span><br><span class="line">  obj.__proto__ = Constructor.prototype</span><br><span class="line">  <span class="comment">// 开始执行这个构造函数，就是这个构造函数的this方法属性挂到这个新对象上</span></span><br><span class="line">  <span class="comment">// 这里就是把 name 和 age 挂上去</span></span><br><span class="line">  <span class="keyword">const</span> ret = Constructor.call(obj, ...param)</span><br><span class="line">  <span class="comment">// const ret = Constructor.apply(obj, param)</span></span><br><span class="line">  <span class="comment">// 若构造函数中没有返回值或返回值是基本类型（Number、String、Boolean）的值，则返回新实例对象；</span></span><br><span class="line">  <span class="comment">// 若返回值是引用类型的值，则实际返回值为这个引用类型。</span></span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">typeof</span> ret === <span class="string">'object'</span> ? ret : obj</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">const</span> man2 = _new(Person, <span class="string">'456'</span>, <span class="number">20</span>)</span><br><span class="line"><span class="built_in">console</span>.log(man2.name)</span><br><span class="line"><span class="built_in">console</span>.log(man2.age)</span><br><span class="line"><span class="built_in">console</span>.log(man2.attr)</span><br></pre></td></tr></table></figure>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Person</span>(<span class="params">name, age</span>) </span>&#123;</span><br><span class="line">  <span class="built_in">this</span>.name = name</span><br><span class="line">  <span class="built_in">this</span>.age = age</span><br><span class="line">&#125;</span><br><span class="line">Person.prototype.attr = <span class="string">&#x27;human&#x27;</span></span><br><span class="line"><span class="keyword">const</span> man1 = <span class="keyword">new</span> Person(<span class="string">&#x27;123&#x27;</span>, <span class="number">18</span>)</span><br><span class="line"><span class="built_in">console</span>.log(man1.name)</span><br><span class="line"><span class="built_in">console</span>.log(man1.age)</span><br><span class="line"><span class="built_in">console</span>.log(man1.attr)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">_new</span>(<span class="params">Constructor, ...param</span>) </span>&#123;</span><br><span class="line">  <span class="comment">// 新建一个对象</span></span><br><span class="line">  <span class="keyword">const</span> obj = &#123;&#125; <span class="comment">// Object.create(null)</span></span><br><span class="line">  <span class="comment">// 建立继承关系，__proto__指向构造函数原型，获得原型属性与方法</span></span><br><span class="line">  <span class="comment">// 这里获得 attr 属性</span></span><br><span class="line">  obj.__proto__ = Constructor.prototype</span><br><span class="line">  <span class="comment">// 开始执行这个构造函数，就是这个构造函数的this方法属性挂到这个新对象上</span></span><br><span class="line">  <span class="comment">// 这里就是把 name 和 age 挂上去</span></span><br><span class="line">  <span class="keyword">const</span> ret = Constructor.call(obj, ...param)</span><br><span class="line">  <span class="comment">// const ret = Constructor.apply(obj, param)</span></span><br><span class="line">  <span class="comment">// 若构造函数中没有返回值或返回值是基本类型（Number、String、Boolean）的值，则返回新实例对象；</span></span><br><span class="line">  <span class="comment">// 若返回值是引用类型的值，则实际返回值为这个引用类型。</span></span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">typeof</span> ret === <span class="string">&#x27;object&#x27;</span> ? ret : obj</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">const</span> man2 = _new(Person, <span class="string">&#x27;456&#x27;</span>, <span class="number">20</span>)</span><br><span class="line"><span class="built_in">console</span>.log(man2.name)</span><br><span class="line"><span class="built_in">console</span>.log(man2.age)</span><br><span class="line"><span class="built_in">console</span>.log(man2.attr)</span><br></pre></td></tr></table></figure>
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.cchealthier.com/2020/05/25/new-object/" data-id="ckid8vc3z000m8cuk0nw51l7p" class="article-share-link">Share</a>
+      <a data-url="http://blog.cchealthier.com/2020/05/25/new-object/" data-id="ckjr7kecy000m28uk074ah26f" class="article-share-link">Share</a>
       
       
     </footer>
@@ -178,7 +174,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a></li></ul>
     </div>
   </div>
 
@@ -189,6 +185,10 @@
     <h3 class="widget-title">最新文章</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2021/01/09/performance-api/">前端性能监控</a>
+          </li>
         
           <li>
             <a href="/2020/12/06/autumn/">我言秋日胜春朝</a>
@@ -206,10 +206,6 @@
             <a href="/2020/11/22/webpack-config/">webpack的配置</a>
           </li>
         
-          <li>
-            <a href="/2020/11/15/search/">深度优先遍历(DFS)-栈和广度优先遍历(BFS)-队列的理解</a>
-          </li>
-        
       </ul>
     </div>
   </div>
@@ -222,7 +218,7 @@
   
   <div class="outer">
     <div id="footer-info" class="inner">
-      &copy; 2020 ChrisIori<br>
+      &copy; 2021 ChrisIori<br>
       Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
     </div>
   </div>
