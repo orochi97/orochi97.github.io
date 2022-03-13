@@ -1,4 +1,4 @@
-const isDev = true; // 是否开发状态总开关，手动修改
+const isDev = false; // 是否开发状态总开关，手动修改
 const baseUrl = isDev ? 'http://localhost:3334' : 'https://www.cchealthier.com';
 
 function getRequestUrl(path) {
@@ -151,6 +151,7 @@ function getRequestUrl(path) {
     $ball.removeClass('run');
   });
 
+  var $thumbsUpNum = $('.article-thumbs-up-num');
   // 点赞
   $('.article-thumbs-up').on('click', function(){
     const id = $(this).attr('data-id'); // 这篇文章的id
@@ -170,7 +171,6 @@ function getRequestUrl(path) {
       }),
       //请求成功
       success : function(result) {
-        console.log(result);
         if (result.code === 1) {
           $.Toast(
             '感谢支持',
@@ -182,7 +182,10 @@ function getRequestUrl(path) {
               has_icon: false,
             }
           );
+          return;
         }
+        const num = Number($thumbsUpNum.text());
+        $thumbsUpNum.text(num + 1);
       },
       //请求失败，包含具体的错误信息
       error : function(e){
@@ -209,7 +212,7 @@ function getRequestUrl(path) {
     //请求成功
     success : function(result) {
       console.log(result);
-      $('.article-thumbs-up-num').text(`(${result.data.favor})`);
+      $thumbsUpNum.text(result.data.favor);
     },
     //请求失败，包含具体的错误信息
     error : function(e){
