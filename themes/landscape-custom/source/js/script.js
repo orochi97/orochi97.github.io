@@ -1,3 +1,10 @@
+const isDev = true; // 是否开发状态总开关，手动修改
+const baseUrl = isDev ? 'http://localhost:3334' : 'https://www.cchealthier.com';
+
+function getRequestUrl(path) {
+  return `${baseUrl}${path}`;
+}
+
 (function($){
   // Search
   var $searchWrap = $('#search-form-wrap'),
@@ -144,6 +151,47 @@
     $ball.removeClass('run');
   });
 
+  // 点赞
+  $('.article-thumbs-up').on('click', function(){
+    const id = $(this).attr('data-id'); // 这篇文章的id
+    $.ajax({
+      //请求方式
+      type : 'POST',
+      //请求的媒体类型
+      contentType: 'application/json;charset=UTF-8',
+      //请求地址
+      url : getRequestUrl('/api/favor'),
+      //数据，json字符串
+      data : JSON.stringify({
+        id,
+        cip,
+        cname,
+        url: location.href
+      }),
+      //请求成功
+      success : function(result) {
+        console.log(result);
+        if (result.code === 1) {
+          $.Toast(
+            '感谢支持',
+            '今天赞过啦',
+            'success',
+            {
+              position_class: 'toast-top-right',
+              width: 120,
+              has_icon: false,
+            }
+          );
+        }
+      },
+      //请求失败，包含具体的错误信息
+      error : function(e){
+        console.log(e.status);
+        console.log(e.responseText);
+      }
+    });
+  });
+
   const { cip, cname } = window.returnCitySN
   $.ajax({
     //请求方式
@@ -151,7 +199,7 @@
     //请求的媒体类型
     contentType: 'application/json;charset=UTF-8',
     //请求地址
-    url : 'https://www.cchealthier.com/api/view',
+    url : getRequestUrl('/api/view'),
     //数据，json字符串
     data : JSON.stringify({
       cip,
@@ -161,6 +209,7 @@
     //请求成功
     success : function(result) {
       console.log(result);
+      $('.article-thumbs-up-num').text(`(${result.data.favor})`);
     },
     //请求失败，包含具体的错误信息
     error : function(e){

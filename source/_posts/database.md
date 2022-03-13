@@ -26,7 +26,7 @@ create database 数据库名字;
 
 删除数据库
 ```bash
-frop table 数据库名字;
+drop table 数据库名字;
 ```
 
 选择数据库
