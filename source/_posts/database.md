@@ -73,3 +73,8 @@ show index table 表名字;
 ```bash
 truncate table 表名字;
 ```
+
+更新数据，注意搜索的值字符串的话要加引号
+```bash
+update url set 要更新的字段=要更新的值 where 搜索的字段=搜索的值;
+```
