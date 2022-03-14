@@ -184,13 +184,15 @@ function getRequestUrl(path) {
           );
           return;
         }
-        const num = Number($thumbsUpNum.text());
-        $thumbsUpNum.text(num + 1);
+        if (result.code === 0) {
+          const num = Number($thumbsUpNum.text());
+          $thumbsUpNum.text(num + 1);
+        }
       },
       //请求失败，包含具体的错误信息
       error : function(e){
         console.log(e.status);
-        console.log(e.responseText);
+        console.log(e.statusText);
       }
     });
   });
@@ -217,7 +219,7 @@ function getRequestUrl(path) {
     //请求失败，包含具体的错误信息
     error : function(e){
       console.log(e.status);
-      console.log(e.responseText);
+      console.log(e.statusText);
     }
   });
 })(jQuery);
