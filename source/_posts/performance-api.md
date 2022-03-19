@@ -22,6 +22,8 @@ performance.getEntriesByType('paint')[0]
 performance.getEntriesByType('paint')[1]
 ```
 
+<!--more-->
+
 #### 3、可交互时间（Time to Interactive，TTI）
 用户开始可操作时间，需要满足两个条件（资料来源于网上）：
 > 第一个条件是主线程的长任务（长任务是指耗时超过 50 ms）执行完成后，第二个条件是随后网络静默时间达到 5 秒，这里的静默时间是指请求数不超过 2 个， 排除失败的资源请求和未使用 GET 方法进行的网络请求。

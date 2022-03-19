@@ -10,6 +10,8 @@ categories:
 
 {% asset_img beijing1.jpg beijing1 %}
 
+<!--more-->
+
 </br>
 </br>
 </br>
