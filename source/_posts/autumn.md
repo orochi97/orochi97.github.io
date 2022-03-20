@@ -8,18 +8,14 @@ categories:
 
 10月11月交界去了趟北京，看看红叶枫叶。不得不说，北方就是比南方有秋意。毕竟广东没秋天，哈哈。
 
-{% asset_img beijing1.jpg beijing1 %}
+![1.jpg](https://file.cchealthier.com/file/blog/autumn/beijing1.jpg)
 
 <!--more-->
 
 </br>
-</br>
-</br>
 
-{% asset_img beijing2.jpg beijing2 %}
+![2.jpg](https://file.cchealthier.com/file/blog/autumn/beijing2.jpg)
 
 </br>
-</br>
-</br>
 
-{% asset_img beijing3.jpg beijing3 %}
+![3.jpg](https://file.cchealthier.com/file/blog/autumn/beijing3.jpg)

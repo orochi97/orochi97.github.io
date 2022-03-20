@@ -25,10 +25,10 @@ categories:
 
 <!--more-->
 
-[点击这里打开单独pdf页面](/2022/03/19/vite-server-import/vite-server-import.pdf)
+[点击这里打开单独pdf页面](https://file.cchealthier.com/file/blog/vite-server-import/vite.pdf)
 
 <!-- <object data="/2022/03/19/vite-server-import/vite-server-import.pdf" type="application/pdf" width="100%" height="1000px"> -->
-{% pdf /2022/03/19/vite-server-import/vite-server-import.pdf %}
+{% pdf https://file.cchealthier.com/file/blog/vite-server-import/vite.pdf %}
 
 </br>
 </br>
