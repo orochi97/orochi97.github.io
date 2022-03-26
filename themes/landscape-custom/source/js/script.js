@@ -198,6 +198,7 @@ function getRequestUrl(path) {
   });
 
   const { cip, cname } = window.returnCitySN
+
   $.ajax({
     //请求方式
     type : 'POST',
@@ -209,7 +210,7 @@ function getRequestUrl(path) {
     data : JSON.stringify({
       cip,
       cname,
-      url: location.href
+      url: `${location.origin}${location.pathname}`
     }),
     //请求成功
     success : function(result) {
