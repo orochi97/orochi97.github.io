@@ -39,6 +39,7 @@ module.exports = {
   },
   // externals：不打包某些库 https://webpack.js.org/configuration/externals/#externals
   optimization: {
+    minimize: false, // 不要压缩
      // 抽出公共js，贼复杂，一般用默认的就可以了 
      // https://webpack.js.org/plugins/split-chunks-plugin/#root
     splitChunks: {
