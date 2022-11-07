@@ -101,3 +101,6 @@ deploy:
   type: git
   repo: git@github.com:orochi97/orochi97.github.io.git
   branch: master
+
+sitemap:
+  path: sitemap.xml
