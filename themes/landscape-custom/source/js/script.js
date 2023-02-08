@@ -5,7 +5,23 @@ function getRequestUrl(path) {
   return `${baseUrl}${path}`;
 }
 
-(function($){
+function jsonpRequest(url) {
+  return new Promise((resolve, reject) => {
+    $.ajax({
+      url: url,
+      type: 'GET',
+      dataType: 'jsonp', //指定服务器返回的数据类型
+      success: function(data) {
+        resolve(data);
+      },
+      error: function(error){
+        reject(error);
+      },
+    });
+  });
+}
+
+;(async ($) =>{
   // Search
   var $searchWrap = $('#search-form-wrap'),
     isSearchAnim = false,
@@ -197,7 +213,13 @@ function getRequestUrl(path) {
     });
   });
 
-  const { cip, cname } = window.returnCitySN
+  let cip = '';
+  try {
+    const { ip } = await jsonpRequest('https://api.ipify.org/?format=jsonp');
+    cip = ip;
+  } catch (error) {
+    console.log('get ip error', error);
+  }
 
   $.ajax({
     //请求方式
@@ -209,7 +231,7 @@ function getRequestUrl(path) {
     //数据，json字符串
     data : JSON.stringify({
       cip,
-      cname,
+      cname: '获取不到城市',
       url: `${location.origin}${location.pathname}`
     }),
     //请求成功

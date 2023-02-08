@@ -8,7 +8,7 @@ categories:
 
 简单梳理一下 vue 源码里，observer、dep、watcher 这三者的作用，捋清了基本上就知道 vue 的响应式操作了。看一张图：
 
-![vue-observer-dep-watcher.jpg](https://file.cchealthier.com/system/blog/202210/vue-observer-dep-watcher.png)
+![vue-observer-dep-watcher.jpg](https://file.cchealthier.com/file/blog/202210/vue-observer-dep-watcher.png)
 
 总结一下就是，我们在 vue 文件定义数据 data 属性，会生成一个 _data 的对象，遍历这个 _data 对象的属性，会通过 defineProperty 挂载到 vue 实例上。以图里 src 为例：
 
