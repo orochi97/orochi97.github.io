@@ -2,9 +2,18 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://blog.cchealthier.com/2023/04/21/nginx-basic/</loc>
+    
+    <lastmod>2023-04-21</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>http://blog.cchealthier.com/2020/12/06/webpack-speed/</loc>
     
-    <lastmod>2023-04-20</lastmod>
+    <lastmod>2023-04-21</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -13,7 +22,7 @@
   <url>
     <loc>http://blog.cchealthier.com/2020/08/16/webpackJsonp/</loc>
     
-    <lastmod>2023-04-20</lastmod>
+    <lastmod>2023-04-21</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -22,7 +31,7 @@
   <url>
     <loc>http://blog.cchealthier.com/2020/07/26/vue-life/</loc>
     
-    <lastmod>2023-04-20</lastmod>
+    <lastmod>2023-04-21</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -31,16 +40,7 @@
   <url>
     <loc>http://blog.cchealthier.com/2022/11/07/vue-observer-dep-watcher/</loc>
     
-    <lastmod>2023-04-20</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>http://blog.cchealthier.com/2020/07/29/vertical-middle/</loc>
-    
-    <lastmod>2023-04-20</lastmod>
+    <lastmod>2023-04-21</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -49,7 +49,16 @@
   <url>
     <loc>http://blog.cchealthier.com/2022/03/19/vite-server-import/</loc>
     
-    <lastmod>2023-04-20</lastmod>
+    <lastmod>2023-04-21</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://blog.cchealthier.com/2020/07/29/vertical-middle/</loc>
+    
+    <lastmod>2023-04-21</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -58,7 +67,7 @@
   <url>
     <loc>http://blog.cchealthier.com/2020/07/25/traversal-property/</loc>
     
-    <lastmod>2023-04-20</lastmod>
+    <lastmod>2023-04-21</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -67,61 +76,7 @@
   <url>
     <loc>http://blog.cchealthier.com/2020/06/22/ssl-lts/</loc>
     
-    <lastmod>2023-04-20</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>http://blog.cchealthier.com/2022/03/26/nginx/</loc>
-    
-    <lastmod>2023-04-20</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>http://blog.cchealthier.com/2020/05/31/protocol/</loc>
-    
-    <lastmod>2023-04-20</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>http://blog.cchealthier.com/2020/08/30/puppeteer/</loc>
-    
-    <lastmod>2023-04-20</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>http://blog.cchealthier.com/2020/08/30/promise-api/</loc>
-    
-    <lastmod>2023-04-20</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>http://blog.cchealthier.com/2020/08/16/next-tick/</loc>
-    
-    <lastmod>2023-04-20</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>http://blog.cchealthier.com/2020/08/30/shenzhen-guanhucun/</loc>
-    
-    <lastmod>2023-04-20</lastmod>
+    <lastmod>2023-04-21</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -130,7 +85,61 @@
   <url>
     <loc>http://blog.cchealthier.com/2020/05/25/new-object/</loc>
     
-    <lastmod>2023-04-20</lastmod>
+    <lastmod>2023-04-21</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://blog.cchealthier.com/2020/08/16/next-tick/</loc>
+    
+    <lastmod>2023-04-21</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://blog.cchealthier.com/2022/03/26/nginx/</loc>
+    
+    <lastmod>2023-04-21</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://blog.cchealthier.com/2020/05/31/protocol/</loc>
+    
+    <lastmod>2023-04-21</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://blog.cchealthier.com/2020/08/30/promise-api/</loc>
+    
+    <lastmod>2023-04-21</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://blog.cchealthier.com/2020/08/30/puppeteer/</loc>
+    
+    <lastmod>2023-04-21</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://blog.cchealthier.com/2020/08/30/shenzhen-guanhucun/</loc>
+    
+    <lastmod>2023-04-21</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -139,25 +148,7 @@
   <url>
     <loc>http://blog.cchealthier.com/2023/02/07/multi-function-select/</loc>
     
-    <lastmod>2023-04-20</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>http://blog.cchealthier.com/2020/07/12/lazyload/</loc>
-    
-    <lastmod>2023-04-20</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>http://blog.cchealthier.com/2022/09/25/linked-list/</loc>
-    
-    <lastmod>2023-04-20</lastmod>
+    <lastmod>2023-04-21</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -166,7 +157,25 @@
   <url>
     <loc>http://blog.cchealthier.com/2020/05/28/js-performance/</loc>
     
-    <lastmod>2023-04-20</lastmod>
+    <lastmod>2023-04-21</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://blog.cchealthier.com/2022/09/25/linked-list/</loc>
+    
+    <lastmod>2023-04-21</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://blog.cchealthier.com/2020/07/12/lazyload/</loc>
+    
+    <lastmod>2023-04-21</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -175,7 +184,7 @@
   <url>
     <loc>http://blog.cchealthier.com/2020/05/31/html-resource/</loc>
     
-    <lastmod>2023-04-20</lastmod>
+    <lastmod>2023-04-21</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -184,7 +193,7 @@
   <url>
     <loc>http://blog.cchealthier.com/2020/05/21/js-inherit/</loc>
     
-    <lastmod>2023-04-20</lastmod>
+    <lastmod>2023-04-21</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -193,7 +202,7 @@
   <url>
     <loc>http://blog.cchealthier.com/2020/05/03/hello-world/</loc>
     
-    <lastmod>2023-04-20</lastmod>
+    <lastmod>2023-04-21</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -202,7 +211,7 @@
   <url>
     <loc>http://blog.cchealthier.com/2020/05/03/hexo-githubpage/</loc>
     
-    <lastmod>2023-04-20</lastmod>
+    <lastmod>2023-04-21</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -211,7 +220,7 @@
   <url>
     <loc>http://blog.cchealthier.com/2023/04/21/fontend-engineering-2/</loc>
     
-    <lastmod>2023-04-20</lastmod>
+    <lastmod>2023-04-21</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -220,34 +229,7 @@
   <url>
     <loc>http://blog.cchealthier.com/2023/03/06/fontend-engineering/</loc>
     
-    <lastmod>2023-04-20</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>http://blog.cchealthier.com/2022/10/18/deepth-breadth-traversal/</loc>
-    
-    <lastmod>2023-04-20</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>http://blog.cchealthier.com/2022/10/18/binary-tree-traversal/</loc>
-    
-    <lastmod>2023-04-20</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>http://blog.cchealthier.com/2020/05/03/buyu/</loc>
-    
-    <lastmod>2023-04-20</lastmod>
+    <lastmod>2023-04-21</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -256,7 +238,16 @@
   <url>
     <loc>http://blog.cchealthier.com/2020/07/09/callapplybind/</loc>
     
-    <lastmod>2023-04-20</lastmod>
+    <lastmod>2023-04-21</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://blog.cchealthier.com/2022/10/18/deepth-breadth-traversal/</loc>
+    
+    <lastmod>2023-04-21</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -265,34 +256,7 @@
   <url>
     <loc>http://blog.cchealthier.com/2020/12/06/autumn/</loc>
     
-    <lastmod>2023-04-20</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>http://blog.cchealthier.com/2022/03/14/beijing-winter/</loc>
-    
-    <lastmod>2023-04-20</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>http://blog.cchealthier.com/2020/07/02/cache/</loc>
-    
-    <lastmod>2023-04-20</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>http://blog.cchealthier.com/2022/10/19/2022-autumn/</loc>
-    
-    <lastmod>2023-04-20</lastmod>
+    <lastmod>2023-04-21</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -301,7 +265,52 @@
   <url>
     <loc>http://blog.cchealthier.com/2020/11/29/api-defference/</loc>
     
-    <lastmod>2023-04-20</lastmod>
+    <lastmod>2023-04-21</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://blog.cchealthier.com/2022/03/14/beijing-winter/</loc>
+    
+    <lastmod>2023-04-21</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://blog.cchealthier.com/2022/10/18/binary-tree-traversal/</loc>
+    
+    <lastmod>2023-04-21</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://blog.cchealthier.com/2020/05/03/buyu/</loc>
+    
+    <lastmod>2023-04-21</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://blog.cchealthier.com/2020/07/02/cache/</loc>
+    
+    <lastmod>2023-04-21</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://blog.cchealthier.com/2022/10/19/2022-autumn/</loc>
+    
+    <lastmod>2023-04-21</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -449,6 +458,13 @@
   </url>
   
   <url>
+    <loc>http://blog.cchealthier.com/categories/%E5%BC%80%E5%8F%91/%E7%AE%97%E6%B3%95/</loc>
+    <lastmod>2023-04-21</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
     <loc>http://blog.cchealthier.com/categories/%E7%83%B9%E9%A5%AA/</loc>
     <lastmod>2023-04-21</lastmod>
     <changefreq>weekly</changefreq>
@@ -457,13 +473,6 @@
   
   <url>
     <loc>http://blog.cchealthier.com/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/</loc>
-    <lastmod>2023-04-21</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>http://blog.cchealthier.com/categories/%E5%BC%80%E5%8F%91/%E7%AE%97%E6%B3%95/</loc>
     <lastmod>2023-04-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
