@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>自己实现call，apply，bind | 凝雪密境</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="介绍这三个都是改变函数里的 this 指向第一个参数都是用来替换 this 的对象，后面是原来函数的参数，不定个数当第一个参数为 null 或 undefined，则里面 this 指向 window call，apply用法一样，区别在于 1234func.call(obj, a, b, c, ...) &#x2F;&#x2F; 后面的参数是一个一个func.apply(obj, []) &#x2F;&#x2F; 后面的参数是一个数组">
+<meta property="og:type" content="article">
+<meta property="og:title" content="自己实现call，apply，bind">
+<meta property="og:url" content="http://blog.cchealthier.com/2020/07/09/callapplybind/index.html">
+<meta property="og:site_name" content="凝雪密境">
+<meta property="og:description" content="介绍这三个都是改变函数里的 this 指向第一个参数都是用来替换 this 的对象，后面是原来函数的参数，不定个数当第一个参数为 null 或 undefined，则里面 this 指向 window call，apply用法一样，区别在于 1234func.call(obj, a, b, c, ...) &#x2F;&#x2F; 后面的参数是一个一个func.apply(obj, []) &#x2F;&#x2F; 后面的参数是一个数组">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-07-09T14:58:38.000Z">
+<meta property="article:modified_time" content="2023-04-20T17:47:14.428Z">
+<meta property="article:author" content="ChrisIori">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="凝雪密境" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.ico">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  <link href="https://www.jq22.com/demo/jqueryToast201708310012/css/toast.style.css" rel="stylesheet" type="text/css">
+<meta name="generator" content="Hexo 7.0.0-rc1"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">凝雪密境</a>
+      </h1>
+      
+        <div id="avatar" style="background-image: url( /avatar.jpg )">
+          <div class="container">
+            <div class="ball wind"></div>
+            <div class="ball fire"></div>
+            <div class="ball water"></div>
+            <div class="ball soil"></div>
+          </div>
+        </div>
+      
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://blog.cchealthier.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-callapplybind" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/07/09/callapplybind/" class="article-date">
+  <time datetime="2020-07-09T14:58:38.000Z" itemprop="datePublished">2020-07-09</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      自己实现call，apply，bind
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>这三个都是改变函数里的 this 指向<br>第一个参数都是用来替换 this 的对象，后面是原来函数的参数，不定个数<br>当第一个参数为 null 或 undefined，则里面 this 指向 window</p>
+<p>call，apply用法一样，区别在于</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">func.<span class="title function_">call</span>(obj, a, b, c, ...) <span class="comment">// 后面的参数是一个一个</span></span><br><span class="line">func.<span class="title function_">apply</span>(obj, []) <span class="comment">// 后面的参数是一个数组</span></span><br><span class="line"><span class="comment">// 这里有个帅气的找出数组最大值</span></span><br><span class="line"><span class="title class_">Math</span>.<span class="property">max</span>.<span class="title function_">apply</span>(<span class="literal">null</span>, [<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>])</span><br></pre></td></tr></table></figure>
+<p>bind 比较特别，返回的是个函数，不执行</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 后面的参数也是一个一个，同时会被锁住，成为原函数的前几个参数</span></span><br><span class="line"><span class="keyword">const</span> newFn = bind.<span class="title function_">call</span>(obj, a, b, c, ...)</span><br><span class="line"><span class="comment">// 再调用的时候，参数为原函数的第n+1个参数</span></span><br><span class="line"><span class="title function_">newFn</span>(e, f, g, ...)</span><br></pre></td></tr></table></figure>
+
+<h3 id="上码"><a href="#上码" class="headerlink" title="上码"></a>上码</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> name = <span class="string">&#x27;windowname&#x27;</span></span><br><span class="line"><span class="keyword">var</span> age = <span class="string">&#x27;windowage&#x27;</span>  </span><br><span class="line"><span class="keyword">const</span> boy = &#123;</span><br><span class="line">  <span class="attr">name</span>: <span class="string">&#x27;xiaoming&#x27;</span>,</span><br><span class="line">  <span class="attr">age</span>: <span class="number">18</span>,</span><br><span class="line">  show (a, b, c) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">`<span class="subst">$&#123;<span class="variable language_">this</span>.name&#125;</span> is <span class="subst">$&#123;<span class="variable language_">this</span>.age&#125;</span>`</span>, a, b, c)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">const</span> girl = &#123;</span><br><span class="line">  <span class="attr">name</span>: <span class="string">&#x27;xiaohong&#x27;</span>,</span><br><span class="line">  <span class="attr">age</span>: <span class="number">16</span></span><br><span class="line">&#125;</span><br><span class="line">boy.<span class="title function_">show</span>(<span class="number">7</span>, <span class="number">8</span>, <span class="number">9</span>) <span class="comment">// xiaoming is 18 7 8 9</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 先来正常的结果</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;------------------- 对比 -------------------&#x27;</span>)</span><br><span class="line">boy.<span class="property">show</span>.<span class="title function_">call</span>(girl, <span class="number">17</span>, <span class="number">18</span>, <span class="number">19</span>, <span class="number">10</span>) <span class="comment">// xiaohong is 16 17 18 19</span></span><br><span class="line">boy.<span class="property">show</span>.<span class="title function_">apply</span>(girl, [<span class="number">27</span>, <span class="number">28</span>, <span class="number">29</span>, <span class="number">20</span>]) <span class="comment">// xiaohong is 16 27 28 29</span></span><br><span class="line">boy.<span class="property">show</span>.<span class="title function_">call</span>(<span class="literal">null</span>, <span class="number">17</span>, <span class="number">18</span>, <span class="number">19</span>, <span class="number">10</span>) <span class="comment">// windowname is windowage 17 18 19</span></span><br><span class="line">boy.<span class="property">show</span>.<span class="title function_">apply</span>(<span class="literal">undefined</span>, [<span class="number">27</span>, <span class="number">28</span>, <span class="number">29</span>, <span class="number">20</span>]) <span class="comment">// windowname is windowage 27 28 29</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> bindFn1 = boy.<span class="property">show</span>.<span class="title function_">bind</span>(girl, <span class="number">17</span>, <span class="number">18</span>, <span class="number">19</span>, <span class="number">10</span>)</span><br><span class="line"><span class="title function_">bindFn1</span>() <span class="comment">// xiaohong is 16 17 18 19</span></span><br><span class="line"><span class="title function_">bindFn1</span>(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>) <span class="comment">// xiaohong is 16 17 18 19</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> bindFn2 = boy.<span class="property">show</span>.<span class="title function_">bind</span>(girl, <span class="number">27</span>)</span><br><span class="line"><span class="title function_">bindFn2</span>() <span class="comment">// xiaohong is 16 27 undefined undefined</span></span><br><span class="line"><span class="title function_">bindFn2</span>(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>) <span class="comment">// xiaohong is 16 27 1 2</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> bindFn3 = boy.<span class="property">show</span>.<span class="title function_">bind</span>(<span class="literal">null</span>, <span class="number">27</span>)</span><br><span class="line"><span class="title function_">bindFn3</span>() <span class="comment">// windowname is windowage 27 undefined undefined</span></span><br><span class="line"><span class="title function_">bindFn3</span>(<span class="number">12</span>, <span class="number">13</span>, <span class="number">14</span>) <span class="comment">// windowname is windowage 27 12 13</span></span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;------------------- 分割线 -------------------&#x27;</span>)</span><br><span class="line"><span class="comment">// 通俗来讲就是哪个对象调用了函数，this就指向谁，当前面没有谁调用则是window</span></span><br><span class="line"><span class="comment">// 绑定对象赋予一个字段为函数，来调用这个函数</span></span><br><span class="line"><span class="comment">// 当绑定对象为 null 或者 undefined，则让这个函数单独运行，自然 this 会指向window</span></span><br><span class="line"><span class="comment">// 随机数的为了不要不小心覆盖到绑定对象原来的属性</span></span><br><span class="line"><span class="comment">// 不能绑定后对象多了个新属性，要删掉多出来的字段函数，雁过不留痕</span></span><br><span class="line"><span class="title class_">Function</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">_call</span> = <span class="keyword">function</span>(<span class="params">context, ...param</span>) &#123;</span><br><span class="line">  <span class="comment">// 随便的随机名字</span></span><br><span class="line">  <span class="keyword">const</span> functionName = <span class="title class_">Math</span>.<span class="title function_">floor</span>(<span class="title class_">Math</span>.<span class="title function_">random</span>() * <span class="number">100000</span>)</span><br><span class="line">  <span class="keyword">let</span> result</span><br><span class="line">  <span class="keyword">if</span> (context) &#123;</span><br><span class="line">    context[functionName] = <span class="variable language_">this</span></span><br><span class="line">    result = context[functionName](...param)</span><br><span class="line">    <span class="keyword">delete</span> context[functionName]</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    result = <span class="title function_">this</span>(...param)</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> result</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 当不能用 ES6 的解构时候，就用字符串拼接起来，然后用 eval 触发</span></span><br><span class="line"><span class="title class_">Function</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">_call2</span> = <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> functionName = <span class="title class_">Math</span>.<span class="title function_">floor</span>(<span class="title class_">Math</span>.<span class="title function_">random</span>() * <span class="number">100000</span>)</span><br><span class="line">  <span class="keyword">const</span> params = []</span><br><span class="line">  <span class="keyword">let</span> _context</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">1</span>, l = <span class="variable language_">arguments</span>.<span class="property">length</span>; i &lt; l; i++) &#123;</span><br><span class="line">    params.<span class="title function_">push</span>(<span class="variable language_">arguments</span>[i])</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span> (<span class="variable language_">arguments</span>[<span class="number">0</span>]) &#123;</span><br><span class="line">    _context = <span class="variable language_">arguments</span>[<span class="number">0</span>]</span><br><span class="line">    _context[functionName] = <span class="variable language_">this</span></span><br><span class="line">    paramStr = <span class="string">`_context[functionName](<span class="subst">$&#123;params.join(<span class="string">&#x27;, &#x27;</span>)&#125;</span>)`</span></span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    _context = <span class="variable language_">this</span></span><br><span class="line">    paramStr = <span class="string">`_context(<span class="subst">$&#123;params.join(<span class="string">&#x27;, &#x27;</span>)&#125;</span>)`</span></span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">const</span> result = <span class="built_in">eval</span>(paramStr)</span><br><span class="line">  <span class="keyword">delete</span> _context[functionName]</span><br><span class="line">  <span class="keyword">return</span> result</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="title class_">Function</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">_apply</span> = <span class="keyword">function</span>(<span class="params">context, arr</span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> functionName = <span class="title class_">Math</span>.<span class="title function_">floor</span>(<span class="title class_">Math</span>.<span class="title function_">random</span>() * <span class="number">100000</span>)</span><br><span class="line">  <span class="keyword">let</span> result</span><br><span class="line">  <span class="keyword">if</span> (context) &#123;</span><br><span class="line">    context[functionName] = <span class="variable language_">this</span></span><br><span class="line">    result = context[functionName](...arr)</span><br><span class="line">    <span class="keyword">delete</span> context[functionName]</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    result = <span class="title function_">this</span>(...arr)</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> result</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="title class_">Function</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">_bind</span> = <span class="keyword">function</span>(<span class="params">context, ...oldParam</span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> fn = <span class="variable language_">this</span></span><br><span class="line">  <span class="keyword">if</span> (context) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="function">(<span class="params">...newParam</span>) =&gt;</span> &#123;</span><br><span class="line">      <span class="keyword">const</span> functionName = <span class="title class_">Math</span>.<span class="title function_">floor</span>(<span class="title class_">Math</span>.<span class="title function_">random</span>() * <span class="number">100000</span>)</span><br><span class="line">      context[functionName] = fn</span><br><span class="line">      <span class="keyword">const</span> result = context[functionName](...oldParam, ...newParam)</span><br><span class="line">      <span class="keyword">delete</span> context[functionName]</span><br><span class="line">      <span class="keyword">return</span> result</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> <span class="function">(<span class="params">...newParam</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="title function_">fn</span>(...oldParam, ...newParam)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">boy.<span class="property">show</span>.<span class="title function_">_call</span>(girl, <span class="number">17</span>, <span class="number">18</span>, <span class="number">19</span>, <span class="number">10</span>)</span><br><span class="line">boy.<span class="property">show</span>.<span class="title function_">_apply</span>(girl, [<span class="number">27</span>, <span class="number">28</span>, <span class="number">29</span>, <span class="number">20</span>])</span><br><span class="line">boy.<span class="property">show</span>.<span class="title function_">_call</span>(<span class="literal">null</span>, <span class="number">17</span>, <span class="number">18</span>, <span class="number">19</span>, <span class="number">10</span>)</span><br><span class="line">boy.<span class="property">show</span>.<span class="title function_">_apply</span>(<span class="literal">undefined</span>, [<span class="number">27</span>, <span class="number">28</span>, <span class="number">29</span>, <span class="number">20</span>])</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> _bindFn1 = boy.<span class="property">show</span>.<span class="title function_">_bind</span>(girl, <span class="number">17</span>, <span class="number">18</span>, <span class="number">19</span>, <span class="number">10</span>)</span><br><span class="line"><span class="title function_">_bindFn1</span>()</span><br><span class="line"><span class="title function_">_bindFn1</span>(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> _bindFn2 = boy.<span class="property">show</span>.<span class="title function_">_bind</span>(girl, <span class="number">27</span>)</span><br><span class="line"><span class="title function_">_bindFn2</span>()</span><br><span class="line"><span class="title function_">_bindFn2</span>(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> _bindFn3 = boy.<span class="property">show</span>.<span class="title function_">_bind</span>(<span class="literal">null</span>, <span class="number">27</span>)</span><br><span class="line"><span class="title function_">_bindFn3</span>()</span><br><span class="line"><span class="title function_">_bindFn3</span>(<span class="number">12</span>, <span class="number">13</span>, <span class="number">14</span>)</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      
+        <a data-url="http://blog.cchealthier.com/2020/07/09/callapplybind/" data-id="clgpxyygr00077j9m2xu40zqn" class="article-thumbs-up">赞一个(<span class="article-thumbs-up-num">0</span>)</a>
+      
+      <!-- <a data-url="http://blog.cchealthier.com/2020/07/09/callapplybind/" data-id="clgpxyygr00077j9m2xu40zqn" class="article-share-link">分享</a> -->
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020/07/12/lazyload/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          简单实现图片懒加载、预加载、分批加载
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/07/02/cache/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">关于缓存的几个关键词</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/http%E5%8D%8F%E8%AE%AE/">http协议</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/%E6%9C%8D%E5%8A%A1/">服务</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/%E7%AE%97%E6%B3%95/">算法</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%97%85%E8%A1%8C/">旅行</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%97%85%E8%A1%8C/%E8%AE%B0%E5%BD%95/">记录</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%83%B9%E9%A5%AA/">烹饪</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%83%B9%E9%A5%AA/%E4%BC%A0%E7%BB%9F/">传统</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%9A%8F%E6%83%B3/">随想</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%9A%8F%E6%83%B3/%E5%BF%83%E6%83%85/">心情</a></li></ul></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/blog/" rel="tag">blog</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cook/" rel="tag">cook</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fish/" rel="tag">fish</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/blog/" style="font-size: 10px;">blog</a> <a href="/tags/cook/" style="font-size: 10px;">cook</a> <a href="/tags/fish/" style="font-size: 10px;">fish</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/04/">四月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/03/">三月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/02/">二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">十一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">十月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">九月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2023/04/21/fontend-engineering-2/">从零搭建前端工程（下）</a>
+          </li>
+        
+          <li>
+            <a href="/2023/03/06/fontend-engineering/">从零搭建前端工程（上）</a>
+          </li>
+        
+          <li>
+            <a href="/2023/02/07/multi-function-select/">懒加载-虚拟列表-下拉菜单选择器</a>
+          </li>
+        
+          <li>
+            <a href="/2022/11/07/vue-observer-dep-watcher/">vue 的里 observer、dep、watcher</a>
+          </li>
+        
+          <li>
+            <a href="/2022/10/19/2022-autumn/">最近看到的一些美景</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2023 ChrisIori<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//cdn.staticfile.org/jquery/2.0.3/jquery.min.js"></script>
+<script type="text/javascript" src="https://www.jq22.com/demo/jqueryToast201708310012/js/toast.script.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>

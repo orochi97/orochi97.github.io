@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>vue生命周期 | 凝雪密境</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="对于 vue 的几个生命周期老是记不住，应该还是理解不够透彻，这里记录一下。 代码与注释参考了 segmentfault 和 imooc 这两篇文章，感谢。 1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859606162636465">
+<meta property="og:type" content="article">
+<meta property="og:title" content="vue生命周期">
+<meta property="og:url" content="http://blog.cchealthier.com/2020/07/26/vue-life/index.html">
+<meta property="og:site_name" content="凝雪密境">
+<meta property="og:description" content="对于 vue 的几个生命周期老是记不住，应该还是理解不够透彻，这里记录一下。 代码与注释参考了 segmentfault 和 imooc 这两篇文章，感谢。 1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859606162636465">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-07-26T04:00:16.000Z">
+<meta property="article:modified_time" content="2023-04-20T17:47:14.448Z">
+<meta property="article:author" content="ChrisIori">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="凝雪密境" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.ico">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  <link href="https://www.jq22.com/demo/jqueryToast201708310012/css/toast.style.css" rel="stylesheet" type="text/css">
+<meta name="generator" content="Hexo 7.0.0-rc1"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">凝雪密境</a>
+      </h1>
+      
+        <div id="avatar" style="background-image: url( /avatar.jpg )">
+          <div class="container">
+            <div class="ball wind"></div>
+            <div class="ball fire"></div>
+            <div class="ball water"></div>
+            <div class="ball soil"></div>
+          </div>
+        </div>
+      
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://blog.cchealthier.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-vue-life" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/07/26/vue-life/" class="article-date">
+  <time datetime="2020-07-26T04:00:16.000Z" itemprop="datePublished">2020-07-26</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      vue生命周期
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>对于 vue 的几个生命周期老是记不住，应该还是理解不够透彻，这里记录一下。</p>
+<p>代码与注释参考了 <a target="_blank" rel="noopener" href="https://segmentfault.com/a/1190000011381906">segmentfault</a> 和 <a target="_blank" rel="noopener" href="https://www.imooc.com/article/293328">imooc</a> 这两篇文章，感谢。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">title</span>&gt;</span><span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">&quot;text/javascript&quot;</span> <span class="attr">src</span>=<span class="string">&quot;https://cdn.jsdelivr.net/vue/2.1.3/vue.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;app&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">p</span>&gt;</span>&#123;&#123; message &#125;&#125;<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">a</span> @<span class="attr">click</span>=<span class="string">&quot;change&quot;</span>&gt;</span>change<span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">a</span> @<span class="attr">click</span>=<span class="string">&quot;destroy&quot;</span>&gt;</span>destroy<span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">span</span> <span class="attr">v-if</span>=<span class="string">&quot;false&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">&quot;text/javascript&quot;</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript"><span class="keyword">var</span> i = <span class="number">0</span></span></span><br><span class="line"><span class="language-javascript"><span class="keyword">var</span> app = <span class="keyword">new</span> <span class="title class_">Vue</span>(&#123;</span></span><br><span class="line"><span class="language-javascript">  <span class="comment">// render &gt; template &gt; el，但 el 不能缺少</span></span></span><br><span class="line"><span class="language-javascript">  <span class="attr">el</span>: <span class="string">&#x27;#app&#x27;</span>,</span></span><br><span class="line"><span class="language-javascript">  <span class="comment">// template: &#x27;&lt;div id=&quot;app&quot;&gt;&#123;&#123;message1&#125;&#125;&lt;/div&gt;&#x27;,</span></span></span><br><span class="line"><span class="language-javascript">  <span class="comment">// render: function(createElement) &#123;</span></span></span><br><span class="line"><span class="language-javascript">  <span class="comment">//   const menu_items = [&quot;首页&quot;,&quot;搜索&quot;,&quot;分类&quot;,&quot;系统&quot;]</span></span></span><br><span class="line"><span class="language-javascript">  <span class="comment">//   return createElement(&#x27;ul&#x27;, </span></span></span><br><span class="line"><span class="language-javascript">  <span class="comment">//     menu_items.map(item =&gt; &#123;</span></span></span><br><span class="line"><span class="language-javascript">  <span class="comment">//       return createElement(&#x27;li&#x27;, &#123;</span></span></span><br><span class="line"><span class="language-javascript">  <span class="comment">//         class: &#123;</span></span></span><br><span class="line"><span class="language-javascript">  <span class="comment">//           &#x27;uk-nav&#x27;: true</span></span></span><br><span class="line"><span class="language-javascript">  <span class="comment">//         &#125;,</span></span></span><br><span class="line"><span class="language-javascript">  <span class="comment">//         domProps: &#123;</span></span></span><br><span class="line"><span class="language-javascript">  <span class="comment">//           innerHTML: item</span></span></span><br><span class="line"><span class="language-javascript">  <span class="comment">//         &#125;</span></span></span><br><span class="line"><span class="language-javascript">  <span class="comment">//       &#125;)</span></span></span><br><span class="line"><span class="language-javascript">  <span class="comment">//     &#125;)</span></span></span><br><span class="line"><span class="language-javascript">  <span class="comment">//   )</span></span></span><br><span class="line"><span class="language-javascript">  <span class="comment">// &#125;,</span></span></span><br><span class="line"><span class="language-javascript">  <span class="attr">data</span>: &#123;</span></span><br><span class="line"><span class="language-javascript">    message : <span class="string">&#x27;init&#x27;</span>,</span></span><br><span class="line"><span class="language-javascript">    message1 : <span class="string">&#x27;ok&#x27;</span>  </span></span><br><span class="line"><span class="language-javascript">  &#125;,</span></span><br><span class="line"><span class="language-javascript">  <span class="attr">methods</span>: &#123;</span></span><br><span class="line"><span class="language-javascript">    change () &#123;</span></span><br><span class="line"><span class="language-javascript">      <span class="variable language_">this</span>.<span class="property">message</span> = <span class="string">&#x27;ok&#x27;</span> + i++</span></span><br><span class="line"><span class="language-javascript">    &#125;,</span></span><br><span class="line"><span class="language-javascript">    destroy () &#123;</span></span><br><span class="line"><span class="language-javascript">      <span class="variable language_">this</span>.$destroy()</span></span><br><span class="line"><span class="language-javascript">    &#125;</span></span><br><span class="line"><span class="language-javascript">  &#125;,</span></span><br><span class="line"><span class="language-javascript">  <span class="attr">beforeCreate</span>: <span class="keyword">function</span> (<span class="params"></span>) &#123;</span></span><br><span class="line"><span class="language-javascript">    <span class="comment">// 创建实例前，此时虚拟dom和属性全都拿不到</span></span></span><br><span class="line"><span class="language-javascript">    <span class="comment">// 主要就是给vm对象添加了 $parent、$root、$children 属性，以及一些其它的生命周期相关的标识</span></span></span><br><span class="line"><span class="language-javascript">    <span class="comment">// 初始化事件相关的属性</span></span></span><br><span class="line"><span class="language-javascript">    <span class="comment">// vm 添加了一些虚拟 dom、slot 等相关的属性和方法</span></span></span><br><span class="line"><span class="language-javascript">    <span class="variable language_">console</span>.<span class="title function_">info</span>(<span class="string">&#x27;beforeCreate 创建前状态===============》&#x27;</span>)</span></span><br><span class="line"><span class="language-javascript">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;%c%s&#x27;</span>, <span class="string">&#x27;color:red&#x27;</span> , <span class="string">&#x27;el     : &#x27;</span> + <span class="variable language_">this</span>.<span class="property">$el</span>) <span class="comment">//undefined</span></span></span><br><span class="line"><span class="language-javascript">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;%c%s&#x27;</span>, <span class="string">&#x27;color:red&#x27;</span>,<span class="string">&#x27;data   : &#x27;</span> + <span class="variable language_">this</span>.<span class="property">$data</span>) <span class="comment">//undefined </span></span></span><br><span class="line"><span class="language-javascript">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;%c%s&#x27;</span>, <span class="string">&#x27;color:red&#x27;</span>,<span class="string">&#x27;message: &#x27;</span> + <span class="variable language_">this</span>.<span class="property">message</span>) <span class="comment">//undefined </span></span></span><br><span class="line"><span class="language-javascript">  &#125;,</span></span><br><span class="line"><span class="language-javascript">  <span class="attr">created</span>: <span class="keyword">function</span> (<span class="params"></span>) &#123;</span></span><br><span class="line"><span class="language-javascript">    <span class="comment">// 初始化，可以拿到属性，应该是完成了数据劫持，但dom依旧拿不到</span></span></span><br><span class="line"><span class="language-javascript">    <span class="comment">// props、methods、data、watch、computed等数据初始化</span></span></span><br><span class="line"><span class="language-javascript">    <span class="variable language_">console</span>.<span class="title function_">info</span>(<span class="string">&#x27;created 创建完毕状态===============》&#x27;</span>)</span></span><br><span class="line"><span class="language-javascript">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;%c%s&#x27;</span>, <span class="string">&#x27;color:red&#x27;</span>,<span class="string">&#x27;el     : &#x27;</span> + <span class="variable language_">this</span>.<span class="property">$el</span>) <span class="comment">//undefined</span></span></span><br><span class="line"><span class="language-javascript">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;%c%s&#x27;</span>, <span class="string">&#x27;color:red&#x27;</span>,<span class="string">&#x27;data   : &#x27;</span> + <span class="title class_">JSON</span>.<span class="title function_">stringify</span>(<span class="variable language_">this</span>.<span class="property">$data</span>)) <span class="comment">//已被初始化 </span></span></span><br><span class="line"><span class="language-javascript">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;%c%s&#x27;</span>, <span class="string">&#x27;color:red&#x27;</span>,<span class="string">&#x27;message: &#x27;</span> + <span class="variable language_">this</span>.<span class="property">message</span>) <span class="comment">//已被初始化</span></span></span><br><span class="line"><span class="language-javascript">  &#125;,</span></span><br><span class="line"><span class="language-javascript">  <span class="attr">beforeMount</span>: <span class="keyword">function</span> (<span class="params"></span>) &#123;</span></span><br><span class="line"><span class="language-javascript">    <span class="comment">// 根据el和template属性来初始化dom</span></span></span><br><span class="line"><span class="language-javascript">    <span class="variable language_">console</span>.<span class="title function_">info</span>(<span class="string">&#x27;beforeMount 挂载前状态===============》&#x27;</span>)</span></span><br><span class="line"><span class="language-javascript">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;%c%s&#x27;</span>, <span class="string">&#x27;color:red&#x27;</span>,<span class="string">&#x27;el     : &#x27;</span> + (<span class="variable language_">this</span>.<span class="property">$el</span>)) <span class="comment">//已被初始化</span></span></span><br><span class="line"><span class="language-javascript">    <span class="comment">// 这里的dom还没进行模板替换，也就是还显示着 &#123;&#123;message&#125;&#125; 这种占位符，span 元素也还在</span></span></span><br><span class="line"><span class="language-javascript">    <span class="comment">// 这里就算有 template render，也是出现 outer html</span></span></span><br><span class="line"><span class="language-javascript">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="variable language_">this</span>.<span class="property">$el</span>)</span></span><br><span class="line"><span class="language-javascript">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;%c%s&#x27;</span>, <span class="string">&#x27;color:red&#x27;</span>,<span class="string">&#x27;data   : &#x27;</span> + <span class="variable language_">this</span>.<span class="property">$data</span>) <span class="comment">//已被初始化  </span></span></span><br><span class="line"><span class="language-javascript">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;%c%s&#x27;</span>, <span class="string">&#x27;color:red&#x27;</span>,<span class="string">&#x27;message: &#x27;</span> + <span class="variable language_">this</span>.<span class="property">message</span>) <span class="comment">//已被初始化 </span></span></span><br><span class="line"><span class="language-javascript">  &#125;,</span></span><br><span class="line"><span class="language-javascript">  <span class="attr">mounted</span>: <span class="keyword">function</span> (<span class="params"></span>) &#123;</span></span><br><span class="line"><span class="language-javascript">    <span class="comment">// 完成挂载，&#123;&#123;message&#125;&#125; 被数据替换，span 元素也被移除</span></span></span><br><span class="line"><span class="language-javascript">    <span class="variable language_">console</span>.<span class="title function_">info</span>(<span class="string">&#x27;mounted 挂载结束状态===============》&#x27;</span>)</span></span><br><span class="line"><span class="language-javascript">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;%c%s&#x27;</span>, <span class="string">&#x27;color:red&#x27;</span>,<span class="string">&#x27;el     : &#x27;</span> + <span class="variable language_">this</span>.<span class="property">$el</span>) <span class="comment">//已被初始化</span></span></span><br><span class="line"><span class="language-javascript">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="variable language_">this</span>.<span class="property">$el</span>)    </span></span><br><span class="line"><span class="language-javascript">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;%c%s&#x27;</span>, <span class="string">&#x27;color:red&#x27;</span>,<span class="string">&#x27;data   : &#x27;</span> + <span class="variable language_">this</span>.<span class="property">$data</span>) <span class="comment">//已被初始化</span></span></span><br><span class="line"><span class="language-javascript">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;%c%s&#x27;</span>, <span class="string">&#x27;color:red&#x27;</span>,<span class="string">&#x27;message: &#x27;</span> + <span class="variable language_">this</span>.<span class="property">message</span>) <span class="comment">//已被初始化 </span></span></span><br><span class="line"><span class="language-javascript">  &#125;,</span></span><br><span class="line"><span class="language-javascript">  <span class="attr">beforeUpdate</span>: <span class="keyword">function</span> (<span class="params"></span>) &#123;</span></span><br><span class="line"><span class="language-javascript">    <span class="variable language_">console</span>.<span class="title function_">info</span>(<span class="string">&#x27;beforeUpdate 更新前状态===============》&#x27;</span>)</span></span><br><span class="line"><span class="language-javascript">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;%c%s&#x27;</span>, <span class="string">&#x27;color:red&#x27;</span>,<span class="string">&#x27;el     : &#x27;</span> + <span class="variable language_">this</span>.<span class="property">$el</span>)</span></span><br><span class="line"><span class="language-javascript">    <span class="comment">// 这里的dom还是旧的</span></span></span><br><span class="line"><span class="language-javascript">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="variable language_">this</span>.<span class="property">$el</span>)   </span></span><br><span class="line"><span class="language-javascript">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;%c%s&#x27;</span>, <span class="string">&#x27;color:red&#x27;</span>,<span class="string">&#x27;data   : &#x27;</span> + <span class="title class_">JSON</span>.<span class="title function_">stringify</span>(<span class="variable language_">this</span>.<span class="property">$data</span>))</span></span><br><span class="line"><span class="language-javascript">    <span class="comment">// 数据已更新,，这里修改数据会引起死循环</span></span></span><br><span class="line"><span class="language-javascript">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;%c%s&#x27;</span>, <span class="string">&#x27;color:red&#x27;</span>,<span class="string">&#x27;message: &#x27;</span> + <span class="variable language_">this</span>.<span class="property">message</span>)</span></span><br><span class="line"><span class="language-javascript">  &#125;,</span></span><br><span class="line"><span class="language-javascript">  <span class="attr">updated</span>: <span class="keyword">function</span> (<span class="params"></span>) &#123;</span></span><br><span class="line"><span class="language-javascript">    <span class="variable language_">console</span>.<span class="title function_">info</span>(<span class="string">&#x27;updated 更新完成状态===============》&#x27;</span>)</span></span><br><span class="line"><span class="language-javascript">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;%c%s&#x27;</span>, <span class="string">&#x27;color:red&#x27;</span>,<span class="string">&#x27;el     : &#x27;</span> + <span class="variable language_">this</span>.<span class="property">$el</span>)</span></span><br><span class="line"><span class="language-javascript">    <span class="comment">// dom已更新，这里修改数据会引起死循环</span></span></span><br><span class="line"><span class="language-javascript">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="variable language_">this</span>.<span class="property">$el</span>) </span></span><br><span class="line"><span class="language-javascript">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;%c%s&#x27;</span>, <span class="string">&#x27;color:red&#x27;</span>,<span class="string">&#x27;data   : &#x27;</span> + <span class="variable language_">this</span>.<span class="property">$data</span>) </span></span><br><span class="line"><span class="language-javascript">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;%c%s&#x27;</span>, <span class="string">&#x27;color:red&#x27;</span>,<span class="string">&#x27;message: &#x27;</span> + <span class="variable language_">this</span>.<span class="property">message</span>)</span></span><br><span class="line"><span class="language-javascript">  &#125;,</span></span><br><span class="line"><span class="language-javascript">  <span class="attr">beforeDestroy</span>: <span class="keyword">function</span> (<span class="params"></span>) &#123;</span></span><br><span class="line"><span class="language-javascript">    <span class="comment">// 所有东西还在</span></span></span><br><span class="line"><span class="language-javascript">    <span class="variable language_">console</span>.<span class="title function_">info</span>(<span class="string">&#x27;beforeDestroy 销毁前状态===============》&#x27;</span>)</span></span><br><span class="line"><span class="language-javascript">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;%c%s&#x27;</span>, <span class="string">&#x27;color:red&#x27;</span>,<span class="string">&#x27;el     : &#x27;</span> + <span class="variable language_">this</span>.<span class="property">$el</span>)</span></span><br><span class="line"><span class="language-javascript">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="variable language_">this</span>.<span class="property">$el</span>)    </span></span><br><span class="line"><span class="language-javascript">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;%c%s&#x27;</span>, <span class="string">&#x27;color:red&#x27;</span>,<span class="string">&#x27;data   : &#x27;</span> + <span class="variable language_">this</span>.<span class="property">$data</span>) </span></span><br><span class="line"><span class="language-javascript">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;%c%s&#x27;</span>, <span class="string">&#x27;color:red&#x27;</span>,<span class="string">&#x27;message: &#x27;</span> + <span class="variable language_">this</span>.<span class="property">message</span>)</span></span><br><span class="line"><span class="language-javascript">    <span class="variable language_">this</span>.<span class="property">message</span> = <span class="string">&#x27;destroy&#x27;</span></span></span><br><span class="line"><span class="language-javascript">  &#125;,</span></span><br><span class="line"><span class="language-javascript">  <span class="attr">destroyed</span>: <span class="keyword">function</span> (<span class="params"></span>) &#123;</span></span><br><span class="line"><span class="language-javascript">    <span class="comment">// 数据绑定被卸除，监听被移出，子实例也统统被销毁，dom保留着</span></span></span><br><span class="line"><span class="language-javascript">    <span class="variable language_">console</span>.<span class="title function_">info</span>(<span class="string">&#x27;destroyed 销毁完成状态===============》&#x27;</span>)</span></span><br><span class="line"><span class="language-javascript">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;%c%s&#x27;</span>, <span class="string">&#x27;color:red&#x27;</span>,<span class="string">&#x27;el     : &#x27;</span> + <span class="variable language_">this</span>.<span class="property">$el</span>)</span></span><br><span class="line"><span class="language-javascript">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="variable language_">this</span>.<span class="property">$el</span>)  </span></span><br><span class="line"><span class="language-javascript">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;%c%s&#x27;</span>, <span class="string">&#x27;color:red&#x27;</span>,<span class="string">&#x27;data   : &#x27;</span> + <span class="variable language_">this</span>.<span class="property">$data</span>) </span></span><br><span class="line"><span class="language-javascript">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;%c%s&#x27;</span>, <span class="string">&#x27;color:red&#x27;</span>,<span class="string">&#x27;message: &#x27;</span> + <span class="variable language_">this</span>.<span class="property">message</span>)</span></span><br><span class="line"><span class="language-javascript">    <span class="built_in">setTimeout</span>(<span class="function">() =&gt;</span> &#123;</span></span><br><span class="line"><span class="language-javascript">      <span class="comment">// 实例还在</span></span></span><br><span class="line"><span class="language-javascript">      <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;vue 实例===============》&#x27;</span>, app)</span></span><br><span class="line"><span class="language-javascript">    &#125;, <span class="number">1000</span>)</span></span><br><span class="line"><span class="language-javascript">  &#125;</span></span><br><span class="line"><span class="language-javascript">&#125;)</span></span><br><span class="line"><span class="language-javascript"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+      
+    </div>
+    <footer class="article-footer">
+      
+        <a data-url="http://blog.cchealthier.com/2020/07/26/vue-life/" data-id="clgpxyyh100297j9m0e7wg1al" class="article-thumbs-up">赞一个(<span class="article-thumbs-up-num">0</span>)</a>
+      
+      <!-- <a data-url="http://blog.cchealthier.com/2020/07/26/vue-life/" data-id="clgpxyyh100297j9m0e7wg1al" class="article-share-link">分享</a> -->
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020/07/29/vertical-middle/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          垂直居中的几个方法
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/07/25/variable-type/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">判断变量类型的几个方法</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/http%E5%8D%8F%E8%AE%AE/">http协议</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/%E6%9C%8D%E5%8A%A1/">服务</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/%E7%AE%97%E6%B3%95/">算法</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%97%85%E8%A1%8C/">旅行</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%97%85%E8%A1%8C/%E8%AE%B0%E5%BD%95/">记录</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%83%B9%E9%A5%AA/">烹饪</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%83%B9%E9%A5%AA/%E4%BC%A0%E7%BB%9F/">传统</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%9A%8F%E6%83%B3/">随想</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%9A%8F%E6%83%B3/%E5%BF%83%E6%83%85/">心情</a></li></ul></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/blog/" rel="tag">blog</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cook/" rel="tag">cook</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fish/" rel="tag">fish</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/blog/" style="font-size: 10px;">blog</a> <a href="/tags/cook/" style="font-size: 10px;">cook</a> <a href="/tags/fish/" style="font-size: 10px;">fish</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/04/">四月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/03/">三月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/02/">二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">十一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">十月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">九月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2023/04/21/fontend-engineering-2/">从零搭建前端工程（下）</a>
+          </li>
+        
+          <li>
+            <a href="/2023/03/06/fontend-engineering/">从零搭建前端工程（上）</a>
+          </li>
+        
+          <li>
+            <a href="/2023/02/07/multi-function-select/">懒加载-虚拟列表-下拉菜单选择器</a>
+          </li>
+        
+          <li>
+            <a href="/2022/11/07/vue-observer-dep-watcher/">vue 的里 observer、dep、watcher</a>
+          </li>
+        
+          <li>
+            <a href="/2022/10/19/2022-autumn/">最近看到的一些美景</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2023 ChrisIori<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//cdn.staticfile.org/jquery/2.0.3/jquery.min.js"></script>
+<script type="text/javascript" src="https://www.jq22.com/demo/jqueryToast201708310012/js/toast.script.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>

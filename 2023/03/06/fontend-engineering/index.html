@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>从零搭建前端工程（上） | 凝雪密境</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="文章内容太多，分为上下两部分，这里是上半部分。下半部分在《从零搭建前端工程（下）》，此篇的内容有：1. 使用 webpack 打包（编译）vue2. 使用 babel 处理 js3. 使用 webpack-dev-sever 做热调试开发   产生这个的想法来自于某天接手一个项目，eslint 没配好，想着弄好格式化一下，一时之前忘了 cli 命令。想一下，现在我们用的各种框架，都自带了脚手架工具">
+<meta property="og:type" content="article">
+<meta property="og:title" content="从零搭建前端工程（上）">
+<meta property="og:url" content="http://blog.cchealthier.com/2023/03/06/fontend-engineering/index.html">
+<meta property="og:site_name" content="凝雪密境">
+<meta property="og:description" content="文章内容太多，分为上下两部分，这里是上半部分。下半部分在《从零搭建前端工程（下）》，此篇的内容有：1. 使用 webpack 打包（编译）vue2. 使用 babel 处理 js3. 使用 webpack-dev-sever 做热调试开发   产生这个的想法来自于某天接手一个项目，eslint 没配好，想着弄好格式化一下，一时之前忘了 cli 命令。想一下，现在我们用的各种框架，都自带了脚手架工具">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://blog.cchealthier.com/2023/03/06/fontend-engineering/babel1.png">
+<meta property="og:image" content="http://blog.cchealthier.com/2023/03/06/fontend-engineering/babel2.png">
+<meta property="article:published_time" content="2023-03-06T14:22:43.000Z">
+<meta property="article:modified_time" content="2023-04-20T17:47:14.430Z">
+<meta property="article:author" content="ChrisIori">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://blog.cchealthier.com/2023/03/06/fontend-engineering/babel1.png">
+  
+    <link rel="alternate" href="/atom.xml" title="凝雪密境" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.ico">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  <link href="https://www.jq22.com/demo/jqueryToast201708310012/css/toast.style.css" rel="stylesheet" type="text/css">
+<meta name="generator" content="Hexo 7.0.0-rc1"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">凝雪密境</a>
+      </h1>
+      
+        <div id="avatar" style="background-image: url( /avatar.jpg )">
+          <div class="container">
+            <div class="ball wind"></div>
+            <div class="ball fire"></div>
+            <div class="ball water"></div>
+            <div class="ball soil"></div>
+          </div>
+        </div>
+      
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://blog.cchealthier.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-fontend-engineering" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2023/03/06/fontend-engineering/" class="article-date">
+  <time datetime="2023-03-06T14:22:43.000Z" itemprop="datePublished">2023-03-06</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      从零搭建前端工程（上）
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><em><strong>文章内容太多，分为上下两部分，这里是上半部分。下半部分在《<a href="/2023/04/21/fontend-engineering-2/">从零搭建前端工程（下）</a>》，此篇的内容有：</strong></em><br><em><strong>1. 使用 webpack 打包（编译）vue</strong></em><br><em><strong>2. 使用 babel 处理 js</strong></em><br><em><strong>3. 使用 webpack-dev-sever 做热调试开发</strong></em></p>
+<hr>
+<hr>
+<p>产生这个的想法来自于某天接手一个项目，eslint 没配好，想着弄好格式化一下，一时之前忘了 cli 命令。<br>想一下，现在我们用的各种框架，都自带了脚手架工具，初始化后基本上不用怎么改造就可以上手开发。导致很多工程化的东西被人忽视了，就容易遇到问题时被卡住或者东找西找翻资料。<br>所以就想着自己从头搭建一个项目看看，遇到的一些配置、工具、命令都给记录下来，方便后面再遇到时候就不会生手了。</p>
+<p>这里我就用 vue 来做基础框架，用 react 也一样，就一些编译工具的差别，大部分是一样的。要做的事有：</p>
+<ol>
+<li>使用 webpack 打包（编译）vue</li>
+<li>使用 babel 处理 js</li>
+<li>使用 webpack-dev-sever 做热调试开发</li>
+<li>使用 eslint + prettier 让代码健壮和优雅</li>
+<li>使用 husky + lint-staged 强制增量各类检查</li>
+<li>使用 @commitlint&#x2F;cli 规范提交信息</li>
+<li>使用 埋点（性能 + 错误） 让项目运行更好</li>
+</ol>
+<h2 id="零、文件初始化"><a href="#零、文件初始化" class="headerlink" title="零、文件初始化"></a>零、文件初始化</h2><p>准备一个和 vue 脚手架创建出来的初始工程一样。有：</p>
+<p>src：项目源代码<br>src&#x2F;main.js：工程入口文件，在这里做 vue 初始化，也是 webpack 的entry<br>src&#x2F;App.vue：一个主页面<br>src&#x2F;components&#x2F;HelloWorld.vue：一个子组件<br>src&#x2F;assets&#x2F;logo.png：一张图片资源<br>src&#x2F;public：公共资源文件夹，这里放的东西依样拷贝进打包里（除了index.html）<br>src&#x2F;public&#x2F;index.html：用来做单页面工程入口 html 的基础模板</p>
+<p>然后初始化一下 npm 环境：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm init -y</span><br></pre></td></tr></table></figure>
+<p><code>-y</code> 就是创建一份默认的，不需要一步步问要填什么。直接生成空信息，有需要自己再去填就好了。</p>
+<span id="more"></span>
+
+<h2 id="一、使用-webpack-打包（编译）"><a href="#一、使用-webpack-打包（编译）" class="headerlink" title="一、使用 webpack 打包（编译）"></a>一、使用 webpack 打包（编译）</h2><p>安装 webpack。webpack-cli 是为了可以在终端命令启动 webpack。如果使用 api 启动就不需要安装这个。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install -D webpack webpack-cli</span><br></pre></td></tr></table></figure>
+
+<p>然后新建一份 <code>webpack.config.js</code> 在项目根目录。这是 webpack 的默认指定配置文件。用过老一点的 vue 工程的话，可能会有印象工程里有三份类似的配置 webpack.base.config.js&#x2F;webpack.dev.config.js&#x2F;webpack.prod.config.js，因为开发用和打生产包有些东西不一样，所以分了两份配置，再把共同的抽取成一份 base。后面的 vue 工程就看不到相关 webpack 配置了。全部都封装了起来。定义了一份 <code>vue.config.js</code> 做扩展入口。我们可以用命令打它里面的默认配置给打印出来，以供参考学习。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vue inspect &gt; output.js</span><br></pre></td></tr></table></figure>
+
+<p>这点我觉得比 react 好。react 没有留扩展入口。如果自己想要 DIY 一些配置，要把配置打出来，而且过程不可逆。虽然一般可能也不太需要自己再加什么。或许也有别的方法，可能我没了解到。</p>
+<p>webpack 的配置用法这里就不赘述了。直接把 webpack.config.js 内容展示出来，再来解释都是些啥。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> &#123; resolve &#125; = <span class="built_in">require</span>(<span class="string">&#x27;path&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> webpack = <span class="built_in">require</span>(<span class="string">&#x27;webpack&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> &#123; <span class="title class_">VueLoaderPlugin</span> &#125; = <span class="built_in">require</span>(<span class="string">&#x27;vue-loader&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> <span class="title class_">HtmlWebpackPlugin</span> = <span class="built_in">require</span>(<span class="string">&#x27;html-webpack-plugin&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> <span class="title class_">MiniCssExtractPlugin</span> = <span class="built_in">require</span>(<span class="string">&#x27;mini-css-extract-plugin&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> <span class="title class_">CopyWebpackPlugin</span> = <span class="built_in">require</span>(<span class="string">&#x27;copy-webpack-plugin&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> <span class="title class_">ESLintPlugin</span> = <span class="built_in">require</span>(<span class="string">&#x27;eslint-webpack-plugin&#x27;</span>);</span><br><span class="line"><span class="comment">// const BundleAnalyzerPlugin = require(&#x27;webpack-bundle-analyzer&#x27;).BundleAnalyzerPlugin;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> cwd = process.<span class="title function_">cwd</span>();</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> publicDir = <span class="title function_">resolve</span>(cwd, <span class="string">&#x27;public&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> isDev = process.<span class="property">env</span>.<span class="property">NODE_ENV</span> === <span class="string">&#x27;development&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">module</span>.<span class="property">exports</span> = &#123;</span><br><span class="line">  <span class="attr">mode</span>: <span class="string">&#x27;development&#x27;</span>,</span><br><span class="line">  <span class="attr">devtool</span>: isDev ? <span class="string">&#x27;source-map&#x27;</span> : <span class="literal">false</span>,</span><br><span class="line">  <span class="attr">entry</span>: &#123;</span><br><span class="line">    <span class="attr">main</span>: <span class="title function_">resolve</span>(cwd, <span class="string">&#x27;src/main.js&#x27;</span>),</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">output</span>: &#123;</span><br><span class="line">    <span class="attr">path</span>: <span class="title function_">resolve</span>(cwd, <span class="string">&#x27;dist&#x27;</span>),</span><br><span class="line">    <span class="attr">filename</span>: <span class="string">&#x27;[name].js&#x27;</span>, <span class="comment">// 打包后输出文件的文件名</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">devServer</span>: &#123;</span><br><span class="line">    <span class="attr">static</span>: &#123;</span><br><span class="line">      <span class="attr">directory</span>: publicDir, <span class="comment">// 指定静态资源的路径</span></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">compress</span>: <span class="literal">true</span>, <span class="comment">// 是否压缩</span></span><br><span class="line">    <span class="attr">port</span>: <span class="number">8080</span>, <span class="comment">// 指定使用端口</span></span><br><span class="line">    <span class="attr">hot</span>: <span class="literal">true</span>, <span class="comment">// 是否热更新，那肯定啦...</span></span><br><span class="line">    <span class="attr">open</span>: <span class="literal">true</span>, <span class="comment">// 编译完成打开浏览器</span></span><br><span class="line">    <span class="attr">client</span>: &#123;</span><br><span class="line">      <span class="attr">logging</span>: <span class="string">&#x27;error&#x27;</span>, <span class="comment">// 终端显示错误即可</span></span><br><span class="line">      <span class="attr">overlay</span>: &#123; <span class="comment">// warnings 类型不要挡着页面，error才展示为浏览器页面</span></span><br><span class="line">        <span class="attr">errors</span>: <span class="literal">true</span>,</span><br><span class="line">        <span class="attr">warnings</span>: <span class="literal">false</span>,</span><br><span class="line">      &#125;,</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="comment">// proxy: &#123; // 配置代理</span></span><br><span class="line">    <span class="comment">//   &#x27;/api&#x27;: &#123;</span></span><br><span class="line">    <span class="comment">//     target: &#x27;http://localhost:3000&#x27;,</span></span><br><span class="line">    <span class="comment">//     changeOrigin: true,</span></span><br><span class="line">    <span class="comment">//   &#125;,</span></span><br><span class="line">    <span class="comment">// &#125;,</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="comment">// optimization: &#123;</span></span><br><span class="line">  <span class="comment">//   splitChunks: &#123;</span></span><br><span class="line">  <span class="comment">//     chunks: &#x27;all&#x27;,</span></span><br><span class="line">  <span class="comment">//     // minChunks: 3,</span></span><br><span class="line">  <span class="comment">//     // minSize: 0,</span></span><br><span class="line">  <span class="comment">//     cacheGroups: &#123;</span></span><br><span class="line">  <span class="comment">//       default: &#123;</span></span><br><span class="line">  <span class="comment">//         priority: 1,</span></span><br><span class="line">  <span class="comment">//         reuseExistingChunk: true,</span></span><br><span class="line">  <span class="comment">//         enforce: true</span></span><br><span class="line">  <span class="comment">//       &#125;</span></span><br><span class="line">  <span class="comment">//     &#125;</span></span><br><span class="line">  <span class="comment">//   &#125;</span></span><br><span class="line">  <span class="comment">// &#125;,</span></span><br><span class="line">  <span class="attr">module</span>: &#123;</span><br><span class="line">    <span class="attr">rules</span>: [</span><br><span class="line">      &#123;</span><br><span class="line">        <span class="attr">test</span>: <span class="regexp">/\.js$/</span>, <span class="comment">// 解析 js 文件</span></span><br><span class="line">        <span class="attr">exclude</span>: <span class="regexp">/node_modules/</span>,</span><br><span class="line">        <span class="attr">use</span>: <span class="string">&#x27;babel-loader&#x27;</span>,</span><br><span class="line">      &#125;,</span><br><span class="line">      &#123;</span><br><span class="line">        <span class="attr">test</span>: <span class="regexp">/\.vue$/</span>, <span class="comment">// 解析 vue 文件</span></span><br><span class="line">        <span class="attr">exclude</span>: <span class="regexp">/node_modules/</span>,</span><br><span class="line">        <span class="attr">use</span>: <span class="string">&#x27;vue-loader&#x27;</span>, <span class="comment">// 17版本会导致 css 打包报错</span></span><br><span class="line">      &#125;,</span><br><span class="line">      &#123;</span><br><span class="line">        <span class="attr">test</span>: <span class="regexp">/\.css$/</span>, <span class="comment">// 添加对样式表的处理</span></span><br><span class="line">        <span class="attr">use</span>: [</span><br><span class="line">          <span class="comment">// 请只在生产环境下使用 CSS 提取，这将便于你在开发环境下进行热重载。</span></span><br><span class="line">          isDev ? <span class="string">&#x27;vue-style-loader&#x27;</span> : <span class="title class_">MiniCssExtractPlugin</span>.<span class="property">loader</span>,</span><br><span class="line">          <span class="string">&#x27;css-loader&#x27;</span>,</span><br><span class="line">        ],</span><br><span class="line">      &#125;,</span><br><span class="line">      &#123;</span><br><span class="line">        <span class="attr">test</span>: <span class="regexp">/\.less$/</span>, <span class="comment">// 使用 less sass 这些要额外声明处理规则</span></span><br><span class="line">        <span class="attr">use</span>: [</span><br><span class="line">          isDev ? <span class="string">&#x27;vue-style-loader&#x27;</span> : <span class="title class_">MiniCssExtractPlugin</span>.<span class="property">loader</span>,</span><br><span class="line">          <span class="string">&#x27;css-loader&#x27;</span>,</span><br><span class="line">          <span class="string">&#x27;less-loader&#x27;</span>,</span><br><span class="line">        ],</span><br><span class="line">      &#125;,</span><br><span class="line">      &#123;</span><br><span class="line">        <span class="attr">test</span>: <span class="regexp">/\.(png|jpg|gif)$/i</span>,</span><br><span class="line">        <span class="attr">use</span>: [</span><br><span class="line">          &#123;</span><br><span class="line">            <span class="attr">loader</span>: <span class="string">&#x27;url-loader&#x27;</span>,</span><br><span class="line">            <span class="attr">options</span>: &#123;</span><br><span class="line">              <span class="comment">// 新版本的file-loader选项esModule默认为true，</span></span><br><span class="line">              <span class="comment">// 需要将其设置为false，否则打包后src为[object Module]</span></span><br><span class="line">              <span class="attr">esModule</span>: <span class="literal">false</span>,</span><br><span class="line">              <span class="attr">limit</span>: <span class="number">8192</span>,</span><br><span class="line">            &#125;,</span><br><span class="line">          &#125;,</span><br><span class="line">        ],</span><br><span class="line">      &#125;,</span><br><span class="line">    ],</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">resolve</span>: &#123;</span><br><span class="line">    <span class="attr">alias</span>: &#123;</span><br><span class="line">      <span class="string">&#x27;@&#x27;</span>: <span class="title function_">resolve</span>(cwd, <span class="string">&#x27;src&#x27;</span>),</span><br><span class="line">    &#125;,</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">plugins</span>: [</span><br><span class="line">    <span class="comment">// new BundleAnalyzerPlugin(),</span></span><br><span class="line">    <span class="comment">// 参考官方文档 https://vue-loader.vuejs.org/migrating.html#a-plugin-is-now-required</span></span><br><span class="line">    <span class="comment">// Vue-loader在15.*之后的版本都是 vue-loader的使用都是需要伴生 VueLoaderPlugin的,</span></span><br><span class="line">    <span class="keyword">new</span> <span class="title class_">VueLoaderPlugin</span>(),</span><br><span class="line">    <span class="comment">// 编译时替换全局变量</span></span><br><span class="line">    <span class="keyword">new</span> webpack.<span class="title class_">DefinePlugin</span>(&#123;</span><br><span class="line">      <span class="attr">BASE_URL</span>: <span class="title class_">JSON</span>.<span class="title function_">stringify</span>(<span class="string">&#x27;./&#x27;</span>),</span><br><span class="line">      <span class="string">&#x27;process.env.NODE_ENV&#x27;</span>: <span class="title class_">JSON</span>.<span class="title function_">stringify</span>(process.<span class="property">env</span>.<span class="property">NODE_ENV</span>),</span><br><span class="line">    &#125;),</span><br><span class="line">    <span class="keyword">new</span> <span class="title class_">ESLintPlugin</span>(&#123;</span><br><span class="line">      <span class="attr">extensions</span>: [<span class="string">&#x27;.js&#x27;</span>, <span class="string">&#x27;.vue&#x27;</span>], <span class="comment">// Default: &#x27;js&#x27;</span></span><br><span class="line">    &#125;), <span class="comment">// https://eslint.org/docs/latest/integrate/nodejs-api#-new-eslintoptions</span></span><br><span class="line">    <span class="keyword">new</span> <span class="title class_">MiniCssExtractPlugin</span>(&#123;</span><br><span class="line">      <span class="attr">filename</span>: <span class="string">&#x27;style.css&#x27;</span>,</span><br><span class="line">    &#125;),</span><br><span class="line">    <span class="comment">// 用来将打包的 js 注入到 index.html</span></span><br><span class="line">    <span class="keyword">new</span> <span class="title class_">HtmlWebpackPlugin</span>(&#123;</span><br><span class="line">      <span class="attr">inject</span>: <span class="string">&#x27;body&#x27;</span>,</span><br><span class="line">      <span class="attr">template</span>: <span class="title function_">resolve</span>(publicDir, <span class="string">&#x27;index.html&#x27;</span>),</span><br><span class="line">    &#125;),</span><br><span class="line">    <span class="comment">// 把 public 的文件拷贝过去 dist 文件</span></span><br><span class="line">    <span class="keyword">new</span> <span class="title class_">CopyWebpackPlugin</span>(&#123;</span><br><span class="line">      <span class="attr">patterns</span>: [</span><br><span class="line">        &#123;</span><br><span class="line">          <span class="attr">from</span>: publicDir,</span><br><span class="line">          <span class="attr">globOptions</span>: &#123;</span><br><span class="line">            <span class="attr">ignore</span>: [</span><br><span class="line">              <span class="string">&#x27;**/index.html&#x27;</span>, <span class="comment">// html 由 HtmlWebpackPlugin 生成，不需要拷贝</span></span><br><span class="line">              <span class="string">&#x27;**/.DS_Store&#x27;</span>,</span><br><span class="line">              <span class="string">&#x27;**/Thumbs.db&#x27;</span>,</span><br><span class="line">            ],</span><br><span class="line">          &#125;,</span><br><span class="line">        &#125;,</span><br><span class="line">      ],</span><br><span class="line">    &#125;),</span><br><span class="line">  ],</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h3 id="1-使用的-loader"><a href="#1-使用的-loader" class="headerlink" title="1 使用的 loader"></a>1 使用的 loader</h3><p>基础的 <code>entry</code> 和 <code>outpout</code> 就不说了。我们知道 webpack 是一个模块解决方案，它就是把所有东西打包（编译）成能运行的 js。所有东西，种类很多，所以我们要告诉它各式各样的文件类型用对应的 loader 去处理，包括 js，也要相应 loader 去处理。所以在 <code>module.rules</code> 那里，可以看到指定了用 <code>babel-loader</code> 去处理 js 文件，用 <code>vue-loader</code> 去处理 vue 文件。</p>
+<h4 id="1-1-vue-loader-干了啥"><a href="#1-1-vue-loader-干了啥" class="headerlink" title="1.1 vue-loader 干了啥"></a>1.1 vue-loader 干了啥</h4><p>这里简单介绍一下 vue-loader 干了啥。我们知道，vue 文件是 &lt;template&gt; &lt;script&gt; &lt;style&gt; 三部分组成，里面还夹杂了 vue 自身的模板语法，正常浏览器当然不认识这么个写法。所以要把 vue 文件给编译成浏览器喜闻乐见的 js。vue-loader 先把这三部分拆分，分成三份文件，这是编译过程中产生的，并不会真的生成相应的文件。&lt;template&gt; 部分经过 ast 处理后也变成 js 了，用 babel-loader 去接着处理。&lt;style&gt; 则变成 css 文件，所以要指定 <code>style-loader</code> 和 <code>css-loader</code> 去处理。<br><strong>注意 vue-loader 还要搭配使用 VueLoaderPlugin</strong></p>
+<h4 id="1-2-对样式的处理"><a href="#1-2-对样式的处理" class="headerlink" title="1.2 对样式的处理"></a>1.2 对样式的处理</h4><p>上面提到，对于样式，我们使用了 <code>style-loader</code> 和 <code>css-loader</code>。但现在我们都会使用 less sass 等 css 预处理语言。当我们像 <code>&lt;style lang=&quot;less&quot;&gt;</code> 这样加上 lang 声明后，vue-loader就会从生成一份 .css 文件变成生成一份 .less 文件了。此时加上多一个相应的 loader，如 <code>less-loader</code>、<code>sass-loader</code> 先处理就行了。<br>注意这里还用到了 MiniCssExtractPlugin.loader，这是一个来自于插件 <code>mini-css-extract-plugin</code> 的一个附属插件，可以看到同时也使用了它的 plugin 部分。作用是：<br>将里面的所有 class 给抽取出来，生成一份单独的 style 文件。一来减轻 js 产物的体积。二来 css 改动频率应该比不上 js 的改动，可以针对做不一样的缓存策略。</p>
+<h4 id="对其他资源的处理"><a href="#对其他资源的处理" class="headerlink" title="对其他资源的处理"></a>对其他资源的处理</h4><p>一般都是用 <code>url-loader</code> 处理。一般都是小图标会转换成 base64 引入。稍微有点体积的，也不会参与编译了，都是上传到文件服务器，拿资源的 http 地址来使用。</p>
+<h3 id="2-使用的-plugin"><a href="#2-使用的-plugin" class="headerlink" title="2 使用的 plugin"></a>2 使用的 plugin</h3><p>上面提到的 VueLoaderPlugin 和 MiniCssExtractPlugin 就不赘述了。</p>
+<h4 id="2-1-替换全局变量"><a href="#2-1-替换全局变量" class="headerlink" title="2.1 替换全局变量"></a>2.1 替换全局变量</h4><p>有时候，我们经常有不同环境要注入不同变量的，比如开发与生产请求不一样的地址之类的。可以借助 <code>webpack.DefinePlugin</code> 将全局变量注入代码里。代码里直接写 <code>&#39;process.env.NODE_ENV&#39;: JSON.stringify(process.env.NODE_ENV)</code> 这样，打包的时候，就会把这个字符给替换成相应的值，这样我们就把外部的值给注入到 web 应用里。<strong>要注意的是，自己声明的全局变量，对于 eslint 或 tslint 是不认识，可能会报错。这时候需要在这两者的配置里声明这是全局变量，不要报错。</strong></p>
+<h4 id="2-2-加入-eslint-做编译时语法检测"><a href="#2-2-加入-eslint-做编译时语法检测" class="headerlink" title="2.2 加入 eslint 做编译时语法检测"></a>2.2 加入 eslint 做编译时语法检测</h4><p>eslint 的具体用法下文再讲。这里 webpack 也需要集成 eslint，虽然在开发时候编辑器应该配好提醒，但还是需要在编译工具再做一层拦截兜底。以前是用 <code>eslint-loader</code> 的，现在发现改成用 <code>eslint-webpack-plugin</code> 了，不过用法依然简单，毕竟复杂的是 eslint 本身，而不是 webpack 怎么集成它。具体配置可看<a target="_blank" rel="noopener" href="https://eslint.org/docs/latest/integrate/nodejs-api#-new-eslintoptions">介绍</a>。</p>
+<h4 id="2-3-生成单页面用的-html"><a href="#2-3-生成单页面用的-html" class="headerlink" title="2.3 生成单页面用的 html"></a>2.3 生成单页面用的 html</h4><p>单页面框架最后生成的是 js，也得有一个 html 页面作为载体。需要注入打包出来的 js，然后放到产出的文件夹里。用的是 <code>html-webpack-plugin</code> 插件。需要指定一个基础模板，就是 public 下的 index.html 啦。然后可以配置生成的名字啊，注入的 js 要放在那里什么的。还挺多不错的配置的，详情可看<a target="_blank" rel="noopener" href="https://github.com/jantimon/html-webpack-plugin#options">介绍</a>。</p>
+<h4 id="2-4-拷贝静态资源文件"><a href="#2-4-拷贝静态资源文件" class="headerlink" title="2.4 拷贝静态资源文件"></a>2.4 拷贝静态资源文件</h4><p>上面说了，public 的东西除了 index.html 由 html-webpack-plugin 生成外，其他的会依样拷贝到产出包里。这里用 <code>copy-webpack-plugin</code> 插件。当然，就一个拷贝动作，自己写点 node 代码也可以。</p>
+<h4 id="2-5-分析包体积大小"><a href="#2-5-分析包体积大小" class="headerlink" title="2.5 分析包体积大小"></a>2.5 分析包体积大小</h4><p>庞大的项目会打出巨型的生产包。这时候我们需要知道到底是到底是哪里体积大了，比如是否有可替代的小体积依赖包等。用 <code>webpack-bundle-analyzer</code> 插件会生成一份分析结果的 html，里面详细列出了包的各个组成。</p>
+<h4 id="3-其他点"><a href="#3-其他点" class="headerlink" title="3 其他点"></a>3 其他点</h4><p>再介绍下其他的一些配置点：</p>
+<p>devtool：编译后的代码已经和我们写的源码大相径庭，这个字段用来配置 source-map 的类型，详情可看<a target="_blank" rel="noopener" href="https://webpack.js.org/configuration/devtool/#devtool">官网</a>介绍。<br><strong>要注意是，source-map的类型会影响编译速度。</strong></p>
+<p>resolve.alias：给文件引用起别名。我们在写代码的时候，引进别的文件，要看清楚相对路径，写一大堆点点点。有了这个就可以不管三七二十一，比如根据配置 <code>&#39;@&#39;: resolve(cwd, &#39;src&#39;)</code>，就可以直接了当的写：<code>import xxx from &#39;@/yyy/zzz&#39;</code>。webpack 会在编译时候自动去替换路径。<br>当然也不是百分百适用，比如层级特别深的 a.js 要引用同层级的 b.js，那不如就用相对路径 <code>./b.js</code> 就可以了。个人觉得超过两层，如 <code>../../b.js</code>, 就用 alias。<br>关于 resolve 还有很多实用的配置，详情可看<a target="_blank" rel="noopener" href="https://webpack.js.org/configuration/resolve/#resolve">官网</a>介绍</p>
+<p>webpack 的配置还很多也复杂，以前还被笑称前端有个分类为 webpack 工程师。这里只示例一些基本的。真正的项目还是会使用更多的配置。甚至，还可能需要自己开发 loader 和 plugin。这里可以看一下之前写的文章<a href="/2020/11/22/webpack-config/">《webpack的配置》</a>。里面示例了 loader 和 plugin 的基础写法和其他的一些配置介绍。</p>
+<h2 id="二、使用-babel-处理-js"><a href="#二、使用-babel-处理-js" class="headerlink" title="二、使用 babel 处理 js"></a>二、使用 babel 处理 js</h2><p>虽然在 webpack 里就一个 <code>babel-loader</code> 完事，但是 babel 是一个很复杂而厉害的东西。值得单独说一说。</p>
+<p>官网的概念就不说了，我笼统说下自己理解：众所周知，ECMAScript的标准制定，是领先于浏览器的实现的。有时候定好方法，浏览器不支持也是白搭。babel 就是用来抹平这部分差距。把各类超前的 js 编译成当前浏览器支持的语法。使得开发者也可以放心愉快地使用一些新的 api。</p>
+<p>所以我们先安装 babel 一系列东西。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install -D @babel/core @babel/preset-env @babel/plugin-transform-runtime babel-loader</span><br></pre></td></tr></table></figure>
+<p><em><em>@babel&#x2F;</em> 这种 monorepo 仓库是 7 版本开始的。以前是 babel-core。</em>*</p>
+<p>在项目根目录下创建一份 <code>babel.config.js</code>，先把配置贴一贴：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">module</span>.<span class="property">exports</span> = &#123;</span><br><span class="line">  <span class="attr">presets</span>: [</span><br><span class="line">    [</span><br><span class="line">      <span class="string">&#x27;@babel/preset-env&#x27;</span>,</span><br><span class="line">      &#123;</span><br><span class="line">        <span class="comment">// targets: &#123;</span></span><br><span class="line">        <span class="comment">//   chrome: 100,</span></span><br><span class="line">        <span class="comment">// &#125;,</span></span><br><span class="line">        <span class="attr">useBuiltIns</span>: <span class="string">&#x27;usage&#x27;</span>,</span><br><span class="line">        <span class="attr">corejs</span>: <span class="number">3</span>,</span><br><span class="line">      &#125;,</span><br><span class="line">    ],</span><br><span class="line">  ],</span><br><span class="line">  <span class="attr">plugins</span>: [</span><br><span class="line">    <span class="string">&#x27;@babel/plugin-transform-runtime&#x27;</span>,</span><br><span class="line">  ],</span><br><span class="line">&#125;;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>配置有两个东西：<code>presets</code> 和 <code>plugins</code>。</p>
+<h3 id="1-presets"><a href="#1-presets" class="headerlink" title="1 presets"></a>1 presets</h3><p>告诉 babel，要编译到哪个标准的版本。据说以前是带有明显版本号的依赖名：<code>babel-preset-es2016</code>。这样搞不好每次新标准就要改新包了。干脆，就用一个 <code>@babel/preset-env</code> 代表最新。对于 vue 和 react 也推出了自己的 presets，<code>@vue/babel-preset-app</code> 和 <code>@babel/preset-react</code>。<br>这个写法也是比较特别，首先最外层是个数组，这个没问题。数组元素的话，如果没有参数的话，就是一个普通的字符串。如果有参数，就变成一个数组，第一个元素还是该 preset。第二元素就变成一份 json 配置。如上面示例，就是个二维数组。这个配置，有几个参数会比较常见到。</p>
+<h4 id="1-1-target"><a href="#1-1-target" class="headerlink" title="1.1 target"></a>1.1 target</h4><p>指定到哪个浏览器版本，比如 100 版本的 chrome 是支持 async await 和 optional chaining 的，那就不会去转译这个语法。</p>
+<h4 id="1-2-useBuiltIns"><a href="#1-2-useBuiltIns" class="headerlink" title="1.2 useBuiltIns"></a>1.2 useBuiltIns</h4><p>有三个值：”usage” | “entry” | false, defaults to false。false 就是不启用。<br><strong>“usage”：</strong> 必须在入口处主动引入（只能引一次） @babel&#x2F;polyfill（已经包含core-js） 或者 core-js，就会注入一系列垫片函数，全部引入。<br><strong>“entry”：</strong> babel 会判断到底使用了哪些当前指定浏览器版本不支持的方法，按需注入那些垫片函数。</p>
+<h4 id="1-3-corejs"><a href="#1-3-corejs" class="headerlink" title="1.3 corejs"></a>1.3 corejs</h4><p>这个功能的核心库，可以不声明，默认用的是 2 版本。想要用 3 版本主动安装 <a target="_blank" rel="noopener" href="https://www.npmjs.com/package/core-js">core-js</a> 依赖库 3 版本以上，同时要像例子那样声明 <code>corejs: 3</code>。当然 3 版本比 2 版本功能丰富，对新功能支持就更好。</p>
+<p>关于 presets 详情，可看官网<a target="_blank" rel="noopener" href="https://babeljs.io/docs/babel-preset-env#options">介绍</a>。</p>
+<h3 id="2-plugins"><a href="#2-plugins" class="headerlink" title="2 plugins"></a>2 plugins</h3><p>有时候，一些新语法新方法没法支持，就得自己注入一些垫片函数来支持。比如对于 async await 的支持，是注入了一个 regeneratorRuntime（大致是这个名字） 的方法来处理。我们经常看到的是这个插件：<a target="_blank" rel="noopener" href="https://babeljs.io/docs/babel-plugin-transform-regenerator">@babel&#x2F;plugin-transform-runtime</a>。不引入是不是就不行？其实不引入也是可以支持的。</p>
+<p><code>@babel/preset-env</code> 内置了 <code>@babel/plugin-transform-regenerator</code>， 会对 async await 进行转译，但是是在每个模块的作用域给加上处理函数，这样可能造成多个冗余了这个处理函数。所以一般都会使用 <code>@babel/plugin-transform-runtime</code>，它是把处理函数给抽取成单独的模块函数，全局一份。</p>
+<img src="/2023/03/06/fontend-engineering/babel1.png" class="" title="babel1">
+<p>如图，是把整个方法写在这份文件里。一份 js 就有一份。在 webpack 的处理下，每一份 js 都是一个闭包模块。然后每个模块代码都有一样的这个方法。</p>
+<img src="/2023/03/06/fontend-engineering/babel2.png" class="" title="babel2">
+<p>如图，可以看到是变成引用了一个依赖方法，那么在 webpack 处理下，这个就会是同一个第三方方法，就只会有一份代码。</p>
+<p><strong>注意有些旧版本 babel 没有注入处理函数，会报错： regeneratorRuntime is not defined。此时也要自己手动引入该函数，老版本叫 babel-plugin-transform-runtime，与使用的 babel-core、@babel&#x2F;core 相呼应。</strong></p>
+<h3 id="3-一些-cli-命令"><a href="#3-一些-cli-命令" class="headerlink" title="3 一些 cli 命令"></a>3 一些 cli 命令</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 基本的单文件编译并指定输出文件及生成 source-map</span></span><br><span class="line">babel src/index.js --out-file(-o) dist/lib.js --source-maps(-s)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 编译一份文件夹内容并输出到一份文件夹</span></span><br><span class="line">babel src --out-dir(-d) lib</span><br><span class="line"></span><br><span class="line"><span class="comment"># 编译整个 src 目录下的文件并将输出合并为一个文件。</span></span><br><span class="line">babel src --out-file script-compiled.js</span><br><span class="line"></span><br><span class="line"><span class="comment"># 忽略规范和测试文件</span></span><br><span class="line">babel src --out-dir lib --ignore <span class="string">&quot;src/**/*.spec.js&quot;</span>,<span class="string">&quot;src/**/*.test.js&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 复制不需要编译的文件</span></span><br><span class="line">babel src --out-dir lib --copy-files</span><br><span class="line"></span><br><span class="line"><span class="comment"># 自定义配置文件路径</span></span><br><span class="line">babel --config-file /path/to/my/babel.config.json</span><br></pre></td></tr></table></figure>
+
+<h2 id="三、使用-webpack-dev-sever-做热调试开发"><a href="#三、使用-webpack-dev-sever-做热调试开发" class="headerlink" title="三、使用 webpack-dev-sever 做热调试开发"></a>三、使用 webpack-dev-sever 做热调试开发</h2><p>这个大家也是耳熟能详了。现代化前端工程几乎离不开编译这个操作，如果每次改完代码，手动执行下编译操作，然后刷新页面，这开发体验也太灾难了。好在，还是 webpack，帮我们推出了 <a target="_blank" rel="noopener" href="https://www.webpackjs.com/configuration/dev-server/">webpack-dev-server</a>，可以虚拟打包产物放在内存，然后监听文件的修改，有修改就只更新那部分文件，大大提高了开发效率。</p>
+<p>用法也很简单，在前面两个 webpack 工具前置安装完后，再安装这个。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install -D webpack-dev-server</span><br></pre></td></tr></table></figure>
+<p>然后搭配 webpack 启动</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">npx webpack serve</span><br><span class="line"><span class="comment"># 或</span></span><br><span class="line">npx webpack-dev-server</span><br></pre></td></tr></table></figure>
+<p>还可以用 api 方式启动，用于需要判断众多环境启动不一样的服务的时候，随便新建一份 js：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> &#123; resolve &#125; = <span class="built_in">require</span>(<span class="string">&#x27;path&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> <span class="title class_">Webpack</span> = <span class="built_in">require</span>(<span class="string">&#x27;webpack&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> <span class="title class_">WebpackDevServer</span> = <span class="built_in">require</span>(<span class="string">&#x27;webpack-dev-server&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> webpackConfig = <span class="built_in">require</span>(<span class="title function_">resolve</span>(process.<span class="title function_">cwd</span>(), <span class="string">&#x27;webpack.config.js&#x27;</span>));</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> compiler = <span class="title class_">Webpack</span>(webpackConfig);</span><br><span class="line"><span class="keyword">const</span> devServerOptions = &#123; ...webpackConfig.<span class="property">devServer</span> &#125;;</span><br><span class="line"><span class="keyword">const</span> server = <span class="keyword">new</span> <span class="title class_">WebpackDevServer</span>(devServerOptions, compiler);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">runServer</span> = <span class="keyword">async</span> (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">info</span>(<span class="string">&#x27;Starting server...&#x27;</span>);</span><br><span class="line">  server.<span class="title function_">startCallback</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">info</span>(</span><br><span class="line">      <span class="string">`Successfully started server on http://localhost:<span class="subst">$&#123;webpackConfig.devServer.port&#125;</span>`</span></span><br><span class="line">    );</span><br><span class="line">  &#125;);</span><br><span class="line">  <span class="comment">// 或者 await server.start();</span></span><br><span class="line">&#125;;</span><br><span class="line"><span class="title function_">runServer</span>();</span><br></pre></td></tr></table></figure>
+
+<p>用法简单，因为对于编译配置比如 loader、plugin 这些本身就和 webpack 如出一辙。用的同一份 webpack.config.js，只要用环境变量区分 production 和 development 就行了。要了解的是，针对于 webpack-dev-server 的配置。看看 <code>devServer</code> 字段的配置。上面的例子已经加了注释介绍。事实上还有很多功能，比如 proxy 可以访问到请求和响应对象，方便做一些接口的统一处理。这些都视实际情况而定。</p>
+<hr>
+<hr>
+<p><em><strong>以下内容请移步《<a href="/2023/04/21/fontend-engineering-2/">从零搭建前端工程（下）</a>》阅读</strong></em><br><em><strong>4. 使用 eslint + prettier 让代码健壮和优雅</strong></em><br><em><strong>5. 使用 husky + lint-staged 强制增量各类检查</strong></em><br><em><strong>6. 使用 @commitlint&#x2F;cli 规范提交信息</strong></em><br><em><strong>7. 使用 埋点（性能 + 错误） 让项目运行更好</strong></em></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      
+        <a data-url="http://blog.cchealthier.com/2023/03/06/fontend-engineering/" data-id="clgpxyygu000o7j9mhhhg7ph3" class="article-thumbs-up">赞一个(<span class="article-thumbs-up-num">0</span>)</a>
+      
+      <!-- <a data-url="http://blog.cchealthier.com/2023/03/06/fontend-engineering/" data-id="clgpxyygu000o7j9mhhhg7ph3" class="article-share-link">分享</a> -->
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2023/04/21/fontend-engineering-2/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          从零搭建前端工程（下）
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2023/02/07/multi-function-select/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">懒加载-虚拟列表-下拉菜单选择器</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/http%E5%8D%8F%E8%AE%AE/">http协议</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/%E6%9C%8D%E5%8A%A1/">服务</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/%E7%AE%97%E6%B3%95/">算法</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%97%85%E8%A1%8C/">旅行</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%97%85%E8%A1%8C/%E8%AE%B0%E5%BD%95/">记录</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%83%B9%E9%A5%AA/">烹饪</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%83%B9%E9%A5%AA/%E4%BC%A0%E7%BB%9F/">传统</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%9A%8F%E6%83%B3/">随想</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%9A%8F%E6%83%B3/%E5%BF%83%E6%83%85/">心情</a></li></ul></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/blog/" rel="tag">blog</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cook/" rel="tag">cook</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fish/" rel="tag">fish</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/blog/" style="font-size: 10px;">blog</a> <a href="/tags/cook/" style="font-size: 10px;">cook</a> <a href="/tags/fish/" style="font-size: 10px;">fish</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/04/">四月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/03/">三月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/02/">二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">十一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">十月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">九月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2023/04/21/fontend-engineering-2/">从零搭建前端工程（下）</a>
+          </li>
+        
+          <li>
+            <a href="/2023/03/06/fontend-engineering/">从零搭建前端工程（上）</a>
+          </li>
+        
+          <li>
+            <a href="/2023/02/07/multi-function-select/">懒加载-虚拟列表-下拉菜单选择器</a>
+          </li>
+        
+          <li>
+            <a href="/2022/11/07/vue-observer-dep-watcher/">vue 的里 observer、dep、watcher</a>
+          </li>
+        
+          <li>
+            <a href="/2022/10/19/2022-autumn/">最近看到的一些美景</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2023 ChrisIori<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//cdn.staticfile.org/jquery/2.0.3/jquery.min.js"></script>
+<script type="text/javascript" src="https://www.jq22.com/demo/jqueryToast201708310012/js/toast.script.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>

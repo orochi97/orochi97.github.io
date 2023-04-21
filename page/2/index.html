@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>凝雪密境</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="卡卡希的吐槽圣地">
+<meta property="og:type" content="website">
+<meta property="og:title" content="凝雪密境">
+<meta property="og:url" content="http://blog.cchealthier.com/page/2/index.html">
+<meta property="og:site_name" content="凝雪密境">
+<meta property="og:description" content="卡卡希的吐槽圣地">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:author" content="ChrisIori">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="凝雪密境" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.ico">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  <link href="https://www.jq22.com/demo/jqueryToast201708310012/css/toast.style.css" rel="stylesheet" type="text/css">
+<meta name="generator" content="Hexo 7.0.0-rc1"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">凝雪密境</a>
+      </h1>
+      
+        <div id="avatar" style="background-image: url( /avatar.jpg )">
+          <div class="container">
+            <div class="ball wind"></div>
+            <div class="ball fire"></div>
+            <div class="ball water"></div>
+            <div class="ball soil"></div>
+          </div>
+        </div>
+      
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://blog.cchealthier.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main">
+  
+    <article id="post-vite-server-import" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2022/03/19/vite-server-import/" class="article-date">
+  <time datetime="2022-03-19T07:32:20.000Z" itemprop="datePublished">2022-03-19</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2022/03/19/vite-server-import/">vite server运行时替换请求路径</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><a target="_blank" rel="noopener" href="https://vitejs.cn/guide/">介绍</a><br><a target="_blank" rel="noopener" href="https://github.com/vitejs/vite">仓库</a>（当前<a target="_blank" rel="noopener" href="https://github.com/vitejs/vite/tree/12be4d22405c85235e0842e5ebbc7ca6b1356a22">commit</a>）</p>
+<p><strong>核心吸引力：<br>使用浏览器原生ES模块功能，不做耗时的打包，达到极速的启动速度。同时达到真正的按需加载。</strong></p>
+<p>问题一：<br>第三方不是Esmodule的依赖库要预先处理成ES输出，暂存起来。使用预构建，将处理结果打包输出到node_modules&#x2F;.vite。记录在 <code>_metadata.json</code> 文件上，这里了称为“优化依赖元数据”。</p>
+<p>问题二：<br>依赖资源的请求。我们代码里写的都是分散地对ES module的引用，但实际请求的确实只有一份打包合并的文件。所以必然在运行时挟持了请求路径。这里借助一下 <a target="_blank" rel="noopener" href="https://modernjs.dev/docs/guides/usages/debug/unbundled#%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86%E5%92%8C%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9">modern.js</a> 官网的文字给予解释。vite server也是这么处理的。</p>
+        
+          <p class="article-more-link">
+            <a href="/2022/03/19/vite-server-import/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      
+      <!-- <a data-url="http://blog.cchealthier.com/2022/03/19/vite-server-import/" data-id="clgpxyyh2002b7j9m7ict8cad" class="article-share-link">分享</a> -->
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-beijing-winter" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2022/03/14/beijing-winter/" class="article-date">
+  <time datetime="2022-03-14T15:48:23.000Z" itemprop="datePublished">2022-03-14</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%97%85%E8%A1%8C/">旅行</a>►<a class="article-category-link" href="/categories/%E6%97%85%E8%A1%8C/%E8%AE%B0%E5%BD%95/">记录</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2022/03/14/beijing-winter/">首次体验北方冬天</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>22年元旦又去了趟北京，当然是想看看雪，不过那几天天气好到不行，大晴空。即便没看到雪，这也是本南方人第一次见识北方的冬天。无论是光秃秃的树木，结冰的河面，还是凛冽的寒风，喷香的铜炉羊肉，都很有趣。</p>
+<p><img src="https://file.cchealthier.com/file/blog/beijing-winter/beijing1.jpg" alt="1.jpg"></p>
+        
+          <p class="article-more-link">
+            <a href="/2022/03/14/beijing-winter/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      
+      <!-- <a data-url="http://blog.cchealthier.com/2022/03/14/beijing-winter/" data-id="clgpxyygs000b7j9m5byy9c41" class="article-share-link">分享</a> -->
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-performance-api" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2021/01/09/performance-api/" class="article-date">
+  <time datetime="2021-01-09T13:52:41.000Z" itemprop="datePublished">2021-01-09</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/01/09/performance-api/">前端性能监控</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>前端性能参数，可以直接敲 <code>performance</code>。里面记录了各个性能指标。具体的各个参数，可以查看大佬们的<a target="_blank" rel="noopener" href="http://www.alloyteam.com/2015/09/explore-performance/#prettyPhoto">总结</a>。</p>
+<p>这里记录几个参数</p>
+<h4 id="1、首屏绘制（First-Paint，FP）"><a href="#1、首屏绘制（First-Paint，FP）" class="headerlink" title="1、首屏绘制（First Paint，FP）"></a>1、首屏绘制（First Paint，FP）</h4><p>就是白屏时间啦。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">performance.<span class="title function_">getEntriesByType</span>(<span class="string">&#x27;paint&#x27;</span>)[<span class="number">0</span>]</span><br></pre></td></tr></table></figure>
+
+<h4 id="2、首屏内容绘制（First-Contentful-Paint，FCP）"><a href="#2、首屏内容绘制（First-Contentful-Paint，FCP）" class="headerlink" title="2、首屏内容绘制（First Contentful Paint，FCP）"></a>2、首屏内容绘制（First Contentful Paint，FCP）</h4><p>就是首屏加载时间啦</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">performance.<span class="title function_">getEntriesByType</span>(<span class="string">&#x27;paint&#x27;</span>)[<span class="number">1</span>]</span><br></pre></td></tr></table></figure>
+        
+          <p class="article-more-link">
+            <a href="/2021/01/09/performance-api/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      
+      <!-- <a data-url="http://blog.cchealthier.com/2021/01/09/performance-api/" data-id="clgpxyygy001f7j9mcjdm99zn" class="article-share-link">分享</a> -->
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-autumn" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/12/06/autumn/" class="article-date">
+  <time datetime="2020-12-06T04:09:51.000Z" itemprop="datePublished">2020-12-06</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%97%85%E8%A1%8C/">旅行</a>►<a class="article-category-link" href="/categories/%E6%97%85%E8%A1%8C/%E8%AE%B0%E5%BD%95/">记录</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/12/06/autumn/">我言秋日胜春朝</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>10月11月交界去了趟北京，看看红叶枫叶。不得不说，北方就是比南方有秋意。毕竟广东没秋天，哈哈。</p>
+<p><img src="https://file.cchealthier.com/file/blog/autumn/beijing1.jpg" alt="1.jpg"></p>
+        
+          <p class="article-more-link">
+            <a href="/2020/12/06/autumn/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      
+      <!-- <a data-url="http://blog.cchealthier.com/2020/12/06/autumn/" data-id="clgpxyygr00097j9m8wkudnjc" class="article-share-link">分享</a> -->
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-webpack-speed" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/12/06/webpack-speed/" class="article-date">
+  <time datetime="2020-12-06T02:34:40.000Z" itemprop="datePublished">2020-12-06</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/12/06/webpack-speed/">webpack 的快</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>现在啥都离不开性能。性能其实就是讲快的问题。一般 webpack 的快，都是讲它的构建（打包）的速度，但其实也可以有辅助运行时候的快的。<br>简单记录一下。</p>
+<h3 id="构建速度"><a href="#构建速度" class="headerlink" title="构建速度"></a>构建速度</h3><h4 id="一、缓存"><a href="#一、缓存" class="headerlink" title="一、缓存"></a>一、缓存</h4><p>基本上只要讲到快的肯定都有缓存。</p>
+<ol>
+<li><p><a target="_blank" rel="noopener" href="https://webpack.js.org/configuration/other-options/#cache">webpack5 的持久化缓存</a></p>
+</li>
+<li><p>各类 loader 自带的缓存功能（比如 babel-loader的 cacheDirectory: true）</p>
+</li>
+<li><p>cache-loader</p>
+</li>
+<li><p>hard-source-webpack-plugin</p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://webpack.js.org/plugins/dll-plugin">DllPlugin 和 DllReferencePlugin</a></p>
+</li>
+</ol>
+<p>前面四个是编译一次后产生缓存，也就是用以第二次缓存。<br>最后一个 Dll 是把一些不常变化的先打包好，然后引进来就可以了，不要每次都花时间构建。另类缓存。</p>
+<h4 id="二、加速文件查找"><a href="#二、加速文件查找" class="headerlink" title="二、加速文件查找"></a>二、加速文件查找</h4><ol>
+<li><p>对文件进行编译，那文件多少，找文件也是个耗时的工作。webpack 配置的 resolve 字段，就是用来告诉查找规则。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">module</span>.<span class="property">exports</span> = &#123;</span><br><span class="line">  <span class="attr">resolve</span>: &#123; <span class="comment">// 配置一系列搜索资源的规则</span></span><br><span class="line">    <span class="attr">alias</span>: &#123; <span class="comment">// 起别名，相当于转换成绝对路径了，所以比相对路径快</span></span><br><span class="line">      @<span class="attr">src</span>: path.<span class="title function_">resolve</span>(process.<span class="title function_">cwd</span>(), <span class="string">&#x27;src&#x27;</span>)</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="comment">// 引用的文件可以不加后缀，会找这些后缀的文件，引用文件详细到后缀名最快了</span></span><br><span class="line">    <span class="comment">// 但是一般也习惯不写后缀名，但这字段不要太多吧</span></span><br><span class="line">    <span class="attr">extensions</span>: [<span class="string">&#x27;.wasm&#x27;</span>, <span class="string">&#x27;.mjs&#x27;</span>, <span class="string">&#x27;.js&#x27;</span>, <span class="string">&#x27;.json&#x27;</span>],</span><br><span class="line">    <span class="comment">// 明确告诉 webpack 搜索哪个依赖文件，可以用绝对路径写死</span></span><br><span class="line">    <span class="attr">modules</span>: [<span class="string">&#x27;node_modules&#x27;</span>]</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>以及 loader 配置里的 <code>include</code> 和 <code>exclude</code> 来告诉 webpack 哪些需要编译哪些不需要，不干活当然最省时间。</p>
+</li>
+</ol>
+<h4 id="三、多进程打包"><a href="#三、多进程打包" class="headerlink" title="三、多进程打包"></a>三、多进程打包</h4><ol>
+<li><p>happypack（作者都推荐用 thread-loader 了。。。）</p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://webpack.js.org/loaders/thread-loader/">thread-loader</a></p>
+</li>
+</ol>
+<h3 id="运行速度"><a href="#运行速度" class="headerlink" title="运行速度"></a>运行速度</h3><h4 id="一、缓存-1"><a href="#一、缓存-1" class="headerlink" title="一、缓存"></a>一、缓存</h4><p>还是避不开缓存，这个结合《<a href="2020/07/02/cache/">关于缓存的几个关键词</a>》最下面内容来看。就是跟浏览器的缓存策略搭配起来。</p>
+<h4 id="二、花样减少代码"><a href="#二、花样减少代码" class="headerlink" title="二、花样减少代码"></a>二、花样减少代码</h4><ol>
+<li><p>压缩代码，现在 prodcution 模式，webpack 会自定开启混淆压缩功能了。（当然也可以自己<a target="_blank" rel="noopener" href="https://webpack.js.org/configuration/optimization/">配置压缩功能</a>）</p>
+</li>
+<li><p>减去不被触及的代码，<a target="_blank" rel="noopener" href="https://webpack.js.org/guides/tree-shaking">Tree Shaking</a>，但我想还是尽量不要写这种代码吧，Tree Shaking 也不是百分百靠谱。</p>
+</li>
+<li><p>按需加载，配合 ES6 的 <code>import export</code>，webpack就会处理了。没有用到的模块就不打包进来。<br><strong>注意：</strong>这里提一下，require 也可以使用，但并不是浏览器支持 require，而是 webpack 对其做了方法处理。<br>无论是 import 还是 require，最终都会变成 <code>__webpack_require__</code>。使用 require 就没有按需这种功效了。代码都会全部打进去。<br>而且因为 import 语法原因，所以需要放在最上面声明，是静态解析，所以才能分析出哪些要不要。（其实这部分是 babel 干的活）<br>当然 require 也有用处，代码虽然都打进来，但是不会一开始就运行（调用 require 了才会），也就是省去一开始的解析时间，最关键的还是，可以条件引入：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">getModule</span>(<span class="params">flag</span>) &#123;</span><br><span class="line">  <span class="keyword">if</span> (flag) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">require</span>(<span class="string">&#x27;./a.js&#x27;</span>)</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> <span class="built_in">require</span>(<span class="string">&#x27;./b.js&#x27;</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>抽出公共js，虽然大部分工程都会打成一个 js，但有些还是会有多份，就可能存在重复代码，然后这个相当复杂的 <a target="_blank" rel="noopener" href="https://webpack.js.org/plugins/split-chunks-plugin">SplitChunksPlugin</a> （<a target="_blank" rel="noopener" href="https://webpack.js.org/plugins/commons-chunk-plugin/">CommonsChunkPlugin</a>的升级版，不过这家伙已经是时代的眼泪了）就出场了。可以抽出公共组件，可以很精细地配置，当然官网说他们的默认配置最优了，没什么事就不要瞎改了。</p>
+</li>
+<li><p>异步加载，这个就跟上面那个有千丝的关系。我们运行性能讲究一个最小展示，可以看下<a href="/2020/05/28/js-performance/">JS性能优化探讨</a>里的加快响应。<br>有些功能不一定会被点到，那这部分功能就可以延后初始化。那相关的 js 就可以延迟加载。也即是动态加载，对应上面说的 import 是静态加载。使用 webpack 的语法 <a target="_blank" rel="noopener" href="https://webpack.js.org/guides/code-splitting/#dynamic-imports">import()</a>。这个跟 require 不同，不会被打包进去，而是抽多一份 js 出来。延迟去下载。</p>
+</li>
+<li><p>合并js文件，这个就跟上面那两个有万缕的关系。抽的 js 太多就会增多 http 请求，这是最耗性能的，走多一次 http 的消耗可能比一次请求多点内容更消耗，当然 http2 的多路复用另说。<br><a target="_blank" rel="noopener" href="https://webpack.js.org/plugins/limit-chunk-count-plugin/">LimitChunkCountPlugin</a> 和 <a target="_blank" rel="noopener" href="https://webpack.js.org/plugins/min-chunk-size-plugin/">MinChunkSizePlugin</a>（LimitChunkCountPlugin功能多一点，没具体使用过） 用于合并小 js 文件。实际场景中，我们就曾在使用 monaco-editor（vscode的网页版）的时候，打包出来有很多细碎的 js，然后用了 MinChunkSizePlugin 把小 js 文件给合成一份。</p>
+</li>
+</ol>
+
+      
+    </div>
+    <footer class="article-footer">
+      
+      <!-- <a data-url="http://blog.cchealthier.com/2020/12/06/webpack-speed/" data-id="clgpxyyh3002l7j9m7aof2wf9" class="article-share-link">分享</a> -->
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-api-defference" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/11/29/api-defference/" class="article-date">
+  <time datetime="2020-11-29T15:15:36.000Z" itemprop="datePublished">2020-11-29</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/11/29/api-defference/">几个相似（splice slice，substr substring）方法的区别</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>数组有 splice，slice 这两个方法，字符串也有类似的，长得很像，经常混了，这里记录下。</p>
+<h4 id="arrayObject-splice-index-howmany-item1-…-itemX"><a href="#arrayObject-splice-index-howmany-item1-…-itemX" class="headerlink" title="arrayObject.splice(index, howmany, item1, ….., itemX)"></a>arrayObject.splice(index, howmany, item1, ….., itemX)</h4><p>splice：绞接，捻接(两段绳子)的意思。该方法向&#x2F;从数组中添加&#x2F;删除项目，然后返回被删除的项目。该方法会直接对数组进行修改。</p>
+<p>index：必需。整数，规定添加&#x2F;删除项目的位置，使用负数可从数组结尾处规定位置。<br>howmany：必需。要删除的项目数量。如果设置为 0，则不会删除项目。<br>item1, …, itemX：可选。向数组添加的新项目。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> arr = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>]</span><br><span class="line">arr.<span class="title function_">splice</span>(<span class="number">2</span>, <span class="number">0</span>, <span class="number">7</span>, <span class="number">7</span>, <span class="number">7</span>) <span class="comment">// 返回[]，arr = [1, 2, 7, 7, 7, 3, 4]</span></span><br><span class="line">arr.<span class="title function_">splice</span>(<span class="number">2</span>, <span class="number">1</span>, <span class="number">7</span>, <span class="number">7</span>, <span class="number">7</span>) <span class="comment">// 返回[3]，arr = [1, 2, 7, 7, 7, 4]</span></span><br><span class="line">arr.<span class="title function_">splice</span>(<span class="number">0</span>, <span class="number">1</span>) <span class="comment">// 返回[1]，arr = [2, 3, 4]</span></span><br><span class="line">arr.<span class="title function_">splice</span>(-<span class="number">1</span>, <span class="number">1</span>, <span class="number">7</span>, <span class="number">7</span>, <span class="number">7</span>) <span class="comment">// 返回[4]，arr = [1, 2, 3, 7, 7, 7]</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="arrayObject-slice-start-end"><a href="#arrayObject-slice-start-end" class="headerlink" title="arrayObject.slice(start, end)"></a>arrayObject.slice(start, end)</h4><p>slice：切片的意思。该方法可从已有的数组中返回选定的元素。返回一个新的数组，包含从 start 到 end （不包括该元素）的 arrayObject 中的元素。不会改变原数组。</p>
+<p>start：必需。规定从何处开始选取。如果是负数，那么它规定从数组尾部开始算起的位置。也就是说，-1 指最后一个元素，-2 指倒数第二个元素，以此类推。<br>end：可选。规定从何处结束选取。该参数是数组片断结束处的数组下标。如果没有指定该参数，那么切分的数组包含从 start 到数组结束的所有元素。如果这个参数是负数，那么它规定的是从数组尾部开始算起的元素。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> arr = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>]</span><br><span class="line">arr.<span class="title function_">slice</span>(<span class="number">0</span>, <span class="number">0</span>) <span class="comment">// []</span></span><br><span class="line">arr.<span class="title function_">slice</span>(<span class="number">0</span>, <span class="number">1</span>) <span class="comment">// [1]</span></span><br><span class="line">arr.<span class="title function_">slice</span>(<span class="number">2</span>, <span class="number">3</span>) <span class="comment">// [3]</span></span><br><span class="line">arr.<span class="title function_">slice</span>(<span class="number">0</span>) <span class="comment">// [1, 2, 3, 4]</span></span><br><span class="line">arr.<span class="title function_">slice</span>(-<span class="number">2</span>) <span class="comment">// [3, 4]</span></span><br><span class="line">arr.<span class="title function_">slice</span>(-<span class="number">2</span>, -<span class="number">1</span>) <span class="comment">// [3]</span></span><br></pre></td></tr></table></figure>
+
+<p>字符串的 slice，substr，substring 方法</p>
+<h4 id="stringObject-slice-start-end"><a href="#stringObject-slice-start-end" class="headerlink" title="stringObject.slice(start, end)"></a>stringObject.slice(start, end)</h4><p>该方法可提取字符串的某个部分，并以新的字符串返回被提取的部分。跟数组一样不赘述</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&#x27;1234567&#x27;</span>.<span class="title function_">slice</span>(<span class="number">1</span>, <span class="number">3</span>) <span class="comment">// 23</span></span><br><span class="line"><span class="string">&#x27;1234567&#x27;</span>.<span class="title function_">slice</span>(-<span class="number">4</span>, -<span class="number">1</span>) <span class="comment">// 456</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="stringObject-substr-start-length"><a href="#stringObject-substr-start-length" class="headerlink" title="stringObject.substr(start, length)"></a>stringObject.substr(start, length)</h4><p>该方法可在字符串中抽取从 start 下标开始的指定数目的字符。<br><em><strong>注意：ECMAscript 没有对该方法进行标准化，因此反对使用它。</strong></em></p>
+<p>start：必需。要抽取的子串的起始下标。必须是数值。如果是负数，那么该参数声明从字符串的尾部开始算起的位置。也就是说，-1 指字符串中最后一个字符，-2 指倒数第二个字符，以此类推。<br>length：可选。子串中的字符数。必须是数值。如果省略了该参数，那么返回从 stringObject 的开始位置到结尾的字串。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&#x27;1234567&#x27;</span>.<span class="title function_">substr</span>(<span class="number">1</span>, <span class="number">3</span>) <span class="comment">// 234</span></span><br><span class="line"><span class="string">&#x27;1234567&#x27;</span>.<span class="title function_">substr</span>(<span class="number">0</span>) <span class="comment">// 1234567</span></span><br><span class="line"><span class="string">&#x27;1234567&#x27;</span>.<span class="title function_">substr</span>(-<span class="number">4</span>, <span class="number">2</span>) <span class="comment">// 45</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="stringObject-substring-start-stop"><a href="#stringObject-substring-start-stop" class="headerlink" title="stringObject.substring(start, stop)"></a>stringObject.substring(start, stop)</h4><p>该方法用于提取字符串中介于两个指定下标之间的字符。</p>
+<p>start：必需。一个非负的整数，规定要提取的子串的第一个字符在 stringObject 中的位置。<br>stop：可选。一个非负的整数，比要提取的子串的最后一个字符在 stringObject 中的位置多 1。如果省略该参数，那么返回的子串会一直到字符串的结尾。</p>
+<p><em><strong>注意：与 slice 和 substr 方法不同的是，substring 不接受负的参数。substring 功能与 slice 一样。</strong></em></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&#x27;1234567&#x27;</span>.<span class="title function_">substring</span>(<span class="number">1</span>, <span class="number">3</span>) <span class="comment">// 23</span></span><br><span class="line"><span class="string">&#x27;1234567&#x27;</span>.<span class="title function_">substring</span>(<span class="number">3</span>, <span class="number">1</span>) <span class="comment">// 23，如果 start 比 stop 大，那么该方法在提取子串之前会先交换这两个参数。</span></span><br><span class="line"><span class="string">&#x27;1234567&#x27;</span>.<span class="title function_">substring</span>(<span class="number">3</span>) <span class="comment">// 4567</span></span><br><span class="line"><span class="string">&#x27;1234567&#x27;</span>.<span class="title function_">substring</span>(-<span class="number">1</span>, <span class="number">1</span>) <span class="comment">// 1，参数 -1 被解析成 0</span></span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      
+      <!-- <a data-url="http://blog.cchealthier.com/2020/11/29/api-defference/" data-id="clgpxyygp00037j9mex6l9fnq" class="article-share-link">分享</a> -->
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-webpack-config" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/11/22/webpack-config/" class="article-date">
+  <time datetime="2020-11-22T14:27:35.000Z" itemprop="datePublished">2020-11-22</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/11/22/webpack-config/">webpack的配置</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>webpack也用了好久，想来短期内前端暂时也离不开它。虽然现在很多框架都集成了，但难免还是会遇到需要自己配置的时候。在这里记录下一些基础配置。<br>以下基于 webpack5，不过一般差别不大</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> path = <span class="built_in">require</span>(<span class="string">&#x27;path&#x27;</span>)</span><br><span class="line"><span class="keyword">const</span> &#123; execSync &#125; = <span class="built_in">require</span>(<span class="string">&#x27;child_process&#x27;</span>)</span><br><span class="line"><span class="keyword">const</span> webpack = <span class="built_in">require</span>(<span class="string">&#x27;webpack&#x27;</span>)</span><br><span class="line"><span class="keyword">const</span> <span class="title class_">Customplugin</span> = <span class="built_in">require</span>(<span class="string">&#x27;./custom-plugin&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 默认也会覆盖，不过我习惯删了，windows不支持命令的话，可以改用 fs 模块</span></span><br><span class="line"><span class="title function_">execSync</span>(<span class="string">`rm -rf build`</span>)</span><br><span class="line"></span><br><span class="line"><span class="variable language_">module</span>.<span class="property">exports</span> = &#123;</span><br><span class="line">  <span class="attr">context</span>: process.<span class="title function_">cwd</span>(), <span class="comment">// 当前上下文，一般也不用配置</span></span><br><span class="line">  <span class="attr">mode</span>: <span class="string">&#x27;development&#x27;</span>, <span class="comment">// 打包模式，production模式自动压缩混淆</span></span><br><span class="line">   <span class="comment">// source-map 类型 </span></span><br><span class="line">   <span class="comment">// https://webpack.js.org/configuration/devtool/#root</span></span><br><span class="line">  <span class="attr">devtool</span>: <span class="literal">false</span>,</span><br><span class="line">   <span class="comment">// 编译信息，一般也不需要那么多，可以精细配置 </span></span><br><span class="line">   <span class="comment">// https://webpack.js.org/configuration/stats/#root</span></span><br><span class="line">  <span class="attr">stats</span>: <span class="string">&#x27;none&#x27;</span>,</span><br><span class="line">  <span class="attr">entry</span>:  &#123; </span><br><span class="line">    <span class="attr">a</span>: __dirname + <span class="string">&#x27;/a.js&#x27;</span>,</span><br><span class="line">    <span class="attr">b</span>: __dirname + <span class="string">&#x27;/b.js&#x27;</span>,</span><br><span class="line">    <span class="attr">c</span>: __dirname + <span class="string">&#x27;/c.js&#x27;</span></span><br><span class="line">  &#125;, <span class="comment">// 指定文件入口</span></span><br><span class="line">  <span class="attr">output</span>: &#123;</span><br><span class="line">    <span class="attr">path</span>: __dirname + <span class="string">&#x27;/build&#x27;</span>,<span class="comment">// 打包后的文件存放的地方</span></span><br><span class="line">    <span class="attr">filename</span>: <span class="string">&#x27;[name].js&#x27;</span><span class="comment">// 打包后输出文件的文件名，比如上面打出来就会是 a.js b.js c.js</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="comment">// externals：不打包某些库 https://webpack.js.org/configuration/externals/#externals</span></span><br><span class="line">  <span class="attr">optimization</span>: &#123;</span><br><span class="line">    <span class="attr">minimize</span>: <span class="literal">false</span>, <span class="comment">// 不要压缩</span></span><br><span class="line">     <span class="comment">// 抽出公共js，贼复杂，一般用默认的就可以了 </span></span><br><span class="line">     <span class="comment">// https://webpack.js.org/plugins/split-chunks-plugin/#root</span></span><br><span class="line">    <span class="attr">splitChunks</span>: &#123;</span><br><span class="line">      <span class="attr">chunks</span>: <span class="string">&#x27;all&#x27;</span>,</span><br><span class="line">      <span class="comment">// minChunks: 3,</span></span><br><span class="line">      <span class="comment">// minSize: 0,</span></span><br><span class="line">      <span class="attr">cacheGroups</span>: &#123;</span><br><span class="line">        <span class="attr">default</span>: &#123;</span><br><span class="line">          <span class="attr">priority</span>: <span class="number">1</span>,</span><br><span class="line">          <span class="attr">reuseExistingChunk</span>: <span class="literal">true</span>,</span><br><span class="line">          <span class="attr">enforce</span>: <span class="literal">true</span></span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">module</span>: &#123;</span><br><span class="line">    <span class="attr">rules</span>: [</span><br><span class="line">      &#123; <span class="comment">// 添加自定义 loader</span></span><br><span class="line">        <span class="attr">loader</span>: <span class="string">&#x27;./custom-loader.js&#x27;</span>,</span><br><span class="line">        <span class="attr">options</span>: &#123;</span><br><span class="line">          <span class="attr">param</span>: <span class="number">1</span></span><br><span class="line">        &#125;</span><br><span class="line">      &#125;,</span><br><span class="line">      &#123;</span><br><span class="line">        <span class="attr">test</span>: <span class="regexp">/\.js$/</span>,</span><br><span class="line">        <span class="attr">exclude</span>: <span class="regexp">/node_modules/</span>,</span><br><span class="line">        <span class="attr">use</span>: <span class="string">&#x27;babel-loader&#x27;</span>,</span><br><span class="line">        <span class="attr">options</span>: &#123;</span><br><span class="line">          <span class="attr">cacheDirectory</span>: <span class="literal">true</span>,</span><br><span class="line">          <span class="attr">presets</span>: [<span class="string">&#x27;@babel/preset-env&#x27;</span>],</span><br><span class="line">          <span class="attr">plugins</span>: [<span class="string">&#x27;@babel/transform-runtime&#x27;</span>]</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;,</span><br><span class="line">      &#123;</span><br><span class="line">        <span class="attr">use</span>: [</span><br><span class="line">          <span class="string">&#x27;style-loader&#x27;</span>,</span><br><span class="line">          &#123;</span><br><span class="line">            <span class="attr">loader</span>: <span class="string">&#x27;css-loader&#x27;</span>,</span><br><span class="line">            <span class="attr">options</span>: &#123;</span><br><span class="line">              <span class="attr">importLoaders</span>: <span class="number">1</span></span><br><span class="line">            &#125;</span><br><span class="line">          &#125;,</span><br><span class="line">          &#123;</span><br><span class="line">            <span class="attr">loader</span>: <span class="string">&#x27;less-loader&#x27;</span>,</span><br><span class="line">            <span class="attr">options</span>: &#123;</span><br><span class="line">              <span class="attr">noIeCompat</span>: <span class="literal">true</span></span><br><span class="line">            &#125;</span><br><span class="line">          &#125;</span><br><span class="line">        ]</span><br><span class="line">      &#125;</span><br><span class="line">    ]</span><br><span class="line">  &#125;, </span><br><span class="line">  <span class="attr">plugins</span>: [</span><br><span class="line">    <span class="keyword">new</span> webpack.<span class="title class_">DefinePlugin</span>(&#123;</span><br><span class="line">      <span class="string">&#x27;process.env.NODE_ENV&#x27;</span>: <span class="string">&#x27;&quot;development&quot;&#x27;</span>,</span><br><span class="line">    &#125;),</span><br><span class="line">    <span class="keyword">new</span> <span class="title class_">Customplugin</span>(&#123; <span class="attr">params</span>: <span class="number">1</span> &#125;) <span class="comment">// 添加自定义 plugin</span></span><br><span class="line">  ],</span><br><span class="line">  <span class="attr">resolve</span>: &#123; <span class="comment">// 配置一系列搜索资源的规则</span></span><br><span class="line">    <span class="attr">alias</span>: &#123; <span class="comment">// 起别名，方便资源引用</span></span><br><span class="line">      @<span class="attr">src</span>: path.<span class="title function_">resolve</span>(process.<span class="title function_">cwd</span>(), <span class="string">&#x27;src&#x27;</span>)</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="comment">// 引用的文件可以不加后缀，会找这些后缀的文件</span></span><br><span class="line">    <span class="attr">extensions</span>: [<span class="string">&#x27;.wasm&#x27;</span>, <span class="string">&#x27;.mjs&#x27;</span>, <span class="string">&#x27;.js&#x27;</span>, <span class="string">&#x27;.json&#x27;</span>],</span><br><span class="line">    <span class="comment">// 告诉 webpack 搜索哪些文件夹，可以用绝对路径写死</span></span><br><span class="line">    <span class="attr">modules</span>: [<span class="string">&#x27;node_modules&#x27;</span>],</span><br><span class="line">    <span class="comment">// 从npm包导入时，例如import * as D3 from &#x27;d3&#x27;，此选项将确定package.json选中其中的哪些字段</span></span><br><span class="line">    <span class="attr">mainFields</span>: [<span class="string">&#x27;browser&#x27;</span>, <span class="string">&#x27;module&#x27;</span>, <span class="string">&#x27;main&#x27;</span>],</span><br><span class="line">    <span class="comment">// 解析目录时要使用的文件名，一般都是 index 了，不要瞎改</span></span><br><span class="line">    <span class="attr">mainFiles</span>: [<span class="string">&#x27;index&#x27;</span>]</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>自定义loader：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> loaderUtils = <span class="built_in">require</span>(<span class="string">&#x27;loader-utils&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">// https://webpack.js.org/api/loaders/</span></span><br><span class="line"><span class="variable language_">module</span>.<span class="property">exports</span> = <span class="keyword">function</span> (<span class="params">content, map, meta</span>) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="variable language_">this</span>.<span class="property">data</span>.<span class="property">value</span>) <span class="comment">// 123，具体场景看文档</span></span><br><span class="line">  <span class="comment">// 用 loaderUtils 解析这个 loader 的参数</span></span><br><span class="line">  <span class="keyword">const</span> options = loaderUtils.<span class="title function_">getOptions</span>(<span class="variable language_">this</span>)</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 最后要以一个模块的导出形式</span></span><br><span class="line">  content = <span class="string">`module.exports = function () &#123; <span class="subst">$&#123;content&#125;</span> &#125;`</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// 同步</span></span><br><span class="line">  <span class="variable language_">this</span>.<span class="title function_">callback</span>(<span class="literal">null</span>, content, map, meta)</span><br><span class="line">  <span class="keyword">return</span><span class="comment">// 当调用 callback() 时总是返回 undefined</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// 同步</span></span><br><span class="line">  <span class="comment">// return content</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// 异步</span></span><br><span class="line">  <span class="comment">// const callback = this.async()</span></span><br><span class="line">  <span class="comment">// callback(null, result, map, meta)</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 可以定义一个 pitch 方法，要写在 loader 方法下面，但是会先于 loader 方法执行</span></span><br><span class="line"><span class="variable language_">module</span>.<span class="property">exports</span>.<span class="property">pitch</span> = <span class="keyword">function</span>(<span class="params">remainingRequest, precedingRequest, data</span>) &#123;</span><br><span class="line">  data.<span class="property">value</span> = <span class="number">123</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>自定义plugin：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> pluginName = <span class="string">&#x27;CustomPlugin&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// https://webpack.js.org/api/plugins/</span></span><br><span class="line"><span class="comment">// 写成 ES5 prototype 形式也可以，一定要有 apply 方法</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">CustomPlugin</span> &#123;</span><br><span class="line">  <span class="title function_">constructor</span> (options) &#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">options</span> = options</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="title function_">apply</span>(<span class="params">compiler</span>) &#123;</span><br><span class="line">    <span class="comment">// compiler 和 compilation 有很多生命周期钩子</span></span><br><span class="line">    compiler.<span class="property">hooks</span>.<span class="property">run</span>.<span class="title function_">tap</span>(pluginName, <span class="function"><span class="params">compilation</span> =&gt;</span> &#123;</span><br><span class="line">      <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;The webpack build process is starting!!!&#x27;</span>)</span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">module</span>.<span class="property">exports</span> = <span class="title class_">CustomPlugin</span></span><br></pre></td></tr></table></figure>
+      
+    </div>
+    <footer class="article-footer">
+      
+      <!-- <a data-url="http://blog.cchealthier.com/2020/11/22/webpack-config/" data-id="clgpxyyh2002j7j9mgs60h5ds" class="article-share-link">分享</a> -->
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-search" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/11/15/search/" class="article-date">
+  <time datetime="2020-11-15T02:41:59.000Z" itemprop="datePublished">2020-11-15</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E7%AE%97%E6%B3%95/">算法</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/11/15/search/">深度优先遍历(DFS)-栈和广度优先遍历(BFS)-队列的理解</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>JS版本的，概念什么的就不赘述了。参考了这位大佬的<a target="_blank" rel="noopener" href="https://segmentfault.com/a/1190000018706578">文章（JS算法之深度优先遍历(DFS)和广度优先遍历(BFS)）</a>。<br>在这里记录下自己的理解，为啥一个是栈，一个是队列。看码：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;box&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">ul</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">li</span>&gt;</span><span class="tag">&lt;<span class="name">div</span>&gt;</span><span class="tag">&lt;<span class="name">p</span>&gt;</span><span class="tag">&lt;/<span class="name">p</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span><span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">li</span>&gt;</span><span class="tag">&lt;<span class="name">img</span> /&gt;</span><span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">li</span>&gt;</span><span class="tag">&lt;<span class="name">a</span>&gt;</span><span class="tag">&lt;/<span class="name">a</span>&gt;</span><span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">ul</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span>&gt;</span>1<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span>&gt;</span><span class="tag">&lt;<span class="name">span</span>&gt;</span><span class="tag">&lt;<span class="name">strong</span>&gt;</span><span class="tag">&lt;/<span class="name">strong</span>&gt;</span><span class="tag">&lt;/<span class="name">span</span>&gt;</span><span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span>&gt;</span>3<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">button</span>&gt;</span><span class="tag">&lt;<span class="name">strong</span>&gt;</span><span class="tag">&lt;/<span class="name">strong</span>&gt;</span><span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 深度优先，用的是栈，同一边进出，后入先出</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">deepFirstSearch</span>(<span class="params">node</span>) &#123;</span><br><span class="line">  <span class="keyword">var</span> nodes = []</span><br><span class="line">  <span class="keyword">if</span> (node != <span class="literal">null</span>) &#123;</span><br><span class="line">    <span class="keyword">var</span> stack = []</span><br><span class="line">    stack.<span class="title function_">push</span>(node) <span class="comment">// 第一个元素无论 push 还是 unshift 都一样，这里只是为了相呼应。</span></span><br><span class="line">    <span class="keyword">while</span>(stack.<span class="property">length</span> != <span class="number">0</span>) &#123;</span><br><span class="line">      <span class="comment">// 最核心的差别在这里了</span></span><br><span class="line">      <span class="comment">// 第一次进来：是[$box]，弹出来后都是为空</span></span><br><span class="line">      <span class="comment">// 第二次进来: [button, div, ul]，然后 ul 被 pop 出去，收进结果数组 nodes 里</span></span><br><span class="line">      <span class="keyword">var</span> item = stack.<span class="title function_">pop</span>()</span><br><span class="line">      nodes.<span class="title function_">push</span>(item)</span><br><span class="line">      <span class="keyword">var</span> children = item.<span class="property">children</span></span><br><span class="line">      <span class="keyword">for</span> (<span class="keyword">var</span> i = children.<span class="property">length</span> - <span class="number">1</span>; i &gt;= <span class="number">0</span>; i--) &#123;</span><br><span class="line">        <span class="comment">// 这一步也是一样，把每个子节点放进去待遍历数组</span></span><br><span class="line">        <span class="comment">// 把 $box 的子节点放进待选数组，此时是 [button, div, ul]</span></span><br><span class="line">        <span class="comment">// 第一次 while 进来都是一样</span></span><br><span class="line">        <span class="comment">// 这里先收集左边还是右边的子级意义都是一样的</span></span><br><span class="line">        <span class="comment">// 这里是从先把 button 放进来，ul 最后，等下 pop 出去就是 ul 最先</span></span><br><span class="line">        stack.<span class="title function_">push</span>(children[i])</span><br><span class="line">        <span class="comment">// 点出 ul 的子级，收进 stack 的最后，下次 while 进来，pop 就会是 ul 的子级，也即是 li</span></span><br><span class="line">        <span class="comment">// 然后再继续下去，还是会把 ul 的子级的子级，也就是 div，收进 stack 最后</span></span><br><span class="line">        <span class="comment">// 也就是不断的子级优先，达成深挖</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> nodes</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 广度优先，用的是队列，一边进另一边出，先入先出</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">breadthFirstSearch</span>(<span class="params">node</span>) &#123;</span><br><span class="line">  <span class="keyword">var</span> nodes = []</span><br><span class="line">  <span class="keyword">if</span> (node != <span class="literal">null</span>) &#123;</span><br><span class="line">    <span class="keyword">var</span> queue = []</span><br><span class="line">    <span class="comment">// 第一次进来：是[$box]，弹出来后都是为空</span></span><br><span class="line">    <span class="comment">// 第二次进来：[button, div, ul]，然后 button 被 unshift 出去，收进结果数组 nodes 里</span></span><br><span class="line">    <span class="comment">// 第三次进来：[div, ul, strong]，然后 div 被 unshift 出去，收进结果数组 nodes 里</span></span><br><span class="line">    <span class="comment">// 第四次进来：[ul, strong, p, p, p]，然后 ul 被 unshift 出去，收进结果数组 nodes 里</span></span><br><span class="line">    <span class="comment">// 可以看出跟深度的差别，点出子级都是排进待选数组的最后</span></span><br><span class="line">    <span class="comment">// 但是深度是栈pop，加塞在数组最后的子级优先</span></span><br><span class="line">    <span class="comment">// 广度是队列unshift，一起放进数组的兄弟级优先</span></span><br><span class="line">    queue.<span class="title function_">unshift</span>(node)</span><br><span class="line">    <span class="keyword">while</span>(queue.<span class="property">length</span> != <span class="number">0</span>) &#123;</span><br><span class="line">      <span class="keyword">var</span> item = queue.<span class="title function_">shift</span>()</span><br><span class="line">      nodes.<span class="title function_">push</span>(item)</span><br><span class="line">      <span class="keyword">var</span> children = item.<span class="property">children</span></span><br><span class="line">      <span class="keyword">for</span> (<span class="keyword">var</span> i = children.<span class="property">length</span> - <span class="number">1</span>; i &gt;= <span class="number">0</span>; i--) &#123;</span><br><span class="line">        queue.<span class="title function_">push</span>(children[i])</span><br><span class="line">        <span class="comment">// 对应上面第二次进来：点出 button 的子级，也就是 strong，收进 queue 的最后</span></span><br><span class="line">        <span class="comment">// 但对 unshift 的结果没影响，下次 while 进来，unshift 依然是 div</span></span><br><span class="line">        <span class="comment">// 对应上面第三次进来：点出 div 的子级，也就是 p，收进 queue 的最后</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> nodes</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可以看出，就是在遍历时候暂存的数据结构不一样。<br><strong>深度优先</strong>，就是一直深挖，孩子的孩子的孩子…。<br><strong>广度优先</strong>，就是兄弟兄弟兄弟孩子兄弟…。需要注意的是，同级的就算兄弟。意思是相对于根级为孙子辈，就算不是同个父级，也算是兄弟级。</p>
+<p><strong>2022-10-18 21:31:18</strong><br>更新了一篇用 js 做遍历的<a href="/2022/10/18/deepth-breadth-traversal/">《深广度优先遍历》</a>。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      
+      <!-- <a data-url="http://blog.cchealthier.com/2020/11/15/search/" data-id="clgpxyygz001p7j9m047k333f" class="article-share-link">分享</a> -->
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-algorithm" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/10/21/algorithm/" class="article-date">
+  <time datetime="2020-10-21T15:51:13.000Z" itemprop="datePublished">2020-10-21</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E7%AE%97%E6%B3%95/">算法</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/10/21/algorithm/">记录一些基础算法</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>开始补充一些算法和数据结构的知识</p>
+<h3 id="冒泡排序"><a href="#冒泡排序" class="headerlink" title="冒泡排序"></a>冒泡排序</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> arr = [<span class="number">162</span>, <span class="number">6</span>, <span class="number">3</span>, <span class="number">8</span>, <span class="number">90</span>, <span class="number">234</span>, <span class="number">5</span>, <span class="number">7</span>, <span class="number">31</span>, <span class="number">45</span>, <span class="number">12</span>, <span class="number">1</span>, <span class="number">98</span>, <span class="number">23</span>, <span class="number">87</span>, <span class="number">40</span>]</span><br><span class="line"><span class="keyword">function</span> <span class="title function_">sort</span>(<span class="params">arr</span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> len = arr.<span class="property">length</span> - <span class="number">1</span></span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> x = <span class="number">0</span>, y = len; x &lt; y; x++) &#123;</span><br><span class="line">    <span class="comment">// 把第一个跟后面那个对比，如果比后面的数大，就交换位置，到最后就可以确定最大的数在最后</span></span><br><span class="line">    <span class="comment">// 也就是在 length 的位置</span></span><br><span class="line">    <span class="comment">// 在第一轮的时候，x=1，也就是遍历到倒数第二个就好，因为取到 i+1 的数</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>, l = len - x; i &lt; l; i++) &#123;</span><br><span class="line">      <span class="keyword">const</span> first = arr[i], second = arr[i+<span class="number">1</span>]</span><br><span class="line">      <span class="keyword">if</span> (first &gt; second) &#123;</span><br><span class="line">        [arr[i], arr[i+<span class="number">1</span>]] = [second, first]</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 假设没有第一层，最大的数已经在最后，那么第二轮就是要在剩下的数找到最大，并放到倒数第二位置</span></span><br><span class="line">    <span class="comment">// 也就是在 length-1 的位置</span></span><br><span class="line">    <span class="comment">// 此时 x=2，因为依然是当轮最后数（第二轮为length-1）的前一个</span></span><br><span class="line">    <span class="comment">// for (var i = 0, l = arr.length - 2; i &lt; l; i++) &#123;</span></span><br><span class="line">    <span class="comment">//  if (arr[i] &gt; arr[i+1]) &#123;</span></span><br><span class="line">    <span class="comment">//    [arr[i], arr[i+1]] = [arr[i+1], arr[i]]</span></span><br><span class="line">    <span class="comment">//  &#125;</span></span><br><span class="line">    <span class="comment">// &#125;</span></span><br><span class="line">    <span class="comment">// 第三轮 x=3</span></span><br><span class="line">    <span class="comment">// for (var i = 0, l = arr.length - 3; i &lt; l; i++) &#123;</span></span><br><span class="line">    <span class="comment">//  if (arr[i] &gt; arr[i+1]) &#123;</span></span><br><span class="line">    <span class="comment">//    [arr[i], arr[i+1]] = [arr[i+1], arr[i]]</span></span><br><span class="line">    <span class="comment">//  &#125;</span></span><br><span class="line">    <span class="comment">// &#125;</span></span><br><span class="line">    <span class="comment">// 第四轮 x=4</span></span><br><span class="line">    <span class="comment">// for (var i = 0, l = arr.length - 4; i &lt; l; i++) &#123;</span></span><br><span class="line">    <span class="comment">//  if (arr[i] &gt; arr[i+1]) &#123;</span></span><br><span class="line">    <span class="comment">//    [arr[i], arr[i+1]] = [arr[i+1], arr[i]]</span></span><br><span class="line">    <span class="comment">//  &#125;</span></span><br><span class="line">    <span class="comment">// &#125;</span></span><br><span class="line">    <span class="comment">// 所以循环个遍，就成了外面一层的循环</span></span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> arr</span><br><span class="line">&#125;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">sort</span>(arr))</span><br></pre></td></tr></table></figure>
+
+<h3 id="二分法"><a href="#二分法" class="headerlink" title="二分法"></a>二分法</h3><p>就是在一个有序的序列中迅速找到要找的那个数的索引。一个一个遍历当然也可以找到，但是不确定性导致复杂度。<br>二分法就是中间砍一刀，这样数列就成了两半。看看中间值是不是，是那就刚好了。不是的话，判断目标数是在前一半还是后一半，如此这般的循环即可。</p>
+<p>这种思想应该在现实生活中还是经常用到的，比如<code>git bisect</code>（<a target="_blank" rel="noopener" href="http://www.ruanyifeng.com/blog/2018/12/git-bisect.html">看看大佬的介绍</a>）。<br>以及，让我想起以前 TVB 的《超级无敌掌门人》里面有个游戏叫“超级无敌开口中”，轮流在在100里面瞎说一个数，中了就受罚。特别是轮到说最后一个必中的数字时那种视死如归的神情，超搞笑。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">getRandomNum</span>(<span class="params">numMin, numMax</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="title class_">Math</span>.<span class="title function_">round</span>( <span class="title class_">Math</span>.<span class="title function_">random</span>()*(numMax-numMin) + numMin )</span><br><span class="line">&#125;  </span><br><span class="line"><span class="keyword">function</span> <span class="title function_">getArr</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> arr = []</span><br><span class="line">  <span class="keyword">for</span>(<span class="keyword">let</span> i = <span class="number">1</span>, l = <span class="number">100</span>; i &lt;= l; i++) &#123;</span><br><span class="line">    arr.<span class="title function_">push</span>(i)</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> arr</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 随机生成 1 ~ 100 中的某数</span></span><br><span class="line"><span class="keyword">const</span> num = <span class="title function_">getRandomNum</span>(<span class="number">1</span>, <span class="number">100</span>)</span><br><span class="line"><span class="comment">// 生成 1 - 100 的数组</span></span><br><span class="line"><span class="keyword">const</span> arr = <span class="title function_">getArr</span>()</span><br><span class="line"><span class="keyword">function</span> <span class="title function_">binarySearch</span>(<span class="params">num, arr</span>) &#123;</span><br><span class="line">  <span class="keyword">let</span> start = arr.<span class="property">length</span></span><br><span class="line">  <span class="keyword">let</span> end = <span class="number">0</span></span><br><span class="line">  <span class="keyword">const</span> <span class="title function_">getHalf</span> = (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">    <span class="keyword">let</span> length = start + end</span><br><span class="line">    <span class="keyword">return</span> (length % <span class="number">2</span> === <span class="number">0</span>) ? (length / <span class="number">2</span>) : (length + <span class="number">1</span>) / <span class="number">2</span></span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 取中值</span></span><br><span class="line">  <span class="keyword">let</span> half = <span class="title function_">getHalf</span>()</span><br><span class="line">  <span class="keyword">let</span> current = arr[half]</span><br><span class="line">  <span class="keyword">while</span> (current !== num) &#123;</span><br><span class="line">    <span class="keyword">if</span> (current &gt; num) &#123;</span><br><span class="line">      start = half</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (current &lt; num) &#123;</span><br><span class="line">      end = half</span><br><span class="line">    &#125;</span><br><span class="line">    half = <span class="title function_">getHalf</span>()</span><br><span class="line">    current = arr[half]</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> half</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">const</span> idx = <span class="title function_">binarySearch</span>(num, arr)</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(idx, arr[idx], num)</span><br></pre></td></tr></table></figure>
+
+<h3 id="斐波那契数列"><a href="#斐波那契数列" class="headerlink" title="斐波那契数列"></a>斐波那契数列</h3><p>具体的数学意义就不说了，我也不懂，总而言之是满足这样的一个数列：F(0)&#x3D;0，F(1)&#x3D;1，F(n)&#x3D;F(n - 1)+F(n - 2)（n ≥ 3，n ∈ N*）</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 第一反应就是递归，最简单最明晰。但效率最低，其实就是每次算出来的值没存起来，导致每个 n 位的值传进去都要重新递归的算</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">fibonacci</span>(<span class="params">n</span>) &#123;</span><br><span class="line">  <span class="keyword">if</span>(n === <span class="number">0</span> || n === <span class="number">1</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> n</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> <span class="title function_">fibonacci</span>(n-<span class="number">1</span>) + <span class="title function_">fibonacci</span>(n-<span class="number">2</span>)</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 改进一些，是个数列自然就可以用个数组来存</span></span><br><span class="line"><span class="comment">// 把之前获得 n 位的值存起来，下次要拿就直接取就好</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">fibonacci2</span>(<span class="params">n</span>) &#123;</span><br><span class="line">  <span class="keyword">if</span>(n === <span class="number">0</span> || n === <span class="number">1</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> n</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">const</span> arr = [<span class="number">0</span>, <span class="number">1</span>]</span><br><span class="line">  <span class="keyword">for</span>(<span class="keyword">let</span> i = <span class="number">2</span>; i &lt;= n; i++) &#123;</span><br><span class="line">    arr[i] = arr[i-<span class="number">1</span>] + arr[i-<span class="number">2</span>]</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> arr[n]</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 改进一些，其实每次都是需要上两位就可以了，不需要用整个数组来存全部</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">fibonacci3</span>(<span class="params">n</span>) &#123;</span><br><span class="line">  <span class="keyword">if</span>(n === <span class="number">0</span> || n === <span class="number">1</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> n</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">let</span> lastOne = <span class="number">1</span> <span class="comment">// n-1</span></span><br><span class="line">  <span class="keyword">let</span> lastTwo = <span class="number">0</span> <span class="comment">// n-2</span></span><br><span class="line">  <span class="keyword">for</span>(<span class="keyword">let</span> i = <span class="number">2</span>; i &lt;= n; i++) &#123;</span><br><span class="line">    <span class="keyword">var</span> current = lastOne + lastTwo</span><br><span class="line">    <span class="comment">// n-2 和 n-1 分别获取后一位的值</span></span><br><span class="line">    lastTwo = lastOne</span><br><span class="line">    lastOne = current</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> current</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 第一种递归的方法，在浏览器 40 以后基本快跑不出来了</span></span><br><span class="line"><span class="comment">// 第三种还是比第二种快那么些许</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">time</span>(<span class="string">&#x27;fibonacci&#x27;</span>)</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">fibonacci</span>(<span class="number">40</span>))</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">timeEnd</span>(<span class="string">&#x27;fibonacci&#x27;</span>)</span><br></pre></td></tr></table></figure>
+      
+    </div>
+    <footer class="article-footer">
+      
+      <!-- <a data-url="http://blog.cchealthier.com/2020/10/21/algorithm/" data-id="clgpxyygo00017j9m08xr1icr" class="article-share-link">分享</a> -->
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-puppeteer" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/08/30/puppeteer/" class="article-date">
+  <time datetime="2020-08-30T09:48:13.000Z" itemprop="datePublished">2020-08-30</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/08/30/puppeteer/">玩一玩puppeteer</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><a target="_blank" rel="noopener" href="https://zhaoqize.github.io/puppeteer-api-zh_CN/">puppeteer</a>官网上写着：</p>
+<blockquote>
+<p>Puppeteer 是一个 Node 库，它提供了一个高级 API 来通过 DevTools 协议控制 Chromium 或 Chrome。Puppeteer 默认以 headless 模式运行，但是可以通过修改配置文件运行“有头”模式。</p>
+</blockquote>
+<p>其实就是个浏览器，给了许多方法让我们可以控制这个浏览器，比如打开某某网页，输入什么字符，点击哪个按钮。看起来就像是用程序来模拟人工的行为。<br>这样就表示了它可以用来自动化测试。搭配 jest 或 mocha 之类的测试框架，进行e2e测试，模拟一个人去访问网站，进行一些操作。<br>当然不止这一个方案，还有 <a target="_blank" rel="noopener" href="http://www.selenium.org.cn/">selenium</a> 和在这之上的 <a target="_blank" rel="noopener" href="https://nightwatchjs.org/">night-watch</a>，也是干 web 自动化测试的活。</p>
+<p>我们项目上使用它来跑自动化测试的，我自己用它来做爬虫，奸笑~<br>可能也不叫爬虫，就是上新闻网站扫一下热搜，到图片库搜点图片之类的。</p>
+<h3 id="安装："><a href="#安装：" class="headerlink" title="安装："></a>安装：</h3><p>安装是个蛋疼的事，因为这个用到chromium，这玩意在谷歌仓库。所以如果不能科学上网，那就只能修改为淘宝源。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">env</span> puppeteer_download_host=https://npm.taobao.org/mirrors npm i puppeteer</span><br><span class="line"></span><br><span class="line">npm config <span class="built_in">set</span> puppeteer_download_host  https://npm.taobao.org/mirrors</span><br><span class="line">npm i puppeteer</span><br></pre></td></tr></table></figure>
+<p>年代久远，记得都是可以的。不保证时效性…</p>
+<p>我们项目一开始使用它来截图</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> puppeteer = <span class="built_in">require</span>(<span class="string">&#x27;puppeteer&#x27;</span>)</span><br><span class="line">;(<span class="keyword">async</span> () =&gt; &#123;</span><br><span class="line">  <span class="keyword">const</span> browser = <span class="keyword">await</span> puppeteer.<span class="title function_">launch</span>(&#123;</span><br><span class="line">    <span class="attr">headless</span>: <span class="literal">true</span> <span class="comment">// 无头就是不要弹出浏览器</span></span><br><span class="line">  &#125;)</span><br><span class="line">  <span class="keyword">const</span> page = <span class="keyword">await</span> browser.<span class="title function_">newPage</span>()</span><br><span class="line">  <span class="keyword">await</span> page.<span class="title function_">goto</span>(<span class="string">&#x27;https://www.baidu.com&#x27;</span>)</span><br><span class="line">  <span class="keyword">await</span> page.<span class="title function_">setViewport</span>(&#123;</span><br><span class="line">    <span class="attr">width</span>: <span class="number">1200</span>,</span><br><span class="line">    <span class="attr">height</span>: <span class="number">800</span></span><br><span class="line">  &#125;)</span><br><span class="line">  <span class="keyword">await</span> page.<span class="title function_">screenshot</span>(&#123;</span><br><span class="line">    <span class="attr">path</span>: <span class="string">&#x27;puppeteer.png&#x27;</span>,</span><br><span class="line">    <span class="attr">fullPage</span>: <span class="literal">true</span></span><br><span class="line">  &#125;)</span><br><span class="line">  <span class="keyword">await</span> browser.<span class="title function_">close</span>()</span><br><span class="line">&#125;)()</span><br></pre></td></tr></table></figure>
+<p>来看下用它来搜百度热搜，之所以对 puppeteer 感兴趣，就是同事写了一篇这个教程，里面就是演示了爬热搜。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> puppeteer = <span class="built_in">require</span>(<span class="string">&#x27;puppeteer&#x27;</span>)</span><br><span class="line">;(<span class="keyword">async</span> () =&gt; &#123;</span><br><span class="line">  <span class="keyword">const</span> browser = <span class="keyword">await</span> puppeteer.<span class="title function_">launch</span>(&#123;</span><br><span class="line">    <span class="attr">headless</span>: <span class="literal">true</span> <span class="comment">// 无头就是不要弹出浏览器</span></span><br><span class="line">  &#125;)</span><br><span class="line">  <span class="keyword">const</span> page = <span class="keyword">await</span> browser.<span class="title function_">newPage</span>()</span><br><span class="line">  <span class="keyword">await</span> page.<span class="title function_">goto</span>(<span class="string">&#x27;http://top.baidu.com/buzz?b=1&amp;fr=topindex&#x27;</span>, &#123;</span><br><span class="line">    <span class="attr">timeout</span>: <span class="number">0</span>, <span class="comment">// 设置超时时间为0</span></span><br><span class="line">    <span class="attr">waitUntil</span>: <span class="string">&#x27;domcontentloaded&#x27;</span> <span class="comment">// 有多个状态可设置，这里设置为 dom 渲染完成</span></span><br><span class="line">  &#125;)</span><br><span class="line">  <span class="comment">// 有时候网速卡，加载慢，容易超时报错，所以上面把超时时间去掉</span></span><br><span class="line">  <span class="comment">// 同时网页渲染也需要时间，可以等一下，</span></span><br><span class="line">  <span class="comment">// 比如 await page.waitFor(1000) 等待1000ms</span></span><br><span class="line">  <span class="comment">// 比如我之前爬图片的时候，都知道图片是相当耗时的</span></span><br><span class="line">  <span class="comment">// 所以我写成等图片的 dom 可见即可，可见包括了它已经被赋予 src，不需要等到图片下载并渲染完成</span></span><br><span class="line">  <span class="comment">// 然后获取其 src，再通过别的方法下载</span></span><br><span class="line">  <span class="comment">// await page.waitForSelector(dom, &#123; visible: true, timeout: 0 &#125;)</span></span><br><span class="line">  <span class="keyword">const</span> list = <span class="keyword">await</span> page.evaluate(<span class="function">(<span class="params">dom</span>) =&gt;</span> &#123;  <span class="comment">// 爬取内容</span></span><br><span class="line">    <span class="comment">// 这个 dom 需要去网站上看实际结构，很好找，跟 jQuery 一样</span></span><br><span class="line">    <span class="keyword">const</span> $doms = <span class="variable language_">document</span>.<span class="title function_">querySelectorAll</span>(<span class="string">&#x27;.mainBody .keyword a&#x27;</span>)</span><br><span class="line">    <span class="keyword">const</span> list = <span class="title class_">Array</span>.<span class="title function_">from</span>($doms).<span class="title function_">map</span>(<span class="function">(<span class="params">$dom</span>) =&gt;</span> &#123;</span><br><span class="line">      <span class="keyword">return</span> &#123;</span><br><span class="line">        <span class="attr">href</span>: $dom.<span class="property">href</span>,</span><br><span class="line">        <span class="attr">text</span>: $dom.<span class="property">innerText</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;)</span><br><span class="line">    <span class="keyword">return</span> list</span><br><span class="line">  &#125;)</span><br><span class="line">  <span class="comment">// 这个 list 就记录了热搜的标题和网址</span></span><br><span class="line">  <span class="keyword">await</span> page.<span class="title function_">close</span>()</span><br><span class="line">  <span class="keyword">await</span> browser.<span class="title function_">close</span>()</span><br><span class="line">&#125;)()</span><br></pre></td></tr></table></figure>
+
+<p>对网页的抓取还有这个<a target="_blank" rel="noopener" href="https://github.com/cheeriojs/cheerio/wiki/Chinese-README">cheerio</a>，在 node 里面像 jQuery 一样获取dom。<br>不过好像对单页面的网站比较麻烦。因为是抓了整个网页内容下来，再来分析页面。那对于 SPA 抓下来也是一个容器一个js，没有实体dom。所以具体看用途啦。</p>
+<p>puppeteer还有很多牛的功能，这里只是用到了冰山一角，还能做更多有趣的事。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      
+      <!-- <a data-url="http://blog.cchealthier.com/2020/08/30/puppeteer/" data-id="clgpxyygz001m7j9m00nvcbe8" class="article-share-link">分享</a> -->
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+
+
+  <nav id="page-nav">
+    
+    <a class="extend prev" rel="prev" href="/">« 上一页</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/3/">下一页 »</a>
+  </nav>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/http%E5%8D%8F%E8%AE%AE/">http协议</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/%E6%9C%8D%E5%8A%A1/">服务</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/%E7%AE%97%E6%B3%95/">算法</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%97%85%E8%A1%8C/">旅行</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%97%85%E8%A1%8C/%E8%AE%B0%E5%BD%95/">记录</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%83%B9%E9%A5%AA/">烹饪</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%83%B9%E9%A5%AA/%E4%BC%A0%E7%BB%9F/">传统</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%9A%8F%E6%83%B3/">随想</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%9A%8F%E6%83%B3/%E5%BF%83%E6%83%85/">心情</a></li></ul></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/blog/" rel="tag">blog</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cook/" rel="tag">cook</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fish/" rel="tag">fish</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/blog/" style="font-size: 10px;">blog</a> <a href="/tags/cook/" style="font-size: 10px;">cook</a> <a href="/tags/fish/" style="font-size: 10px;">fish</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/04/">四月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/03/">三月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/02/">二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">十一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">十月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">九月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2023/04/21/fontend-engineering-2/">从零搭建前端工程（下）</a>
+          </li>
+        
+          <li>
+            <a href="/2023/03/06/fontend-engineering/">从零搭建前端工程（上）</a>
+          </li>
+        
+          <li>
+            <a href="/2023/02/07/multi-function-select/">懒加载-虚拟列表-下拉菜单选择器</a>
+          </li>
+        
+          <li>
+            <a href="/2022/11/07/vue-observer-dep-watcher/">vue 的里 observer、dep、watcher</a>
+          </li>
+        
+          <li>
+            <a href="/2022/10/19/2022-autumn/">最近看到的一些美景</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2023 ChrisIori<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//cdn.staticfile.org/jquery/2.0.3/jquery.min.js"></script>
+<script type="text/javascript" src="https://www.jq22.com/demo/jqueryToast201708310012/js/toast.script.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>关于缓存的几个关键词 | 凝雪密境</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="缓存可以看成浏览器开辟了一个区域来放缓存的东西。有些放在内存有些放在硬盘。从缓存返回的状态码为304。缓存分两种 强缓存：设定一个期限，期限的重复访问都会去缓存获取，有两个字符来表示这个期限：__http1__的是__Expires__，Expires: Wed, 22 Oct 2018 08:41:00 GMT表示资源会在 Wed, 22 Oct 2018 08:41:00 GMT 后过期，需要">
+<meta property="og:type" content="article">
+<meta property="og:title" content="关于缓存的几个关键词">
+<meta property="og:url" content="http://blog.cchealthier.com/2020/07/02/cache/index.html">
+<meta property="og:site_name" content="凝雪密境">
+<meta property="og:description" content="缓存可以看成浏览器开辟了一个区域来放缓存的东西。有些放在内存有些放在硬盘。从缓存返回的状态码为304。缓存分两种 强缓存：设定一个期限，期限的重复访问都会去缓存获取，有两个字符来表示这个期限：__http1__的是__Expires__，Expires: Wed, 22 Oct 2018 08:41:00 GMT表示资源会在 Wed, 22 Oct 2018 08:41:00 GMT 后过期，需要">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-07-02T15:32:38.000Z">
+<meta property="article:modified_time" content="2023-04-20T17:47:14.428Z">
+<meta property="article:author" content="ChrisIori">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="凝雪密境" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.ico">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  <link href="https://www.jq22.com/demo/jqueryToast201708310012/css/toast.style.css" rel="stylesheet" type="text/css">
+<meta name="generator" content="Hexo 7.0.0-rc1"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">凝雪密境</a>
+      </h1>
+      
+        <div id="avatar" style="background-image: url( /avatar.jpg )">
+          <div class="container">
+            <div class="ball wind"></div>
+            <div class="ball fire"></div>
+            <div class="ball water"></div>
+            <div class="ball soil"></div>
+          </div>
+        </div>
+      
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://blog.cchealthier.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-cache" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/07/02/cache/" class="article-date">
+  <time datetime="2020-07-02T15:32:38.000Z" itemprop="datePublished">2020-07-02</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      关于缓存的几个关键词
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>缓存可以看成浏览器开辟了一个区域来放缓存的东西。有些放在内存有些放在硬盘。<br>从缓存返回的状态码为304。缓存分两种</p>
+<h4 id="强缓存："><a href="#强缓存：" class="headerlink" title="强缓存："></a>强缓存：</h4><p>设定一个期限，期限的重复访问都会去缓存获取，有两个字符来表示这个期限：<br>__http1__的是__Expires__，Expires: Wed, 22 Oct 2018 08:41:00 GMT表示资源会在 Wed, 22 Oct 2018 08:41:00 GMT 后过期，需要再次请求。<br>__http1.1__的是__Cache-Control__，当Cache-Control:max-age&#x3D;300，表示5分钟缓存时间。还有其他几个值。直接看另外一个比较有影响的：no-cache。这个看做就是不强缓存，继续去判断协商缓存。</p>
+<p>Cache-Control优先级高于Expires，现在基本都是http1.1，Expires也就是兼容用。</p>
+<h4 id="协商缓存："><a href="#协商缓存：" class="headerlink" title="协商缓存："></a>协商缓存：</h4><p>首次访问资源，响应头会返回标识符（__Last-Modified&#x2F;ETag__），下次访问请求头会带上标识符（__If-Modified-Since&#x2F;If-None-Match__），去服务器查询是否启用缓存。也就是请求还是要发，但是至少东西是省发了。</p>
+<p>响应头和请求头的缓存标识符字段名不一样，但值一样。</p>
+<p>Last-Modified和If-Modified-Since，就是资源最后修改时间，发送到服务器去判断有没有更新，无则返回304。<br>缺点就很明显，如果文件有被打开或者别的什么改动了时间，那缓存失效。同时最低也是精确到秒，一秒内的改动判断不出来。</p>
+<p>ETag和If-None-Match<br>Etag可以看成根据文件算出的哈希，唯一的，文件一改肯定就改。<br>缺点就是要消耗资源去计算。</p>
+<p>当然ETag明显精度高于Last-Modified，所以优先级也是ETag高。</p>
+<h4 id="应用中的策略"><a href="#应用中的策略" class="headerlink" title="应用中的策略"></a>应用中的策略</h4><p>设定一个期限很大的强缓存，如 max-age&#x3D;31536000 (一年)。文件通过打包工具生成出来都带上哈希。只要文件内容不改哈希就不改，请求的地址就不改，命中强缓存。改了内容自然连请求地址都改了，就会返回新文件。</p>
+<h4 id="代码的角度，"><a href="#代码的角度，" class="headerlink" title="代码的角度，"></a>代码的角度，</h4><p>看到的资料几乎都是服务端的，比如node的express可以在请求资源的返回里设置响应头</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">app.<span class="title function_">get</span>(<span class="string">&#x27;/foo.js&#x27;</span>, <span class="keyword">function</span> (<span class="params">req, res</span>) &#123;</span><br><span class="line">  res.<span class="title function_">set</span>(&#123;</span><br><span class="line">    <span class="string">&#x27;Content-Type&#x27;</span>: <span class="string">&#x27;text/javascript&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;Cache-Control&#x27;</span>: <span class="string">&#x27;no-cache&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;ETag&#x27;</span>: <span class="string">&#x27;12345&#x27;</span></span><br><span class="line">  &#125;)</span><br><span class="line">  res.<span class="title function_">sendFile</span>(<span class="string">&#x27;foo.js&#x27;</span>)</span><br><span class="line">&#125;)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>当然每个都这样搞未免太麻烦了，在静态资源那里可以统一设置</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> options = &#123;</span><br><span class="line">  <span class="attr">dotfiles</span>: <span class="string">&#x27;ignore&#x27;</span>,</span><br><span class="line">  <span class="attr">etag</span>: <span class="literal">false</span>,</span><br><span class="line">  <span class="attr">extensions</span>: [<span class="string">&#x27;htm&#x27;</span>, <span class="string">&#x27;html&#x27;</span>],</span><br><span class="line">  <span class="attr">index</span>: <span class="literal">false</span>,</span><br><span class="line">  <span class="attr">maxAge</span>: <span class="string">&#x27;1d&#x27;</span>,</span><br><span class="line">  <span class="attr">redirect</span>: <span class="literal">false</span>,</span><br><span class="line">  <span class="attr">setHeaders</span>: <span class="keyword">function</span> (<span class="params">res, path, stat</span>) &#123;</span><br><span class="line">    res.<span class="title function_">set</span>(<span class="string">&#x27;x-timestamp&#x27;</span>, <span class="title class_">Date</span>.<span class="title function_">now</span>())</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">app.<span class="title function_">use</span>(express.<span class="title function_">static</span>(<span class="string">&#x27;public&#x27;</span>, options))</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>上面是默认设置，自己也可以修改。</p>
+<p>至于前端的设置，似乎只有</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">http-equiv</span>=<span class="string">&quot;expires&quot;</span> <span class="attr">content</span>=<span class="string">&quot;Wed, 20 Jun 2007 22:33:00 GMT&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">http-equiv</span>=<span class="string">&quot;cache-control&quot;</span> <span class="attr">content</span>=<span class="string">&quot;no-cache&quot;</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>尝试设置为强缓存好像没生效。而且这还是只是针对该份html，其他的资源似乎无能为力，可能也是了解不够。</p>
+<h4 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h4><p>上面提到的利用打包工具来做这个哈希名字的事，首先想到的当然是webpack</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">module</span>.<span class="property">exports</span> = &#123;</span><br><span class="line">  <span class="attr">output</span>:&#123;</span><br><span class="line">    <span class="attr">path</span>:path.<span class="title function_">join</span>(__dirname, <span class="string">&#x27;/dist/js&#x27;</span>),</span><br><span class="line">    <span class="attr">filename</span>: <span class="string">&#x27;[name].[chunkhash].js&#x27;</span>,</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>都知道输出文件名字可配置成带哈希字符的，也就是上面的 [chunkhash] 部分，这里有三个值可以写：<br><strong>hash、chunkhash、contenthash</strong></p>
+<p>__hash：__利用整个工程内容来计算，所以改一点点全部都改。<br>__chunkhash：__计算的单独chunk（这个是webpack的概念，相当于每个要输出的文件，一般一个entry对应一个chunk）的哈希。<br>__contenthash：__在使用抽离的css插件的时候，抽离的css文件会与引用它的js共用一份chunkhash，那js一改css也得改。当然反过来也是。此时用contenthash就只针对该份文件内容做哈希，就不会互相影响到了。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      
+        <a data-url="http://blog.cchealthier.com/2020/07/02/cache/" data-id="clgpxyygt000f7j9m5yvndhjm" class="article-thumbs-up">赞一个(<span class="article-thumbs-up-num">0</span>)</a>
+      
+      <!-- <a data-url="http://blog.cchealthier.com/2020/07/02/cache/" data-id="clgpxyygt000f7j9m5yvndhjm" class="article-share-link">分享</a> -->
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020/07/09/callapplybind/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          自己实现call，apply，bind
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/06/22/ssl-lts/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">ssl-lts 协议过程</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/http%E5%8D%8F%E8%AE%AE/">http协议</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/%E6%9C%8D%E5%8A%A1/">服务</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/%E7%AE%97%E6%B3%95/">算法</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%97%85%E8%A1%8C/">旅行</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%97%85%E8%A1%8C/%E8%AE%B0%E5%BD%95/">记录</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%83%B9%E9%A5%AA/">烹饪</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%83%B9%E9%A5%AA/%E4%BC%A0%E7%BB%9F/">传统</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%9A%8F%E6%83%B3/">随想</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%9A%8F%E6%83%B3/%E5%BF%83%E6%83%85/">心情</a></li></ul></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/blog/" rel="tag">blog</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cook/" rel="tag">cook</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fish/" rel="tag">fish</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/blog/" style="font-size: 10px;">blog</a> <a href="/tags/cook/" style="font-size: 10px;">cook</a> <a href="/tags/fish/" style="font-size: 10px;">fish</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/04/">四月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/03/">三月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/02/">二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">十一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">十月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">九月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2023/04/21/fontend-engineering-2/">从零搭建前端工程（下）</a>
+          </li>
+        
+          <li>
+            <a href="/2023/03/06/fontend-engineering/">从零搭建前端工程（上）</a>
+          </li>
+        
+          <li>
+            <a href="/2023/02/07/multi-function-select/">懒加载-虚拟列表-下拉菜单选择器</a>
+          </li>
+        
+          <li>
+            <a href="/2022/11/07/vue-observer-dep-watcher/">vue 的里 observer、dep、watcher</a>
+          </li>
+        
+          <li>
+            <a href="/2022/10/19/2022-autumn/">最近看到的一些美景</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2023 ChrisIori<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//cdn.staticfile.org/jquery/2.0.3/jquery.min.js"></script>
+<script type="text/javascript" src="https://www.jq22.com/demo/jqueryToast201708310012/js/toast.script.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>
