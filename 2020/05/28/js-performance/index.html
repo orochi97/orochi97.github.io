@@ -7,15 +7,15 @@
   
   <title>JS性能优化探讨 | 凝雪密境</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="一、最核心一点，减少http请求，3次握手，冷启动，成本昂贵__1、__合并小js文件__2、__使用雪碧图__3、__小图转换成base64放到代码里__4、__设置缓存 二、加快响应__1、__CDN__2、__减少DNS查询次数__3、__提前加载，延迟加载__4、__首页最小内容显示，将样式表置顶渲染页面，将js放到底部不阻塞页面渲染。 三、资源层面__1、__能用不那么高清图片，就用体积">
+  <meta name="description" content="一、最核心一点，减少http请求，3次握手，冷启动，成本昂贵 合并小js文件 使用雪碧图 小图转换成base64放到代码里 设置缓存  二、加快响应 CDN 减少DNS查询次数 提前加载，延迟加载 首页最小内容显示，将样式表置顶渲染页面，将js放到底部不阻塞页面渲染。  三、资源层面 能用不那么高清图片，就用体积小的图片 压缩业务代码 压缩减少或不要cookie，每次请求头都会带上 把静态资源放在">
 <meta property="og:type" content="article">
 <meta property="og:title" content="JS性能优化探讨">
 <meta property="og:url" content="http://blog.cchealthier.com/2020/05/28/js-performance/index.html">
 <meta property="og:site_name" content="凝雪密境">
-<meta property="og:description" content="一、最核心一点，减少http请求，3次握手，冷启动，成本昂贵__1、__合并小js文件__2、__使用雪碧图__3、__小图转换成base64放到代码里__4、__设置缓存 二、加快响应__1、__CDN__2、__减少DNS查询次数__3、__提前加载，延迟加载__4、__首页最小内容显示，将样式表置顶渲染页面，将js放到底部不阻塞页面渲染。 三、资源层面__1、__能用不那么高清图片，就用体积">
+<meta property="og:description" content="一、最核心一点，减少http请求，3次握手，冷启动，成本昂贵 合并小js文件 使用雪碧图 小图转换成base64放到代码里 设置缓存  二、加快响应 CDN 减少DNS查询次数 提前加载，延迟加载 首页最小内容显示，将样式表置顶渲染页面，将js放到底部不阻塞页面渲染。  三、资源层面 能用不那么高清图片，就用体积小的图片 压缩业务代码 压缩减少或不要cookie，每次请求头都会带上 把静态资源放在">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2020-05-28T15:56:30.000Z">
-<meta property="article:modified_time" content="2023-04-21T03:44:31.071Z">
+<meta property="article:modified_time" content="2023-05-15T13:22:18.000Z">
 <meta property="article:author" content="ChrisIori">
 <meta name="twitter:card" content="summary">
   
@@ -103,18 +103,40 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h3 id="一、最核心一点，减少http请求，3次握手，冷启动，成本昂贵"><a href="#一、最核心一点，减少http请求，3次握手，冷启动，成本昂贵" class="headerlink" title="一、最核心一点，减少http请求，3次握手，冷启动，成本昂贵"></a>一、最核心一点，减少http请求，3次握手，冷启动，成本昂贵</h3><p>__1、__合并小js文件<br>__2、__使用雪碧图<br>__3、__小图转换成base64放到代码里<br>__4、__设置缓存</p>
-<h3 id="二、加快响应"><a href="#二、加快响应" class="headerlink" title="二、加快响应"></a>二、加快响应</h3><p>__1、__CDN<br>__2、__减少DNS查询次数<br>__3、__提前加载，延迟加载<br>__4、__首页最小内容显示，将样式表置顶渲染页面，将js放到底部不阻塞页面渲染。</p>
-<h3 id="三、资源层面"><a href="#三、资源层面" class="headerlink" title="三、资源层面"></a>三、资源层面</h3><p>__1、__能用不那么高清图片，就用体积小的图片<br>__2、__压缩业务代码<br>__3、__压缩减少或不要cookie，每次请求头都会带上<br>__4、__把静态资源放在另外一个域名，根据域名划分内容。<br>浏览器一般对同一个域的下载连接数有所限制，按照域名划分下载内容可以浏览器增大并行下载连接。<br>但是注意控制域名使用在2-4个之间，不然dns查询也是个问题。<br>一般网站规划会将静态资源放在类似于static.example.com，动态内容放在<a target="_blank" rel="noopener" href="http://www.example.com上./">www.example.com上。</a><br>这样做还有一个好处是可以在静态的域名上避免使用cookie。页面内容使用无cookie域名<br>__5、__使用小且可缓存的favicon.ico网站图标文件favicon.ico。<br>不管你服务器有还是没有，浏览器都会去尝试请求这个图标。所以我们要确保这个图标存在文件尽量小，最好小于1k设置一个长的过期时间</p>
-<h3 id="四、代码层面"><a href="#四、代码层面" class="headerlink" title="四、代码层面"></a>四、代码层面</h3><p>__1、__html尽量减少dom（document.getElementsByTagName(‘*’).length）<br>__2、__避免CSS表达式，CSS表达式的问题在于它被重新计算的次数远比我们想象的要多，不仅在网页绘制或大小改变时计算，即使我们滚动屏幕或者移动鼠标的时候也在计算，因此我们还是尽量避免使用它来防止使用不当而造成的性能损耗。<br>__3、__减少对dom的操作<br>__4、__用<link>代替@import，避免使用@import的原因很简单，因为它相当于将css放在网页内容底部。<br>__5、__使用智能事件处理<br>这里说智能的事件处理需要开发者对事件处理有更深入的了解，通过不同的方式尽量少去触发事件，如果必要就尽早的去处理事件。比如一个div中10个按钮都需要事件句柄，那么我们可以将事件放在div上，在事件冒泡过程中捕获该事件然后判断事件来源。</p>
+        <h3 id="一、最核心一点，减少http请求，3次握手，冷启动，成本昂贵"><a href="#一、最核心一点，减少http请求，3次握手，冷启动，成本昂贵" class="headerlink" title="一、最核心一点，减少http请求，3次握手，冷启动，成本昂贵"></a>一、最核心一点，减少http请求，3次握手，冷启动，成本昂贵</h3><ol>
+<li>合并小js文件</li>
+<li>使用雪碧图</li>
+<li>小图转换成base64放到代码里</li>
+<li>设置缓存</li>
+</ol>
+<h3 id="二、加快响应"><a href="#二、加快响应" class="headerlink" title="二、加快响应"></a>二、加快响应</h3><ol>
+<li>CDN</li>
+<li>减少DNS查询次数</li>
+<li>提前加载，延迟加载</li>
+<li>首页最小内容显示，将样式表置顶渲染页面，将js放到底部不阻塞页面渲染。</li>
+</ol>
+<h3 id="三、资源层面"><a href="#三、资源层面" class="headerlink" title="三、资源层面"></a>三、资源层面</h3><ol>
+<li>能用不那么高清图片，就用体积小的图片</li>
+<li>压缩业务代码</li>
+<li>压缩减少或不要cookie，每次请求头都会带上</li>
+<li>把静态资源放在另外一个域名，根据域名划分内容。<br>浏览器一般对同一个域的下载连接数有所限制，按照域名划分下载内容可以浏览器增大并行下载连接。<br>但是注意控制域名使用在2-4个之间，不然dns查询也是个问题。<br>一般网站规划会将静态资源放在类似于static.example.com，动态内容放在<a target="_blank" rel="noopener" href="http://www.example.com上./">www.example.com上。</a><br>这样做还有一个好处是可以在静态的域名上避免使用cookie。页面内容使用无cookie域名</li>
+<li>使用小且可缓存的favicon.ico网站图标文件favicon.ico。<br>不管你服务器有还是没有，浏览器都会去尝试请求这个图标。所以我们要确保这个图标存在文件尽量小，最好小于1k设置一个长的过期时间</li>
+</ol>
+<h3 id="四、代码层面"><a href="#四、代码层面" class="headerlink" title="四、代码层面"></a>四、代码层面</h3><ol>
+<li>html尽量减少dom的数量（可以 document.getElementsByTagName(‘*’).length 查看有多少个）</li>
+<li>避免CSS表达式，CSS表达式的问题在于它被重新计算的次数远比我们想象的要多，不仅在网页绘制或大小改变时计算，即使我们滚动屏幕或者移动鼠标的时候也在计算，因此我们还是尽量避免使用它来防止使用不当而造成的性能损耗。</li>
+<li>减少对dom的操作</li>
+<li>用<link>代替@import，避免使用@import的原因很简单，因为它相当于将css放在网页内容底部。</li>
+<li>使用智能事件处理<br>这里说智能的事件处理需要开发者对事件处理有更深入的了解，通过不同的方式尽量少去触发事件，如果必要就尽早的去处理事件。比如一个div中10个按钮都需要事件句柄，那么我们可以将事件放在div上，在事件冒泡过程中捕获该事件然后判断事件来源。</li>
+</ol>
 
       
     </div>
     <footer class="article-footer">
       
-        <a data-url="http://blog.cchealthier.com/2020/05/28/js-performance/" data-id="clhm440lo00143e9makw20kcc" class="article-thumbs-up">赞一个(<span class="article-thumbs-up-num">0</span>)</a>
+        <a data-url="http://blog.cchealthier.com/2020/05/28/js-performance/" data-id="clhqb37p3000zts9m60h11rnz" class="article-thumbs-up">赞一个(<span class="article-thumbs-up-num">0</span>)</a>
       
-      <!-- <a data-url="http://blog.cchealthier.com/2020/05/28/js-performance/" data-id="clhm440lo00143e9makw20kcc" class="article-share-link">分享</a> -->
+      <!-- <a data-url="http://blog.cchealthier.com/2020/05/28/js-performance/" data-id="clhqb37p3000zts9m60h11rnz" class="article-share-link">分享</a> -->
       
       
     </footer>

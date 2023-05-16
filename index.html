@@ -106,6 +106,7 @@
         <p>上传文件体积一大，要等很久。如果只是水管小，等一会也就算了。但是如果网络差，上传到 99% 突然断网了又重新开始，就比较难受了。所以又有了文件切片进行断点上传的方法。</p>
 <p>上传的文件对象是一个 <a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/API/File">File</a> 对象，然后它是 <a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/API/Blob">Blob</a> 对象的一个子类。再然后它有一个 <a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/API/Blob/slice">slice</a> 方法，用这个方法就可以对文件进行切片，就和数组的这个方法一样。用法如示例。</p>
 <p>话不多说直接上代码（里面代码是问了 chatgpt 然后改的，哈哈）。把下面两份代码分别保存为 <code>index.html</code> 和 <code>server.js</code>，安装好依赖，然后启动执行 <code>node server.js</code>，访问 <code>http://localhost:3000</code>。</p>
+<p>前端也大概美化了一下上传组件，支持点击选择文件或者拖拽文件上传。原生的 <code>&lt;input type=&quot;file&quot; &gt;&lt;/input&gt;</code> 组件的样式应该没人用吧，那么丑…。其中的 loading 效果出自网上大佬的《<a target="_blank" rel="noopener" href="https://juejin.cn/post/7037036742985121800">纯css实现117个Loading效果</a>》，里面挺多效果不错的。</p>
         
           <p class="article-more-link">
             <a href="/2023/05/13/file-slice-upload/#more">Read More</a>
@@ -115,7 +116,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="http://blog.cchealthier.com/2023/05/13/file-slice-upload/" data-id="clhm440lm000j3e9mazfza6za" class="article-share-link">分享</a> -->
+      <!-- <a data-url="http://blog.cchealthier.com/2023/05/13/file-slice-upload/" data-id="clhqb37p0000jts9mdmta6kq8" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -180,7 +181,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="http://blog.cchealthier.com/2023/04/21/nginx-basic/" data-id="clhm440lr001m3e9merwrd8w0" class="article-share-link">分享</a> -->
+      <!-- <a data-url="http://blog.cchealthier.com/2023/04/21/nginx-basic/" data-id="clhqb37p5001mts9mgomkazkv" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -232,7 +233,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="http://blog.cchealthier.com/2023/04/21/fontend-engineering-2/" data-id="clhm440lm000m3e9m7ae96qjp" class="article-share-link">分享</a> -->
+      <!-- <a data-url="http://blog.cchealthier.com/2023/04/21/fontend-engineering-2/" data-id="clhqb37p1000mts9mcmbldxs1" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -296,7 +297,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="http://blog.cchealthier.com/2023/03/06/fontend-engineering/" data-id="clhm440ln000p3e9m8833dejj" class="article-share-link">分享</a> -->
+      <!-- <a data-url="http://blog.cchealthier.com/2023/03/06/fontend-engineering/" data-id="clhqb37p1000pts9m1l983rsj" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -347,7 +348,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="http://blog.cchealthier.com/2023/02/07/multi-function-select/" data-id="clhm440lp001e3e9m5lywfkjq" class="article-share-link">分享</a> -->
+      <!-- <a data-url="http://blog.cchealthier.com/2023/02/07/multi-function-select/" data-id="clhqb37p4001cts9m0tzget0j" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -403,7 +404,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="http://blog.cchealthier.com/2022/11/07/vue-observer-dep-watcher/" data-id="clhm440lu002l3e9m0cb3gggh" class="article-share-link">分享</a> -->
+      <!-- <a data-url="http://blog.cchealthier.com/2022/11/07/vue-observer-dep-watcher/" data-id="clhqb37p8002its9m1k4q0wd6" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -450,7 +451,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="http://blog.cchealthier.com/2022/10/19/2022-autumn/" data-id="clhm440le00003e9m7bm467g7" class="article-share-link">分享</a> -->
+      <!-- <a data-url="http://blog.cchealthier.com/2022/10/19/2022-autumn/" data-id="clhqb37os0000ts9mbe607t4s" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -498,7 +499,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="http://blog.cchealthier.com/2022/10/18/binary-tree-traversal/" data-id="clhm440lj00073e9m6fjp7q1n" class="article-share-link">分享</a> -->
+      <!-- <a data-url="http://blog.cchealthier.com/2022/10/18/binary-tree-traversal/" data-id="clhqb37ox0005ts9m6sal8pxe" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -545,7 +546,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="http://blog.cchealthier.com/2022/10/18/deepth-breadth-traversal/" data-id="clhm440lm000i3e9m8uye1fjy" class="article-share-link">分享</a> -->
+      <!-- <a data-url="http://blog.cchealthier.com/2022/10/18/deepth-breadth-traversal/" data-id="clhqb37oz000ets9mdflkacnx" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -594,7 +595,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="http://blog.cchealthier.com/2022/09/25/linked-list/" data-id="clhm440lp00193e9m8outdbia" class="article-share-link">分享</a> -->
+      <!-- <a data-url="http://blog.cchealthier.com/2022/09/25/linked-list/" data-id="clhqb37p30017ts9m9mop78ft" class="article-share-link">分享</a> -->
       
       
     </footer>
