@@ -1,6 +1,7 @@
 ---
-title: nginx 的基础用法
+title: nginx 的基础用法 & linux（centos）下支持 https 和 http2 
 date: 2023-04-21 21:33:48
+updated: 2023-05-20 15:46:40
 categories:
 - 开发
 - 服务
@@ -40,43 +41,82 @@ root：资源文件夹
 index： 默认的 index 文件
 ```yaml
 location / {
-    root   /电脑地址/nginx;
-    index  index.html index.htm;
+  root   /电脑地址/nginx;
+  index  index.html index.htm;
 }
 ```
 
 如果要配置不同路由访问不同的文件，root 要改成 alias，比如访问 `http://localhost:8080/page`
 ```yaml
 location /page {
-    alias /电脑地址/nginx;
-    index page.html;
+  alias /电脑地址/nginx;
+  index page.html;
 }
 ```
 
 可以写多个server，启动多个服务
 ```yaml
 server {
-    listen       3000;
-    server_name  0.0.0.0;
+  listen       3000;
+  server_name  0.0.0.0;
 
-    location / {
-        root   /电脑地址/nginx;
-        index  3000.html 3000.htm;
-    }
+  location / {
+    root   /电脑地址/nginx;
+    index  3000.html 3000.htm;
+  }
 }
 ```
 
 代理 ~ 为区分大小写，~*为不区分大小写，其他符号则请查询官网啦。
 ```yaml
 location ~ /api/* {
-    proxy_pass   http://localhost:3000;
+  proxy_pass   http://localhost:3000;
 }
 ```
 
 https服务，声明好证书即可。这里只是把其中证书配置列出来，实际上 nginx.conf 的例子还有挺多配置，一般我们不是运维，应该默认就够了。作为调试用，可能都不需要启动到 https server。
 ```yaml
 server {
-    ssl_certificate      /电脑地址/nginx/cert/cert.pem;
-    ssl_certificate_key  /电脑地址/nginx/cert/server.key;
+  ssl_certificate      /电脑地址/nginx/cert/cert.pem;
+  ssl_certificate_key  /电脑地址/nginx/cert/server.key;
 }
+```
+
+开启文本压缩
+```yaml
+http {
+  gzip on;
+  # 压缩比例，比例越大，压缩时间越长。默认是1
+  gzip_comp_level 6;
+  # 哪些文件可以被压缩
+  gzip_types text/xml text/plain text/css application/javascript application/x-javascript application/rss+xml;
+}
+```
+
+linux 下支持 https 和 http2，也是网上搜集的，实操了可以，这里记录一下。
+
+```bash
+# 安装依赖
+yum -y install gcc zlib zlib-devel pcre-devel openssl openssl-devel
+# 解压缩
+tar -zxvf nginx-1.23.4.tar.gz
+cd nginx-1.23.4
+# 执行配置
+./configure --with-http_ssl_module --with-http_v2_module
+# 编译安装
+make
+make install
+```
+
+```bash
+# 默认安装在
+/usr/local/nginx
+# 启动
+/usr/local/nginx/sbin/nginx
+# 刷新配置启动
+/usr/local/nginx/sbin/nginx -s reload
+# 关闭
+/usr/local/nginx/sbin/nginx -s stop
+# 修改配置
+vim  /usr/local/nginx/conf/nginx.conf
 ```
