@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>一次性能优化的过程（多图） | 凝雪密境</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="性能优化听多了，又是各个注意点，又是监控什么的，如《JS性能优化探讨》《前端性能监控》，真正遇到了还是得具体场景具体分析。 一直觉得我的个人网站首页（现在不会了）很慢，进去后背景和熊猫头渲染得特别慢。当然这个慢是相对的，就我做过的 TO B 系统单单是前置接口的获取都要几秒了，只是有 loading 效果看起来不难受。但是我这个网页啥都没有，就那么几个图片和动画，着实不该。那就实际一步步看看吧。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="一次性能优化的过程（多图）">
+<meta property="og:url" content="http://blog.cchealthier.com/2023/05/19/performance-optimize/index.html">
+<meta property="og:site_name" content="凝雪密境">
+<meta property="og:description" content="性能优化听多了，又是各个注意点，又是监控什么的，如《JS性能优化探讨》《前端性能监控》，真正遇到了还是得具体场景具体分析。 一直觉得我的个人网站首页（现在不会了）很慢，进去后背景和熊猫头渲染得特别慢。当然这个慢是相对的，就我做过的 TO B 系统单单是前置接口的获取都要几秒了，只是有 loading 效果看起来不难受。但是我这个网页啥都没有，就那么几个图片和动画，着实不该。那就实际一步步看看吧。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://blog.cchealthier.com/2023/05/19/performance-optimize/%E4%BC%98%E5%8C%96%E5%89%8Dnetwork.png">
+<meta property="og:image" content="http://blog.cchealthier.com/2023/05/19/performance-optimize/pagespeed.png">
+<meta property="og:image" content="http://blog.cchealthier.com/2023/05/19/performance-optimize/%E7%BD%91%E7%AB%99%E6%80%A7%E8%83%BD%E5%88%86%E6%9E%90.png">
+<meta property="og:image" content="http://blog.cchealthier.com/2023/05/19/performance-optimize/%E7%BD%91%E7%AB%99%E6%80%A7%E8%83%BD%E5%88%86%E6%9E%902.png">
+<meta property="og:image" content="http://blog.cchealthier.com/2023/05/19/performance-optimize/%E7%BD%91%E7%AB%99%E6%80%A7%E8%83%BD%E5%88%86%E6%9E%903.png">
+<meta property="og:image" content="http://blog.cchealthier.com/2023/05/19/performance-optimize/%E4%BC%98%E5%8C%96%E5%89%8Dnetwork.png">
+<meta property="og:image" content="http://blog.cchealthier.com/2023/05/19/performance-optimize/%E6%96%87%E6%9C%AC%E5%8E%8B%E7%BC%A9.png">
+<meta property="og:image" content="http://blog.cchealthier.com/2023/05/19/performance-optimize/%E4%BC%98%E5%8C%96%E5%90%8E%E7%9A%84%E6%80%A7%E8%83%BD%E6%8A%A5%E5%91%8A.png">
+<meta property="og:image" content="http://blog.cchealthier.com/2023/05/19/performance-optimize/%E4%BC%98%E5%8C%96%E5%90%8E%E7%9A%84%E6%80%A7%E8%83%BD%E6%8A%A5%E5%91%8A2.png">
+<meta property="og:image" content="http://blog.cchealthier.com/2023/05/19/performance-optimize/network%E9%9D%A2%E6%9D%BF.png">
+<meta property="og:image" content="http://blog.cchealthier.com/2023/05/19/performance-optimize/%E4%BC%98%E5%8C%96%E5%89%8D%E7%9A%84%E5%9B%BE%E7%89%87%E8%AF%B7%E6%B1%82.png">
+<meta property="og:image" content="http://blog.cchealthier.com/2023/05/19/performance-optimize/%E4%BC%98%E5%8C%96%E5%90%8E%E7%9A%84%E5%9B%BE%E7%89%87%E8%AF%B7%E6%B1%82.png">
+<meta property="og:image" content="http://blog.cchealthier.com/2023/05/19/performance-optimize/%E4%BC%98%E5%8C%96%E5%89%8D%E7%9A%84jscss%E8%AF%B7%E6%B1%82.png">
+<meta property="og:image" content="http://blog.cchealthier.com/2023/05/19/performance-optimize/%E4%BC%98%E5%8C%96%E5%90%8E%E7%9A%84jscss%E8%AF%B7%E6%B1%82.png">
+<meta property="og:image" content="http://blog.cchealthier.com/2023/05/19/performance-optimize/%E6%94%B9%E5%9B%BE%E7%89%87%E6%A0%BC%E5%BC%8F%E5%90%8E%E7%9A%84%E8%AF%B7%E6%B1%82.png">
+<meta property="og:image" content="http://blog.cchealthier.com/2023/05/19/performance-optimize/%E6%B2%A1%E6%9C%89%E9%A2%84%E5%8A%A0%E8%BD%BD%E6%97%B6%E7%9A%84%E5%9B%BE%E7%89%87%E8%AF%B7%E6%B1%82.png">
+<meta property="og:image" content="http://blog.cchealthier.com/2023/05/19/performance-optimize/%E9%A2%84%E5%8A%A0%E8%BD%BD%E5%90%8E%E7%9A%84%E5%9B%BE%E7%89%87%E8%AF%B7%E6%B1%82.png">
+<meta property="og:image" content="http://blog.cchealthier.com/2023/05/19/performance-optimize/%E6%9C%80%E7%BB%88%E4%BC%98%E5%8C%96%E6%95%88%E6%9E%9C.png">
+<meta property="article:published_time" content="2023-05-18T16:03:11.000Z">
+<meta property="article:modified_time" content="2023-05-20T16:35:38.154Z">
+<meta property="article:author" content="ChrisIori">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://blog.cchealthier.com/2023/05/19/performance-optimize/%E4%BC%98%E5%8C%96%E5%89%8Dnetwork.png">
+  
+    <link rel="alternate" href="/atom.xml" title="凝雪密境" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.ico">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  <link href="https://www.jq22.com/demo/jqueryToast201708310012/css/toast.style.css" rel="stylesheet" type="text/css">
+<meta name="generator" content="Hexo 7.0.0-rc1"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">凝雪密境</a>
+      </h1>
+      
+        <div id="avatar" style="background-image: url( /avatar.jpg )">
+          <div class="container">
+            <div class="ball wind"></div>
+            <div class="ball fire"></div>
+            <div class="ball water"></div>
+            <div class="ball soil"></div>
+          </div>
+        </div>
+      
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://blog.cchealthier.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-performance-optimize" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2023/05/19/performance-optimize/" class="article-date">
+  <time datetime="2023-05-18T16:03:11.000Z" itemprop="datePublished">2023-05-19</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      一次性能优化的过程（多图）
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>性能优化听多了，又是各个注意点，又是监控什么的，如《<a href="/2020/05/28/js-performance/">JS性能优化探讨</a>》《<a href="/2021/01/09/performance-api/">前端性能监控</a>》，真正遇到了还是得具体场景具体分析。</p>
+<p>一直觉得我的<a target="_blank" rel="noopener" href="https://cchealthier.com/">个人网站首页</a>（现在不会了）很慢，进去后背景和熊猫头渲染得特别慢。当然这个慢是相对的，就我做过的 TO B 系统单单是前置接口的获取都要几秒了，只是有 loading 效果看起来不难受。但是我这个网页啥都没有，就那么几个图片和动画，着实不该。那就实际一步步看看吧。</p>
+<h3 id="一-服务器连接速度"><a href="#一-服务器连接速度" class="headerlink" title="一. 服务器连接速度"></a>一. 服务器连接速度</h3><p>直接百度搜<code>网站访问速度测试</code>就有很多工具网站。一看都没啥问题，除了极个别的比较远的省份（我这是买的阿里云深圳的服务器）其他都在一秒以内。再 <code>ping</code> 一下，也可以看到并无延迟。也就是 <code>DNS</code> 解析和访问并没有问题。</p>
+<h3 id="二-减小图片体积"><a href="#二-减小图片体积" class="headerlink" title="二. 减小图片体积"></a>二. 减小图片体积</h3><p>那首先考虑资源图片过大，因为确实用了比较高清的图片，那就在不糊的情况下尽量缩小体积。兴冲冲地更新一看，没啥变化。还是有那个等待过程。那好吧，一不做而不休，我尝试把其他图片都去掉，只留下一个熊猫头，还是很慢，就证明不该是图片背锅。当然缩小体积是没有问题的。省流量嘛。</p>
+<h3 id="三-使用-Devtool-Performance"><a href="#三-使用-Devtool-Performance" class="headerlink" title="三. 使用 Devtool Performance"></a>三. 使用 Devtool Performance</h3><p>那就直接用工具看吧，打开开发者工具，切到 <code>Performance</code>，启动录制看看效果。找一下，在 Timings 那里看到 <code>FP</code> <code>FCP</code> 等事件，这里就是影响视觉观看的主要节点了。当然前面还有 <code>Parse HTML</code> 或者 <code>Function call</code> 等等事件。主要看 <code>Parse HTML</code>，因为要解析了 html，才会加载一系列资源，可以看出这一步并没有什么问题，也是很快就响应了。但是到 <code>FCP</code> 却隔了好几秒。也就是中间有东西耽搁了。<br>看了一下，是<strong>必要的 js 文件加载</strong>。有两个，一个是 <code>app.***.js</code>，基础的业务 js， 一个是 <code>chunk-vendor.***.js</code>，vue 框架的打包厂务。毫无疑问，这两者都是不可或缺的。<code>appjs</code> 比较小还好，很快就获取完了。<code>chunk-vendorjs</code>有 300+kb，耗时几秒。可以看到它加载完后，很快就 <code>FCP</code> 了。所以它的加载就是问题关键了。</p>
+<h3 id="四-js-文件太大？"><a href="#四-js-文件太大？" class="headerlink" title="四. js 文件太大？"></a>四. js 文件太大？</h3><p>讲道理，300+kb 的 js 文件不算小，但也不能叫很大啊。怎么要好几秒才能加载完？当然我的服务器没有加速功能，如果放到 CDN 服务，我想应该效果会好点。但是没有这条件，那只能另外想想办法。我代码里用了 <code>Element-UI</code>，测试了一下确实是按需引入，去掉几个组件后，体积变小了。<br>但，这些就是要用到的，减不了。路由页面用的也是 <code>import()</code> 动态引入，也就是到了真正访问那个页面组件，才会去加载相应的 js。再说了业务代码也不会打包到 vendor 去。那体积没法减了。然后在自己本地测试了一下，以及线上的缓存状态下，页面出现都很快，更加印证了我的猜测，就是这个 “大 js 文件” 导致了页面渲染慢。（当然最好有个 CDN 什么的加速可以验证…）</p>
+<img src="/2023/05/19/performance-optimize/%E4%BC%98%E5%8C%96%E5%89%8Dnetwork.png" class="" title="优化前network">
+
+<p>事情本到这里就结束了（啥都没干，555…），结果又看到一个神奇的网站，谷歌的性能分析网站，地址：<a target="_blank" rel="noopener" href="https://pagespeed.web.dev/">https://pagespeed.web.dev</a> （可能需要科学上网）</p>
+<span id="more"></span>
+
+<h3 id="五-使用谷歌分析网站"><a href="#五-使用谷歌分析网站" class="headerlink" title="五. 使用谷歌分析网站"></a>五. 使用谷歌分析网站</h3><p>基础界面长这样，把要分析的网站填上去，点击开始分析。同时可以选择<code>手机</code>或者<code>桌面设备</code>。在测试过程中出现过分析失败，会显示一堆 Error。也不知为啥，尝试多几次就好。</p>
+<img src="/2023/05/19/performance-optimize/pagespeed.png" class="" title="pagespeed">
+
+<p>分析后展示了一系列问题和建议。</p>
+<img src="/2023/05/19/performance-optimize/%E7%BD%91%E7%AB%99%E6%80%A7%E8%83%BD%E5%88%86%E6%9E%90.png" class="" title="网站性能分析">
+<br />
+<img src="/2023/05/19/performance-optimize/%E7%BD%91%E7%AB%99%E6%80%A7%E8%83%BD%E5%88%86%E6%9E%902.png" class="" title="网站性能分析2">
+<br />
+<img src="/2023/05/19/performance-optimize/%E7%BD%91%E7%AB%99%E6%80%A7%E8%83%BD%E5%88%86%E6%9E%903.png" class="" title="网站性能分析3">
+
+<p>其实分析结果给了四个方面：<code>性能</code>，<code>无障碍</code>，<code>性能</code>，<code>SEO</code>。由于这里是为了解决性能问题，所以就只截了性能方面的图。里面给了两个很实在的建议：</p>
+<h4 id="1-启用文本压缩"><a href="#1-启用文本压缩" class="headerlink" title="1. 启用文本压缩"></a>1. 启用文本压缩</h4><p>对于这个就不啰嗦介绍了。我只是在想怎么一开始没想到！我是用的 nginx 做的服务代理，结果 nginx 是默认没有开启 gzip 压缩。赶紧给加上。</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">http</span> &#123;</span><br><span class="line">  <span class="string">gzip</span> <span class="string">on;</span></span><br><span class="line">  <span class="string">gzip_comp_level</span> <span class="number">6</span><span class="string">;</span>    <span class="comment"># 压缩比例，比例越大，压缩时间越长。默认是1</span></span><br><span class="line">  <span class="string">gzip_types</span> <span class="string">text/xml</span> <span class="string">text/plain</span> <span class="string">text/css</span> <span class="string">application/javascript</span> <span class="string">application/x-javascript</span> <span class="string">application/rss+xml;</span>     <span class="comment"># 哪些文件可以被压缩</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>默认 <code>nginx.conf</code> 的 <code>gzip on</code> 是注释掉的，给打开，然后要注意的是 <code>gzip_types</code> 要声明好 css js 都要压缩。要不然还是默认只有 html 压缩。<br>然后重启服务，看看效果，嘿，体感上果然是快了。300+kb 直接给压缩到 <strong>100+kb</strong>，加载速度从原来的 5s 快到 <strong>1.5s</strong>！当然这个是有波动的，试了好几次也有 2s 多的。但总之是快多了。可以看到 <code>FCP</code> 提前了很多。</p>
+<img src="/2023/05/19/performance-optimize/%E4%BC%98%E5%8C%96%E5%89%8Dnetwork.png" class="" title="优化前network">
+
+<p><strong>要注意的是：这里的时间线对的是最上面的那个白色时间间隙，蓝色的其实是下面事件时间轴的视角外。另外查看文件的响应头有 Content-Encoding 字段，即是有开启文本压缩。</strong></p>
+<img src="/2023/05/19/performance-optimize/%E6%96%87%E6%9C%AC%E5%8E%8B%E7%BC%A9.png" class="" title="文本压缩">
+
+<h4 id="2-优化星星跳动动画"><a href="#2-优化星星跳动动画" class="headerlink" title="2. 优化星星跳动动画"></a>2. 优化星星跳动动画</h4><p>因为这个动画方法，其实是当时刚学前端看的教学视频抄的，而我看的还是几年前的过期视频。那时候可能还没有 css3 的 transform 啊，will-change 什么的，用的是 <code>定时器 + left 位移</code>。一直没理，这次也一起优化下吧。当然这其实和首屏展示慢没影响，不过确实也是性能指标的一环了。</p>
+<img src="/2023/05/19/performance-optimize/%E4%BC%98%E5%8C%96%E5%90%8E%E7%9A%84%E6%80%A7%E8%83%BD%E6%8A%A5%E5%91%8A.png" class="" title="优化后的性能报告">
+<br />
+<img src="/2023/05/19/performance-optimize/%E4%BC%98%E5%8C%96%E5%90%8E%E7%9A%84%E6%80%A7%E8%83%BD%E6%8A%A5%E5%91%8A2.png" class="" title="优化后的性能报告2">
+
+<p>接着看下优化后的数据，看得出分数是高了。但是 Speed Index 却更多了，应该是网络波动问题，看下这个指标是啥意思。先看下<a target="_blank" rel="noopener" href="https://developer.mozilla.org/en-US/docs/Glossary/Speed_index">官方介绍</a>。再看下相关<a target="_blank" rel="noopener" href="https://www.wbolt.com/speed-index.html">中文文章</a>。里面提到一句：<strong>当用户视口中的所有内容都完全可见时</strong>。那我理解应该还是那几张图片拖了后腿。</p>
+<p>新的建议里也提到了优化图片资源，换成更加省空间的 WebP 和 AVIF 等图片格式。而且动画除了开销低的 <code>opacity</code> 和 <code>transform</code>，其他还是对性能有较大影响。</p>
+<h3 id="六-还能继续优化吗？"><a href="#六-还能继续优化吗？" class="headerlink" title="六. 还能继续优化吗？"></a>六. 还能继续优化吗？</h3><p>有的，”建议“里面也提到了，<strong>请减少未使用的 JavaScript，并等到需要使用时再加载脚本，以减少网络活动耗用的字节数</strong>。里面提到的未使用到的 js，应该就是那部分 Element-UI 的代码，首页确实没有用到。这里可以：</p>
+<ol>
+<li>改成 CDN 引入插件代码，加上 <code>prefetch</code> 属性（可参阅《<a href="/2020/05/31/html-resource/">HTML几个资源异步属性</a>》）让浏览器有空下载就行，反正首页也用不到。不过也得考虑直接进入其他页面时的情况。</li>
+<li>把使用到的组件的引入放在具体的页面里，就是分薄了 <code>chunk-vendorjs</code>，不过这个太麻烦了，少数几个也就算了，多了还要关注引入组件太麻烦。</li>
+</ol>
+<h3 id="七-继续优化，来波狠的处理第三方插件"><a href="#七-继续优化，来波狠的处理第三方插件" class="headerlink" title="七. 继续优化，来波狠的处理第三方插件"></a>七. 继续优化，来波狠的处理第三方插件</h3><h4 id="1-启用-CDN？不要了"><a href="#1-启用-CDN？不要了" class="headerlink" title="1. 启用 CDN？不要了"></a>1. 启用 CDN？不要了</h4><p>顺着上面的想法，继续尝试下能否优化到极致。首先是 CDN 方案，结果发现如果 Element-UI 使用 CDN，同时 vue 也要用 CDN 引入，具体可看<a target="_blank" rel="noopener" href="https://element.eleme.cn/#/zh-CN/component/installation">安装文档</a>。也不是说不行，但，还是算了。</p>
+<h4 id="2-动态引入"><a href="#2-动态引入" class="headerlink" title="2. 动态引入"></a>2. 动态引入</h4><p>既然首页不需要用到 Element-UI 的东西，那么就摘出来，改成动态引入。放在哪里好呢，除了首页其他都用到了。思来想去，就放在全局路由钩子吧，代码如下：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> hasInstall = <span class="literal">false</span>;</span><br><span class="line">router.<span class="title function_">beforeEach</span>(<span class="function">(<span class="params">to, <span class="keyword">from</span>, next</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">if</span> (hasInstall || [<span class="string">&#x27;home&#x27;</span>].<span class="title function_">includes</span>(to.<span class="property">name</span>)) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="title function_">next</span>();</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">import</span>(<span class="string">&#x27;element-ui/lib/theme-chalk/index.css&#x27;</span>);</span><br><span class="line">  <span class="keyword">import</span>(<span class="comment">/* webpackChunkName: &quot;elementui&quot; */</span><span class="string">&#x27;element-ui&#x27;</span>).<span class="title function_">then</span>(<span class="function">(<span class="params">elementui</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="title class_">Vue</span>.<span class="title function_">use</span>(elementui);</span><br><span class="line">    hasInstall = <span class="literal">true</span>;</span><br><span class="line">  &#125;).<span class="title function_">finally</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="title function_">next</span>();</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>用一个变量和页面名字做判断，如果是非首页，那么就加载后再进入页面。然后我发现就算这样写，在进入首页时候也会在空闲的时候去加载 <code>elementui.js</code>，这挺好的，不阻塞。不过还是会有两个小问题：</p>
+<ol>
+<li>如果不经过首页且首次直接进入其他页面，那么就要等待加载 <code>elementui.js</code> 后再进入，必然会有点慢。相当于让其他页面给首页负重前行了。不过也不对，首页本来也用不上，不该它背。</li>
+<li>变成动态引入之后，就不能按需加载了。所以代码直接全部安装： <code>Vue.use(elementui)</code>。这是 webpack 的策略，也好理解。资源分析只能在打包静态处理。都动态引入了，哪知道什么按需引入，先全部加载了再看情况使用。</li>
+</ol>
+<p>这个方法呢，感觉有点极端 hack，生产来讲没必要这样做，这里自己小网站就无所谓。但是这一招确实大大减轻了首页的体积，在没压缩下，300+kb 降到 200+ kb，少了 100kb，当然压缩后差别没那么大，只有 30kb。</p>
+<h3 id="八-http2-amp-资源分流-amp-缓存"><a href="#八-http2-amp-资源分流-amp-缓存" class="headerlink" title="八. http2 &amp; 资源分流 &amp; 缓存"></a>八. http2 &amp; 资源分流 &amp; 缓存</h3><h4 id="1-启用-http2"><a href="#1-启用-http2" class="headerlink" title="1. 启用 http2"></a>1. 启用 http2</h4><p>继续看 Devtool Network 面板，觉得一口气请求的东西还是有点多（自己觉得，其实不多）。想了一下都啥年代了，不得上个 http2 试试多路复用？马上更新了一下 nginx，这里启用 http2，还费了一番周章，过程记录在《<a href="/2023/04/21/nginx-basic/">nginx 的基础用法 &amp; linux（centos）下支持 https 和 http2</a>》。但是很遗憾这一招没看到多大优化，可能是数量不算真正的多，之前的 http1.1 keep-alive 已经效果不错了，http2 的多路复用提升不明显。<br>这里说一下，Network 面板的 Protocol 可能没显示，在表头那里右键菜单勾上就可以了。</p>
+<img src="/2023/05/19/performance-optimize/network%E9%9D%A2%E6%9D%BF.png" class="" title="network面板">
+
+<h4 id="2-图片分流"><a href="#2-图片分流" class="headerlink" title="2. 图片分流"></a>2. 图片分流</h4><p>接着说到多路复用，必然想到请求分流啊。之前整个文件服务器花了大半天研究 nginx，在《<a href="/2022/03/26/nginx/">记录下 nginx 使用配置</a>》里，还提到一句：</p>
+<blockquote>
+<p>而且“一个域名同时请求的资源有限，chrome是六个，文件请求可以配置成不一样的域名，不要带cookie等请求头，有助于性能优化”。当然在我这有点扯淡，远远不到要用这个性能优化的手段。</p>
+</blockquote>
+<p>没想到还真的用到了。也就是把图片资源放到文件服务器上去，这里就达到和 js css 文件们域名不同，不用挤到一个赛道去。看一下操作前后对比：</p>
+<p><strong>图片分流优化前</strong></p>
+<img src="/2023/05/19/performance-optimize/%E4%BC%98%E5%8C%96%E5%89%8D%E7%9A%84%E5%9B%BE%E7%89%87%E8%AF%B7%E6%B1%82.png" class="" title="优化前的图片请求">
+
+<p><strong>图片分流优化后</strong></p>
+<img src="/2023/05/19/performance-optimize/%E4%BC%98%E5%8C%96%E5%90%8E%E7%9A%84%E5%9B%BE%E7%89%87%E8%AF%B7%E6%B1%82.png" class="" title="优化后的图片请求">
+
+<p>网络是有波动的，这是我刷新多次截的比较普遍的数据。还是很明显可以看出每张图片都普遍快了几百毫秒。那这一招就算生效了。</p>
+<h4 id="3-js-css-分流"><a href="#3-js-css-分流" class="headerlink" title="3. js css 分流"></a>3. js css 分流</h4><p>在处理上面的图片分流时，突然又想到，之前公司是这样处理的：前端的东西全部放在一个容器，后端的东西放在一个容器，然后配置好 HAProxy 接口转发规则。也就是前端只有接口和后端打交道，没有所谓后端路由概念。前端也是 HAProxy 配置好静态资源访问路径，前端资源的访问和后端没有任何关系。<br>也就是：之前没有用 nginx，用的 express.static 来做静态资源容器。现在不要这样用了啊，完全可以改成前端由 nginx 来承载。然后配一条 <code>/api</code> 规则打到后端服务就可以了。</p>
+<p><strong>js css 分流优化前</strong></p>
+<img src="/2023/05/19/performance-optimize/%E4%BC%98%E5%8C%96%E5%89%8D%E7%9A%84jscss%E8%AF%B7%E6%B1%82.png" class="" title="优化前的jscss请求">
+
+<p><strong>js css 分流优化后</strong></p>
+<img src="/2023/05/19/performance-optimize/%E4%BC%98%E5%8C%96%E5%90%8E%E7%9A%84jscss%E8%AF%B7%E6%B1%82.png" class="" title="优化后的jscss请求">
+
+<p>可以看到，分流后的加载速度也是大小不一的加快了：其中最猛的是 elementui.js，直接快了几秒。那这一招也是有效了。<br>不过这里我有个疑问：<strong>是分流减轻了 express 本身的服务压力所以响应快呢？还是说 nginx 作为专业的服务容器就是比 express.static 快？</strong></p>
+<h4 id="4-上缓存"><a href="#4-上缓存" class="headerlink" title="4. 上缓存"></a>4. 上缓存</h4><p>要不是“建议”里提到，我还没注意到我都没加缓存，赶紧给 nginx 加上。</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">location</span> <span class="string">/</span> &#123;</span><br><span class="line">  <span class="string">expires</span> <span class="string">365d;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>其实一开始我是写 <code>14d</code> 的，也就是两周。因为之前想起的公司老大说缓存时间跟着发版间隔就好，我觉得有道理，没必要那么长。但是设置 <code>14d</code>，“建议”里具体还是有 warning，然后在 chrome 文档《<a target="_blank" rel="noopener" href="https://developer.chrome.com/docs/lighthouse/performance/uses-long-cache-ttl/?utm_source=lighthouse&utm_medium=lr">Serve static assets with an efficient cache policy</a>》（可能需要科学上网）里示例也是一年的样子，当然里面也提到按照实际来。实际就是我改成一年后，“建议”没有 warning 了。其实在之前的缓存策略文章《<a href="/2020/07/02/cache/">关于缓存的几个关键词</a>》里提到：</p>
+<blockquote>
+<p>设定一个期限很大的强缓存，如 max-age&#x3D;31536000 (一年)。文件通过打包工具生成出来都带上哈希。只要文件内容不改哈希就不改，请求的地址就不改，命中强缓存。改了内容自然连请求地址都改了，就会返回新文件。</p>
+</blockquote>
+<p>也是说一年的。按照实际情况设置即可。</p>
+<h3 id="九-继续处理图片"><a href="#九-继续处理图片" class="headerlink" title="九. 继续处理图片"></a>九. 继续处理图片</h3><h4 id="1-转换图片格式，减小体积"><a href="#1-转换图片格式，减小体积" class="headerlink" title="1. 转换图片格式，减小体积"></a>1. 转换图片格式，减小体积</h4><p>那现在基本就是剩下图片大小问题了。那就跟随建议，把图片转为 <code>webp</code> 格式，不得不说，确实图片质量看起来没变化，或者说肉眼看不出来变化，但是体积变小了不少。</p>
+<img src="/2023/05/19/performance-optimize/%E6%94%B9%E5%9B%BE%E7%89%87%E6%A0%BC%E5%BC%8F%E5%90%8E%E7%9A%84%E8%AF%B7%E6%B1%82.png" class="" title="改图片格式后的请求">
+
+<p><strong>这里只放一张图，因为是在已经分流的基础上改的，和上面的 <em>图片分流优化后</em> 图片作对比就行</strong><br>可以看出，体积变小了，又快了不少，小的几十毫秒，大的几百毫秒。</p>
+<h4 id="2-预加载图片"><a href="#2-预加载图片" class="headerlink" title="2. 预加载图片"></a>2. 预加载图片</h4><p>这个就是障眼法了，全体加载完肯定还是要那么多时间，但是有些图片先渲染出来效果会好一点，比如我期望熊猫头先渲染出来。那就可以先做预加载：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> sunImage = isMobile ? <span class="string">&#x27;https://file.cchealthier.com/file/home/mobile/m-sun.webp&#x27;</span> : <span class="string">&#x27;https://file.cchealthier.com/file/home/pc/sun.webp&#x27;</span>;</span><br><span class="line">  <span class="keyword">const</span> moonImage = isMobile ? <span class="string">&#x27;https://file.cchealthier.com/file/home/mobile/m-moon.webp&#x27;</span> : <span class="string">&#x27;https://file.cchealthier.com/file/home/pc/moon.webp&#x27;</span>;</span><br><span class="line">  <span class="keyword">const</span> runImage = theme === <span class="string">&#x27;day&#x27;</span> ? sunImage : moonImage</span><br><span class="line">  <span class="keyword">const</span> preloadImages = isMobile ? [</span><br><span class="line">    <span class="string">&#x27;https://file.cchealthier.com/file/home/mobile/m-alert.webp&#x27;</span>,</span><br><span class="line">    runImage,</span><br><span class="line">    <span class="string">&#x27;https://file.cchealthier.com/file/home/mobile/m-yun.webp&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;https://file.cchealthier.com/file/home/mobile/m-xing.webp&#x27;</span>,</span><br><span class="line">  ] : [</span><br><span class="line">    <span class="string">&#x27;https://file.cchealthier.com/file/home/pc/alert.webp&#x27;</span>,</span><br><span class="line">    runImage,</span><br><span class="line">    <span class="string">&#x27;https://file.cchealthier.com/file/home/pc/yun.webp&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;https://file.cchealthier.com/file/home/pc/xing.webp&#x27;</span>,</span><br><span class="line">  ];</span><br><span class="line">  preloadImages.<span class="title function_">forEach</span>(<span class="function"><span class="params">src</span> =&gt;</span> <span class="keyword">new</span> <span class="title class_">Image</span>().<span class="property">src</span> = src);</span><br><span class="line">&#125;)();</span><br></pre></td></tr></table></figure>
+<p>我在首页 vue 文件的 script 里一开始就调用，其实还有更早的地方可以放，但我觉得还是这个页面用的，就放在这个页面吧。</p>
+<p><strong>没有预加载时的图片请求</strong></p>
+<img src="/2023/05/19/performance-optimize/%E6%B2%A1%E6%9C%89%E9%A2%84%E5%8A%A0%E8%BD%BD%E6%97%B6%E7%9A%84%E5%9B%BE%E7%89%87%E8%AF%B7%E6%B1%82.png" class="" title="没有预加载时的图片请求">
+
+<p><strong>预加载后的图片请求</strong></p>
+<img src="/2023/05/19/performance-optimize/%E9%A2%84%E5%8A%A0%E8%BD%BD%E5%90%8E%E7%9A%84%E5%9B%BE%E7%89%87%E8%AF%B7%E6%B1%82.png" class="" title="预加载后的图片请求">
+
+<p>熊猫头是 alert.png，预加载后，提前很多加载完了。这样就可以在一进去就看到熊猫头出来，然后几个大的背景图，让它们逐个有层次的出来就行了，体感好很多。</p>
+<h3 id="十-总结"><a href="#十-总结" class="headerlink" title="十. 总结"></a>十. 总结</h3><h4 id="最终优化效果"><a href="#最终优化效果" class="headerlink" title="最终优化效果"></a>最终优化效果</h4><p>啪啪啪一顿组合拳操作猛如虎，效果终于可以了。<strong>量化数据的话就是：优化前的 FCP 经常是 5s~6s，优化后的 FCP 都在 1s 内了。</strong></p>
+<img src="/2023/05/19/performance-optimize/%E6%9C%80%E7%BB%88%E4%BC%98%E5%8C%96%E6%95%88%E6%9E%9C.png" class="" title="最终优化效果">
+
+<p>还有点瑕疵就是 LCP 那里有点慢，不过我觉得可以了，至少没有明显的等待感，一进去感觉好多了。证明所采取的措施有效的。虽然小网站页面简单，但是见微知著，实际线上网页的优化思路和措施也是大同小异。</p>
+<h4 id="再归纳总结一下"><a href="#再归纳总结一下" class="headerlink" title="再归纳总结一下"></a>再归纳总结一下</h4><p>这里面也是用了各种性能打点数据查看，不过这种都是用来查看是否有问题的，具体问题在哪还得具体分析。基本思路：</p>
+<ol>
+<li>资源文件（图片，css，js 等）体积是否可以缩小，请求是否分流。</li>
+<li>服务器有没有启用文本压缩、加速、缓存，网络有没有启用 http2。</li>
+<li>第三点我觉得才是前端代码的问题，比如有没有动态引入啊，接口请求是否合理，有没有保证最小单位展示。先有东西吸引眼球，然后那点视觉延迟就足够加载完其他资源了。</li>
+</ol>
+<p>当然上面说的，其实都是对于加载速度，也就是平常说的首页展示速度。平时前端 coding 的时候也要注意各类影响性能的做法，比如<code>防抖节流</code>，<code>懒加载虚拟加载</code>（《<a href="/2020/07/12/lazyload/">简单实现图片懒加载、预加载、分批加载</a>》《<a href="/2023/02/07/multi-function-select">懒加载-虚拟列表-下拉菜单选择器</a>》）等等。这就是另外的性能问题了：页面卡顿。</p>
+<h4 id="随想"><a href="#随想" class="headerlink" title="随想"></a>随想</h4><p>这篇文章引用了很多别的文章，包括很多我自己以前写的文章，也算是有了真实用武之地的实践。所以除去功能不讲，很多时候我们都在寻求更好的网站体验。一开始还只是到第五点就结束了，几乎啥都没优化到。没想到最后效果能到这样。所以细细琢磨，从多个角度思考，还是很多点可以挖。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      
+        <a data-url="http://blog.cchealthier.com/2023/05/19/performance-optimize/" data-id="clhw7zmv9001vlb9mgwb0elu0" class="article-thumbs-up">赞一个(<span class="article-thumbs-up-num">0</span>)</a>
+      
+      <!-- <a data-url="http://blog.cchealthier.com/2023/05/19/performance-optimize/" data-id="clhw7zmv9001vlb9mgwb0elu0" class="article-share-link">分享</a> -->
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2023/05/13/file-slice-upload/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">文件切片上传（断点续传）</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/http%E5%8D%8F%E8%AE%AE/">http协议</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/%E6%9C%8D%E5%8A%A1/">服务</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/%E7%AE%97%E6%B3%95/">算法</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%97%85%E8%A1%8C/">旅行</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%97%85%E8%A1%8C/%E8%AE%B0%E5%BD%95/">记录</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%83%B9%E9%A5%AA/">烹饪</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%83%B9%E9%A5%AA/%E4%BC%A0%E7%BB%9F/">传统</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%9A%8F%E6%83%B3/">随想</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%9A%8F%E6%83%B3/%E5%BF%83%E6%83%85/">心情</a></li></ul></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/blog/" rel="tag">blog</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cook/" rel="tag">cook</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fish/" rel="tag">fish</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/blog/" style="font-size: 10px;">blog</a> <a href="/tags/cook/" style="font-size: 10px;">cook</a> <a href="/tags/fish/" style="font-size: 10px;">fish</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/05/">五月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/04/">四月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/03/">三月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/02/">二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">十一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">十月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">九月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2023/05/19/performance-optimize/">一次性能优化的过程（多图）</a>
+          </li>
+        
+          <li>
+            <a href="/2023/05/13/file-slice-upload/">文件切片上传（断点续传）</a>
+          </li>
+        
+          <li>
+            <a href="/2023/04/21/nginx-basic/">nginx 的基础用法 &amp; linux（centos）下支持 https 和 http2</a>
+          </li>
+        
+          <li>
+            <a href="/2023/04/21/fontend-engineering-2/">从零搭建前端工程（下）</a>
+          </li>
+        
+          <li>
+            <a href="/2023/03/06/fontend-engineering/">从零搭建前端工程（上）</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2023 ChrisIori<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//cdn.staticfile.org/jquery/2.0.3/jquery.min.js"></script>
+<script type="text/javascript" src="https://www.jq22.com/demo/jqueryToast201708310012/js/toast.script.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>

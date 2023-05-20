@@ -77,6 +77,55 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-linked-list" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2022/09/25/linked-list/" class="article-date">
+  <time datetime="2022-09-25T15:22:55.000Z" itemprop="datePublished">2022-09-25</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E7%AE%97%E6%B3%95/">算法</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2022/09/25/linked-list/">链表</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E9%93%BE%E8%A1%A8/9794473?fr=aladdin">链表</a>的概念这里就不赘述了，直接上代码吧。<br>其他都没什么问题，主要是反转的做法。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Node</span> &#123;</span><br><span class="line">  <span class="title function_">constructor</span>(<span class="params">element</span>) &#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">element</span> = element;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">next</span> = <span class="literal">null</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">LinkedList</span> &#123;</span><br><span class="line">  <span class="title function_">constructor</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">head</span> = <span class="keyword">new</span> <span class="title class_">Node</span>(<span class="string">&#x27;head&#x27;</span>);</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">length</span> = <span class="number">0</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="title function_">insert</span>(<span class="params">newElement, element = <span class="literal">null</span></span>) &#123; <span class="comment">// 加在某个元素后面，如果该元素不在，则加在 head 后面</span></span><br><span class="line">    <span class="keyword">let</span> currNode = <span class="variable language_">this</span>.<span class="title function_">find</span>(element);</span><br><span class="line">    <span class="keyword">if</span> (!currNode) &#123;</span><br><span class="line">      currNode = <span class="variable language_">this</span>.<span class="property">head</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">const</span> newNode = <span class="keyword">new</span> <span class="title class_">Node</span>(newElement);</span><br><span class="line">    newNode.<span class="property">next</span> = currNode.<span class="property">next</span>;</span><br><span class="line">    currNode.<span class="property">next</span> = newNode;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">length</span>++;</span><br><span class="line">    <span class="keyword">return</span> <span class="variable language_">this</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="title function_">remove</span>(<span class="params">element</span>) &#123;</span><br><span class="line">    <span class="keyword">const</span> prevNode = <span class="variable language_">this</span>.<span class="title function_">prev</span>(element);</span><br><span class="line">    <span class="keyword">if</span> (prevNode &amp;&amp; prevNode.<span class="property">next</span>) &#123;</span><br><span class="line">      <span class="keyword">const</span> currNode = prevNode.<span class="property">next</span>;</span><br><span class="line">      prevNode.<span class="property">next</span> = currNode.<span class="property">next</span>;</span><br><span class="line">      <span class="variable language_">this</span>.<span class="property">length</span>--;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="variable language_">this</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="title function_">find</span>(<span class="params">element</span>) &#123;</span><br><span class="line">    <span class="keyword">let</span> node = <span class="variable language_">this</span>.<span class="property">head</span>;</span><br><span class="line">    <span class="keyword">while</span>(node) &#123;</span><br><span class="line">      <span class="keyword">if</span> (node.<span class="property">element</span> === element) &#123;</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">      &#125;</span><br><span class="line">      node = node.<span class="property">next</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> node;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="title function_">getAll</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">const</span> result = [];</span><br><span class="line">    <span class="keyword">let</span> node = <span class="variable language_">this</span>.<span class="property">head</span>;</span><br><span class="line">    <span class="keyword">while</span>(node &amp;&amp; node.<span class="property">next</span>) &#123;</span><br><span class="line">      node = node.<span class="property">next</span>;</span><br><span class="line">      result.<span class="title function_">push</span>(node.<span class="property">element</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="title function_">prev</span>(<span class="params">element</span>) &#123;</span><br><span class="line">    <span class="keyword">let</span> node = <span class="variable language_">this</span>.<span class="property">head</span>;</span><br><span class="line">    <span class="keyword">while</span>(node) &#123;</span><br><span class="line">      <span class="keyword">if</span> (node.<span class="property">next</span> &amp;&amp; node.<span class="property">next</span>.<span class="property">element</span> === element) &#123;</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">      &#125;</span><br><span class="line">      node = node.<span class="property">next</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> node;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="title function_">next</span>(<span class="params">element</span>) &#123;</span><br><span class="line">    <span class="keyword">const</span> currNode = <span class="variable language_">this</span>.<span class="title function_">find</span>(element);</span><br><span class="line">    <span class="keyword">if</span> (currNode) &#123;</span><br><span class="line">      <span class="keyword">return</span> currNode.<span class="property">next</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="title function_">reverse</span>(<span class="params">element</span>) &#123;</span><br><span class="line">    <span class="comment">// 直接倒序重新生成的不正规解法</span></span><br><span class="line">    <span class="comment">// let node = this.head;</span></span><br><span class="line">    <span class="comment">// this.getAll().reverse().forEach((element) =&gt; &#123;</span></span><br><span class="line">    <span class="comment">// 	node.next = new Node(element);</span></span><br><span class="line">    <span class="comment">// 	node = node.next;</span></span><br><span class="line">    <span class="comment">// &#125;);</span></span><br><span class="line">    <span class="comment">// node.next = null;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 只需要循环一次的正规解法</span></span><br><span class="line">    <span class="keyword">let</span> head = <span class="variable language_">this</span>.<span class="title function_">prev</span>(element); <span class="comment">// 这个后面的元素要反转，所以也有可能是链表的 head</span></span><br><span class="line">    <span class="keyword">let</span> first = <span class="variable language_">this</span>.<span class="title function_">find</span>(element); <span class="comment">// 一直指向要反转的链表第一个</span></span><br><span class="line">    <span class="keyword">if</span> (!first) &#123;</span><br><span class="line">      head = <span class="variable language_">this</span>.<span class="property">head</span>;</span><br><span class="line">      first = <span class="variable language_">this</span>.<span class="property">head</span>.<span class="property">next</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (!first) <span class="keyword">return</span> <span class="variable language_">this</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">const</span> node = first; <span class="comment">// node 是不需要变的，一直都是一开始的第一个，因为每次循环 node 都会变位置，它的 next 指向也会一直变</span></span><br><span class="line">    <span class="keyword">while</span>(node &amp;&amp; node.<span class="property">next</span>) &#123;</span><br><span class="line">      <span class="keyword">const</span> nextNode = node.<span class="property">next</span>;</span><br><span class="line">      node.<span class="property">next</span> = nextNode.<span class="property">next</span>;</span><br><span class="line">      nextNode.<span class="property">next</span> = first;</span><br><span class="line">      first = nextNode;</span><br><span class="line">    &#125;</span><br><span class="line">    head.<span class="property">next</span> = first;</span><br><span class="line">    <span class="comment">// 每次都把 1 的 next 挪到 first 的前面，同时 1 也会相应的变位置</span></span><br><span class="line">    <span class="comment">// 12345：first = 1，node = 1，把 1 的 next 指向 3，2 的 next 指向 1，即把 2 放到 1（frist） 前面</span></span><br><span class="line">    <span class="comment">// 21345：first = 2，node = 1，把 1 的 next 指向 4，3 的 next 指向 2，即把 3 放到 2（frist） 前面</span></span><br><span class="line">    <span class="comment">// 32145：first = 3，node = 1，把 1 的 next 指向 5，4 的 next 指向 3，即把 4 放到 3（frist） 前面</span></span><br><span class="line">    <span class="comment">// 43215</span></span><br><span class="line">    <span class="comment">// 54321</span></span><br><span class="line">    <span class="keyword">return</span> <span class="variable language_">this</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>下面是运行结果</p>
+        
+          <p class="article-more-link">
+            <a href="/2022/09/25/linked-list/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      
+      <!-- <a data-url="http://blog.cchealthier.com/2022/09/25/linked-list/" data-id="clhw7zmv60019lb9m7bl3g5e7" class="article-share-link">分享</a> -->
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-webpack-babel-esm" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2022/09/05/webpack-babel-esm/" class="article-date">
@@ -119,7 +168,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="http://blog.cchealthier.com/2022/09/05/webpack-babel-esm/" data-id="clhqb37pc004ets9md9q08533" class="article-share-link">分享</a> -->
+      <!-- <a data-url="http://blog.cchealthier.com/2022/09/05/webpack-babel-esm/" data-id="clhw7zmvc002rlb9mcqapg7oi" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -171,7 +220,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="http://blog.cchealthier.com/2022/03/26/nginx/" data-id="clhqb37p6001ots9mh1mjg3fm" class="article-share-link">分享</a> -->
+      <!-- <a data-url="http://blog.cchealthier.com/2022/03/26/nginx/" data-id="clhw7zmv8001qlb9mafrg5ntc" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -220,7 +269,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="http://blog.cchealthier.com/2022/03/19/vite-server-import/" data-id="clhqb37p8002gts9m76i55lyc" class="article-share-link">分享</a> -->
+      <!-- <a data-url="http://blog.cchealthier.com/2022/03/19/vite-server-import/" data-id="clhw7zmvb002klb9meka3akin" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -267,7 +316,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="http://blog.cchealthier.com/2022/03/14/beijing-winter/" data-id="clhqb37ox0007ts9m49l0ey73" class="article-share-link">分享</a> -->
+      <!-- <a data-url="http://blog.cchealthier.com/2022/03/14/beijing-winter/" data-id="clhw7zmuz0005lb9mf2hlbuvn" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -319,7 +368,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="http://blog.cchealthier.com/2021/01/09/performance-api/" data-id="clhqb37p6001rts9meemu0h78" class="article-share-link">分享</a> -->
+      <!-- <a data-url="http://blog.cchealthier.com/2021/01/09/performance-api/" data-id="clhw7zmv8001tlb9mbh7zgylp" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -366,7 +415,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="http://blog.cchealthier.com/2020/12/06/autumn/" data-id="clhqb37ow0004ts9m2iw87pq9" class="article-share-link">分享</a> -->
+      <!-- <a data-url="http://blog.cchealthier.com/2020/12/06/autumn/" data-id="clhw7zmuy0003lb9mb13n3wu8" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -451,7 +500,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="http://blog.cchealthier.com/2020/12/06/webpack-speed/" data-id="clhqb37pd004fts9mhiq41s0m" class="article-share-link">分享</a> -->
+      <!-- <a data-url="http://blog.cchealthier.com/2020/12/06/webpack-speed/" data-id="clhw7zmvc002wlb9m4l049rov" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -513,7 +562,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="http://blog.cchealthier.com/2020/11/29/api-defference/" data-id="clhqb37ou0001ts9m2mli5z2w" class="article-share-link">分享</a> -->
+      <!-- <a data-url="http://blog.cchealthier.com/2020/11/29/api-defference/" data-id="clhw7zmuz0004lb9mcklh3r82" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -560,54 +609,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="http://blog.cchealthier.com/2020/11/22/webpack-config/" data-id="clhqb37p9002nts9md1bwe8a2" class="article-share-link">分享</a> -->
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-search" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/11/15/search/" class="article-date">
-  <time datetime="2020-11-15T02:41:59.000Z" itemprop="datePublished">2020-11-15</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E7%AE%97%E6%B3%95/">算法</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/11/15/search/">深度优先遍历(DFS)-栈和广度优先遍历(BFS)-队列的理解</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>JS版本的，概念什么的就不赘述了。参考了这位大佬的<a target="_blank" rel="noopener" href="https://segmentfault.com/a/1190000018706578">文章（JS算法之深度优先遍历(DFS)和广度优先遍历(BFS)）</a>。<br>在这里记录下自己的理解，为啥一个是栈，一个是队列。看码：</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;box&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">ul</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">li</span>&gt;</span><span class="tag">&lt;<span class="name">div</span>&gt;</span><span class="tag">&lt;<span class="name">p</span>&gt;</span><span class="tag">&lt;/<span class="name">p</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span><span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">li</span>&gt;</span><span class="tag">&lt;<span class="name">img</span> /&gt;</span><span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">li</span>&gt;</span><span class="tag">&lt;<span class="name">a</span>&gt;</span><span class="tag">&lt;/<span class="name">a</span>&gt;</span><span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">ul</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span>&gt;</span>1<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span>&gt;</span><span class="tag">&lt;<span class="name">span</span>&gt;</span><span class="tag">&lt;<span class="name">strong</span>&gt;</span><span class="tag">&lt;/<span class="name">strong</span>&gt;</span><span class="tag">&lt;/<span class="name">span</span>&gt;</span><span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span>&gt;</span>3<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">button</span>&gt;</span><span class="tag">&lt;<span class="name">strong</span>&gt;</span><span class="tag">&lt;/<span class="name">strong</span>&gt;</span><span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 深度优先，用的是栈，同一边进出，后入先出</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">deepFirstSearch</span>(<span class="params">node</span>) &#123;</span><br><span class="line">  <span class="keyword">var</span> nodes = []</span><br><span class="line">  <span class="keyword">if</span> (node != <span class="literal">null</span>) &#123;</span><br><span class="line">    <span class="keyword">var</span> stack = []</span><br><span class="line">    stack.<span class="title function_">push</span>(node) <span class="comment">// 第一个元素无论 push 还是 unshift 都一样，这里只是为了相呼应。</span></span><br><span class="line">    <span class="keyword">while</span>(stack.<span class="property">length</span> != <span class="number">0</span>) &#123;</span><br><span class="line">      <span class="comment">// 最核心的差别在这里了</span></span><br><span class="line">      <span class="comment">// 第一次进来：是[$box]，弹出来后都是为空</span></span><br><span class="line">      <span class="comment">// 第二次进来: [button, div, ul]，然后 ul 被 pop 出去，收进结果数组 nodes 里</span></span><br><span class="line">      <span class="keyword">var</span> item = stack.<span class="title function_">pop</span>()</span><br><span class="line">      nodes.<span class="title function_">push</span>(item)</span><br><span class="line">      <span class="keyword">var</span> children = item.<span class="property">children</span></span><br><span class="line">      <span class="keyword">for</span> (<span class="keyword">var</span> i = children.<span class="property">length</span> - <span class="number">1</span>; i &gt;= <span class="number">0</span>; i--) &#123;</span><br><span class="line">        <span class="comment">// 这一步也是一样，把每个子节点放进去待遍历数组</span></span><br><span class="line">        <span class="comment">// 把 $box 的子节点放进待选数组，此时是 [button, div, ul]</span></span><br><span class="line">        <span class="comment">// 第一次 while 进来都是一样</span></span><br><span class="line">        <span class="comment">// 这里先收集左边还是右边的子级意义都是一样的</span></span><br><span class="line">        <span class="comment">// 这里是从先把 button 放进来，ul 最后，等下 pop 出去就是 ul 最先</span></span><br><span class="line">        stack.<span class="title function_">push</span>(children[i])</span><br><span class="line">        <span class="comment">// 点出 ul 的子级，收进 stack 的最后，下次 while 进来，pop 就会是 ul 的子级，也即是 li</span></span><br><span class="line">        <span class="comment">// 然后再继续下去，还是会把 ul 的子级的子级，也就是 div，收进 stack 最后</span></span><br><span class="line">        <span class="comment">// 也就是不断的子级优先，达成深挖</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> nodes</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 广度优先，用的是队列，一边进另一边出，先入先出</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">breadthFirstSearch</span>(<span class="params">node</span>) &#123;</span><br><span class="line">  <span class="keyword">var</span> nodes = []</span><br><span class="line">  <span class="keyword">if</span> (node != <span class="literal">null</span>) &#123;</span><br><span class="line">    <span class="keyword">var</span> queue = []</span><br><span class="line">    <span class="comment">// 第一次进来：是[$box]，弹出来后都是为空</span></span><br><span class="line">    <span class="comment">// 第二次进来：[button, div, ul]，然后 button 被 unshift 出去，收进结果数组 nodes 里</span></span><br><span class="line">    <span class="comment">// 第三次进来：[div, ul, strong]，然后 div 被 unshift 出去，收进结果数组 nodes 里</span></span><br><span class="line">    <span class="comment">// 第四次进来：[ul, strong, p, p, p]，然后 ul 被 unshift 出去，收进结果数组 nodes 里</span></span><br><span class="line">    <span class="comment">// 可以看出跟深度的差别，点出子级都是排进待选数组的最后</span></span><br><span class="line">    <span class="comment">// 但是深度是栈pop，加塞在数组最后的子级优先</span></span><br><span class="line">    <span class="comment">// 广度是队列unshift，一起放进数组的兄弟级优先</span></span><br><span class="line">    queue.<span class="title function_">unshift</span>(node)</span><br><span class="line">    <span class="keyword">while</span>(queue.<span class="property">length</span> != <span class="number">0</span>) &#123;</span><br><span class="line">      <span class="keyword">var</span> item = queue.<span class="title function_">shift</span>()</span><br><span class="line">      nodes.<span class="title function_">push</span>(item)</span><br><span class="line">      <span class="keyword">var</span> children = item.<span class="property">children</span></span><br><span class="line">      <span class="keyword">for</span> (<span class="keyword">var</span> i = children.<span class="property">length</span> - <span class="number">1</span>; i &gt;= <span class="number">0</span>; i--) &#123;</span><br><span class="line">        queue.<span class="title function_">push</span>(children[i])</span><br><span class="line">        <span class="comment">// 对应上面第二次进来：点出 button 的子级，也就是 strong，收进 queue 的最后</span></span><br><span class="line">        <span class="comment">// 但对 unshift 的结果没影响，下次 while 进来，unshift 依然是 div</span></span><br><span class="line">        <span class="comment">// 对应上面第三次进来：点出 div 的子级，也就是 p，收进 queue 的最后</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> nodes</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>可以看出，就是在遍历时候暂存的数据结构不一样。<br><strong>深度优先</strong>，就是一直深挖，孩子的孩子的孩子…。<br><strong>广度优先</strong>，就是兄弟兄弟兄弟孩子兄弟…。需要注意的是，同级的就算兄弟。意思是相对于根级为孙子辈，就算不是同个父级，也算是兄弟级。</p>
-<p><strong>2022-10-18 21:31:18</strong><br>更新了一篇用 js 做遍历的<a href="/2022/10/18/deepth-breadth-traversal/">《深广度优先遍历》</a>。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      
-      <!-- <a data-url="http://blog.cchealthier.com/2020/11/15/search/" data-id="clhqb37p70021ts9m14ioh5ua" class="article-share-link">分享</a> -->
+      <!-- <a data-url="http://blog.cchealthier.com/2020/11/22/webpack-config/" data-id="clhw7zmvc002ulb9me71zesbo" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -674,11 +676,15 @@
       <ul>
         
           <li>
+            <a href="/2023/05/19/performance-optimize/">一次性能优化的过程（多图）</a>
+          </li>
+        
+          <li>
             <a href="/2023/05/13/file-slice-upload/">文件切片上传（断点续传）</a>
           </li>
         
           <li>
-            <a href="/2023/04/21/nginx-basic/">nginx 的基础用法</a>
+            <a href="/2023/04/21/nginx-basic/">nginx 的基础用法 &amp; linux（centos）下支持 https 和 http2</a>
           </li>
         
           <li>
@@ -687,10 +693,6 @@
         
           <li>
             <a href="/2023/03/06/fontend-engineering/">从零搭建前端工程（上）</a>
-          </li>
-        
-          <li>
-            <a href="/2023/02/07/multi-function-select/">懒加载-虚拟列表-下拉菜单选择器</a>
           </li>
         
       </ul>

@@ -77,6 +77,49 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-new-object" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/05/25/new-object/" class="article-date">
+  <time datetime="2020-05-25T15:59:18.000Z" itemprop="datePublished">2020-05-25</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/05/25/new-object/">JS new 一个对象干了什么事</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <br>
+
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">Person</span>(<span class="params">name, age</span>) &#123;</span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">name</span> = name</span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">age</span> = age</span><br><span class="line">&#125;</span><br><span class="line"><span class="title class_">Person</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">attr</span> = <span class="string">&#x27;human&#x27;</span></span><br><span class="line"><span class="keyword">const</span> man1 = <span class="keyword">new</span> <span class="title class_">Person</span>(<span class="string">&#x27;123&#x27;</span>, <span class="number">18</span>)</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(man1.<span class="property">name</span>)</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(man1.<span class="property">age</span>)</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(man1.<span class="property">attr</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">_new</span>(<span class="params">Constructor, ...param</span>) &#123;</span><br><span class="line">  <span class="comment">// 新建一个对象</span></span><br><span class="line">  <span class="keyword">const</span> obj = &#123;&#125; <span class="comment">// Object.create(null)</span></span><br><span class="line">  <span class="comment">// 建立继承关系，__proto__指向构造函数原型，获得原型属性与方法</span></span><br><span class="line">  <span class="comment">// 这里获得 attr 属性</span></span><br><span class="line">  obj.<span class="property">__proto__</span> = <span class="title class_">Constructor</span>.<span class="property"><span class="keyword">prototype</span></span></span><br><span class="line">  <span class="comment">// 开始执行这个构造函数，就是这个构造函数的this方法属性挂到这个新对象上</span></span><br><span class="line">  <span class="comment">// 这里就是把 name 和 age 挂上去</span></span><br><span class="line">  <span class="keyword">const</span> ret = <span class="title class_">Constructor</span>.<span class="title function_">call</span>(obj, ...param)</span><br><span class="line">  <span class="comment">// const ret = Constructor.apply(obj, param)</span></span><br><span class="line">  <span class="comment">// 若构造函数中没有返回值或返回值是基本类型（Number、String、Boolean）的值，则返回新实例对象；</span></span><br><span class="line">  <span class="comment">// 若返回值是引用类型的值，则实际返回值为这个引用类型。</span></span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">typeof</span> ret === <span class="string">&#x27;object&#x27;</span> ? ret : obj</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">const</span> man2 = <span class="title function_">_new</span>(<span class="title class_">Person</span>, <span class="string">&#x27;456&#x27;</span>, <span class="number">20</span>)</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(man2.<span class="property">name</span>)</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(man2.<span class="property">age</span>)</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(man2.<span class="property">attr</span>)</span><br></pre></td></tr></table></figure>
+      
+    </div>
+    <footer class="article-footer">
+      
+      <!-- <a data-url="http://blog.cchealthier.com/2020/05/25/new-object/" data-id="clhw7zmv6001elb9m95u22rlt" class="article-share-link">分享</a> -->
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-js-inherit" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2020/05/21/js-inherit/" class="article-date">
@@ -139,7 +182,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="http://blog.cchealthier.com/2020/05/21/js-inherit/" data-id="clhqb37p30012ts9mdc1g28xa" class="article-share-link">分享</a> -->
+      <!-- <a data-url="http://blog.cchealthier.com/2020/05/21/js-inherit/" data-id="clhw7zmv50011lb9m5sl23vna" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -186,7 +229,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="http://blog.cchealthier.com/2020/05/14/mood/" data-id="clhqb37p4001ats9maq7f8m8c" class="article-share-link">分享</a> -->
+      <!-- <a data-url="http://blog.cchealthier.com/2020/05/14/mood/" data-id="clhw7zmv6001clb9m9bsc2gim" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -231,7 +274,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="http://blog.cchealthier.com/2020/05/03/buyu/" data-id="clhqb37ox0008ts9m6dh9f7yn" class="article-share-link">分享</a> -->
+      <!-- <a data-url="http://blog.cchealthier.com/2020/05/03/buyu/" data-id="clhw7zmv00008lb9m34vn9w9p" class="article-share-link">分享</a> -->
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/cook/" rel="tag">cook</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/fish/" rel="tag">fish</a></li></ul>
@@ -301,7 +344,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="http://blog.cchealthier.com/2020/05/03/hexo-githubpage/" data-id="clhqb37p2000vts9mba186bbe" class="article-share-link">分享</a> -->
+      <!-- <a data-url="http://blog.cchealthier.com/2020/05/03/hexo-githubpage/" data-id="clhw7zmv5000vlb9m69hcb6ck" class="article-share-link">分享</a> -->
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/blog/" rel="tag">blog</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/hexo/" rel="tag">hexo</a></li></ul>
@@ -353,7 +396,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="http://blog.cchealthier.com/2020/05/03/hello-world/" data-id="clhqb37p2000tts9m5jp41yzo" class="article-share-link">分享</a> -->
+      <!-- <a data-url="http://blog.cchealthier.com/2020/05/03/hello-world/" data-id="clhw7zmv4000plb9m2at86lnx" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -420,11 +463,15 @@
       <ul>
         
           <li>
+            <a href="/2023/05/19/performance-optimize/">一次性能优化的过程（多图）</a>
+          </li>
+        
+          <li>
             <a href="/2023/05/13/file-slice-upload/">文件切片上传（断点续传）</a>
           </li>
         
           <li>
-            <a href="/2023/04/21/nginx-basic/">nginx 的基础用法</a>
+            <a href="/2023/04/21/nginx-basic/">nginx 的基础用法 &amp; linux（centos）下支持 https 和 http2</a>
           </li>
         
           <li>
@@ -433,10 +480,6 @@
         
           <li>
             <a href="/2023/03/06/fontend-engineering/">从零搭建前端工程（上）</a>
-          </li>
-        
-          <li>
-            <a href="/2023/02/07/multi-function-select/">懒加载-虚拟列表-下拉菜单选择器</a>
           </li>
         
       </ul>

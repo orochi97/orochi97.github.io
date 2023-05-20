@@ -77,6 +77,60 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-performance-optimize" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2023/05/19/performance-optimize/" class="article-date">
+  <time datetime="2023-05-18T16:03:11.000Z" itemprop="datePublished">2023-05-19</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2023/05/19/performance-optimize/">一次性能优化的过程（多图）</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>性能优化听多了，又是各个注意点，又是监控什么的，如《<a href="/2020/05/28/js-performance/">JS性能优化探讨</a>》《<a href="/2021/01/09/performance-api/">前端性能监控</a>》，真正遇到了还是得具体场景具体分析。</p>
+<p>一直觉得我的<a target="_blank" rel="noopener" href="https://cchealthier.com/">个人网站首页</a>（现在不会了）很慢，进去后背景和熊猫头渲染得特别慢。当然这个慢是相对的，就我做过的 TO B 系统单单是前置接口的获取都要几秒了，只是有 loading 效果看起来不难受。但是我这个网页啥都没有，就那么几个图片和动画，着实不该。那就实际一步步看看吧。</p>
+<h3 id="一-服务器连接速度"><a href="#一-服务器连接速度" class="headerlink" title="一. 服务器连接速度"></a>一. 服务器连接速度</h3><p>直接百度搜<code>网站访问速度测试</code>就有很多工具网站。一看都没啥问题，除了极个别的比较远的省份（我这是买的阿里云深圳的服务器）其他都在一秒以内。再 <code>ping</code> 一下，也可以看到并无延迟。也就是 <code>DNS</code> 解析和访问并没有问题。</p>
+<h3 id="二-减小图片体积"><a href="#二-减小图片体积" class="headerlink" title="二. 减小图片体积"></a>二. 减小图片体积</h3><p>那首先考虑资源图片过大，因为确实用了比较高清的图片，那就在不糊的情况下尽量缩小体积。兴冲冲地更新一看，没啥变化。还是有那个等待过程。那好吧，一不做而不休，我尝试把其他图片都去掉，只留下一个熊猫头，还是很慢，就证明不该是图片背锅。当然缩小体积是没有问题的。省流量嘛。</p>
+<h3 id="三-使用-Devtool-Performance"><a href="#三-使用-Devtool-Performance" class="headerlink" title="三. 使用 Devtool Performance"></a>三. 使用 Devtool Performance</h3><p>那就直接用工具看吧，打开开发者工具，切到 <code>Performance</code>，启动录制看看效果。找一下，在 Timings 那里看到 <code>FP</code> <code>FCP</code> 等事件，这里就是影响视觉观看的主要节点了。当然前面还有 <code>Parse HTML</code> 或者 <code>Function call</code> 等等事件。主要看 <code>Parse HTML</code>，因为要解析了 html，才会加载一系列资源，可以看出这一步并没有什么问题，也是很快就响应了。但是到 <code>FCP</code> 却隔了好几秒。也就是中间有东西耽搁了。<br>看了一下，是<strong>必要的 js 文件加载</strong>。有两个，一个是 <code>app.***.js</code>，基础的业务 js， 一个是 <code>chunk-vendor.***.js</code>，vue 框架的打包厂务。毫无疑问，这两者都是不可或缺的。<code>appjs</code> 比较小还好，很快就获取完了。<code>chunk-vendorjs</code>有 300+kb，耗时几秒。可以看到它加载完后，很快就 <code>FCP</code> 了。所以它的加载就是问题关键了。</p>
+<h3 id="四-js-文件太大？"><a href="#四-js-文件太大？" class="headerlink" title="四. js 文件太大？"></a>四. js 文件太大？</h3><p>讲道理，300+kb 的 js 文件不算小，但也不能叫很大啊。怎么要好几秒才能加载完？当然我的服务器没有加速功能，如果放到 CDN 服务，我想应该效果会好点。但是没有这条件，那只能另外想想办法。我代码里用了 <code>Element-UI</code>，测试了一下确实是按需引入，去掉几个组件后，体积变小了。<br>但，这些就是要用到的，减不了。路由页面用的也是 <code>import()</code> 动态引入，也就是到了真正访问那个页面组件，才会去加载相应的 js。再说了业务代码也不会打包到 vendor 去。那体积没法减了。然后在自己本地测试了一下，以及线上的缓存状态下，页面出现都很快，更加印证了我的猜测，就是这个 “大 js 文件” 导致了页面渲染慢。（当然最好有个 CDN 什么的加速可以验证…）</p>
+<img src="/2023/05/19/performance-optimize/%E4%BC%98%E5%8C%96%E5%89%8Dnetwork.png" class="" title="优化前network">
+
+<p>事情本到这里就结束了（啥都没干，555…），结果又看到一个神奇的网站，谷歌的性能分析网站，地址：<a target="_blank" rel="noopener" href="https://pagespeed.web.dev/">https://pagespeed.web.dev</a> （可能需要科学上网）</p>
+        
+          <p class="article-more-link">
+            <a href="/2023/05/19/performance-optimize/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      
+      <!-- <a data-url="http://blog.cchealthier.com/2023/05/19/performance-optimize/" data-id="clhw7zmv9001vlb9mgwb0elu0" class="article-share-link">分享</a> -->
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-file-slice-upload" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2023/05/13/file-slice-upload/" class="article-date">
@@ -116,7 +170,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="http://blog.cchealthier.com/2023/05/13/file-slice-upload/" data-id="clhqb37p0000jts9mdmta6kq8" class="article-share-link">分享</a> -->
+      <!-- <a data-url="http://blog.cchealthier.com/2023/05/13/file-slice-upload/" data-id="clhw7zmv3000jlb9m5r2q7ekc" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -144,7 +198,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2023/04/21/nginx-basic/">nginx 的基础用法</a>
+      <a class="article-title" href="/2023/04/21/nginx-basic/">nginx 的基础用法 &amp; linux（centos）下支持 https 和 http2</a>
     </h1>
   
 
@@ -163,25 +217,33 @@
 <p>默认端口是 8080。所以直接访问本地地址 <code>http://localhost:8080/</code>，看到有显示 <strong>Welcome to nginx!</strong> 字样就是启动成功了。</p>
 <p>其实 nginx.conf 已经写了例子和注释，这里只是稍微补充点。</p>
 <p>root：资源文件夹<br>index： 默认的 index 文件</p>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">location</span> <span class="string">/</span> &#123;</span><br><span class="line">    <span class="string">root</span>   <span class="string">/电脑地址/nginx;</span></span><br><span class="line">    <span class="string">index</span>  <span class="string">index.html</span> <span class="string">index.htm;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">location</span> <span class="string">/</span> &#123;</span><br><span class="line">  <span class="string">root</span>   <span class="string">/电脑地址/nginx;</span></span><br><span class="line">  <span class="string">index</span>  <span class="string">index.html</span> <span class="string">index.htm;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>如果要配置不同路由访问不同的文件，root 要改成 alias，比如访问 <code>http://localhost:8080/page</code></p>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">location</span> <span class="string">/page</span> &#123;</span><br><span class="line">    <span class="string">alias</span> <span class="string">/电脑地址/nginx;</span></span><br><span class="line">    <span class="string">index</span> <span class="string">page.html;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">location</span> <span class="string">/page</span> &#123;</span><br><span class="line">  <span class="string">alias</span> <span class="string">/电脑地址/nginx;</span></span><br><span class="line">  <span class="string">index</span> <span class="string">page.html;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>可以写多个server，启动多个服务</p>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">server</span> &#123;</span><br><span class="line">    <span class="string">listen</span>       <span class="number">3000</span><span class="string">;</span></span><br><span class="line">    <span class="string">server_name</span>  <span class="number">0.0</span><span class="number">.0</span><span class="number">.0</span><span class="string">;</span></span><br><span class="line"></span><br><span class="line">    <span class="string">location</span> <span class="string">/</span> &#123;</span><br><span class="line">        <span class="string">root</span>   <span class="string">/电脑地址/nginx;</span></span><br><span class="line">        <span class="string">index</span>  <span class="number">3000.</span><span class="string">html</span> <span class="number">3000.</span><span class="string">htm;</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">server</span> &#123;</span><br><span class="line">  <span class="string">listen</span>       <span class="number">3000</span><span class="string">;</span></span><br><span class="line">  <span class="string">server_name</span>  <span class="number">0.0</span><span class="number">.0</span><span class="number">.0</span><span class="string">;</span></span><br><span class="line"></span><br><span class="line">  <span class="string">location</span> <span class="string">/</span> &#123;</span><br><span class="line">    <span class="string">root</span>   <span class="string">/电脑地址/nginx;</span></span><br><span class="line">    <span class="string">index</span>  <span class="number">3000.</span><span class="string">html</span> <span class="number">3000.</span><span class="string">htm;</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>代理 ~ 为区分大小写，~*为不区分大小写，其他符号则请查询官网啦。</p>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">location</span> <span class="string">~</span> <span class="string">/api/*</span> &#123;</span><br><span class="line">    <span class="string">proxy_pass</span>   <span class="string">http://localhost:3000;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">location</span> <span class="string">~</span> <span class="string">/api/*</span> &#123;</span><br><span class="line">  <span class="string">proxy_pass</span>   <span class="string">http://localhost:3000;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>https服务，声明好证书即可。这里只是把其中证书配置列出来，实际上 nginx.conf 的例子还有挺多配置，一般我们不是运维，应该默认就够了。作为调试用，可能都不需要启动到 https server。</p>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">server</span> &#123;</span><br><span class="line">    <span class="string">ssl_certificate</span>      <span class="string">/电脑地址/nginx/cert/cert.pem;</span></span><br><span class="line">    <span class="string">ssl_certificate_key</span>  <span class="string">/电脑地址/nginx/cert/server.key;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">server</span> &#123;</span><br><span class="line">  <span class="string">ssl_certificate</span>      <span class="string">/电脑地址/nginx/cert/cert.pem;</span></span><br><span class="line">  <span class="string">ssl_certificate_key</span>  <span class="string">/电脑地址/nginx/cert/server.key;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>开启文本压缩</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">http</span> &#123;</span><br><span class="line">  <span class="string">gzip</span> <span class="string">on;</span></span><br><span class="line">  <span class="comment"># 压缩比例，比例越大，压缩时间越长。默认是1</span></span><br><span class="line">  <span class="string">gzip_comp_level</span> <span class="number">6</span><span class="string">;</span></span><br><span class="line">  <span class="comment"># 哪些文件可以被压缩</span></span><br><span class="line">  <span class="string">gzip_types</span> <span class="string">text/xml</span> <span class="string">text/plain</span> <span class="string">text/css</span> <span class="string">application/javascript</span> <span class="string">application/x-javascript</span> <span class="string">application/rss+xml;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>linux 下支持 https 和 http2，也是网上搜集的，实操了可以，这里记录一下。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 安装依赖</span></span><br><span class="line">yum -y install gcc zlib zlib-devel pcre-devel openssl openssl-devel</span><br><span class="line"><span class="comment"># 解压缩</span></span><br><span class="line">tar -zxvf nginx-1.23.4.tar.gz</span><br><span class="line"><span class="built_in">cd</span> nginx-1.23.4</span><br><span class="line"><span class="comment"># 执行配置</span></span><br><span class="line">./configure --with-http_ssl_module --with-http_v2_module</span><br><span class="line"><span class="comment"># 编译安装</span></span><br><span class="line">make</span><br><span class="line">make install</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 默认安装在</span></span><br><span class="line">/usr/local/nginx</span><br><span class="line"><span class="comment"># 启动</span></span><br><span class="line">/usr/local/nginx/sbin/nginx</span><br><span class="line"><span class="comment"># 刷新配置启动</span></span><br><span class="line">/usr/local/nginx/sbin/nginx -s reload</span><br><span class="line"><span class="comment"># 关闭</span></span><br><span class="line">/usr/local/nginx/sbin/nginx -s stop</span><br><span class="line"><span class="comment"># 修改配置</span></span><br><span class="line">vim  /usr/local/nginx/conf/nginx.conf</span><br></pre></td></tr></table></figure>
 
       
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="http://blog.cchealthier.com/2023/04/21/nginx-basic/" data-id="clhqb37p5001mts9mgomkazkv" class="article-share-link">分享</a> -->
+      <!-- <a data-url="http://blog.cchealthier.com/2023/04/21/nginx-basic/" data-id="clhw7zmv8001olb9mc2ps4l9a" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -233,7 +295,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="http://blog.cchealthier.com/2023/04/21/fontend-engineering-2/" data-id="clhqb37p1000mts9mcmbldxs1" class="article-share-link">分享</a> -->
+      <!-- <a data-url="http://blog.cchealthier.com/2023/04/21/fontend-engineering-2/" data-id="clhw7zmv4000mlb9ma836e4lb" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -297,7 +359,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="http://blog.cchealthier.com/2023/03/06/fontend-engineering/" data-id="clhqb37p1000pts9m1l983rsj" class="article-share-link">分享</a> -->
+      <!-- <a data-url="http://blog.cchealthier.com/2023/03/06/fontend-engineering/" data-id="clhw7zmv4000tlb9megu5h1zv" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -348,7 +410,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="http://blog.cchealthier.com/2023/02/07/multi-function-select/" data-id="clhqb37p4001cts9m0tzget0j" class="article-share-link">分享</a> -->
+      <!-- <a data-url="http://blog.cchealthier.com/2023/02/07/multi-function-select/" data-id="clhw7zmv7001ilb9mdw3a3svi" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -404,7 +466,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="http://blog.cchealthier.com/2022/11/07/vue-observer-dep-watcher/" data-id="clhqb37p8002its9m1k4q0wd6" class="article-share-link">分享</a> -->
+      <!-- <a data-url="http://blog.cchealthier.com/2022/11/07/vue-observer-dep-watcher/" data-id="clhw7zmvb002plb9m9jk0gmrb" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -451,7 +513,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="http://blog.cchealthier.com/2022/10/19/2022-autumn/" data-id="clhqb37os0000ts9mbe607t4s" class="article-share-link">分享</a> -->
+      <!-- <a data-url="http://blog.cchealthier.com/2022/10/19/2022-autumn/" data-id="clhw7zmux0001lb9m28ki5cpt" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -499,7 +561,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="http://blog.cchealthier.com/2022/10/18/binary-tree-traversal/" data-id="clhqb37ox0005ts9m6sal8pxe" class="article-share-link">分享</a> -->
+      <!-- <a data-url="http://blog.cchealthier.com/2022/10/18/binary-tree-traversal/" data-id="clhw7zmuz0007lb9mh1zv9pwd" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -546,56 +608,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="http://blog.cchealthier.com/2022/10/18/deepth-breadth-traversal/" data-id="clhqb37oz000ets9mdflkacnx" class="article-share-link">分享</a> -->
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-linked-list" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2022/09/25/linked-list/" class="article-date">
-  <time datetime="2022-09-25T15:22:55.000Z" itemprop="datePublished">2022-09-25</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E7%AE%97%E6%B3%95/">算法</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2022/09/25/linked-list/">链表</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p><a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E9%93%BE%E8%A1%A8/9794473?fr=aladdin">链表</a>的概念这里就不赘述了，直接上代码吧。<br>其他都没什么问题，主要是反转的做法。</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Node</span> &#123;</span><br><span class="line">  <span class="title function_">constructor</span>(<span class="params">element</span>) &#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">element</span> = element;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">next</span> = <span class="literal">null</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">LinkedList</span> &#123;</span><br><span class="line">  <span class="title function_">constructor</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">head</span> = <span class="keyword">new</span> <span class="title class_">Node</span>(<span class="string">&#x27;head&#x27;</span>);</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">length</span> = <span class="number">0</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="title function_">insert</span>(<span class="params">newElement, element = <span class="literal">null</span></span>) &#123; <span class="comment">// 加在某个元素后面，如果该元素不在，则加在 head 后面</span></span><br><span class="line">    <span class="keyword">let</span> currNode = <span class="variable language_">this</span>.<span class="title function_">find</span>(element);</span><br><span class="line">    <span class="keyword">if</span> (!currNode) &#123;</span><br><span class="line">      currNode = <span class="variable language_">this</span>.<span class="property">head</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">const</span> newNode = <span class="keyword">new</span> <span class="title class_">Node</span>(newElement);</span><br><span class="line">    newNode.<span class="property">next</span> = currNode.<span class="property">next</span>;</span><br><span class="line">    currNode.<span class="property">next</span> = newNode;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">length</span>++;</span><br><span class="line">    <span class="keyword">return</span> <span class="variable language_">this</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="title function_">remove</span>(<span class="params">element</span>) &#123;</span><br><span class="line">    <span class="keyword">const</span> prevNode = <span class="variable language_">this</span>.<span class="title function_">prev</span>(element);</span><br><span class="line">    <span class="keyword">if</span> (prevNode &amp;&amp; prevNode.<span class="property">next</span>) &#123;</span><br><span class="line">      <span class="keyword">const</span> currNode = prevNode.<span class="property">next</span>;</span><br><span class="line">      prevNode.<span class="property">next</span> = currNode.<span class="property">next</span>;</span><br><span class="line">      <span class="variable language_">this</span>.<span class="property">length</span>--;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="variable language_">this</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="title function_">find</span>(<span class="params">element</span>) &#123;</span><br><span class="line">    <span class="keyword">let</span> node = <span class="variable language_">this</span>.<span class="property">head</span>;</span><br><span class="line">    <span class="keyword">while</span>(node) &#123;</span><br><span class="line">      <span class="keyword">if</span> (node.<span class="property">element</span> === element) &#123;</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">      &#125;</span><br><span class="line">      node = node.<span class="property">next</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> node;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="title function_">getAll</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">const</span> result = [];</span><br><span class="line">    <span class="keyword">let</span> node = <span class="variable language_">this</span>.<span class="property">head</span>;</span><br><span class="line">    <span class="keyword">while</span>(node &amp;&amp; node.<span class="property">next</span>) &#123;</span><br><span class="line">      node = node.<span class="property">next</span>;</span><br><span class="line">      result.<span class="title function_">push</span>(node.<span class="property">element</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="title function_">prev</span>(<span class="params">element</span>) &#123;</span><br><span class="line">    <span class="keyword">let</span> node = <span class="variable language_">this</span>.<span class="property">head</span>;</span><br><span class="line">    <span class="keyword">while</span>(node) &#123;</span><br><span class="line">      <span class="keyword">if</span> (node.<span class="property">next</span> &amp;&amp; node.<span class="property">next</span>.<span class="property">element</span> === element) &#123;</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">      &#125;</span><br><span class="line">      node = node.<span class="property">next</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> node;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="title function_">next</span>(<span class="params">element</span>) &#123;</span><br><span class="line">    <span class="keyword">const</span> currNode = <span class="variable language_">this</span>.<span class="title function_">find</span>(element);</span><br><span class="line">    <span class="keyword">if</span> (currNode) &#123;</span><br><span class="line">      <span class="keyword">return</span> currNode.<span class="property">next</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="title function_">reverse</span>(<span class="params">element</span>) &#123;</span><br><span class="line">    <span class="comment">// 直接倒序重新生成的不正规解法</span></span><br><span class="line">    <span class="comment">// let node = this.head;</span></span><br><span class="line">    <span class="comment">// this.getAll().reverse().forEach((element) =&gt; &#123;</span></span><br><span class="line">    <span class="comment">// 	node.next = new Node(element);</span></span><br><span class="line">    <span class="comment">// 	node = node.next;</span></span><br><span class="line">    <span class="comment">// &#125;);</span></span><br><span class="line">    <span class="comment">// node.next = null;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 只需要循环一次的正规解法</span></span><br><span class="line">    <span class="keyword">let</span> head = <span class="variable language_">this</span>.<span class="title function_">prev</span>(element); <span class="comment">// 这个后面的元素要反转，所以也有可能是链表的 head</span></span><br><span class="line">    <span class="keyword">let</span> first = <span class="variable language_">this</span>.<span class="title function_">find</span>(element); <span class="comment">// 一直指向要反转的链表第一个</span></span><br><span class="line">    <span class="keyword">if</span> (!first) &#123;</span><br><span class="line">      head = <span class="variable language_">this</span>.<span class="property">head</span>;</span><br><span class="line">      first = <span class="variable language_">this</span>.<span class="property">head</span>.<span class="property">next</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (!first) <span class="keyword">return</span> <span class="variable language_">this</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">const</span> node = first; <span class="comment">// node 是不需要变的，一直都是一开始的第一个，因为每次循环 node 都会变位置，它的 next 指向也会一直变</span></span><br><span class="line">    <span class="keyword">while</span>(node &amp;&amp; node.<span class="property">next</span>) &#123;</span><br><span class="line">      <span class="keyword">const</span> nextNode = node.<span class="property">next</span>;</span><br><span class="line">      node.<span class="property">next</span> = nextNode.<span class="property">next</span>;</span><br><span class="line">      nextNode.<span class="property">next</span> = first;</span><br><span class="line">      first = nextNode;</span><br><span class="line">    &#125;</span><br><span class="line">    head.<span class="property">next</span> = first;</span><br><span class="line">    <span class="comment">// 每次都把 1 的 next 挪到 first 的前面，同时 1 也会相应的变位置</span></span><br><span class="line">    <span class="comment">// 12345：first = 1，node = 1，把 1 的 next 指向 3，2 的 next 指向 1，即把 2 放到 1（frist） 前面</span></span><br><span class="line">    <span class="comment">// 21345：first = 2，node = 1，把 1 的 next 指向 4，3 的 next 指向 2，即把 3 放到 2（frist） 前面</span></span><br><span class="line">    <span class="comment">// 32145：first = 3，node = 1，把 1 的 next 指向 5，4 的 next 指向 3，即把 4 放到 3（frist） 前面</span></span><br><span class="line">    <span class="comment">// 43215</span></span><br><span class="line">    <span class="comment">// 54321</span></span><br><span class="line">    <span class="keyword">return</span> <span class="variable language_">this</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>下面是运行结果</p>
-        
-          <p class="article-more-link">
-            <a href="/2022/09/25/linked-list/#more">Read More</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      
-      <!-- <a data-url="http://blog.cchealthier.com/2022/09/25/linked-list/" data-id="clhqb37p30017ts9m9mop78ft" class="article-share-link">分享</a> -->
+      <!-- <a data-url="http://blog.cchealthier.com/2022/10/18/deepth-breadth-traversal/" data-id="clhw7zmv3000flb9mhztd458w" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -662,11 +675,15 @@
       <ul>
         
           <li>
+            <a href="/2023/05/19/performance-optimize/">一次性能优化的过程（多图）</a>
+          </li>
+        
+          <li>
             <a href="/2023/05/13/file-slice-upload/">文件切片上传（断点续传）</a>
           </li>
         
           <li>
-            <a href="/2023/04/21/nginx-basic/">nginx 的基础用法</a>
+            <a href="/2023/04/21/nginx-basic/">nginx 的基础用法 &amp; linux（centos）下支持 https 和 http2</a>
           </li>
         
           <li>
@@ -675,10 +692,6 @@
         
           <li>
             <a href="/2023/03/06/fontend-engineering/">从零搭建前端工程（上）</a>
-          </li>
-        
-          <li>
-            <a href="/2023/02/07/multi-function-select/">懒加载-虚拟列表-下拉菜单选择器</a>
           </li>
         
       </ul>
