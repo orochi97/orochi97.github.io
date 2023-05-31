@@ -77,6 +77,53 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-deepth-breadth-traversal" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2022/10/18/deepth-breadth-traversal/" class="article-date">
+  <time datetime="2022-10-18T13:18:08.000Z" itemprop="datePublished">2022-10-18</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E7%AE%97%E6%B3%95/">算法</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2022/10/18/deepth-breadth-traversal/">深广度优先遍历</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>之前其实有写过一篇类似的文章<a href="/2020/11/15/search/">《深度优先遍历(DFS)-栈和广度优先遍历(BFS)-队列的理解》</a>。<br>再次复习一下，写了不一样的注释。而且之前是用 dom 做的遍历，这次还是回到数据来。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 深广度优先遍历</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> tree = &#123;</span><br><span class="line">  <span class="attr">value</span>: <span class="number">1</span>,</span><br><span class="line">  <span class="attr">children</span>: [</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="attr">value</span>: <span class="number">2</span>,</span><br><span class="line">      <span class="attr">children</span>: [</span><br><span class="line">        &#123;</span><br><span class="line">          <span class="attr">value</span>: <span class="number">4</span>,</span><br><span class="line">          <span class="attr">children</span>: [</span><br><span class="line">            &#123;</span><br><span class="line">              <span class="attr">value</span>: <span class="number">8</span></span><br><span class="line">            &#125;,</span><br><span class="line">            &#123;</span><br><span class="line">              <span class="attr">value</span>: <span class="number">9</span></span><br><span class="line">            &#125;,</span><br><span class="line">          ],</span><br><span class="line">        &#125;,</span><br><span class="line">        &#123;</span><br><span class="line">          <span class="attr">value</span>: <span class="number">5</span>,</span><br><span class="line">          <span class="attr">children</span>: [</span><br><span class="line">            &#123;</span><br><span class="line">              <span class="attr">value</span>: <span class="number">10</span></span><br><span class="line">            &#125;,</span><br><span class="line">            &#123;</span><br><span class="line">              <span class="attr">value</span>: <span class="number">11</span></span><br><span class="line">            &#125;,</span><br><span class="line">          ],</span><br><span class="line">        &#125;,</span><br><span class="line">      ],</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="attr">value</span>: <span class="number">3</span>,</span><br><span class="line">      <span class="attr">children</span>: [</span><br><span class="line">        &#123;</span><br><span class="line">          <span class="attr">value</span>: <span class="number">6</span>,</span><br><span class="line">          <span class="attr">children</span>: [</span><br><span class="line">            &#123;</span><br><span class="line">              <span class="attr">value</span>: <span class="number">12</span></span><br><span class="line">            &#125;,</span><br><span class="line">            &#123;</span><br><span class="line">              <span class="attr">value</span>: <span class="number">13</span></span><br><span class="line">            &#125;,</span><br><span class="line">          ],</span><br><span class="line">        &#125;,</span><br><span class="line">        &#123;</span><br><span class="line">          <span class="attr">value</span>: <span class="number">7</span>,</span><br><span class="line">          <span class="attr">children</span>: [</span><br><span class="line">            &#123;</span><br><span class="line">              <span class="attr">value</span>: <span class="number">14</span></span><br><span class="line">            &#125;,</span><br><span class="line">            &#123;</span><br><span class="line">              <span class="attr">value</span>: <span class="number">15</span></span><br><span class="line">            &#125;,</span><br><span class="line">          ],</span><br><span class="line">        &#125;,</span><br><span class="line">      ],</span><br><span class="line">    &#125;</span><br><span class="line">  ],</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+        
+          <p class="article-more-link">
+            <a href="/2022/10/18/deepth-breadth-traversal/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      
+      <!-- <a data-url="http://blog.cchealthier.com/2022/10/18/deepth-breadth-traversal/" data-id="clibqomnh000f939m0rsl6x8o" class="article-share-link">分享</a> -->
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-linked-list" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2022/09/25/linked-list/" class="article-date">
@@ -116,7 +163,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="http://blog.cchealthier.com/2022/09/25/linked-list/" data-id="clhw7zmv60019lb9m7bl3g5e7" class="article-share-link">分享</a> -->
+      <!-- <a data-url="http://blog.cchealthier.com/2022/09/25/linked-list/" data-id="clibqomnl0019939m5eiq8m4y" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -168,7 +215,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="http://blog.cchealthier.com/2022/09/05/webpack-babel-esm/" data-id="clhw7zmvc002rlb9mcqapg7oi" class="article-share-link">分享</a> -->
+      <!-- <a data-url="http://blog.cchealthier.com/2022/09/05/webpack-babel-esm/" data-id="clibqomnr002q939md2h28oh5" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -220,7 +267,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="http://blog.cchealthier.com/2022/03/26/nginx/" data-id="clhw7zmv8001qlb9mafrg5ntc" class="article-share-link">分享</a> -->
+      <!-- <a data-url="http://blog.cchealthier.com/2022/03/26/nginx/" data-id="clibqomnn001o939m73s30pk9" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -269,7 +316,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="http://blog.cchealthier.com/2022/03/19/vite-server-import/" data-id="clhw7zmvb002klb9meka3akin" class="article-share-link">分享</a> -->
+      <!-- <a data-url="http://blog.cchealthier.com/2022/03/19/vite-server-import/" data-id="clibqomnq002i939m7tik00ee" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -316,7 +363,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="http://blog.cchealthier.com/2022/03/14/beijing-winter/" data-id="clhw7zmuz0005lb9mf2hlbuvn" class="article-share-link">分享</a> -->
+      <!-- <a data-url="http://blog.cchealthier.com/2022/03/14/beijing-winter/" data-id="clibqomnc0005939m0j0e8kzp" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -368,7 +415,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="http://blog.cchealthier.com/2021/01/09/performance-api/" data-id="clhw7zmv8001tlb9mbh7zgylp" class="article-share-link">分享</a> -->
+      <!-- <a data-url="http://blog.cchealthier.com/2021/01/09/performance-api/" data-id="clibqomnn001r939m11hy83jm" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -415,7 +462,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="http://blog.cchealthier.com/2020/12/06/autumn/" data-id="clhw7zmuy0003lb9mb13n3wu8" class="article-share-link">分享</a> -->
+      <!-- <a data-url="http://blog.cchealthier.com/2020/12/06/autumn/" data-id="clibqomnc0004939m7ltg8div" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -500,7 +547,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="http://blog.cchealthier.com/2020/12/06/webpack-speed/" data-id="clhw7zmvc002wlb9m4l049rov" class="article-share-link">分享</a> -->
+      <!-- <a data-url="http://blog.cchealthier.com/2020/12/06/webpack-speed/" data-id="clibqomnv004r939m3fgb4onl" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -562,54 +609,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="http://blog.cchealthier.com/2020/11/29/api-defference/" data-id="clhw7zmuz0004lb9mcklh3r82" class="article-share-link">分享</a> -->
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-webpack-config" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/11/22/webpack-config/" class="article-date">
-  <time datetime="2020-11-22T14:27:35.000Z" itemprop="datePublished">2020-11-22</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/11/22/webpack-config/">webpack的配置</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>webpack也用了好久，想来短期内前端暂时也离不开它。虽然现在很多框架都集成了，但难免还是会遇到需要自己配置的时候。在这里记录下一些基础配置。<br>以下基于 webpack5，不过一般差别不大</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> path = <span class="built_in">require</span>(<span class="string">&#x27;path&#x27;</span>)</span><br><span class="line"><span class="keyword">const</span> &#123; execSync &#125; = <span class="built_in">require</span>(<span class="string">&#x27;child_process&#x27;</span>)</span><br><span class="line"><span class="keyword">const</span> webpack = <span class="built_in">require</span>(<span class="string">&#x27;webpack&#x27;</span>)</span><br><span class="line"><span class="keyword">const</span> <span class="title class_">Customplugin</span> = <span class="built_in">require</span>(<span class="string">&#x27;./custom-plugin&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 默认也会覆盖，不过我习惯删了，windows不支持命令的话，可以改用 fs 模块</span></span><br><span class="line"><span class="title function_">execSync</span>(<span class="string">`rm -rf build`</span>)</span><br><span class="line"></span><br><span class="line"><span class="variable language_">module</span>.<span class="property">exports</span> = &#123;</span><br><span class="line">  <span class="attr">context</span>: process.<span class="title function_">cwd</span>(), <span class="comment">// 当前上下文，一般也不用配置</span></span><br><span class="line">  <span class="attr">mode</span>: <span class="string">&#x27;development&#x27;</span>, <span class="comment">// 打包模式，production模式自动压缩混淆</span></span><br><span class="line">   <span class="comment">// source-map 类型 </span></span><br><span class="line">   <span class="comment">// https://webpack.js.org/configuration/devtool/#root</span></span><br><span class="line">  <span class="attr">devtool</span>: <span class="literal">false</span>,</span><br><span class="line">   <span class="comment">// 编译信息，一般也不需要那么多，可以精细配置 </span></span><br><span class="line">   <span class="comment">// https://webpack.js.org/configuration/stats/#root</span></span><br><span class="line">  <span class="attr">stats</span>: <span class="string">&#x27;none&#x27;</span>,</span><br><span class="line">  <span class="attr">entry</span>:  &#123; </span><br><span class="line">    <span class="attr">a</span>: __dirname + <span class="string">&#x27;/a.js&#x27;</span>,</span><br><span class="line">    <span class="attr">b</span>: __dirname + <span class="string">&#x27;/b.js&#x27;</span>,</span><br><span class="line">    <span class="attr">c</span>: __dirname + <span class="string">&#x27;/c.js&#x27;</span></span><br><span class="line">  &#125;, <span class="comment">// 指定文件入口</span></span><br><span class="line">  <span class="attr">output</span>: &#123;</span><br><span class="line">    <span class="attr">path</span>: __dirname + <span class="string">&#x27;/build&#x27;</span>,<span class="comment">// 打包后的文件存放的地方</span></span><br><span class="line">    <span class="attr">filename</span>: <span class="string">&#x27;[name].js&#x27;</span><span class="comment">// 打包后输出文件的文件名，比如上面打出来就会是 a.js b.js c.js</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="comment">// externals：不打包某些库 https://webpack.js.org/configuration/externals/#externals</span></span><br><span class="line">  <span class="attr">optimization</span>: &#123;</span><br><span class="line">    <span class="attr">minimize</span>: <span class="literal">false</span>, <span class="comment">// 不要压缩</span></span><br><span class="line">     <span class="comment">// 抽出公共js，贼复杂，一般用默认的就可以了 </span></span><br><span class="line">     <span class="comment">// https://webpack.js.org/plugins/split-chunks-plugin/#root</span></span><br><span class="line">    <span class="attr">splitChunks</span>: &#123;</span><br><span class="line">      <span class="attr">chunks</span>: <span class="string">&#x27;all&#x27;</span>,</span><br><span class="line">      <span class="comment">// minChunks: 3,</span></span><br><span class="line">      <span class="comment">// minSize: 0,</span></span><br><span class="line">      <span class="attr">cacheGroups</span>: &#123;</span><br><span class="line">        <span class="attr">default</span>: &#123;</span><br><span class="line">          <span class="attr">priority</span>: <span class="number">1</span>,</span><br><span class="line">          <span class="attr">reuseExistingChunk</span>: <span class="literal">true</span>,</span><br><span class="line">          <span class="attr">enforce</span>: <span class="literal">true</span></span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">module</span>: &#123;</span><br><span class="line">    <span class="attr">rules</span>: [</span><br><span class="line">      &#123; <span class="comment">// 添加自定义 loader</span></span><br><span class="line">        <span class="attr">loader</span>: <span class="string">&#x27;./custom-loader.js&#x27;</span>,</span><br><span class="line">        <span class="attr">options</span>: &#123;</span><br><span class="line">          <span class="attr">param</span>: <span class="number">1</span></span><br><span class="line">        &#125;</span><br><span class="line">      &#125;,</span><br><span class="line">      &#123;</span><br><span class="line">        <span class="attr">test</span>: <span class="regexp">/\.js$/</span>,</span><br><span class="line">        <span class="attr">exclude</span>: <span class="regexp">/node_modules/</span>,</span><br><span class="line">        <span class="attr">use</span>: <span class="string">&#x27;babel-loader&#x27;</span>,</span><br><span class="line">        <span class="attr">options</span>: &#123;</span><br><span class="line">          <span class="attr">cacheDirectory</span>: <span class="literal">true</span>,</span><br><span class="line">          <span class="attr">presets</span>: [<span class="string">&#x27;@babel/preset-env&#x27;</span>],</span><br><span class="line">          <span class="attr">plugins</span>: [<span class="string">&#x27;@babel/transform-runtime&#x27;</span>]</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;,</span><br><span class="line">      &#123;</span><br><span class="line">        <span class="attr">use</span>: [</span><br><span class="line">          <span class="string">&#x27;style-loader&#x27;</span>,</span><br><span class="line">          &#123;</span><br><span class="line">            <span class="attr">loader</span>: <span class="string">&#x27;css-loader&#x27;</span>,</span><br><span class="line">            <span class="attr">options</span>: &#123;</span><br><span class="line">              <span class="attr">importLoaders</span>: <span class="number">1</span></span><br><span class="line">            &#125;</span><br><span class="line">          &#125;,</span><br><span class="line">          &#123;</span><br><span class="line">            <span class="attr">loader</span>: <span class="string">&#x27;less-loader&#x27;</span>,</span><br><span class="line">            <span class="attr">options</span>: &#123;</span><br><span class="line">              <span class="attr">noIeCompat</span>: <span class="literal">true</span></span><br><span class="line">            &#125;</span><br><span class="line">          &#125;</span><br><span class="line">        ]</span><br><span class="line">      &#125;</span><br><span class="line">    ]</span><br><span class="line">  &#125;, </span><br><span class="line">  <span class="attr">plugins</span>: [</span><br><span class="line">    <span class="keyword">new</span> webpack.<span class="title class_">DefinePlugin</span>(&#123;</span><br><span class="line">      <span class="string">&#x27;process.env.NODE_ENV&#x27;</span>: <span class="string">&#x27;&quot;development&quot;&#x27;</span>,</span><br><span class="line">    &#125;),</span><br><span class="line">    <span class="keyword">new</span> <span class="title class_">Customplugin</span>(&#123; <span class="attr">params</span>: <span class="number">1</span> &#125;) <span class="comment">// 添加自定义 plugin</span></span><br><span class="line">  ],</span><br><span class="line">  <span class="attr">resolve</span>: &#123; <span class="comment">// 配置一系列搜索资源的规则</span></span><br><span class="line">    <span class="attr">alias</span>: &#123; <span class="comment">// 起别名，方便资源引用</span></span><br><span class="line">      @<span class="attr">src</span>: path.<span class="title function_">resolve</span>(process.<span class="title function_">cwd</span>(), <span class="string">&#x27;src&#x27;</span>)</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="comment">// 引用的文件可以不加后缀，会找这些后缀的文件</span></span><br><span class="line">    <span class="attr">extensions</span>: [<span class="string">&#x27;.wasm&#x27;</span>, <span class="string">&#x27;.mjs&#x27;</span>, <span class="string">&#x27;.js&#x27;</span>, <span class="string">&#x27;.json&#x27;</span>],</span><br><span class="line">    <span class="comment">// 告诉 webpack 搜索哪些文件夹，可以用绝对路径写死</span></span><br><span class="line">    <span class="attr">modules</span>: [<span class="string">&#x27;node_modules&#x27;</span>],</span><br><span class="line">    <span class="comment">// 从npm包导入时，例如import * as D3 from &#x27;d3&#x27;，此选项将确定package.json选中其中的哪些字段</span></span><br><span class="line">    <span class="attr">mainFields</span>: [<span class="string">&#x27;browser&#x27;</span>, <span class="string">&#x27;module&#x27;</span>, <span class="string">&#x27;main&#x27;</span>],</span><br><span class="line">    <span class="comment">// 解析目录时要使用的文件名，一般都是 index 了，不要瞎改</span></span><br><span class="line">    <span class="attr">mainFiles</span>: [<span class="string">&#x27;index&#x27;</span>]</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>自定义loader：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> loaderUtils = <span class="built_in">require</span>(<span class="string">&#x27;loader-utils&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">// https://webpack.js.org/api/loaders/</span></span><br><span class="line"><span class="variable language_">module</span>.<span class="property">exports</span> = <span class="keyword">function</span> (<span class="params">content, map, meta</span>) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="variable language_">this</span>.<span class="property">data</span>.<span class="property">value</span>) <span class="comment">// 123，具体场景看文档</span></span><br><span class="line">  <span class="comment">// 用 loaderUtils 解析这个 loader 的参数</span></span><br><span class="line">  <span class="keyword">const</span> options = loaderUtils.<span class="title function_">getOptions</span>(<span class="variable language_">this</span>)</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 最后要以一个模块的导出形式</span></span><br><span class="line">  content = <span class="string">`module.exports = function () &#123; <span class="subst">$&#123;content&#125;</span> &#125;`</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// 同步</span></span><br><span class="line">  <span class="variable language_">this</span>.<span class="title function_">callback</span>(<span class="literal">null</span>, content, map, meta)</span><br><span class="line">  <span class="keyword">return</span><span class="comment">// 当调用 callback() 时总是返回 undefined</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// 同步</span></span><br><span class="line">  <span class="comment">// return content</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// 异步</span></span><br><span class="line">  <span class="comment">// const callback = this.async()</span></span><br><span class="line">  <span class="comment">// callback(null, result, map, meta)</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 可以定义一个 pitch 方法，要写在 loader 方法下面，但是会先于 loader 方法执行</span></span><br><span class="line"><span class="variable language_">module</span>.<span class="property">exports</span>.<span class="property">pitch</span> = <span class="keyword">function</span>(<span class="params">remainingRequest, precedingRequest, data</span>) &#123;</span><br><span class="line">  data.<span class="property">value</span> = <span class="number">123</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>自定义plugin：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> pluginName = <span class="string">&#x27;CustomPlugin&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// https://webpack.js.org/api/plugins/</span></span><br><span class="line"><span class="comment">// 写成 ES5 prototype 形式也可以，一定要有 apply 方法</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">CustomPlugin</span> &#123;</span><br><span class="line">  <span class="title function_">constructor</span> (options) &#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">options</span> = options</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="title function_">apply</span>(<span class="params">compiler</span>) &#123;</span><br><span class="line">    <span class="comment">// compiler 和 compilation 有很多生命周期钩子</span></span><br><span class="line">    compiler.<span class="property">hooks</span>.<span class="property">run</span>.<span class="title function_">tap</span>(pluginName, <span class="function"><span class="params">compilation</span> =&gt;</span> &#123;</span><br><span class="line">      <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;The webpack build process is starting!!!&#x27;</span>)</span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">module</span>.<span class="property">exports</span> = <span class="title class_">CustomPlugin</span></span><br></pre></td></tr></table></figure>
-      
-    </div>
-    <footer class="article-footer">
-      
-      <!-- <a data-url="http://blog.cchealthier.com/2020/11/22/webpack-config/" data-id="clhw7zmvc002ulb9me71zesbo" class="article-share-link">分享</a> -->
+      <!-- <a data-url="http://blog.cchealthier.com/2020/11/29/api-defference/" data-id="clibqomnc0003939mhb8v37bl" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -676,6 +676,10 @@
       <ul>
         
           <li>
+            <a href="/2023/05/31/react-basic-app/">react 基础工程（react-redux &amp; react-router）</a>
+          </li>
+        
+          <li>
             <a href="/2023/05/19/performance-optimize/">一次性能优化的过程（多图）</a>
           </li>
         
@@ -689,10 +693,6 @@
         
           <li>
             <a href="/2023/04/21/fontend-engineering-2/">从零搭建前端工程（下）</a>
-          </li>
-        
-          <li>
-            <a href="/2023/03/06/fontend-engineering/">从零搭建前端工程（上）</a>
           </li>
         
       </ul>
