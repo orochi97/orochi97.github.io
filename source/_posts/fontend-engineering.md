@@ -1,6 +1,7 @@
 ---
 title: 从零搭建前端工程（上）
 date: 2023-03-06 22:22:43
+updated: 2023-05-31 21:11:36
 categories:
 - 开发
 - 前端
@@ -143,7 +144,9 @@ module.exports = {
       {
         test: /\.css$/, // 添加对样式表的处理
         use: [
-          // 请只在生产环境下使用 CSS 提取，这将便于你在开发环境下进行热重载。
+          // 请只在生产环境下使用 CSS 提取，这将便于你在开发环境下进行热重载
+          // 'vue-style-loader' 与 'style-loader' 类似，会把处理好的 css 内容注入 js 里
+          // 所以开发用 style-loader，生产用 MiniCssExtractPlugin.loader
           isDev ? 'vue-style-loader' : MiniCssExtractPlugin.loader,
           'css-loader',
         ],
