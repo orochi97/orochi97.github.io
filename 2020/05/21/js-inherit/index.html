@@ -11,24 +11,24 @@
   <meta name="description" content="1、原型链继承1234567891011121314151617181920212223242526272829303132333435363738function SuperType(type) &amp;#123;  this.property &#x3D; true  this.colors &#x3D; [&amp;#x27;red&amp;#x27;, &amp;#x27;blue&amp;#x27;]  this.type &#x3D; type&amp;#12">
 <meta property="og:type" content="article">
 <meta property="og:title" content="JS的继承方式">
-<meta property="og:url" content="http://blog.cchealthier.com/2020/05/21/js-inherit/index.html">
+<meta property="og:url" content="https://blog.cchealthier.com/2020/05/21/js-inherit/index.html">
 <meta property="og:site_name" content="凝雪密境">
 <meta property="og:description" content="1、原型链继承1234567891011121314151617181920212223242526272829303132333435363738function SuperType(type) &amp;#123;  this.property &#x3D; true  this.colors &#x3D; [&amp;#x27;red&amp;#x27;, &amp;#x27;blue&amp;#x27;]  this.type &#x3D; type&amp;#12">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://blog.cchealthier.com/2020/05/21/js-inherit/%E5%8E%9F%E5%9E%8B%E9%93%BE%E7%BB%A7%E6%89%BF.PNG">
-<meta property="og:image" content="http://blog.cchealthier.com/2020/05/21/js-inherit/%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0%E7%BB%A7%E6%89%BF.PNG">
-<meta property="og:image" content="http://blog.cchealthier.com/2020/05/21/js-inherit/%E7%BB%84%E5%90%88%E7%BB%A7%E6%89%BF.PNG">
-<meta property="og:image" content="http://blog.cchealthier.com/2020/05/21/js-inherit/%E5%8E%9F%E5%9E%8B%E5%BC%8F%E7%BB%A7%E6%89%BF.PNG">
-<meta property="og:image" content="http://blog.cchealthier.com/2020/05/21/js-inherit/%E5%AF%84%E7%94%9F%E5%BC%8F%E7%BB%A7%E6%89%BF.PNG">
-<meta property="og:image" content="http://blog.cchealthier.com/2020/05/21/js-inherit/%E5%AF%84%E7%94%9F%E7%BB%84%E5%90%88%E5%BC%8F%E7%BB%A7%E6%89%BF-1.PNG">
-<meta property="og:image" content="http://blog.cchealthier.com/2020/05/21/js-inherit/%E5%AF%84%E7%94%9F%E7%BB%84%E5%90%88%E5%BC%8F%E7%BB%A7%E6%89%BF-2.PNG">
-<meta property="og:image" content="http://blog.cchealthier.com/2020/05/21/js-inherit/%E5%AF%84%E7%94%9F%E7%BB%84%E5%90%88%E5%BC%8F%E7%BB%A7%E6%89%BF-3.PNG">
-<meta property="og:image" content="http://blog.cchealthier.com/2020/05/21/js-inherit/%E5%AF%84%E7%94%9F%E7%BB%84%E5%90%88%E5%BC%8F%E7%BB%A7%E6%89%BF-4.PNG">
+<meta property="og:image" content="https://blog.cchealthier.com/2020/05/21/js-inherit/%E5%8E%9F%E5%9E%8B%E9%93%BE%E7%BB%A7%E6%89%BF.PNG">
+<meta property="og:image" content="https://blog.cchealthier.com/2020/05/21/js-inherit/%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0%E7%BB%A7%E6%89%BF.PNG">
+<meta property="og:image" content="https://blog.cchealthier.com/2020/05/21/js-inherit/%E7%BB%84%E5%90%88%E7%BB%A7%E6%89%BF.PNG">
+<meta property="og:image" content="https://blog.cchealthier.com/2020/05/21/js-inherit/%E5%8E%9F%E5%9E%8B%E5%BC%8F%E7%BB%A7%E6%89%BF.PNG">
+<meta property="og:image" content="https://blog.cchealthier.com/2020/05/21/js-inherit/%E5%AF%84%E7%94%9F%E5%BC%8F%E7%BB%A7%E6%89%BF.PNG">
+<meta property="og:image" content="https://blog.cchealthier.com/2020/05/21/js-inherit/%E5%AF%84%E7%94%9F%E7%BB%84%E5%90%88%E5%BC%8F%E7%BB%A7%E6%89%BF-1.PNG">
+<meta property="og:image" content="https://blog.cchealthier.com/2020/05/21/js-inherit/%E5%AF%84%E7%94%9F%E7%BB%84%E5%90%88%E5%BC%8F%E7%BB%A7%E6%89%BF-2.PNG">
+<meta property="og:image" content="https://blog.cchealthier.com/2020/05/21/js-inherit/%E5%AF%84%E7%94%9F%E7%BB%84%E5%90%88%E5%BC%8F%E7%BB%A7%E6%89%BF-3.PNG">
+<meta property="og:image" content="https://blog.cchealthier.com/2020/05/21/js-inherit/%E5%AF%84%E7%94%9F%E7%BB%84%E5%90%88%E5%BC%8F%E7%BB%A7%E6%89%BF-4.PNG">
 <meta property="article:published_time" content="2020-05-21T15:26:20.000Z">
 <meta property="article:modified_time" content="2023-04-21T03:44:31.069Z">
 <meta property="article:author" content="ChrisIori">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://blog.cchealthier.com/2020/05/21/js-inherit/%E5%8E%9F%E5%9E%8B%E9%93%BE%E7%BB%A7%E6%89%BF.PNG">
+<meta name="twitter:image" content="https://blog.cchealthier.com/2020/05/21/js-inherit/%E5%8E%9F%E5%9E%8B%E9%93%BE%E7%BB%A7%E6%89%BF.PNG">
   
     <link rel="alternate" href="/atom.xml" title="凝雪密境" type="application/atom+xml">
   
@@ -82,7 +82,7 @@
         <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
       </nav>
       <div id="search-form-wrap">
-        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://blog.cchealthier.com"></form>
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://blog.cchealthier.com"></form>
       </div>
     </div>
   </div>
@@ -150,9 +150,9 @@
     </div>
     <footer class="article-footer">
       
-        <a data-url="http://blog.cchealthier.com/2020/05/21/js-inherit/" data-id="clicmeuex000zw29mc47shc7j" class="article-thumbs-up">赞一个(<span class="article-thumbs-up-num">0</span>)</a>
+        <a data-url="https://blog.cchealthier.com/2020/05/21/js-inherit/" data-id="clicvrz930011l69mb76bh9qm" class="article-thumbs-up">赞一个(<span class="article-thumbs-up-num">0</span>)</a>
       
-      <!-- <a data-url="http://blog.cchealthier.com/2020/05/21/js-inherit/" data-id="clicmeuex000zw29mc47shc7j" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2020/05/21/js-inherit/" data-id="clicvrz930011l69mb76bh9qm" class="article-share-link">分享</a> -->
       
       
     </footer>
