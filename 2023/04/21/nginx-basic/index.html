@@ -16,8 +16,9 @@
 <meta property="og:description" content="其实之前写过一篇相关的《记录下 nginx 使用配置》，关于 nginx 的一些稍微复杂的场景。然后发现日常的基础用法，反而记不住。这里就记录一下。 安装，mac 可以用 brew 下载。windows 的也很简单，去官网下载个压缩包就行了。至于 linux 的，就网上搜搜啦，我记得也很简单。 12345# 安装brew install nginx#查看brew info nginx  查看信息，">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-04-21T13:33:48.000Z">
-<meta property="article:modified_time" content="2023-05-20T07:46:40.000Z">
+<meta property="article:modified_time" content="2023-06-06T16:05:36.000Z">
 <meta property="article:author" content="ChrisIori">
+<meta property="article:tag" content="nginx">
 <meta name="twitter:card" content="summary">
   
     <link rel="alternate" href="/atom.xml" title="凝雪密境" type="application/atom+xml">
@@ -117,9 +118,16 @@
 <p>root：资源文件夹<br>index： 默认的 index 文件</p>
 <figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">location</span> <span class="string">/</span> &#123;</span><br><span class="line">  <span class="string">root</span>   <span class="string">/电脑地址/nginx;</span></span><br><span class="line">  <span class="string">index</span>  <span class="string">index.html</span> <span class="string">index.htm;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>如果要配置不同路由访问不同的文件，root 要改成 alias，比如访问 <code>http://localhost:8080/page</code></p>
+<p>如果要配置不同路由访问不同的文件，<code>root</code> 要改成 <code>alias</code>，比如访问 <code>http://localhost:8080/page</code></p>
 <figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">location</span> <span class="string">/page</span> &#123;</span><br><span class="line">  <span class="string">alias</span> <span class="string">/电脑地址/nginx;</span></span><br><span class="line">  <span class="string">index</span> <span class="string">page.html;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
+<p>当然最好是写个兜底返回。在 vue 或者 react 使用 router 时，兜底返回默认 index.html。不然每增加一个路由就要写多一个配置很麻烦。</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">location</span> <span class="string">~*</span> <span class="string">^/*</span> &#123;</span><br><span class="line">  <span class="string">root</span>   <span class="string">/电脑地址/nginx;</span></span><br><span class="line">  <span class="string">try_files</span> <span class="string">$uri</span> <span class="string">$uri/</span> <span class="string">/index.html;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>注意</strong><br>root 与 alias<br>两者区别在于 nginx 如何解释 location 后面的 url</p>
+<p><strong>root:</strong><br>语法：root path<br>默认值：root html<br>配置段：http、server、location、if<br>处理结果：root 路径＋ location 路径</p>
+<p><strong>alias:</strong><br>语法：alias path<br>配置段：location<br>处理结果：使用 alias 路径替换 location 路径</p>
+<p><strong>所以用正则匹配写路径的要注意写好 root 或 alias，不然找不到资源就会出现 403！</strong></p>
 <p>可以写多个server，启动多个服务</p>
 <figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">server</span> &#123;</span><br><span class="line">  <span class="string">listen</span>       <span class="number">3000</span><span class="string">;</span></span><br><span class="line">  <span class="string">server_name</span>  <span class="number">0.0</span><span class="number">.0</span><span class="number">.0</span><span class="string">;</span></span><br><span class="line"></span><br><span class="line">  <span class="string">location</span> <span class="string">/</span> &#123;</span><br><span class="line">    <span class="string">root</span>   <span class="string">/电脑地址/nginx;</span></span><br><span class="line">    <span class="string">index</span>  <span class="number">3000.</span><span class="string">html</span> <span class="number">3000.</span><span class="string">htm;</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
@@ -141,11 +149,13 @@
     </div>
     <footer class="article-footer">
       
-        <a data-url="https://blog.cchealthier.com/2023/04/21/nginx-basic/" data-id="clicvrz96001nl69mcn5c7r6n" class="article-thumbs-up">赞一个(<span class="article-thumbs-up-num">0</span>)</a>
+        <a data-url="https://blog.cchealthier.com/2023/04/21/nginx-basic/" data-id="clikhq2vn001iqi9mg3aj189p" class="article-thumbs-up">赞一个(<span class="article-thumbs-up-num">0</span>)</a>
       
-      <!-- <a data-url="https://blog.cchealthier.com/2023/04/21/nginx-basic/" data-id="clicvrz96001nl69mcn5c7r6n" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2023/04/21/nginx-basic/" data-id="clikhq2vn001iqi9mg3aj189p" class="article-share-link">分享</a> -->
       
       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/nginx/" rel="tag">nginx</a></li></ul>
+
     </footer>
   </div>
   
@@ -190,7 +200,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">标签</h3>
     <div class="widget">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/blog/" rel="tag">blog</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cook/" rel="tag">cook</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fish/" rel="tag">fish</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a></li></ul>
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/blog/" rel="tag">blog</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nginx/" rel="tag">nginx</a></li></ul>
     </div>
   </div>
 
@@ -200,7 +210,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">标签云</h3>
     <div class="widget tagcloud">
-      <a href="/tags/blog/" style="font-size: 10px;">blog</a> <a href="/tags/cook/" style="font-size: 10px;">cook</a> <a href="/tags/fish/" style="font-size: 10px;">fish</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a>
+      <a href="/tags/blog/" style="font-size: 10px;">blog</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/nginx/" style="font-size: 10px;">nginx</a>
     </div>
   </div>
 

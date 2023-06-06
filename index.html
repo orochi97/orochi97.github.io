@@ -121,7 +121,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2023/05/31/react-basic-app/" data-id="clicvrz970022l69mhg2zebx5" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2023/05/31/react-basic-app/" data-id="clikhq2vp0021qi9mg0trhv0w" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -175,7 +175,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2023/05/19/performance-optimize/" data-id="clicvrz96001ul69m0dqga3g4" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2023/05/19/performance-optimize/" data-id="clikhq2vo001qqi9m5dx78qrz" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -224,7 +224,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2023/05/13/file-slice-upload/" data-id="clicvrz91000jl69mca6i2scb" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2023/05/13/file-slice-upload/" data-id="clikhq2vj000hqi9m1zbz3lcy" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -273,9 +273,16 @@
 <p>root：资源文件夹<br>index： 默认的 index 文件</p>
 <figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">location</span> <span class="string">/</span> &#123;</span><br><span class="line">  <span class="string">root</span>   <span class="string">/电脑地址/nginx;</span></span><br><span class="line">  <span class="string">index</span>  <span class="string">index.html</span> <span class="string">index.htm;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>如果要配置不同路由访问不同的文件，root 要改成 alias，比如访问 <code>http://localhost:8080/page</code></p>
+<p>如果要配置不同路由访问不同的文件，<code>root</code> 要改成 <code>alias</code>，比如访问 <code>http://localhost:8080/page</code></p>
 <figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">location</span> <span class="string">/page</span> &#123;</span><br><span class="line">  <span class="string">alias</span> <span class="string">/电脑地址/nginx;</span></span><br><span class="line">  <span class="string">index</span> <span class="string">page.html;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
+<p>当然最好是写个兜底返回。在 vue 或者 react 使用 router 时，兜底返回默认 index.html。不然每增加一个路由就要写多一个配置很麻烦。</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">location</span> <span class="string">~*</span> <span class="string">^/*</span> &#123;</span><br><span class="line">  <span class="string">root</span>   <span class="string">/电脑地址/nginx;</span></span><br><span class="line">  <span class="string">try_files</span> <span class="string">$uri</span> <span class="string">$uri/</span> <span class="string">/index.html;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>注意</strong><br>root 与 alias<br>两者区别在于 nginx 如何解释 location 后面的 url</p>
+<p><strong>root:</strong><br>语法：root path<br>默认值：root html<br>配置段：http、server、location、if<br>处理结果：root 路径＋ location 路径</p>
+<p><strong>alias:</strong><br>语法：alias path<br>配置段：location<br>处理结果：使用 alias 路径替换 location 路径</p>
+<p><strong>所以用正则匹配写路径的要注意写好 root 或 alias，不然找不到资源就会出现 403！</strong></p>
 <p>可以写多个server，启动多个服务</p>
 <figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">server</span> &#123;</span><br><span class="line">  <span class="string">listen</span>       <span class="number">3000</span><span class="string">;</span></span><br><span class="line">  <span class="string">server_name</span>  <span class="number">0.0</span><span class="number">.0</span><span class="number">.0</span><span class="string">;</span></span><br><span class="line"></span><br><span class="line">  <span class="string">location</span> <span class="string">/</span> &#123;</span><br><span class="line">    <span class="string">root</span>   <span class="string">/电脑地址/nginx;</span></span><br><span class="line">    <span class="string">index</span>  <span class="number">3000.</span><span class="string">html</span> <span class="number">3000.</span><span class="string">htm;</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
@@ -297,9 +304,11 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2023/04/21/nginx-basic/" data-id="clicvrz96001nl69mcn5c7r6n" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2023/04/21/nginx-basic/" data-id="clikhq2vn001iqi9mg3aj189p" class="article-share-link">分享</a> -->
       
       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/nginx/" rel="tag">nginx</a></li></ul>
+
     </footer>
   </div>
   
@@ -349,7 +358,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2023/04/21/fontend-engineering-2/" data-id="clicvrz91000ml69m8cnf5x3f" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2023/04/21/fontend-engineering-2/" data-id="clikhq2vk000kqi9m1yf155j7" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -413,7 +422,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2023/03/06/fontend-engineering/" data-id="clicvrz91000pl69m753vcoug" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2023/03/06/fontend-engineering/" data-id="clikhq2vk000mqi9mgg3oft16" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -464,7 +473,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2023/02/07/multi-function-select/" data-id="clicvrz94001dl69m0o1t9tai" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2023/02/07/multi-function-select/" data-id="clikhq2vm0019qi9m2ywwccns" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -520,7 +529,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2022/11/07/vue-observer-dep-watcher/" data-id="clicvrz99002rl69m57ky4ejp" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2022/11/07/vue-observer-dep-watcher/" data-id="clikhq2vs002oqi9mhm123f6a" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -567,7 +576,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2022/10/19/2022-autumn/" data-id="clicvrz8s0000l69mby4z1rcs" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2022/10/19/2022-autumn/" data-id="clikhq2va0000qi9m95358gj7" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -615,7 +624,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2022/10/18/binary-tree-traversal/" data-id="clicvrz8x0007l69mb5zy5re6" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2022/10/18/binary-tree-traversal/" data-id="clikhq2vf0007qi9m8xca3hsx" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -650,7 +659,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">标签</h3>
     <div class="widget">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/blog/" rel="tag">blog</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cook/" rel="tag">cook</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fish/" rel="tag">fish</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a></li></ul>
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/blog/" rel="tag">blog</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nginx/" rel="tag">nginx</a></li></ul>
     </div>
   </div>
 
@@ -660,7 +669,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">标签云</h3>
     <div class="widget tagcloud">
-      <a href="/tags/blog/" style="font-size: 10px;">blog</a> <a href="/tags/cook/" style="font-size: 10px;">cook</a> <a href="/tags/fish/" style="font-size: 10px;">fish</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a>
+      <a href="/tags/blog/" style="font-size: 10px;">blog</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/nginx/" style="font-size: 10px;">nginx</a>
     </div>
   </div>
 
