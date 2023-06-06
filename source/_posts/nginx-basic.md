@@ -1,10 +1,12 @@
 ---
 title: nginx 的基础用法 & linux（centos）下支持 https 和 http2 
 date: 2023-04-21 21:33:48
-updated: 2023-05-20 15:46:40
+updated: 2023-06-07 00:05:36
 categories:
 - 开发
 - 服务
+tags:
+- nginx
 ---
 
 其实之前写过一篇相关的《[记录下 nginx 使用配置](/2022/03/26/nginx/)》，关于 nginx 的一些稍微复杂的场景。然后发现日常的基础用法，反而记不住。这里就记录一下。
@@ -46,13 +48,38 @@ location / {
 }
 ```
 
-如果要配置不同路由访问不同的文件，root 要改成 alias，比如访问 `http://localhost:8080/page`
+如果要配置不同路由访问不同的文件，`root` 要改成 `alias`，比如访问 `http://localhost:8080/page`
 ```yaml
 location /page {
   alias /电脑地址/nginx;
   index page.html;
 }
 ```
+
+当然最好是写个兜底返回。在 vue 或者 react 使用 router 时，兜底返回默认 index.html。不然每增加一个路由就要写多一个配置很麻烦。
+```yaml
+location ~* ^/* {
+  root   /电脑地址/nginx;
+  try_files $uri $uri/ /index.html;
+}
+```
+
+**注意**
+root 与 alias
+两者区别在于 nginx 如何解释 location 后面的 url
+
+**root:**
+语法：root path
+默认值：root html
+配置段：http、server、location、if
+处理结果：root 路径＋ location 路径
+
+**alias:**
+语法：alias path
+配置段：location
+处理结果：使用 alias 路径替换 location 路径
+
+**所以用正则匹配写路径的要注意写好 root 或 alias，不然找不到资源就会出现 403！**
 
 可以写多个server，启动多个服务
 ```yaml
