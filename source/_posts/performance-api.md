@@ -5,6 +5,8 @@ updated: 2023-03-06 21:51:09
 categories:
 - 开发
 - 前端
+tags:
+- 性能
 ---
 
 前端性能参数，可以直接敲 `performance`。里面记录了各个性能指标。具体的各个参数，可以查看大佬们的[总结](http://www.alloyteam.com/2015/09/explore-performance/#prettyPhoto)。

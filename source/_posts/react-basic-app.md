@@ -4,6 +4,8 @@ date: 2023-05-31 17:06:08
 categories:
 - 开发
 - 前端
+tags:
+- 工程化
 ---
 
 vue 已经很熟悉。react 虽然也用过，但是对于整体的搭建还不是很熟。这次就使用 [react-redux(^8.0.5)](https://react-redux.js.org/introduction/getting-started) 和 [react-router(^6.11.2)](https://reactrouter.com/en/main/start/tutorial#tutorial)，

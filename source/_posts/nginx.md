@@ -4,6 +4,8 @@ date: 2022-03-26 11:44:19
 categories:
 - 开发
 - 服务
+tags:
+- nginx
 ---
 
 > [nginx](http://nginx.org/en/download.html)是一个高性能的HTTP和反向代理web服务器，同时也提供了IMAP/POP3/SMTP服务。
