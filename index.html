@@ -78,6 +78,78 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-webpack-modulefederationplugin" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2023/06/07/webpack-modulefederationplugin/" class="article-date">
+  <time datetime="2023-06-07T02:34:33.000Z" itemprop="datePublished">2023-06-07</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2023/06/07/webpack-modulefederationplugin/">用 webpack ModuleFederationPlugin 搭建微前端</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>webpack5 推出了一个 <a target="_blank" rel="noopener" href="https://webpack.docschina.org/plugins/module-federation-plugin/">ModuleFederationPlugin</a>，“模块联邦插件”。名字上就有点微前端的意思。网上的介绍原理什么的这里就不说了，就从实际的使用来看，它的作用有：</p>
+<ol>
+<li>把本工程的一些内容单独打包成文件分享出去。</li>
+<li>使用别的工程分享出来的文件。</li>
+</ol>
+<p>用法其实也很简单，就一个插件而已，但是要实现到微前端落地还是有很多要改造的。基于此用 <strong>vue</strong> 工程做了个尝试案例，并对其中一些注意点做一些说明。</p>
+<p>代码压缩包：<a target="_blank" rel="noopener" href="https://file.cchealthier.com/file/blog/attachment/micro-fontends.tar.gz">micro-fontends.tar.gz</a></p>
+<p><strong>注意：代码里的 heal.com 网站，是我自己修改了 host，Mac 可以在 <code>/etc/hosts</code>，Windows 可以在 <code>C:\Windows\System32\drivers\etc\hosts</code> 文件里添加这一行或者改成自己喜欢的域名：<code>0.0.0.0 heal.com</code>。</strong></p>
+<h2 id="一、基础用法"><a href="#一、基础用法" class="headerlink" title="一、基础用法"></a>一、基础用法</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">new</span> <span class="title class_">ModuleFederationPlugin</span>(&#123;</span><br><span class="line">  <span class="attr">name</span>: <span class="string">&#x27;admin&#x27;</span>,</span><br><span class="line">  <span class="attr">filename</span>: <span class="string">&#x27;remoteEntry.js&#x27;</span>,</span><br><span class="line">  <span class="attr">remotes</span>: &#123;</span><br><span class="line">    <span class="attr">workforce</span>: <span class="string">&#x27;workforce@http://heal.com/workforce/remoteEntry.js&#x27;</span>,</span><br><span class="line">    <span class="attr">network</span>: <span class="string">&#x27;network@http://heal.com/network/remoteEntry.js&#x27;</span>,</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">exposes</span>: &#123;</span><br><span class="line">    <span class="string">&#x27;./init&#x27;</span>: <span class="string">&#x27;./src/main.js&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;./layout&#x27;</span>: <span class="string">&#x27;./src/components/Layout.vue&#x27;</span>,</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;),</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>name:</strong> 这个工程的模块名，比如这里是主应用，把它叫做 <code>admin</code>。 </li>
+<li><strong>filename:</strong> 这个工程分享的文件入口，也就是别的工程只需要应用这份入口文件就可以了，其他的文件会在这份文件里发出请求。</li>
+<li><strong>remotes:</strong> 使用其他工程的文件，比如使用了两个子应用 <code>workforce</code> 和 <code>network</code> 的东西，可以看到引用的就是 <code>remoteEntry.js</code>。</li>
+<li><strong>exposes:</strong> 这个工程分享的具体内容，照着格式写就好了，注意 key 值是相对路径写法。</li>
+</ul>
+<p>代码里的使用是使用 <code>import()</code> 异步动态引入的方式：<code>import(&#39;admin/layout&#39;)</code>。引用内容格式为 <code>import(&#39;模块名/exposes的key值&#39;)</code>。这也是个 promise，在 then 的回调里接收导出值即可。</p>
+<h2 id="二、用于微前端"><a href="#二、用于微前端" class="headerlink" title="二、用于微前端"></a>二、用于微前端</h2><p>使用方法看起来，是可以导出单个文件，也可以导出入口文件，让其牵出一模块代码。代码很简单，就这么一个用法。但是用于微前端的搭建还需要考虑：</p>
+<ul>
+<li>主子应用的引入。主应用也就是基座，必然由它来引用子应用的东西，然后来启动项目。那么子应用暴露什么出来好？</li>
+<li>开发问题。本地开发怎么启动，不能我开发子应用还要启动主应用吧？反过来开发主应用难道必须启动所有子应用？那还不如不拆。</li>
+<li>还是开发问题。上面那个的相反，假设现在已经达到每次只需要启动要修改的项目就好了。但是肯定会出现一个功能要同时修改主子应用的，主子项目如何联调开发。</li>
+<li>部署时的代理配置。主子应用已经是不同项目了，当然也是用不同容器承载。但是域名必须是同一个，怎么配置好代理转发可以正常访问到想要的资源？</li>
+</ul>
+<p>那么一个个来看。</p>
+        
+          <p class="article-more-link">
+            <a href="/2023/06/07/webpack-modulefederationplugin/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      
+      <!-- <a data-url="https://blog.cchealthier.com/2023/06/07/webpack-modulefederationplugin/" data-id="clin7f0oe0038ot9macogdi57" class="article-share-link">分享</a> -->
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" rel="tag">工程化</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-react-basic-app" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2023/05/31/react-basic-app/" class="article-date">
@@ -121,9 +193,11 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2023/05/31/react-basic-app/" data-id="clikhq2vp0021qi9mg0trhv0w" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2023/05/31/react-basic-app/" data-id="clin7f0oa002cot9m74sp96ct" class="article-share-link">分享</a> -->
       
       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" rel="tag">工程化</a></li></ul>
+
     </footer>
   </div>
   
@@ -175,9 +249,11 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2023/05/19/performance-optimize/" data-id="clikhq2vo001qqi9m5dx78qrz" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2023/05/19/performance-optimize/" data-id="clin7f0o9001xot9m0yym5v8c" class="article-share-link">分享</a> -->
       
       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%80%A7%E8%83%BD/" rel="tag">性能</a></li></ul>
+
     </footer>
   </div>
   
@@ -224,7 +300,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2023/05/13/file-slice-upload/" data-id="clikhq2vj000hqi9m1zbz3lcy" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2023/05/13/file-slice-upload/" data-id="clin7f0o3000hot9mdnnzfg0t" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -304,7 +380,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2023/04/21/nginx-basic/" data-id="clikhq2vn001iqi9mg3aj189p" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2023/04/21/nginx-basic/" data-id="clin7f0o8001oot9m3cfde0tb" class="article-share-link">分享</a> -->
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/nginx/" rel="tag">nginx</a></li></ul>
@@ -358,9 +434,11 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2023/04/21/fontend-engineering-2/" data-id="clikhq2vk000kqi9m1yf155j7" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2023/04/21/fontend-engineering-2/" data-id="clin7f0o4000kot9me1grghk1" class="article-share-link">分享</a> -->
       
       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" rel="tag">工程化</a></li></ul>
+
     </footer>
   </div>
   
@@ -422,9 +500,11 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2023/03/06/fontend-engineering/" data-id="clikhq2vk000mqi9mgg3oft16" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2023/03/06/fontend-engineering/" data-id="clin7f0o5000qot9m7xtt0vcc" class="article-share-link">分享</a> -->
       
       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" rel="tag">工程化</a></li></ul>
+
     </footer>
   </div>
   
@@ -473,7 +553,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2023/02/07/multi-function-select/" data-id="clikhq2vm0019qi9m2ywwccns" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2023/02/07/multi-function-select/" data-id="clin7f0o7001eot9m9kfq3978" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -529,7 +609,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2022/11/07/vue-observer-dep-watcher/" data-id="clikhq2vs002oqi9mhm123f6a" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2022/11/07/vue-observer-dep-watcher/" data-id="clin7f0od0030ot9m03rvb6sx" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -576,55 +656,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2022/10/19/2022-autumn/" data-id="clikhq2va0000qi9m95358gj7" class="article-share-link">分享</a> -->
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-binary-tree-traversal" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2022/10/18/binary-tree-traversal/" class="article-date">
-  <time datetime="2022-10-18T13:35:33.000Z" itemprop="datePublished">2022-10-18</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E7%AE%97%E6%B3%95/">算法</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2022/10/18/binary-tree-traversal/">二叉树前序中序后序遍历</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>二叉树的遍历，详细概念还是看搜索引擎总结吧，<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E4%BA%8C%E5%8F%89%E6%A0%91%E9%81%8D%E5%8E%86/9796049">二叉树遍历</a></p>
-<p>二叉树，前序、中序、后序，遍历，都是深度优先遍历<br>前中后指的是根节点的访问顺序<br>对最底层的节点而言，前中后就是三个节点<br>对于非最底层的节点而言，左右两个节点就是分支，不仅仅是三个节点</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> tree = &#123;</span><br><span class="line">  <span class="attr">value</span>: <span class="number">1</span>,</span><br><span class="line">  <span class="attr">left</span>: &#123;</span><br><span class="line">    <span class="attr">value</span>: <span class="number">2</span>,</span><br><span class="line">    <span class="attr">left</span>: &#123;</span><br><span class="line">      <span class="attr">value</span>: <span class="number">4</span>,</span><br><span class="line">      <span class="attr">left</span>: &#123;</span><br><span class="line">        <span class="attr">value</span>: <span class="number">8</span>,</span><br><span class="line">      &#125;,</span><br><span class="line">      <span class="attr">right</span>: &#123;</span><br><span class="line">        <span class="attr">value</span>: <span class="number">9</span>,</span><br><span class="line">      &#125;,</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">right</span>: &#123;</span><br><span class="line">      <span class="attr">value</span>: <span class="number">5</span>,</span><br><span class="line">      <span class="attr">left</span>: &#123;</span><br><span class="line">        <span class="attr">value</span>: <span class="number">10</span>,</span><br><span class="line">      &#125;,</span><br><span class="line">      <span class="attr">right</span>: &#123;</span><br><span class="line">        <span class="attr">value</span>: <span class="number">11</span>,</span><br><span class="line">      &#125;,</span><br><span class="line">    &#125;,</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">right</span>: &#123;</span><br><span class="line">    <span class="attr">value</span>: <span class="number">3</span>,</span><br><span class="line">    <span class="attr">left</span>: &#123;</span><br><span class="line">      <span class="attr">value</span>: <span class="number">6</span>,</span><br><span class="line">      <span class="attr">left</span>: &#123;</span><br><span class="line">        <span class="attr">value</span>: <span class="number">12</span>,</span><br><span class="line">      &#125;,</span><br><span class="line">      <span class="attr">right</span>: &#123;</span><br><span class="line">        <span class="attr">value</span>: <span class="number">13</span>,</span><br><span class="line">      &#125;,</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">right</span>: &#123;</span><br><span class="line">      <span class="attr">value</span>: <span class="number">7</span>,</span><br><span class="line">      <span class="attr">left</span>: &#123;</span><br><span class="line">        <span class="attr">value</span>: <span class="number">14</span>,</span><br><span class="line">      &#125;,</span><br><span class="line">      <span class="attr">right</span>: &#123;</span><br><span class="line">        <span class="attr">value</span>: <span class="number">15</span>,</span><br><span class="line">      &#125;,</span><br><span class="line">    &#125;,</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-        
-          <p class="article-more-link">
-            <a href="/2022/10/18/binary-tree-traversal/#more">Read More</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      
-      <!-- <a data-url="https://blog.cchealthier.com/2022/10/18/binary-tree-traversal/" data-id="clikhq2vf0007qi9m8xca3hsx" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2022/10/19/2022-autumn/" data-id="clin7f0nv0000ot9m3fggbg2u" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -659,7 +691,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">标签</h3>
     <div class="widget">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/blog/" rel="tag">blog</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nginx/" rel="tag">nginx</a></li></ul>
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nginx/" rel="tag">nginx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" rel="tag">工程化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%80%A7%E8%83%BD/" rel="tag">性能</a></li></ul>
     </div>
   </div>
 
@@ -669,7 +701,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">标签云</h3>
     <div class="widget tagcloud">
-      <a href="/tags/blog/" style="font-size: 10px;">blog</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/nginx/" style="font-size: 10px;">nginx</a>
+      <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/nginx/" style="font-size: 13.33px;">nginx</a> <a href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" style="font-size: 20px;">工程化</a> <a href="/tags/%E6%80%A7%E8%83%BD/" style="font-size: 16.67px;">性能</a>
     </div>
   </div>
 
@@ -678,7 +710,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/05/">五月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/04/">四月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/03/">三月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/02/">二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">十一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">十月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">九月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/06/">六月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/05/">五月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/04/">四月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/03/">三月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/02/">二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">十一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">十月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">九月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a></li></ul>
     </div>
   </div>
 
@@ -689,6 +721,10 @@
     <h3 class="widget-title">最新文章</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2023/06/07/webpack-modulefederationplugin/">用 webpack ModuleFederationPlugin 搭建微前端</a>
+          </li>
         
           <li>
             <a href="/2023/05/31/react-basic-app/">react 基础工程（react-redux &amp; react-router）</a>
@@ -704,10 +740,6 @@
         
           <li>
             <a href="/2023/04/21/nginx-basic/">nginx 的基础用法 &amp; linux（centos）下支持 https 和 http2</a>
-          </li>
-        
-          <li>
-            <a href="/2023/04/21/fontend-engineering-2/">从零搭建前端工程（下）</a>
           </li>
         
       </ul>

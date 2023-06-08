@@ -78,6 +78,54 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-binary-tree-traversal" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2022/10/18/binary-tree-traversal/" class="article-date">
+  <time datetime="2022-10-18T13:35:33.000Z" itemprop="datePublished">2022-10-18</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E7%AE%97%E6%B3%95/">算法</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2022/10/18/binary-tree-traversal/">二叉树前序中序后序遍历</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>二叉树的遍历，详细概念还是看搜索引擎总结吧，<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E4%BA%8C%E5%8F%89%E6%A0%91%E9%81%8D%E5%8E%86/9796049">二叉树遍历</a></p>
+<p>二叉树，前序、中序、后序，遍历，都是深度优先遍历<br>前中后指的是根节点的访问顺序<br>对最底层的节点而言，前中后就是三个节点<br>对于非最底层的节点而言，左右两个节点就是分支，不仅仅是三个节点</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> tree = &#123;</span><br><span class="line">  <span class="attr">value</span>: <span class="number">1</span>,</span><br><span class="line">  <span class="attr">left</span>: &#123;</span><br><span class="line">    <span class="attr">value</span>: <span class="number">2</span>,</span><br><span class="line">    <span class="attr">left</span>: &#123;</span><br><span class="line">      <span class="attr">value</span>: <span class="number">4</span>,</span><br><span class="line">      <span class="attr">left</span>: &#123;</span><br><span class="line">        <span class="attr">value</span>: <span class="number">8</span>,</span><br><span class="line">      &#125;,</span><br><span class="line">      <span class="attr">right</span>: &#123;</span><br><span class="line">        <span class="attr">value</span>: <span class="number">9</span>,</span><br><span class="line">      &#125;,</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">right</span>: &#123;</span><br><span class="line">      <span class="attr">value</span>: <span class="number">5</span>,</span><br><span class="line">      <span class="attr">left</span>: &#123;</span><br><span class="line">        <span class="attr">value</span>: <span class="number">10</span>,</span><br><span class="line">      &#125;,</span><br><span class="line">      <span class="attr">right</span>: &#123;</span><br><span class="line">        <span class="attr">value</span>: <span class="number">11</span>,</span><br><span class="line">      &#125;,</span><br><span class="line">    &#125;,</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">right</span>: &#123;</span><br><span class="line">    <span class="attr">value</span>: <span class="number">3</span>,</span><br><span class="line">    <span class="attr">left</span>: &#123;</span><br><span class="line">      <span class="attr">value</span>: <span class="number">6</span>,</span><br><span class="line">      <span class="attr">left</span>: &#123;</span><br><span class="line">        <span class="attr">value</span>: <span class="number">12</span>,</span><br><span class="line">      &#125;,</span><br><span class="line">      <span class="attr">right</span>: &#123;</span><br><span class="line">        <span class="attr">value</span>: <span class="number">13</span>,</span><br><span class="line">      &#125;,</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">right</span>: &#123;</span><br><span class="line">      <span class="attr">value</span>: <span class="number">7</span>,</span><br><span class="line">      <span class="attr">left</span>: &#123;</span><br><span class="line">        <span class="attr">value</span>: <span class="number">14</span>,</span><br><span class="line">      &#125;,</span><br><span class="line">      <span class="attr">right</span>: &#123;</span><br><span class="line">        <span class="attr">value</span>: <span class="number">15</span>,</span><br><span class="line">      &#125;,</span><br><span class="line">    &#125;,</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+        
+          <p class="article-more-link">
+            <a href="/2022/10/18/binary-tree-traversal/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      
+      <!-- <a data-url="https://blog.cchealthier.com/2022/10/18/binary-tree-traversal/" data-id="clin7f0o00007ot9m3ug5hssr" class="article-share-link">分享</a> -->
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-deepth-breadth-traversal" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2022/10/18/deepth-breadth-traversal/" class="article-date">
@@ -115,7 +163,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2022/10/18/deepth-breadth-traversal/" data-id="clikhq2vj000eqi9m1ufb0r86" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2022/10/18/deepth-breadth-traversal/" data-id="clin7f0o3000eot9m04zg8sj9" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -164,7 +212,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2022/09/25/linked-list/" data-id="clikhq2vm0014qi9ma9ifdza8" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2022/09/25/linked-list/" data-id="clin7f0o60017ot9m0eix1k55" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -216,9 +264,11 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2022/09/05/webpack-babel-esm/" data-id="clikhq2vs002qqi9m9nm19mza" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2022/09/05/webpack-babel-esm/" data-id="clin7f0oe0032ot9m1mo98djs" class="article-share-link">分享</a> -->
       
       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" rel="tag">工程化</a></li></ul>
+
     </footer>
   </div>
   
@@ -268,9 +318,11 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2022/03/26/nginx/" data-id="clikhq2vn001kqi9m4mdxf87i" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2022/03/26/nginx/" data-id="clin7f0o8001rot9mg3qo0e30" class="article-share-link">分享</a> -->
       
       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/nginx/" rel="tag">nginx</a></li></ul>
+
     </footer>
   </div>
   
@@ -317,7 +369,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2022/03/19/vite-server-import/" data-id="clikhq2vr002jqi9m2hms2h8e" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2022/03/19/vite-server-import/" data-id="clin7f0od002vot9m8nvk3t3o" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -364,7 +416,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2022/03/14/beijing-winter/" data-id="clikhq2vf0005qi9m3dzhf8pz" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2022/03/14/beijing-winter/" data-id="clin7f0nz0005ot9mgaxm0fzy" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -416,9 +468,11 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2021/01/09/performance-api/" data-id="clikhq2vo001oqi9mbczp88j7" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2021/01/09/performance-api/" data-id="clin7f0o8001vot9m301n9qz4" class="article-share-link">分享</a> -->
       
       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%80%A7%E8%83%BD/" rel="tag">性能</a></li></ul>
+
     </footer>
   </div>
   
@@ -463,7 +517,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2020/12/06/autumn/" data-id="clikhq2ve0004qi9mfkmo20r6" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2020/12/06/autumn/" data-id="clin7f0nz0004ot9m7sdxajrf" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -548,71 +602,11 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2020/12/06/webpack-speed/" data-id="clikhq2vt002vqi9m6q3ucu8i" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2020/12/06/webpack-speed/" data-id="clin7f0of003bot9meq4wgkfa" class="article-share-link">分享</a> -->
       
       
-    </footer>
-  </div>
-  
-</article>
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" rel="tag">工程化</a></li></ul>
 
-
-  
-    <article id="post-api-defference" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/11/29/api-defference/" class="article-date">
-  <time datetime="2020-11-29T15:15:36.000Z" itemprop="datePublished">2020-11-29</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/11/29/api-defference/">几个相似（splice slice，substr substring）方法的区别</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>数组有 splice，slice 这两个方法，字符串也有类似的，长得很像，经常混了，这里记录下。</p>
-<h4 id="arrayObject-splice-index-howmany-item1-…-itemX"><a href="#arrayObject-splice-index-howmany-item1-…-itemX" class="headerlink" title="arrayObject.splice(index, howmany, item1, ….., itemX)"></a>arrayObject.splice(index, howmany, item1, ….., itemX)</h4><p>splice：绞接，捻接(两段绳子)的意思。该方法向&#x2F;从数组中添加&#x2F;删除项目，然后返回被删除的项目。该方法会直接对数组进行修改。</p>
-<p>index：必需。整数，规定添加&#x2F;删除项目的位置，使用负数可从数组结尾处规定位置。<br>howmany：必需。要删除的项目数量。如果设置为 0，则不会删除项目。<br>item1, …, itemX：可选。向数组添加的新项目。</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> arr = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>]</span><br><span class="line">arr.<span class="title function_">splice</span>(<span class="number">2</span>, <span class="number">0</span>, <span class="number">7</span>, <span class="number">7</span>, <span class="number">7</span>) <span class="comment">// 返回[]，arr = [1, 2, 7, 7, 7, 3, 4]</span></span><br><span class="line">arr.<span class="title function_">splice</span>(<span class="number">2</span>, <span class="number">1</span>, <span class="number">7</span>, <span class="number">7</span>, <span class="number">7</span>) <span class="comment">// 返回[3]，arr = [1, 2, 7, 7, 7, 4]</span></span><br><span class="line">arr.<span class="title function_">splice</span>(<span class="number">0</span>, <span class="number">1</span>) <span class="comment">// 返回[1]，arr = [2, 3, 4]</span></span><br><span class="line">arr.<span class="title function_">splice</span>(-<span class="number">1</span>, <span class="number">1</span>, <span class="number">7</span>, <span class="number">7</span>, <span class="number">7</span>) <span class="comment">// 返回[4]，arr = [1, 2, 3, 7, 7, 7]</span></span><br></pre></td></tr></table></figure>
-
-<h4 id="arrayObject-slice-start-end"><a href="#arrayObject-slice-start-end" class="headerlink" title="arrayObject.slice(start, end)"></a>arrayObject.slice(start, end)</h4><p>slice：切片的意思。该方法可从已有的数组中返回选定的元素。返回一个新的数组，包含从 start 到 end （不包括该元素）的 arrayObject 中的元素。不会改变原数组。</p>
-<p>start：必需。规定从何处开始选取。如果是负数，那么它规定从数组尾部开始算起的位置。也就是说，-1 指最后一个元素，-2 指倒数第二个元素，以此类推。<br>end：可选。规定从何处结束选取。该参数是数组片断结束处的数组下标。如果没有指定该参数，那么切分的数组包含从 start 到数组结束的所有元素。如果这个参数是负数，那么它规定的是从数组尾部开始算起的元素。</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> arr = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>]</span><br><span class="line">arr.<span class="title function_">slice</span>(<span class="number">0</span>, <span class="number">0</span>) <span class="comment">// []</span></span><br><span class="line">arr.<span class="title function_">slice</span>(<span class="number">0</span>, <span class="number">1</span>) <span class="comment">// [1]</span></span><br><span class="line">arr.<span class="title function_">slice</span>(<span class="number">2</span>, <span class="number">3</span>) <span class="comment">// [3]</span></span><br><span class="line">arr.<span class="title function_">slice</span>(<span class="number">0</span>) <span class="comment">// [1, 2, 3, 4]</span></span><br><span class="line">arr.<span class="title function_">slice</span>(-<span class="number">2</span>) <span class="comment">// [3, 4]</span></span><br><span class="line">arr.<span class="title function_">slice</span>(-<span class="number">2</span>, -<span class="number">1</span>) <span class="comment">// [3]</span></span><br></pre></td></tr></table></figure>
-
-<p>字符串的 slice，substr，substring 方法</p>
-<h4 id="stringObject-slice-start-end"><a href="#stringObject-slice-start-end" class="headerlink" title="stringObject.slice(start, end)"></a>stringObject.slice(start, end)</h4><p>该方法可提取字符串的某个部分，并以新的字符串返回被提取的部分。跟数组一样不赘述</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&#x27;1234567&#x27;</span>.<span class="title function_">slice</span>(<span class="number">1</span>, <span class="number">3</span>) <span class="comment">// 23</span></span><br><span class="line"><span class="string">&#x27;1234567&#x27;</span>.<span class="title function_">slice</span>(-<span class="number">4</span>, -<span class="number">1</span>) <span class="comment">// 456</span></span><br></pre></td></tr></table></figure>
-
-<h4 id="stringObject-substr-start-length"><a href="#stringObject-substr-start-length" class="headerlink" title="stringObject.substr(start, length)"></a>stringObject.substr(start, length)</h4><p>该方法可在字符串中抽取从 start 下标开始的指定数目的字符。<br><em><strong>注意：ECMAscript 没有对该方法进行标准化，因此反对使用它。</strong></em></p>
-<p>start：必需。要抽取的子串的起始下标。必须是数值。如果是负数，那么该参数声明从字符串的尾部开始算起的位置。也就是说，-1 指字符串中最后一个字符，-2 指倒数第二个字符，以此类推。<br>length：可选。子串中的字符数。必须是数值。如果省略了该参数，那么返回从 stringObject 的开始位置到结尾的字串。</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&#x27;1234567&#x27;</span>.<span class="title function_">substr</span>(<span class="number">1</span>, <span class="number">3</span>) <span class="comment">// 234</span></span><br><span class="line"><span class="string">&#x27;1234567&#x27;</span>.<span class="title function_">substr</span>(<span class="number">0</span>) <span class="comment">// 1234567</span></span><br><span class="line"><span class="string">&#x27;1234567&#x27;</span>.<span class="title function_">substr</span>(-<span class="number">4</span>, <span class="number">2</span>) <span class="comment">// 45</span></span><br></pre></td></tr></table></figure>
-
-<h4 id="stringObject-substring-start-stop"><a href="#stringObject-substring-start-stop" class="headerlink" title="stringObject.substring(start, stop)"></a>stringObject.substring(start, stop)</h4><p>该方法用于提取字符串中介于两个指定下标之间的字符。</p>
-<p>start：必需。一个非负的整数，规定要提取的子串的第一个字符在 stringObject 中的位置。<br>stop：可选。一个非负的整数，比要提取的子串的最后一个字符在 stringObject 中的位置多 1。如果省略该参数，那么返回的子串会一直到字符串的结尾。</p>
-<p><em><strong>注意：与 slice 和 substr 方法不同的是，substring 不接受负的参数。substring 功能与 slice 一样。</strong></em></p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&#x27;1234567&#x27;</span>.<span class="title function_">substring</span>(<span class="number">1</span>, <span class="number">3</span>) <span class="comment">// 23</span></span><br><span class="line"><span class="string">&#x27;1234567&#x27;</span>.<span class="title function_">substring</span>(<span class="number">3</span>, <span class="number">1</span>) <span class="comment">// 23，如果 start 比 stop 大，那么该方法在提取子串之前会先交换这两个参数。</span></span><br><span class="line"><span class="string">&#x27;1234567&#x27;</span>.<span class="title function_">substring</span>(<span class="number">3</span>) <span class="comment">// 4567</span></span><br><span class="line"><span class="string">&#x27;1234567&#x27;</span>.<span class="title function_">substring</span>(-<span class="number">1</span>, <span class="number">1</span>) <span class="comment">// 1，参数 -1 被解析成 0</span></span><br></pre></td></tr></table></figure>
-
-      
-    </div>
-    <footer class="article-footer">
-      
-      <!-- <a data-url="https://blog.cchealthier.com/2020/11/29/api-defference/" data-id="clikhq2ve0003qi9mboy29pho" class="article-share-link">分享</a> -->
-      
-      
     </footer>
   </div>
   
@@ -645,7 +639,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">标签</h3>
     <div class="widget">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/blog/" rel="tag">blog</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nginx/" rel="tag">nginx</a></li></ul>
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nginx/" rel="tag">nginx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" rel="tag">工程化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%80%A7%E8%83%BD/" rel="tag">性能</a></li></ul>
     </div>
   </div>
 
@@ -655,7 +649,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">标签云</h3>
     <div class="widget tagcloud">
-      <a href="/tags/blog/" style="font-size: 10px;">blog</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/nginx/" style="font-size: 10px;">nginx</a>
+      <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/nginx/" style="font-size: 13.33px;">nginx</a> <a href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" style="font-size: 20px;">工程化</a> <a href="/tags/%E6%80%A7%E8%83%BD/" style="font-size: 16.67px;">性能</a>
     </div>
   </div>
 
@@ -664,7 +658,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/05/">五月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/04/">四月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/03/">三月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/02/">二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">十一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">十月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">九月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/06/">六月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/05/">五月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/04/">四月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/03/">三月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/02/">二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">十一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">十月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">九月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a></li></ul>
     </div>
   </div>
 
@@ -675,6 +669,10 @@
     <h3 class="widget-title">最新文章</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2023/06/07/webpack-modulefederationplugin/">用 webpack ModuleFederationPlugin 搭建微前端</a>
+          </li>
         
           <li>
             <a href="/2023/05/31/react-basic-app/">react 基础工程（react-redux &amp; react-router）</a>
@@ -690,10 +688,6 @@
         
           <li>
             <a href="/2023/04/21/nginx-basic/">nginx 的基础用法 &amp; linux（centos）下支持 https 和 http2</a>
-          </li>
-        
-          <li>
-            <a href="/2023/04/21/fontend-engineering-2/">从零搭建前端工程（下）</a>
           </li>
         
       </ul>
