@@ -1,6 +1,7 @@
 ---
 title: 用 webpack ModuleFederationPlugin 搭建微前端
 date: 2023-06-07 10:34:33
+updated: 2023-06-10 00:26:43
 categories:
 - 开发
 - 前端
@@ -8,7 +9,7 @@ tags:
 - 工程化
 ---
 
-webpack5 推出了一个 [ModuleFederationPlugin](https://webpack.docschina.org/plugins/module-federation-plugin/)，“模块联邦插件”。名字上就有点微前端的意思。网上的介绍原理什么的这里就不说了，就从实际的使用来看，它的作用有：
+webpack5 推出了一个 [ModuleFederationPlugin](https://webpack.js.org/concepts/module-federation/)，“模块联邦插件”。名字上就有点微前端的意思。网上的介绍原理什么的这里就不说了，就从实际的使用来看，它的作用有：
 
 1. 把本工程的一些内容单独打包成文件分享出去。
 2. 使用别的工程分享出来的文件。
@@ -239,7 +240,7 @@ http {
 1. 用正则匹配子应用的文件资源，比如 js css 文件，有别的文件格式则继续添加后缀。让它们打到相应子应用的容器里去访问。
 2. 接下来统统访问主应用容器。因为使用主应用做基座，也就是用主应用的 index.html 做 html。所以剩余的全部只需要访问主应用容器即可。最后再添加兜底访问主应用的 index.html 文件。以便各式路由都能有东西返回。
 
-### 4、webpack 配置注意点
+### 5、webpack 配置注意点
 
 ```js
 output: {
@@ -259,7 +260,7 @@ output: {
 2. 写成 `/`，文件路径是 `/xxx.js`，那么无论在什么时候都是当前域名加这个路径。也就是在 `http://heal.com/workforce` 页面也是请求 `http://heal.com/xxx.js`。
 3. 通常配置成 `/` 就没问题了。但是呢，在使用 ModuleFederationPlugin 开发的时候，会变成明明是请求线上的别的应用的文件，却变成：`当前域名/文件路径`。也就是我开发的时候，明明应该请求的是 `http://heal.com/xxx.js`，却变成请求 `http://localhost:3000/xxx.js` 了。那么索性把全路径写全了。反正线上的地址也会是固定，不会变来变去。当然需要用标志位作区分，开发时候还是访问本地地址。
 
-### 5、主应用热更新失效了
+### 6、主应用热更新失效了
 
 发现在有使用 ModuleFederationPlugin 插件的 `exposes` 配置下，热更新失效了，得手动刷新页面。
 
@@ -267,8 +268,44 @@ output: {
 
 ```js
 optimization: {
-  runtimeChunk: 'single', // 这样设置可以解决主应用开发时热更新失效（子应用不会），原因未知
+  runtimeChunk: isDev ? 'single' : false,
 },
 ```
 
 在我这项目是生效了，原理不详。
+
+但是！会影响到子应用开发时候的加载，因为对于模块内容的初始化被抽取出去到独自的 runtime.js。然后子应用开发时候是没有加载这份单独出来的 runtime.js。所以用标志位判断主应用开发模式再用 'single' 模式即可。不开发到主应用的时候它的热更新无效也没关系。
+
+### 7、shared 字段可能会引起的错
+
+```js
+shared: {
+  ...dependencies,
+  vue: {
+    eager: true,
+    singleton: true,
+    requiredVersion: dependencies.vue,
+  },
+  vuex: {
+    eager: true,
+    singleton: true,
+    requiredVersion: dependencies.vuex,
+  },
+  'vue-router': {
+    eager: true,
+    singleton: true,
+    requiredVersion: dependencies['vue-router'],
+  },
+},
+```
+
+顾名思义，可以把一些依赖分享出去。但可能会出现这个错误：
+[Uncaught Error: Shared module is not available for eager consumption](https://webpack.js.org/concepts/module-federation/#uncaught-error-shared-module-is-not-available-for-eager-consumption)
+
+原因据说，据说啊：这些主要依赖是一开始就要用到的，但是呢，这些分享出去的依赖都是属于初始化后再加载的，那么就会造成加载出错。官方给出的解决方案就是把实例初始化给抽取到一份单独的 `bootstrap.js`，当然其他名字也可以，然后在入口文件动态引入 `import('./bootstrap');` 就行了。
+
+我理解就是把初始化的代码也变成异步加载了，所以就不会是像同步那样，一开始就要用到导致报错？官方还提到有些瑕疵：
+
+> This method works but can have limitations or drawbacks.
+
+确实有，我试了一下去掉子应用的 vue 依赖，还是报错了，根本没法复用。或者是生产环境的时候，会优先用主应用的依赖的意思。这里就不深究了，小小问题不影响微前端的使用。
