@@ -5,19 +5,60 @@ function getRequestUrl(path) {
   return `${baseUrl}${path}`;
 }
 
-function jsonpRequest(url) {
-  return new Promise((resolve, reject) => {
-    $.ajax({
-      url: url,
-      type: 'GET',
-      dataType: 'jsonp', //指定服务器返回的数据类型
-      success: function(data) {
-        resolve(data);
-      },
-      error: function(error){
-        reject(error);
-      },
-    });
+function debounce(func, wait) {
+  let context, args;
+  let timer;
+
+  return function() {
+    context = this;
+    args = arguments;
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      timer = null;
+      func.apply(context, args);
+    }, wait);
+  };
+}
+
+const openGamePage = debounce(() => {
+  window.open('https://cchealthier.com/game', '_blank');
+}, 2000);
+
+// function jsonpRequest(url) {
+//   return new Promise((resolve, reject) => {
+//     $.ajax({
+//       url: url,
+//       type: 'GET',
+//       dataType: 'jsonp', //指定服务器返回的数据类型
+//       success: function(data) {
+//         resolve(data);
+//       },
+//       error: function(error){
+//         reject(error);
+//       },
+//     });
+//   });
+// }
+
+function getIp() {
+  return new Promise((resolve) => {
+    const $script = document.createElement('script');
+    // 太平洋获取网络 ip 接口 https://whois.pconline.com.cn/
+    // const callback = 'setIp' + Date.now();
+    // $script.src = `https://api.ipify.org/?format=jsonp&callback=${callback}`;
+    const callback = 'IPCallBack';
+    $script.src = 'https://whois.pconline.com.cn/ipJson.jsp';
+    document.body.appendChild($script);
+    window['IPCallBack'] = ({ ip, city, pro, addr }) => {
+      delete window[callback];
+      let _city = city;
+      if (!city && !pro) {
+        _city = addr;
+      } else if (city !== pro){
+        _city = `${pro}${city}`
+      }
+      resolve({ ip, city: _city });
+    }
   });
 }
 
@@ -162,6 +203,7 @@ function jsonpRequest(url) {
   var $ball = $('#avatar > .container');
   $('#avatar').on('click', function(){
     $ball.addClass('run');
+    openGamePage();
   });
   $ball.on('webkitAnimationEnd', function(){
     $ball.removeClass('run');
@@ -213,10 +255,13 @@ function jsonpRequest(url) {
     });
   });
 
+  let cname = '城市';
   let cip = '';
   try {
-    const { ip } = await jsonpRequest('https://api.ipify.org/?format=jsonp');
+    // const { ip } = await jsonpRequest('https://api.ipify.org/?format=jsonp');
+    const { ip, city } = await getIp();
     cip = ip;
+    cname = city;
   } catch (error) {
     console.log('get ip error', error);
   }
@@ -231,7 +276,7 @@ function jsonpRequest(url) {
     //数据，json字符串
     data : JSON.stringify({
       cip,
-      cname: '获取不到城市',
+      cname,
       url: `${location.origin}${location.pathname}`
     }),
     //请求成功

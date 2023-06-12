@@ -1,7 +1,7 @@
 ---
 title: MySql 基本指令
 date: 2020-05-31 10:32:42
-updated: 2023-04-16 11:17:18
+updated: 2023-06-13 00:34:18
 categories:
 - 开发
 - 数据库
@@ -77,11 +77,16 @@ truncate table 表名字;
 
 更新数据，注意搜索的值字符串的话要加引号
 ```bash
-update url set 要更新的字段=要更新的值 where 搜索的字段=搜索的值;
+update table_name set 要更新的字段=要更新的值 where 搜索的字段=搜索的值;
 ```
 
 设置密码
 ```bash
 // set password for 用户名@localhost = password(‘新密码’);
 set password for root@localhost = password('123456');
+```
+
+更新数据是从另外一张表拿的值
+```bash
+update 表A,表B set 表A.字段A=表B.字段A where 表A.字段B=表B.字段B and 表A.字段A=字段值;
 ```
