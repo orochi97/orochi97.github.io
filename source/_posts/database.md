@@ -90,3 +90,9 @@ set password for root@localhost = password('123456');
 ```bash
 update 表A,表B set 表A.字段A=表B.字段A where 表A.字段B=表B.字段B and 表A.字段A=字段值;
 ```
+
+增加字段名
+```bash
+// 字段类型可以先看表结构参考其他字段 show create table 表名字;
+alter table 表名 add 字段名 字段类型 default 默认值;
+```
