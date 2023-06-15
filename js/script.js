@@ -1,6 +1,25 @@
 const isDev = false; // 是否开发状态总开关，手动修改
 const baseUrl = isDev ? 'http://localhost:3334' : 'https://www.cchealthier.com';
 
+const REL_TYPE = {
+  HOST: '1',
+  BLOG: '2',
+};
+
+function getSearchParams(key) {
+  return new URL(location.toString()).searchParams.get(key);
+}
+
+function getReferrer() {
+  if (document.referrer) {
+    return document.referrer;
+  } else if (getSearchParams('rel') === REL_TYPE.HOST) {
+    return 'https://cchealthier.com';
+  } else {
+    return '';
+  }
+}
+
 function getRequestUrl(path) {
   return `${baseUrl}${path}`;
 }
@@ -21,7 +40,7 @@ function debounce(func, wait) {
 }
 
 const openGamePage = debounce(() => {
-  window.open('https://cchealthier.com/game', '_blank');
+  window.open(`https://cchealthier.com/game?rel=${REL_TYPE.BLOG}`, '_blank');
 }, 2000);
 
 // function jsonpRequest(url) {
@@ -277,7 +296,8 @@ function getIp() {
     data : JSON.stringify({
       cip,
       cname,
-      url: `${location.origin}${location.pathname}`
+      url: `${location.origin}${location.pathname}`,
+      referrer: getReferrer(),
     }),
     //请求成功
     success : function(result) {

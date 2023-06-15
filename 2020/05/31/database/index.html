@@ -153,13 +153,17 @@
 
 <p>更新数据是从另外一张表拿的值</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">update 表A,表B <span class="built_in">set</span> 表A.字段A=表B.字段A <span class="built_in">where</span> 表A.字段B=表B.字段B and 表A.字段A=字段值;</span><br></pre></td></tr></table></figure>
+
+<p>增加字段名</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">// 字段类型可以先看表结构参考其他字段 show create table 表名字;</span><br><span class="line">alter table 表名 add 字段名 字段类型 default 默认值;</span><br></pre></td></tr></table></figure>
+
       
     </div>
     <footer class="article-footer">
       
-        <a data-url="https://blog.cchealthier.com/2020/05/31/database/" data-id="clit3ee2f000d6e9mcd37f4xk" class="article-thumbs-up">赞一个(<span class="article-thumbs-up-num">0</span>)</a>
+        <a data-url="https://blog.cchealthier.com/2020/05/31/database/" data-id="clix94hev000ddz9m9av88bbn" class="article-thumbs-up">赞一个(<span class="article-thumbs-up-num">0</span>)</a>
       
-      <!-- <a data-url="https://blog.cchealthier.com/2020/05/31/database/" data-id="clit3ee2f000d6e9mcd37f4xk" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2020/05/31/database/" data-id="clix94hev000ddz9m9av88bbn" class="article-share-link">分享</a> -->
       
       
     </footer>
