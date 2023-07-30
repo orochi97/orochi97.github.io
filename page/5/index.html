@@ -79,6 +79,98 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-database" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/05/31/database/" class="article-date">
+  <time datetime="2020-05-31T02:32:42.000Z" itemprop="datePublished">2020-05-31</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/05/31/database/">MySql 基本指令</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>不做后端开发，不常操作数据库，很容易忘记。记录下自己用到过几条数据库命令。（持续）</p>
+<p>连上数据库</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">// -u 指向用户， -p 需要密码</span><br><span class="line">mysql -u root -p</span><br></pre></td></tr></table></figure>
+
+<p>显示数据库</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">show databases;</span><br></pre></td></tr></table></figure>
+
+<p>创建数据库</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">create database 数据库名字;</span><br></pre></td></tr></table></figure>
+
+<p>删除数据库</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">drop table 数据库名字;</span><br></pre></td></tr></table></figure>
+
+<p>选择数据库</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">use 数据库名字;</span><br></pre></td></tr></table></figure>
+
+<p>显示表</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">show tables;</span><br></pre></td></tr></table></figure>
+
+<p>创建表</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">create table 表名字;</span><br></pre></td></tr></table></figure>
+
+<p>删除表</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">drop table 表名字;</span><br></pre></td></tr></table></figure>
+
+<p>查看表结构</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">show create table 表名字;</span><br></pre></td></tr></table></figure>
+
+<p>查看表内容</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select * from 表名字;</span><br></pre></td></tr></table></figure>
+
+<p>查看表条数</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select count(*) from 表名字;</span><br></pre></td></tr></table></figure>
+
+<p>查看表索引</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">show index table 表名字;</span><br></pre></td></tr></table></figure>
+
+<p>清空表</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">truncate</span> table 表名字;</span><br></pre></td></tr></table></figure>
+
+<p>更新数据，注意搜索的值字符串的话要加引号</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">update table_name <span class="built_in">set</span> 要更新的字段=要更新的值 <span class="built_in">where</span> 搜索的字段=搜索的值;</span><br></pre></td></tr></table></figure>
+
+<p>设置密码</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">// <span class="built_in">set</span> password <span class="keyword">for</span> 用户名@localhost = password(‘新密码’);</span><br><span class="line"><span class="built_in">set</span> password <span class="keyword">for</span> root@localhost = password(<span class="string">&#x27;123456&#x27;</span>);</span><br></pre></td></tr></table></figure>
+
+<p>更新数据是从另外一张表拿的值</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">update 表A,表B <span class="built_in">set</span> 表A.字段A=表B.字段A <span class="built_in">where</span> 表A.字段B=表B.字段B and 表A.字段A=字段值;</span><br></pre></td></tr></table></figure>
+
+<p>增加字段名</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">// 字段类型可以先看表结构参考其他字段 show create table 表名字;</span><br><span class="line">alter table 表名 add 字段名 字段类型 default 默认值;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      
+      <!-- <a data-url="https://blog.cchealthier.com/2020/05/31/database/" data-id="clkp6ufku000db59m6txl73os" class="article-share-link">分享</a> -->
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-js-performance" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2020/05/28/js-performance/" class="article-date">
@@ -136,7 +228,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2020/05/28/js-performance/" data-id="cljv6b8wo0012cm9m5rp8h68a" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2020/05/28/js-performance/" data-id="clkp6ufkx0011b59m2v11cltv" class="article-share-link">分享</a> -->
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%80%A7%E8%83%BD/" rel="tag">性能</a></li></ul>
@@ -195,7 +287,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2020/05/27/eventloop/" data-id="cljv6b8wl000dcm9md88dcozu" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2020/05/27/eventloop/" data-id="clkp6ufku000gb59m9cpph6nj" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -238,7 +330,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2020/05/25/new-object/" data-id="cljv6b8wq001icm9m7y68daza" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2020/05/25/new-object/" data-id="clkp6ufky001ib59mbcjn5nkh" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -310,7 +402,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2020/05/21/js-inherit/" data-id="cljv6b8wo000xcm9m4wyn5fvl" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2020/05/21/js-inherit/" data-id="clkp6ufkx000zb59mbgekdrkt" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -357,7 +449,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2020/05/14/mood/" data-id="cljv6b8wq001bcm9m67sr4exr" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2020/05/14/mood/" data-id="clkp6ufky001bb59m2p8x9uh0" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -402,7 +494,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2020/05/03/buyu/" data-id="cljv6b8wm000kcm9m54l84t8z" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2020/05/03/buyu/" data-id="clkp6ufks0008b59mdhlr29mu" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -470,7 +562,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2020/05/03/hexo-githubpage/" data-id="cljv6b8wn000qcm9mermwc7s1" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2020/05/03/hexo-githubpage/" data-id="clkp6ufkw000sb59mfdcofa8n" class="article-share-link">分享</a> -->
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/hexo/" rel="tag">hexo</a></li></ul>
@@ -522,7 +614,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2020/05/03/hello-world/" data-id="cljv6b8wl000gcm9mcrffa0wx" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2020/05/03/hello-world/" data-id="clkp6ufkw000qb59m4dy6gp6n" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -576,7 +668,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/06/">六月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/05/">五月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/04/">四月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/03/">三月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/02/">二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">十一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">十月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">九月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">七月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/06/">六月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/05/">五月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/04/">四月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/03/">三月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/02/">二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">十一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">十月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">九月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a></li></ul>
     </div>
   </div>
 
@@ -587,6 +679,10 @@
     <h3 class="widget-title">最新文章</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2023/07/26/node-stream/">NodeJS 里的 stream（流）</a>
+          </li>
         
           <li>
             <a href="/2023/06/07/webpack-modulefederationplugin/">用 webpack ModuleFederationPlugin 搭建微前端</a>
@@ -602,10 +698,6 @@
         
           <li>
             <a href="/2023/05/13/file-slice-upload/">文件切片上传（断点续传）</a>
-          </li>
-        
-          <li>
-            <a href="/2023/04/21/nginx-basic/">nginx 的基础用法 &amp; linux（centos）下支持 https 和 http2</a>
           </li>
         
       </ul>

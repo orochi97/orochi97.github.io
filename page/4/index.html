@@ -79,6 +79,51 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-vertical-middle" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/07/29/vertical-middle/" class="article-date">
+  <time datetime="2020-07-29T14:30:18.000Z" itemprop="datePublished">2020-07-29</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/07/29/vertical-middle/">垂直居中的几个方法</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>四种方法，先在外面放四个容器, 赋予 “.container” 类。让其子元素居中，先赋予 “.box” 类，水平居中。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">xmlns</span>=<span class="string">&quot;http://www.w3.org/1999/xhtml&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">http-equiv</span>=<span class="string">&quot;Content-Type&quot;</span> <span class="attr">content</span>=<span class="string">&quot;text/html; charset=utf-8&quot;</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">title</span>&gt;</span>baidu<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">style</span> <span class="attr">type</span>=<span class="string">&quot;text/css&quot;</span>&gt;</span><span class="language-css"></span></span><br><span class="line"><span class="language-css"><span class="selector-class">.container</span> &#123;</span></span><br><span class="line"><span class="language-css">  <span class="attribute">width</span>: <span class="number">22%</span>;</span></span><br><span class="line"><span class="language-css">  <span class="attribute">height</span>: <span class="number">300px</span>;</span></span><br><span class="line"><span class="language-css">  <span class="attribute">float</span>: left;</span></span><br><span class="line"><span class="language-css">  <span class="attribute">background-color</span>: <span class="number">#abcdef</span>;</span></span><br><span class="line"><span class="language-css">  <span class="attribute">margin</span>: <span class="number">0</span> <span class="number">10px</span>;</span></span><br><span class="line"><span class="language-css">  <span class="attribute">position</span>: relative;</span></span><br><span class="line"><span class="language-css">&#125;</span></span><br><span class="line"><span class="language-css"><span class="selector-class">.box</span> &#123;</span></span><br><span class="line"><span class="language-css">  <span class="attribute">width</span>: <span class="number">100px</span>;</span></span><br><span class="line"><span class="language-css">  <span class="attribute">height</span>: <span class="number">100px</span>;</span></span><br><span class="line"><span class="language-css">  <span class="attribute">background-color</span>: red;</span></span><br><span class="line"><span class="language-css">  <span class="attribute">text-align</span>: center;</span></span><br><span class="line"><span class="language-css">&#125;</span></span><br><span class="line"><span class="language-css">&lt;!-- 绝对定位大法，设置为绝对定位，四个方向位移为<span class="number">0</span>，外边距设为auto --&gt;</span></span><br><span class="line"><span class="language-css"><span class="selector-class">.middle1</span> &#123;</span></span><br><span class="line"><span class="language-css">  <span class="attribute">position</span>: absolute;</span></span><br><span class="line"><span class="language-css">  <span class="attribute">left</span>: <span class="number">0</span>;</span></span><br><span class="line"><span class="language-css">  <span class="attribute">right</span>: <span class="number">0</span>;</span></span><br><span class="line"><span class="language-css">  <span class="attribute">top</span>: <span class="number">0</span>;</span></span><br><span class="line"><span class="language-css">  <span class="attribute">bottom</span>: <span class="number">0</span>;</span></span><br><span class="line"><span class="language-css">  <span class="attribute">margin</span>: auto;</span></span><br><span class="line"><span class="language-css">&#125;</span></span><br><span class="line"><span class="language-css">&lt;!-- <span class="attribute">flex</span>弹性布局，特别容易完成这个事 --&gt;</span></span><br><span class="line"><span class="language-css"><span class="selector-class">.middle2</span> &#123;</span></span><br><span class="line"><span class="language-css">  <span class="attribute">display</span>: flex;</span></span><br><span class="line"><span class="language-css">  <span class="attribute">justify-content</span>: center;</span></span><br><span class="line"><span class="language-css">  <span class="attribute">align-items</span>: center;</span></span><br><span class="line"><span class="language-css">&#125;</span></span><br><span class="line"><span class="language-css">&lt;!-- 利用表格居中，注意的是还要多一层<span class="selector-tag">table</span>-cell，真正居中是在<span class="selector-tag">table</span>-cell --&gt;</span></span><br><span class="line"><span class="language-css"><span class="selector-class">.middle3</span> &#123;</span></span><br><span class="line"><span class="language-css">  <span class="attribute">display</span>: table-cell;</span></span><br><span class="line"><span class="language-css">  <span class="attribute">vertical-align</span>: middle;</span></span><br><span class="line"><span class="language-css">  <span class="attribute">background-color</span>: initial;</span></span><br><span class="line"><span class="language-css">&#125;</span></span><br><span class="line"><span class="language-css"><span class="selector-class">.block</span> &#123;</span></span><br><span class="line"><span class="language-css">  <span class="attribute">display</span>: inline-block;</span></span><br><span class="line"><span class="language-css">&#125;</span></span><br><span class="line"><span class="language-css">&lt;!-- 绝对定位加translate大法，水平垂直位移<span class="number">50%</span>，translate里面的<span class="number">50%</span>是相对于自己的，所以不知宽高也可以使用 --&gt;</span></span><br><span class="line"><span class="language-css"><span class="selector-class">.middle4</span> &#123;</span></span><br><span class="line"><span class="language-css">  <span class="attribute">position</span>: absolute;</span></span><br><span class="line"><span class="language-css">  <span class="attribute">left</span>: <span class="number">50%</span>;</span></span><br><span class="line"><span class="language-css">  <span class="attribute">top</span>: <span class="number">50%</span>;</span></span><br><span class="line"><span class="language-css">  <span class="attribute">transform</span>: <span class="built_in">translateX</span>(-<span class="number">50%</span>) <span class="built_in">translateY</span>(-<span class="number">50%</span>);</span></span><br><span class="line"><span class="language-css">&#125;</span></span><br><span class="line"><span class="language-css"></span><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;container&quot;</span>&gt;</span><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;box middle1&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;container middle2&quot;</span>&gt;</span><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;box&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;container&quot;</span> <span class="attr">style</span>=<span class="string">&quot;display: table;&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;box middle3&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span> <span class="attr">class</span>=<span class="string">&quot;box block&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;container&quot;</span>&gt;</span><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;box middle4&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>总结：个人觉得，首先 <a target="_blank" rel="noopener" href="http://www.ruanyifeng.com/blog/2015/07/flex-grammar.html">flex</a> 布局最方便也最帅气。然后绝对定位加 <a target="_blank" rel="noopener" href="https://developer.mozilla.org/en-US/docs/Web/CSS/transform-function/translate">translate</a> 也好理解。至于第一种绝对定位加四个方向位移为0，其实不太理解其原理~ &#x3D; &#x3D;！</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      
+      <!-- <a data-url="https://blog.cchealthier.com/2020/07/29/vertical-middle/" data-id="clkp6ufl4002vb59m6kcgdp42" class="article-share-link">分享</a> -->
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-vue-life" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2020/07/26/vue-life/" class="article-date">
@@ -112,7 +157,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2020/07/26/vue-life/" data-id="cljv6b8wz002ucm9mhl9h5851" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2020/07/26/vue-life/" data-id="clkp6ufl40030b59m7p3qhz7t" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -191,7 +236,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2020/07/25/variable-type/" data-id="cljv6b8wz002wcm9m6g0m2j1r" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2020/07/25/variable-type/" data-id="clkp6ufl4002sb59m3ajkc5r3" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -242,7 +287,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2020/07/25/traversal-property/" data-id="cljv6b8ww002mcm9mb32795de" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2020/07/25/traversal-property/" data-id="clkp6ufl3002qb59mh5zf5km1" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -289,7 +334,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2020/07/12/lazyload/" data-id="cljv6b8wp0014cm9mehbj7m29" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2020/07/12/lazyload/" data-id="clkp6ufkx0016b59m02ea9d9s" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -337,7 +382,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2020/07/09/callapplybind/" data-id="cljv6b8wh0008cm9m9lyshm2b" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2020/07/09/callapplybind/" data-id="clkp6ufkt000bb59mbd832g3u" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -399,7 +444,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2020/07/02/cache/" data-id="cljv6b8wg0007cm9m4j5wgxyk" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2020/07/02/cache/" data-id="clkp6ufkt000ab59me89demc7" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -441,7 +486,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2020/06/22/ssl-lts/" data-id="cljv6b8ww002kcm9m7gcug5eo" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2020/06/22/ssl-lts/" data-id="clkp6ufl3002nb59meo04dljs" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -483,7 +528,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2020/05/31/html-resource/" data-id="cljv6b8wn000scm9mdlnkh65r" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2020/05/31/html-resource/" data-id="clkp6ufkw000vb59mdz6ndfus" class="article-share-link">分享</a> -->
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%80%A7%E8%83%BD/" rel="tag">性能</a></li></ul>
@@ -542,99 +587,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2020/05/31/protocol/" data-id="cljv6b8ws0020cm9mccmp7zc0" class="article-share-link">分享</a> -->
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-database" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/05/31/database/" class="article-date">
-  <time datetime="2020-05-31T02:32:42.000Z" itemprop="datePublished">2020-05-31</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/05/31/database/">MySql 基本指令</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>不做后端开发，不常操作数据库，很容易忘记。记录下自己用到过几条数据库命令。（持续）</p>
-<p>连上数据库</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">// -u 指向用户， -p 需要密码</span><br><span class="line">mysql -u root -p</span><br></pre></td></tr></table></figure>
-
-<p>显示数据库</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">show databases;</span><br></pre></td></tr></table></figure>
-
-<p>创建数据库</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">create database 数据库名字;</span><br></pre></td></tr></table></figure>
-
-<p>删除数据库</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">drop table 数据库名字;</span><br></pre></td></tr></table></figure>
-
-<p>选择数据库</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">use 数据库名字;</span><br></pre></td></tr></table></figure>
-
-<p>显示表</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">show tables;</span><br></pre></td></tr></table></figure>
-
-<p>创建表</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">create table 表名字;</span><br></pre></td></tr></table></figure>
-
-<p>删除表</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">drop table 表名字;</span><br></pre></td></tr></table></figure>
-
-<p>查看表结构</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">show create table 表名字;</span><br></pre></td></tr></table></figure>
-
-<p>查看表内容</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select * from 表名字;</span><br></pre></td></tr></table></figure>
-
-<p>查看表条数</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select count(*) from 表名字;</span><br></pre></td></tr></table></figure>
-
-<p>查看表索引</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">show index table 表名字;</span><br></pre></td></tr></table></figure>
-
-<p>清空表</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">truncate</span> table 表名字;</span><br></pre></td></tr></table></figure>
-
-<p>更新数据，注意搜索的值字符串的话要加引号</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">update table_name <span class="built_in">set</span> 要更新的字段=要更新的值 <span class="built_in">where</span> 搜索的字段=搜索的值;</span><br></pre></td></tr></table></figure>
-
-<p>设置密码</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">// <span class="built_in">set</span> password <span class="keyword">for</span> 用户名@localhost = password(‘新密码’);</span><br><span class="line"><span class="built_in">set</span> password <span class="keyword">for</span> root@localhost = password(<span class="string">&#x27;123456&#x27;</span>);</span><br></pre></td></tr></table></figure>
-
-<p>更新数据是从另外一张表拿的值</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">update 表A,表B <span class="built_in">set</span> 表A.字段A=表B.字段A <span class="built_in">where</span> 表A.字段B=表B.字段B and 表A.字段A=字段值;</span><br></pre></td></tr></table></figure>
-
-<p>增加字段名</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">// 字段类型可以先看表结构参考其他字段 show create table 表名字;</span><br><span class="line">alter table 表名 add 字段名 字段类型 default 默认值;</span><br></pre></td></tr></table></figure>
-
-      
-    </div>
-    <footer class="article-footer">
-      
-      <!-- <a data-url="https://blog.cchealthier.com/2020/05/31/database/" data-id="cljv6b8wj000acm9mapo57zse" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2020/05/31/protocol/" data-id="clkp6ufl10024b59m6w9lc6t1" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -688,7 +641,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/06/">六月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/05/">五月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/04/">四月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/03/">三月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/02/">二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">十一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">十月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">九月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">七月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/06/">六月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/05/">五月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/04/">四月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/03/">三月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/02/">二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">十一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">十月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">九月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a></li></ul>
     </div>
   </div>
 
@@ -699,6 +652,10 @@
     <h3 class="widget-title">最新文章</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2023/07/26/node-stream/">NodeJS 里的 stream（流）</a>
+          </li>
         
           <li>
             <a href="/2023/06/07/webpack-modulefederationplugin/">用 webpack ModuleFederationPlugin 搭建微前端</a>
@@ -714,10 +671,6 @@
         
           <li>
             <a href="/2023/05/13/file-slice-upload/">文件切片上传（断点续传）</a>
-          </li>
-        
-          <li>
-            <a href="/2023/04/21/nginx-basic/">nginx 的基础用法 &amp; linux（centos）下支持 https 和 http2</a>
           </li>
         
       </ul>
