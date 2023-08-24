@@ -105,10 +105,10 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>以前 js 的模块化并没有落地，所以 NodeJS 自己整了个 <code>commonjs</code>，也就是我们代码里常看到 <code>require(&#39;moduleName&#39;)</code>。后来 esm 也就是代码里的 <code>import export</code> 浏览器支持了，NodeJS 也给加上了。</p>
+        <p>在之前 js 的模块化迟迟没有落地，所以 NodeJS 自己整了个 <code>commonjs</code>，也就是我们代码里常看到 <code>require(&#39;moduleName&#39;)</code>。后来浏览器支持了 esm 标准也就是代码里的 <code>import export</code>，NodeJS 也给加上了。</p>
 <p>在不支持的年代，我们代码能直接写上模块化语句，都是 webpack 和 babel 的功劳。无论是 import 还是 require，最后都会处理成 <code>_webpack_require_</code>（应该是这个 api）。</p>
-<p>这里记录下 NodeJS 使用 esm 的一些注意点，以及 package.json 一些看了老是记不住的字段。</p>
-<h3 id="一、文件格式区分"><a href="#一、文件格式区分" class="headerlink" title="一、文件格式区分"></a>一、文件格式区分</h3><p>NodeJS 要是 esm 模块，文件必须声明为 .mjs 后缀。依然使用 .js 或者声明为 .cjs 都是使用 commonjs。</p>
+<p>这里记录下 NodeJS 使用 commonjs、esm 的一些注意点，以及 package.json 一些看了老是记不住的字段。</p>
+<h3 id="一、文件格式区分"><a href="#一、文件格式区分" class="headerlink" title="一、文件格式区分"></a>一、文件格式区分</h3><p>NodeJS 要使用 esm 模块，文件必须声明为 .mjs 后缀。依然使用 .js 或者声明为 .cjs 都是使用 commonjs。</p>
 <ol>
 <li><p>当然硬要在 .js&#x2F;.cjs 文件使用 esm 语句（也就是 import）的话会<strong>报错</strong>：</p>
 <blockquote>
@@ -135,7 +135,7 @@
 <li>在 .mjs 文件 文件引用了 commonjs 模块的话就<strong>没问题</strong>。&#x3D; &#x3D;！</li>
 </ol>
 <p>只不过 commonjs 里并没有 <code>default</code> 这个概念，所以如 <code>import runCommonDefault, &#123; runExport &#125; from &#39;./utils.cjs&#39;;</code> 里，<code>runCommonDefault</code> 就是整个 <code>module.exports</code> 导出的对象。而 <code>runExport</code> 就是纯粹对 <code>module.exports</code> 导出对象的解构，属于其中一个字段内容。</p>
-<h3 id="三、esm-模块不支持-filename，-dirname"><a href="#三、esm-模块不支持-filename，-dirname" class="headerlink" title="三、esm 模块不支持 __filename，__dirname"></a>三、esm 模块不支持 __filename，__dirname</h3><p>esm 模块里是没有 <code>__filename</code>，<code>__dirname</code> 这两个全局变量的。可以这样实现：</p>
+<h3 id="三、esm-模块不支持-filename，-dirname"><a href="#三、esm-模块不支持-filename，-dirname" class="headerlink" title="三、esm 模块不支持 __filename，__dirname"></a>三、esm 模块不支持 __filename，__dirname</h3><p>esm 模块里是没有 <code>__filename</code>，<code>__dirname</code> 这两个全局变量的（其实不是全局变量，和 require 一样是外部传进来，姑且当其是个全局变量）。可以这样实现：</p>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> path <span class="keyword">from</span> <span class="string">&#x27;path&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> url <span class="keyword">from</span> <span class="string">&#x27;url&#x27;</span>;</span><br><span class="line"><span class="keyword">const</span> __filename = url.<span class="title function_">fileURLToPath</span>(<span class="keyword">import</span>.<span class="property">meta</span>.<span class="property">url</span>);</span><br><span class="line"><span class="keyword">const</span> __dirname = path.<span class="title function_">dirname</span>(__filename);</span><br></pre></td></tr></table></figure>
         
           <p class="article-more-link">
@@ -146,7 +146,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2023/08/24/node-module/" data-id="cllow5lmg001u1g9m39s7eloq" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2023/08/24/node-module/" data-id="cllp7v9v3001srl9mdwyd9ps6" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -203,7 +203,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2023/08/23/webpack5-background-url/" data-id="cllow5lmq005d1g9mghut7hju" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2023/08/23/webpack5-background-url/" data-id="cllp7v9va003jrl9ma79e1ar5" class="article-share-link">分享</a> -->
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" rel="tag">工程化</a></li></ul>
@@ -272,7 +272,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2023/07/26/node-stream/" data-id="cllow5lmh001w1g9mf8ergdf6" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2023/07/26/node-stream/" data-id="cllp7v9v3001vrl9m6cqlex8s" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -342,7 +342,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2023/06/07/webpack-modulefederationplugin/" data-id="cllow5lmn003c1g9mhqj1fr7d" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2023/06/07/webpack-modulefederationplugin/" data-id="cllp7v9va003crl9m4edycrvr" class="article-share-link">分享</a> -->
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" rel="tag">工程化</a></li></ul>
@@ -397,7 +397,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2023/05/31/react-basic-app/" data-id="cllow5lmj002g1g9madb39fai" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2023/05/31/react-basic-app/" data-id="cllp7v9v6002grl9m0xrr2usb" class="article-share-link">分享</a> -->
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" rel="tag">工程化</a></li></ul>
@@ -453,7 +453,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2023/05/19/performance-optimize/" data-id="cllow5lmi00231g9m3q1ff9wa" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2023/05/19/performance-optimize/" data-id="cllp7v9v50024rl9m06mpgmoq" class="article-share-link">分享</a> -->
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%80%A7%E8%83%BD/" rel="tag">性能</a></li></ul>
@@ -504,7 +504,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2023/05/13/file-slice-upload/" data-id="cllow5lmb000h1g9m77si3obl" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2023/05/13/file-slice-upload/" data-id="cllp7v9uz000qrl9m2o00fn0n" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -584,7 +584,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2023/04/21/nginx-basic/" data-id="cllow5lmg001n1g9mgtbd4z7w" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2023/04/21/nginx-basic/" data-id="cllp7v9v2001lrl9megda01bv" class="article-share-link">分享</a> -->
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/nginx/" rel="tag">nginx</a></li></ul>
@@ -638,7 +638,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2023/04/21/fontend-engineering-2/" data-id="cllow5lmc000k1g9m1kxogtjh" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2023/04/21/fontend-engineering-2/" data-id="cllp7v9uy000grl9m3hg57z84" class="article-share-link">分享</a> -->
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" rel="tag">工程化</a></li></ul>
@@ -704,7 +704,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2023/03/06/fontend-engineering/" data-id="cllow5lmc000m1g9mhtcs5ruc" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2023/03/06/fontend-engineering/" data-id="cllp7v9uy000hrl9mci9l9udo" class="article-share-link">分享</a> -->
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" rel="tag">工程化</a></li></ul>
