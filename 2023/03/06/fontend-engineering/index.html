@@ -19,7 +19,7 @@
 <meta property="og:image" content="https://blog.cchealthier.com/2023/03/06/fontend-engineering/babel1.png">
 <meta property="og:image" content="https://blog.cchealthier.com/2023/03/06/fontend-engineering/babel2.png">
 <meta property="article:published_time" content="2023-03-06T14:22:43.000Z">
-<meta property="article:modified_time" content="2023-05-31T13:11:36.000Z">
+<meta property="article:modified_time" content="2023-08-24T08:16:36.000Z">
 <meta property="article:author" content="ChrisIori">
 <meta property="article:tag" content="工程化">
 <meta name="twitter:card" content="summary">
@@ -186,6 +186,7 @@
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> &#123; resolve &#125; = <span class="built_in">require</span>(<span class="string">&#x27;path&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> <span class="title class_">Webpack</span> = <span class="built_in">require</span>(<span class="string">&#x27;webpack&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> <span class="title class_">WebpackDevServer</span> = <span class="built_in">require</span>(<span class="string">&#x27;webpack-dev-server&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> webpackConfig = <span class="built_in">require</span>(<span class="title function_">resolve</span>(process.<span class="title function_">cwd</span>(), <span class="string">&#x27;webpack.config.js&#x27;</span>));</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> compiler = <span class="title class_">Webpack</span>(webpackConfig);</span><br><span class="line"><span class="keyword">const</span> devServerOptions = &#123; ...webpackConfig.<span class="property">devServer</span> &#125;;</span><br><span class="line"><span class="keyword">const</span> server = <span class="keyword">new</span> <span class="title class_">WebpackDevServer</span>(devServerOptions, compiler);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">runServer</span> = <span class="keyword">async</span> (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">info</span>(<span class="string">&#x27;Starting server...&#x27;</span>);</span><br><span class="line">  server.<span class="title function_">startCallback</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">info</span>(</span><br><span class="line">      <span class="string">`Successfully started server on http://localhost:<span class="subst">$&#123;webpackConfig.devServer.port&#125;</span>`</span></span><br><span class="line">    );</span><br><span class="line">  &#125;);</span><br><span class="line">  <span class="comment">// 或者 await server.start();</span></span><br><span class="line">&#125;;</span><br><span class="line"><span class="title function_">runServer</span>();</span><br></pre></td></tr></table></figure>
 
 <p>用法简单，因为对于编译配置比如 loader、plugin 这些本身就和 webpack 如出一辙。用的同一份 webpack.config.js，只要用环境变量区分 production 和 development 就行了。要了解的是，针对于 webpack-dev-server 的配置。看看 <code>devServer</code> 字段的配置。上面的例子已经加了注释介绍。事实上还有很多功能，比如 proxy 可以访问到请求和响应对象，方便做一些接口的统一处理。这些都视实际情况而定。</p>
+<h2 id="更新"><a href="#更新" class="headerlink" title="更新"></a>更新</h2><h4 id="2023-08-24-更新"><a href="#2023-08-24-更新" class="headerlink" title="2023-08-24 更新"></a>2023-08-24 更新</h4><p>webpack5 对于资源文件的处理有更新，详情参阅《<a href="/2023/08/23/webpack5-background-url/">webpack5 下 background url 图片打包失败</a>》。</p>
 <hr>
 <hr>
 <p><em><strong>以下内容请移步《<a href="/2023/04/21/fontend-engineering-2/">从零搭建前端工程（下）</a>》阅读</strong></em><br><em><strong>4. 使用 eslint + prettier 让代码健壮和优雅</strong></em><br><em><strong>5. 使用 husky + lint-staged 强制增量各类检查</strong></em><br><em><strong>6. 使用 @commitlint&#x2F;cli 规范提交信息</strong></em><br><em><strong>7. 使用 埋点（性能 + 错误） 让项目运行更好</strong></em></p>
@@ -194,9 +195,9 @@
     </div>
     <footer class="article-footer">
       
-        <a data-url="https://blog.cchealthier.com/2023/03/06/fontend-engineering/" data-id="clloku54t000m8m9mb5qdaxyf" class="article-thumbs-up">赞一个(<span class="article-thumbs-up-num">0</span>)</a>
+        <a data-url="https://blog.cchealthier.com/2023/03/06/fontend-engineering/" data-id="cllow5lmc000m1g9mhtcs5ruc" class="article-thumbs-up">赞一个(<span class="article-thumbs-up-num">0</span>)</a>
       
-      <!-- <a data-url="https://blog.cchealthier.com/2023/03/06/fontend-engineering/" data-id="clloku54t000m8m9mb5qdaxyf" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2023/03/06/fontend-engineering/" data-id="cllow5lmc000m1g9mhtcs5ruc" class="article-share-link">分享</a> -->
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" rel="tag">工程化</a></li></ul>
@@ -277,6 +278,10 @@
       <ul>
         
           <li>
+            <a href="/2023/08/24/node-module/">NodeJS 的 commonjs、esm 模块使用以及一些字段释义</a>
+          </li>
+        
+          <li>
             <a href="/2023/08/23/webpack5-background-url/">webpack5 下 background url 图片打包失败</a>
           </li>
         
@@ -290,10 +295,6 @@
         
           <li>
             <a href="/2023/05/31/react-basic-app/">react 基础工程（react-redux &amp; react-router）</a>
-          </li>
-        
-          <li>
-            <a href="/2023/05/19/performance-optimize/">一次性能优化的过程（多图）</a>
           </li>
         
       </ul>

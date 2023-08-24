@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="baidu-site-verification" content="codeva-nIjDp6ZZc0" />
+  <meta name="referrer" content="no-referrer"/>
+  <meta charset="utf-8">
+  
+
+  
+  <title>NodeJS 的 commonjs、esm 模块使用以及一些字段释义 | 凝雪密境</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="以前 js 的模块化并没有落地，所以 NodeJS 自己整了个 commonjs，也就是我们代码里常看到 require(&#39;moduleName&#39;)。后来 esm 也就是代码里的 import export 浏览器支持了，NodeJS 也给加上了。 在不支持的年代，我们代码能直接写上模块化语句，都是 webpack 和 babel 的功劳。无论是 import 还是 require">
+<meta property="og:type" content="article">
+<meta property="og:title" content="NodeJS 的 commonjs、esm 模块使用以及一些字段释义">
+<meta property="og:url" content="https://blog.cchealthier.com/2023/08/24/node-module/index.html">
+<meta property="og:site_name" content="凝雪密境">
+<meta property="og:description" content="以前 js 的模块化并没有落地，所以 NodeJS 自己整了个 commonjs，也就是我们代码里常看到 require(&#39;moduleName&#39;)。后来 esm 也就是代码里的 import export 浏览器支持了，NodeJS 也给加上了。 在不支持的年代，我们代码能直接写上模块化语句，都是 webpack 和 babel 的功劳。无论是 import 还是 require">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-08-24T03:06:10.000Z">
+<meta property="article:modified_time" content="2023-08-24T08:10:24.564Z">
+<meta property="article:author" content="ChrisIori">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="凝雪密境" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.ico">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  <link href="https://www.jq22.com/demo/jqueryToast201708310012/css/toast.style.css" rel="stylesheet" type="text/css">
+<meta name="generator" content="Hexo 7.0.0-rc1"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">凝雪密境</a>
+      </h1>
+      
+        <div id="avatar" style="background-image: url( /avatar.jpg )">
+          <div class="container">
+            <div class="ball wind"></div>
+            <div class="ball fire"></div>
+            <div class="ball water"></div>
+            <div class="ball soil"></div>
+          </div>
+        </div>
+      
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://blog.cchealthier.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-node-module" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2023/08/24/node-module/" class="article-date">
+  <time datetime="2023-08-24T03:06:10.000Z" itemprop="datePublished">2023-08-24</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      NodeJS 的 commonjs、esm 模块使用以及一些字段释义
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>以前 js 的模块化并没有落地，所以 NodeJS 自己整了个 <code>commonjs</code>，也就是我们代码里常看到 <code>require(&#39;moduleName&#39;)</code>。后来 esm 也就是代码里的 <code>import export</code> 浏览器支持了，NodeJS 也给加上了。</p>
+<p>在不支持的年代，我们代码能直接写上模块化语句，都是 webpack 和 babel 的功劳。无论是 import 还是 require，最后都会处理成 <code>_webpack_require_</code>（应该是这个 api）。</p>
+<p>这里记录下 NodeJS 使用 esm 的一些注意点，以及 package.json 一些看了老是记不住的字段。</p>
+<h3 id="一、文件格式区分"><a href="#一、文件格式区分" class="headerlink" title="一、文件格式区分"></a>一、文件格式区分</h3><p>NodeJS 要是 esm 模块，文件必须声明为 .mjs 后缀。依然使用 .js 或者声明为 .cjs 都是使用 commonjs。</p>
+<ol>
+<li><p>当然硬要在 .js&#x2F;.cjs 文件使用 esm 语句（也就是 import）的话会<strong>报错</strong>：</p>
+<blockquote>
+<p>SyntaxError: Cannot use import statement outside a module</p>
+</blockquote>
+</li>
+<li><p>反过来在 .mjs 文件使用 commonjs 语句（也就是 require）的话会<strong>报错</strong>：</p>
+<blockquote>
+<p>ReferenceError: require is not defined in ES module scope, you can use import instead</p>
+</blockquote>
+</li>
+</ol>
+<h3 id="二、混搭使用"><a href="#二、混搭使用" class="headerlink" title="二、混搭使用"></a>二、混搭使用</h3><p>正常使用当然是两厢安好，但是可能还是会出现一些旧模块是 commonjs 写的，新的又想用 esm 去写的情况。</p>
+<ol>
+<li>在 .js&#x2F;.cjs 文件引用了 esm 模块的话会<strong>报错</strong>：<blockquote>
+<p>require() of ES Module &#x2F;xxx&#x2F;yyy&#x2F;zzz&#x2F;utils.mjs not supported.Instead change the require of &#x2F;xxx&#x2F;yyy&#x2F;zzz&#x2F;utils.mjs to a dynamic import() which is available in all CommonJS modules.</p>
+</blockquote>
+</li>
+</ol>
+<p>按照指示，改成动态引入 <code>import()</code> 就可以了。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span>(<span class="string">&#x27;./utils.mjs&#x27;</span>).<span class="title function_">then</span>(<span class="variable language_">console</span>.<span class="property">log</span>);</span><br><span class="line"><span class="comment">// [Module: null prototype] &#123;</span></span><br><span class="line"><span class="comment">//   default: [Function: runEsm],</span></span><br><span class="line"><span class="comment">//   runSub: [Function: runSub]</span></span><br><span class="line"><span class="comment">// &#125;</span></span><br></pre></td></tr></table></figure>
+<p>可以看出，<code>export default</code> 导出的东西被挂载 <code>default</code> 字段上。上面说了在标准还没落地时，webpack 就是这么做的。不知道是不是 NodeJS 参考了这个实现。</p>
+<ol start="2">
+<li>在 .mjs 文件 文件引用了 commonjs 模块的话就<strong>没问题</strong>。&#x3D; &#x3D;！</li>
+</ol>
+<p>只不过 commonjs 里并没有 <code>default</code> 这个概念，所以如 <code>import runCommonDefault, &#123; runExport &#125; from &#39;./utils.cjs&#39;;</code> 里，<code>runCommonDefault</code> 就是整个 <code>module.exports</code> 导出的对象。而 <code>runExport</code> 就是纯粹对 <code>module.exports</code> 导出对象的解构，属于其中一个字段内容。</p>
+<h3 id="三、esm-模块不支持-filename，-dirname"><a href="#三、esm-模块不支持-filename，-dirname" class="headerlink" title="三、esm 模块不支持 __filename，__dirname"></a>三、esm 模块不支持 __filename，__dirname</h3><p>esm 模块里是没有 <code>__filename</code>，<code>__dirname</code> 这两个全局变量的。可以这样实现：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> path <span class="keyword">from</span> <span class="string">&#x27;path&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> url <span class="keyword">from</span> <span class="string">&#x27;url&#x27;</span>;</span><br><span class="line"><span class="keyword">const</span> __filename = url.<span class="title function_">fileURLToPath</span>(<span class="keyword">import</span>.<span class="property">meta</span>.<span class="property">url</span>);</span><br><span class="line"><span class="keyword">const</span> __dirname = path.<span class="title function_">dirname</span>(__filename);</span><br></pre></td></tr></table></figure>
+
+<span id="more"></span>
+
+<h3 id="四、esm-文件可以直接写-await-方法"><a href="#四、esm-文件可以直接写-await-方法" class="headerlink" title="四、esm 文件可以直接写 await 方法"></a>四、esm 文件可以直接写 await 方法</h3><p>意思就是整份文件在被引入的时候已经是 <code>async</code> 的形式引入，所以直接在文件最顶层就可以直接写 <code>await</code> 关键字。和上面说的 .js&#x2F;.cjs 文件需要用 <code>import()</code> 引用 esm 模块是不是有点关联起来。</p>
+<p>这里可以了解一下 NodeJS 的模块加载机制，很有意思。整个模块是像包在一个函数体执行一样，<code>require</code> 方法是这个函数的入参，从外部传进来的，而不是挂载在全局。这里不展开，有兴趣可以自行搜索。</p>
+<h3 id="五、commonjs-里-module-exports-和-exports-的关系"><a href="#五、commonjs-里-module-exports-和-exports-的关系" class="headerlink" title="五、commonjs 里 module.exports 和 exports 的关系"></a>五、commonjs 里 module.exports 和 exports 的关系</h3><p>一开始这两个确实是指向同个对象，打印能看出： <code>console.log(module.exports === exports) // =&gt; true</code>。<br>也就是 <code>module.exports.funA = xxx</code> 和 <code>exports.funA = xxx</code> 确实效果是一样的。<br>但是现在很习惯会统一导出，很少一个个声明：<code>module.exports = &#123; ... &#125;</code>。这样子就把 <code>module.exports</code> 的指向对象给改了。再也和 <code>exports</code> 聊不到一块儿去了。</p>
+<h3 id="六、package-json-声明导出相关的字段"><a href="#六、package-json-声明导出相关的字段" class="headerlink" title="六、package.json 声明导出相关的字段"></a>六、package.json 声明导出相关的字段</h3><p><strong>module：</strong><br>用于指向 esm 模块的库入口。</p>
+<p><strong>main：</strong><br>用于指向 commonjs 模块的库入口。</p>
+<p><strong>brower：</strong><br>用于指向 umd 模块的库入口。umd 全称是UniversalModuleDefinition，是一种通用模块定义格式。简单理解就是糅合不同标准，根据宿主的支持度使用相应的标准。很适合给浏览器端引入使用。</p>
+<p><strong>exports：</strong><br>用于声明模块的导出路径映射。</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">&quot;exports&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;.&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;types&quot;</span><span class="punctuation">:</span> <span class="string">&quot;./dist/index.d.ts&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;import&quot;</span><span class="punctuation">:</span> <span class="string">&quot;./dist/index.mjs&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;require&quot;</span><span class="punctuation">:</span> <span class="string">&quot;./dist/index.js&quot;</span></span><br><span class="line">  <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;./sub&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;types&quot;</span><span class="punctuation">:</span> <span class="string">&quot;./dist/sub.d.ts&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;import&quot;</span><span class="punctuation">:</span> <span class="string">&quot;./dist/sub.mjs&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;require&quot;</span><span class="punctuation">:</span> <span class="string">&quot;./dist/sub.js&quot;</span></span><br><span class="line">  <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;./package.json&quot;</span><span class="punctuation">:</span> <span class="string">&quot;./package.json&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;./*&quot;</span><span class="punctuation">:</span> <span class="string">&quot;./*.js&quot;</span></span><br><span class="line"><span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br></pre></td></tr></table></figure>
+
+<p>如上例子所示，我们分别在 <code>require(&#39;myUtils&#39;)</code> 和 <code>require(&#39;myUtils/sub&#39;)</code> 的时候，就会相应的导出不同的文件。最后那个 <code>&quot;./package.json&quot;: &quot;./package.json&quot;, &quot;./*&quot;: &quot;./*.js&quot;</code> 可以酌情写。<br>其实在没这个字段的时候，就是按照文件夹去找的。有了这个字段后就会严格按照这个字段去寻找，此时不声明 <code>package.json</code> 的导出的话，甚至都获取不到 package.json。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      
+        <a data-url="https://blog.cchealthier.com/2023/08/24/node-module/" data-id="cllow5lmg001u1g9m39s7eloq" class="article-thumbs-up">赞一个(<span class="article-thumbs-up-num">0</span>)</a>
+      
+      <!-- <a data-url="https://blog.cchealthier.com/2023/08/24/node-module/" data-id="cllow5lmg001u1g9m39s7eloq" class="article-share-link">分享</a> -->
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2023/08/23/webpack5-background-url/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">webpack5 下 background url 图片打包失败</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/http%E5%8D%8F%E8%AE%AE/">http协议</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/%E6%9C%8D%E5%8A%A1/">服务</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/%E7%AE%97%E6%B3%95/">算法</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%97%85%E8%A1%8C/">旅行</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%97%85%E8%A1%8C/%E8%AE%B0%E5%BD%95/">记录</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%83%B9%E9%A5%AA/">烹饪</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%83%B9%E9%A5%AA/%E4%BC%A0%E7%BB%9F/">传统</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%9A%8F%E6%83%B3/">随想</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%9A%8F%E6%83%B3/%E5%BF%83%E6%83%85/">心情</a></li></ul></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nginx/" rel="tag">nginx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" rel="tag">工程化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%80%A7%E8%83%BD/" rel="tag">性能</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/nginx/" style="font-size: 13.33px;">nginx</a> <a href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" style="font-size: 20px;">工程化</a> <a href="/tags/%E6%80%A7%E8%83%BD/" style="font-size: 16.67px;">性能</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/08/">八月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">七月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/06/">六月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/05/">五月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/04/">四月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/03/">三月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/02/">二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">十一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">十月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">九月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2023/08/24/node-module/">NodeJS 的 commonjs、esm 模块使用以及一些字段释义</a>
+          </li>
+        
+          <li>
+            <a href="/2023/08/23/webpack5-background-url/">webpack5 下 background url 图片打包失败</a>
+          </li>
+        
+          <li>
+            <a href="/2023/07/26/node-stream/">NodeJS 里的 stream（流）</a>
+          </li>
+        
+          <li>
+            <a href="/2023/06/07/webpack-modulefederationplugin/">用 webpack ModuleFederationPlugin 搭建微前端</a>
+          </li>
+        
+          <li>
+            <a href="/2023/05/31/react-basic-app/">react 基础工程（react-redux &amp; react-router）</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2023 ChrisIori<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//cdn.staticfile.org/jquery/2.0.3/jquery.min.js"></script>
+<script type="text/javascript" src="https://www.jq22.com/demo/jqueryToast201708310012/js/toast.script.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>

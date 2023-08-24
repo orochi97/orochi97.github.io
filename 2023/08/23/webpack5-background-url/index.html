@@ -17,7 +17,7 @@
 <meta property="og:description" content="一、省流webpack5 下，css-loader 与 file&#x2F;url-loader 对于 css 文件（无论是 import 一份 css 文件还是 vue 里面的 style 块）里的 background-image: url() 资源文件处理有冲突。表现在： 打包出来的 url 使用的是 css-loader 自己产出的图片。但是这张图片生成有问题，导致图片无法显示。 解决方法看最后面。">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-08-23T12:19:03.000Z">
-<meta property="article:modified_time" content="2023-08-24T03:00:02.728Z">
+<meta property="article:modified_time" content="2023-08-24T03:06:59.789Z">
 <meta property="article:author" content="ChrisIori">
 <meta property="article:tag" content="工程化">
 <meta name="twitter:card" content="summary">
@@ -118,6 +118,8 @@
 <p>一开始我怀疑是 <code>mini-css-extract-plugin</code>，怀疑是抽取 css 文件的时候，顺便生成了图片。后面我把这个去掉，只留下 <code>css-loader</code> 发现也会产出图片。这我着实没想到，以为只是单纯处理 css，遇到资源文件还是交给 <code>file/url-loader</code>。但是 webpack4 是好的，或者 webpack5 没有 <code>file/url-loader</code> 也是好的。</p>
 <h3 id="三、查找"><a href="#三、查找" class="headerlink" title="三、查找"></a>三、查找</h3><p>那就缩小了排查范围，就着这几个关键字进行了搜索，终于发现问题：webpack5 对于资源文件处理进行了更改，具体可看官网《<a target="_blank" rel="noopener" href="https://webpack.docschina.org/guides/asset-modules">资源模块</a>》介绍。也就是 webpack5 不需要再对资源文件指定相应的 loader 去处理了。而是加上 <code>type</code> 声明，比如 <code>type: asset/resource</code>。而如果我们还按照老的配置，可能会对资源重复处理，从而导致生成了一堆没法用的损坏图。</p>
 <p>确实是 <code>css-loader</code> 和 <code>file/url-loader</code> 有冲突，决定性证据也懒得去看源码了，这 webpack 4 升 5 真的改变好大。还记得刚出那会一大堆插件不兼容，不升级都没法用。</p>
+<span id="more"></span>
+
 <h3 id="四、解决"><a href="#四、解决" class="headerlink" title="四、解决"></a>四、解决</h3><p>既然知道问题了，那么就有以下解决方案：</p>
 <ol>
 <li><p>继续使用 file&#x2F;url-loader，但是要加上 <code>type: &#39;javascript/auto&#39;</code> 声明。看官网例子：</p>
@@ -142,9 +144,9 @@
     </div>
     <footer class="article-footer">
       
-        <a data-url="https://blog.cchealthier.com/2023/08/23/webpack5-background-url/" data-id="clloku555003h8m9m7vtybvee" class="article-thumbs-up">赞一个(<span class="article-thumbs-up-num">0</span>)</a>
+        <a data-url="https://blog.cchealthier.com/2023/08/23/webpack5-background-url/" data-id="cllow5lmq005d1g9mghut7hju" class="article-thumbs-up">赞一个(<span class="article-thumbs-up-num">0</span>)</a>
       
-      <!-- <a data-url="https://blog.cchealthier.com/2023/08/23/webpack5-background-url/" data-id="clloku555003h8m9m7vtybvee" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2023/08/23/webpack5-background-url/" data-id="cllow5lmq005d1g9mghut7hju" class="article-share-link">分享</a> -->
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" rel="tag">工程化</a></li></ul>
@@ -154,6 +156,15 @@
   
     
 <nav id="article-nav">
+  
+    <a href="/2023/08/24/node-module/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          NodeJS 的 commonjs、esm 模块使用以及一些字段释义
+        
+      </div>
+    </a>
   
   
     <a href="/2023/07/26/node-stream/" id="article-nav-older" class="article-nav-link-wrap">
@@ -216,6 +227,10 @@
       <ul>
         
           <li>
+            <a href="/2023/08/24/node-module/">NodeJS 的 commonjs、esm 模块使用以及一些字段释义</a>
+          </li>
+        
+          <li>
             <a href="/2023/08/23/webpack5-background-url/">webpack5 下 background url 图片打包失败</a>
           </li>
         
@@ -229,10 +244,6 @@
         
           <li>
             <a href="/2023/05/31/react-basic-app/">react 基础工程（react-redux &amp; react-router）</a>
-          </li>
-        
-          <li>
-            <a href="/2023/05/19/performance-optimize/">一次性能优化的过程（多图）</a>
           </li>
         
       </ul>
