@@ -79,6 +79,62 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-vue-observer-dep-watcher" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2022/11/07/vue-observer-dep-watcher/" class="article-date">
+  <time datetime="2022-11-07T15:13:16.000Z" itemprop="datePublished">2022-11-07</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2022/11/07/vue-observer-dep-watcher/">vue 的里 observer、dep、watcher</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>简单梳理一下 vue 源码里，observer、dep、watcher 这三者的作用，捋清了基本上就知道 vue 的响应式操作了。看一张图：</p>
+<p><img src="https://file.cchealthier.com/file/blog/202210/vue-observer-dep-watcher.png" alt="vue-observer-dep-watcher.jpg"></p>
+<p>总结一下就是，我们在 vue 文件定义数据 data 属性，会生成一个 _data 的对象，遍历这个 _data 对象的属性，会通过 defineProperty 挂载到 vue 实例上。以图里 src 为例：</p>
+<ul>
+<li>vm.src，被 defineProperty 处理</li>
+<li>&#x3D;&gt; 读取和设置都是 vm._data.src</li>
+<li>&#x3D;&gt; vm._data.src 被 defineProperty 处理</li>
+<li>&#x3D;&gt; 在其 set get 函数进行依赖收集即更新通知</li>
+</ul>
+<h5 id="再细述两个小点"><a href="#再细述两个小点" class="headerlink" title="再细述两个小点"></a>再细述两个小点</h5><ol>
+<li><p>原来 dom 的更新是在 watcher 的 getter 里。watcher 有两种，一种是在实例上声明的 watch 对象或者主动调用 vm.$watch 方法的，这种都是属性 user&#x3D;&#x3D;&#x3D; true 的 watcher，其 getter 都是直接获取 vm 上的值。一种是生命周期由框架生成的 watcher，这个的 getter 是 updateComponent，里面包含了对 dom 的更新。当然接下来就是 diff 算法更新 dom 的事了，不属于依赖更新的内容。</p>
+</li>
+<li><p>vue 文件的 template 代码会被解析成 render 函数，对，就是那个说直接写会效率更快的 render 函数。原过程是：template &#x3D;&gt; ast &#x3D;&gt; render，这一步还是比较消耗。直接写 render 函数相当于省去前面两步。然后 render 执行后会生成虚拟 dom，也就是 VNode。接下来就是 vm.<em>patch</em> 里通过双指针的 diff 算法，来对比新旧 VNode 的差别，算出变更的地方，然后执行 js 原生的元素操作语句进行 dom 的修改。</p>
+</li>
+</ol>
+
+      
+    </div>
+    <footer class="article-footer">
+      
+      <!-- <a data-url="https://blog.cchealthier.com/2022/11/07/vue-observer-dep-watcher/" data-id="clloku55300328m9m3y3w9b11" class="article-share-link">分享</a> -->
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-2022-autumn" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2022/10/19/2022-autumn/" class="article-date">
@@ -116,7 +172,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2022/10/19/2022-autumn/" data-id="clkp6ufkm0000b59mau6f77xn" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2022/10/19/2022-autumn/" data-id="clloku54k00008m9m8ufy31wf" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -164,7 +220,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2022/10/18/binary-tree-traversal/" data-id="clkp6ufkr0007b59mffja6b5y" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2022/10/18/binary-tree-traversal/" data-id="clloku54p00078m9ma4cx5yfx" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -211,7 +267,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2022/10/18/deepth-breadth-traversal/" data-id="clkp6ufku000eb59m00yb83wm" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2022/10/18/deepth-breadth-traversal/" data-id="clloku54s000e8m9mbedr3th5" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -260,7 +316,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2022/09/25/linked-list/" data-id="clkp6ufky0017b59mhs53erjw" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2022/09/25/linked-list/" data-id="clloku54w00178m9m68bm1fsl" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -318,7 +374,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2022/09/05/webpack-babel-esm/" data-id="clkp6ufl50035b59m9syc1jai" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2022/09/05/webpack-babel-esm/" data-id="clloku55400358m9md4nadeyj" class="article-share-link">分享</a> -->
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" rel="tag">工程化</a></li></ul>
@@ -372,7 +428,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2022/03/26/nginx/" data-id="clkp6ufkz001rb59m2g115r49" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2022/03/26/nginx/" data-id="clloku54y001r8m9m5p2yepo6" class="article-share-link">分享</a> -->
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/nginx/" rel="tag">nginx</a></li></ul>
@@ -423,7 +479,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2022/03/19/vite-server-import/" data-id="clkp6ufl4002xb59mc9f9bnxb" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2022/03/19/vite-server-import/" data-id="clloku553002x8m9mgebahpfj" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -470,7 +526,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2022/03/14/beijing-winter/" data-id="clkp6ufkr0005b59mbtv3b75o" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2022/03/14/beijing-winter/" data-id="clloku54p00058m9mcc5r390a" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -522,58 +578,11 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2021/01/09/performance-api/" data-id="clkp6ufl0001xb59m3uyzds2l" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2021/01/09/performance-api/" data-id="clloku54y001v8m9mft759i6a" class="article-share-link">分享</a> -->
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%80%A7%E8%83%BD/" rel="tag">性能</a></li></ul>
 
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-autumn" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/12/06/autumn/" class="article-date">
-  <time datetime="2020-12-06T04:09:51.000Z" itemprop="datePublished">2020-12-06</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E6%97%85%E8%A1%8C/">旅行</a>►<a class="article-category-link" href="/categories/%E6%97%85%E8%A1%8C/%E8%AE%B0%E5%BD%95/">记录</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/12/06/autumn/">我言秋日胜春朝</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>10月11月交界去了趟北京，看看红叶枫叶。不得不说，北方就是比南方有秋意。毕竟广东没秋天，哈哈。</p>
-<p><img src="https://file.cchealthier.com/file/blog/autumn/beijing1.jpg" alt="1.jpg"></p>
-        
-          <p class="article-more-link">
-            <a href="/2020/12/06/autumn/#more">Read More</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      
-      <!-- <a data-url="https://blog.cchealthier.com/2020/12/06/autumn/" data-id="clkp6ufkq0004b59mcg08d196" class="article-share-link">分享</a> -->
-      
-      
     </footer>
   </div>
   
@@ -625,7 +634,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">七月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/06/">六月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/05/">五月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/04/">四月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/03/">三月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/02/">二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">十一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">十月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">九月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/08/">八月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">七月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/06/">六月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/05/">五月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/04/">四月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/03/">三月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/02/">二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">十一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">十月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">九月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a></li></ul>
     </div>
   </div>
 
@@ -636,6 +645,10 @@
     <h3 class="widget-title">最新文章</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2023/08/23/webpack5-background-url/">webpack5 下 background url 图片打包失败</a>
+          </li>
         
           <li>
             <a href="/2023/07/26/node-stream/">NodeJS 里的 stream（流）</a>
@@ -651,10 +664,6 @@
         
           <li>
             <a href="/2023/05/19/performance-optimize/">一次性能优化的过程（多图）</a>
-          </li>
-        
-          <li>
-            <a href="/2023/05/13/file-slice-upload/">文件切片上传（断点续传）</a>
           </li>
         
       </ul>

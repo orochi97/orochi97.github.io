@@ -2,6 +2,15 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://blog.cchealthier.com/2023/08/23/webpack5-background-url/</loc>
+    
+    <lastmod>2023-08-24</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://blog.cchealthier.com/2023/07/26/node-stream/</loc>
     
     <lastmod>2023-07-30</lastmod>
@@ -445,7 +454,7 @@
 
   <url>
     <loc>https://blog.cchealthier.com/</loc>
-    <lastmod>2023-07-30</lastmod>
+    <lastmod>2023-08-24</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
@@ -453,28 +462,28 @@
   
   <url>
     <loc>https://blog.cchealthier.com/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/</loc>
-    <lastmod>2023-07-30</lastmod>
+    <lastmod>2023-08-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.cchealthier.com/tags/hexo/</loc>
-    <lastmod>2023-07-30</lastmod>
+    <lastmod>2023-08-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.cchealthier.com/tags/%E6%80%A7%E8%83%BD/</loc>
-    <lastmod>2023-07-30</lastmod>
+    <lastmod>2023-08-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.cchealthier.com/tags/nginx/</loc>
-    <lastmod>2023-07-30</lastmod>
+    <lastmod>2023-08-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
@@ -483,84 +492,84 @@
   
   <url>
     <loc>https://blog.cchealthier.com/categories/%E6%97%85%E8%A1%8C/</loc>
-    <lastmod>2023-07-30</lastmod>
+    <lastmod>2023-08-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.cchealthier.com/categories/%E5%BC%80%E5%8F%91/</loc>
-    <lastmod>2023-07-30</lastmod>
+    <lastmod>2023-08-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.cchealthier.com/categories/%E6%97%85%E8%A1%8C/%E8%AE%B0%E5%BD%95/</loc>
-    <lastmod>2023-07-30</lastmod>
+    <lastmod>2023-08-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.cchealthier.com/categories/%E5%BC%80%E5%8F%91/%E7%AE%97%E6%B3%95/</loc>
-    <lastmod>2023-07-30</lastmod>
+    <lastmod>2023-08-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.cchealthier.com/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/</loc>
-    <lastmod>2023-07-30</lastmod>
+    <lastmod>2023-08-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.cchealthier.com/categories/%E7%83%B9%E9%A5%AA/</loc>
-    <lastmod>2023-07-30</lastmod>
+    <lastmod>2023-08-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.cchealthier.com/categories/%E5%BC%80%E5%8F%91/%E6%95%B0%E6%8D%AE%E5%BA%93/</loc>
-    <lastmod>2023-07-30</lastmod>
+    <lastmod>2023-08-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.cchealthier.com/categories/%E7%83%B9%E9%A5%AA/%E4%BC%A0%E7%BB%9F/</loc>
-    <lastmod>2023-07-30</lastmod>
+    <lastmod>2023-08-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.cchealthier.com/categories/%E9%9A%8F%E6%83%B3/</loc>
-    <lastmod>2023-07-30</lastmod>
+    <lastmod>2023-08-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.cchealthier.com/categories/%E5%BC%80%E5%8F%91/%E6%9C%8D%E5%8A%A1/</loc>
-    <lastmod>2023-07-30</lastmod>
+    <lastmod>2023-08-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.cchealthier.com/categories/%E5%BC%80%E5%8F%91/http%E5%8D%8F%E8%AE%AE/</loc>
-    <lastmod>2023-07-30</lastmod>
+    <lastmod>2023-08-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.cchealthier.com/categories/%E9%9A%8F%E6%83%B3/%E5%BF%83%E6%83%85/</loc>
-    <lastmod>2023-07-30</lastmod>
+    <lastmod>2023-08-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
