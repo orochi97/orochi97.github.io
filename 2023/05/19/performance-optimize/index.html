@@ -7,11 +7,11 @@
   
 
   
-  <title>一次性能优化的过程（多图） | 凝雪密境</title>
+  <title>一次前端性能优化的过程（多图） | 凝雪密境</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description" content="性能优化听多了，又是各个注意点，又是监控什么的，如《JS性能优化探讨》《前端性能监控》，真正遇到了还是得具体场景具体分析。 一直觉得我的个人网站首页（现在不会了）很慢，进去后背景和熊猫头渲染得特别慢。当然这个慢是相对的，就我做过的 TO B 系统单单是前置接口的获取都要几秒了，只是有 loading 效果看起来不难受。但是我这个网页啥都没有，就那么几个图片和动画，着实不该。那就实际一步步看看吧。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="一次性能优化的过程（多图）">
+<meta property="og:title" content="一次前端性能优化的过程（多图）">
 <meta property="og:url" content="https://blog.cchealthier.com/2023/05/19/performance-optimize/index.html">
 <meta property="og:site_name" content="凝雪密境">
 <meta property="og:description" content="性能优化听多了，又是各个注意点，又是监控什么的，如《JS性能优化探讨》《前端性能监控》，真正遇到了还是得具体场景具体分析。 一直觉得我的个人网站首页（现在不会了）很慢，进去后背景和熊猫头渲染得特别慢。当然这个慢是相对的，就我做过的 TO B 系统单单是前置接口的获取都要几秒了，只是有 loading 效果看起来不难受。但是我这个网页啥都没有，就那么几个图片和动画，着实不该。那就实际一步步看看吧。">
@@ -21,7 +21,7 @@
 <meta property="og:image" content="https://blog.cchealthier.com/2023/05/19/performance-optimize/%E7%BD%91%E7%AB%99%E6%80%A7%E8%83%BD%E5%88%86%E6%9E%90.png">
 <meta property="og:image" content="https://blog.cchealthier.com/2023/05/19/performance-optimize/%E7%BD%91%E7%AB%99%E6%80%A7%E8%83%BD%E5%88%86%E6%9E%902.png">
 <meta property="og:image" content="https://blog.cchealthier.com/2023/05/19/performance-optimize/%E7%BD%91%E7%AB%99%E6%80%A7%E8%83%BD%E5%88%86%E6%9E%903.png">
-<meta property="og:image" content="https://blog.cchealthier.com/2023/05/19/performance-optimize/%E4%BC%98%E5%8C%96%E5%89%8Dnetwork.png">
+<meta property="og:image" content="https://blog.cchealthier.com/2023/05/19/performance-optimize/%E4%BC%98%E5%8C%96%E5%90%8Enetwork.png">
 <meta property="og:image" content="https://blog.cchealthier.com/2023/05/19/performance-optimize/%E6%96%87%E6%9C%AC%E5%8E%8B%E7%BC%A9.png">
 <meta property="og:image" content="https://blog.cchealthier.com/2023/05/19/performance-optimize/%E4%BC%98%E5%8C%96%E5%90%8E%E7%9A%84%E6%80%A7%E8%83%BD%E6%8A%A5%E5%91%8A.png">
 <meta property="og:image" content="https://blog.cchealthier.com/2023/05/19/performance-optimize/%E4%BC%98%E5%8C%96%E5%90%8E%E7%9A%84%E6%80%A7%E8%83%BD%E6%8A%A5%E5%91%8A2.png">
@@ -35,13 +35,11 @@
 <meta property="og:image" content="https://blog.cchealthier.com/2023/05/19/performance-optimize/%E9%A2%84%E5%8A%A0%E8%BD%BD%E5%90%8E%E7%9A%84%E5%9B%BE%E7%89%87%E8%AF%B7%E6%B1%82.png">
 <meta property="og:image" content="https://blog.cchealthier.com/2023/05/19/performance-optimize/%E6%9C%80%E7%BB%88%E4%BC%98%E5%8C%96%E6%95%88%E6%9E%9C.png">
 <meta property="article:published_time" content="2023-05-18T16:03:11.000Z">
-<meta property="article:modified_time" content="2023-06-07T02:29:05.366Z">
+<meta property="article:modified_time" content="2023-08-28T04:03:54.453Z">
 <meta property="article:author" content="ChrisIori">
 <meta property="article:tag" content="性能">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://blog.cchealthier.com/2023/05/19/performance-optimize/%E4%BC%98%E5%8C%96%E5%89%8Dnetwork.png">
-  
-    <link rel="alternate" href="/atom.xml" title="凝雪密境" type="application/atom+xml">
   
   
     <link rel="icon" href="/favicon.ico">
@@ -88,8 +86,6 @@
       </nav>
       <nav id="sub-nav">
         
-          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
-        
         <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
       </nav>
       <div id="search-form-wrap">
@@ -117,7 +113,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      一次性能优化的过程（多图）
+      一次前端性能优化的过程（多图）
     </h1>
   
 
@@ -126,10 +122,10 @@
     <div class="article-entry" itemprop="articleBody">
       
         <p>性能优化听多了，又是各个注意点，又是监控什么的，如《<a href="/2020/05/28/js-performance/">JS性能优化探讨</a>》《<a href="/2021/01/09/performance-api/">前端性能监控</a>》，真正遇到了还是得具体场景具体分析。</p>
-<p>一直觉得我的<a target="_blank" rel="noopener" href="https://cchealthier.com/">个人网站首页</a>（现在不会了）很慢，进去后背景和熊猫头渲染得特别慢。当然这个慢是相对的，就我做过的 TO B 系统单单是前置接口的获取都要几秒了，只是有 loading 效果看起来不难受。但是我这个网页啥都没有，就那么几个图片和动画，着实不该。那就实际一步步看看吧。</p>
+<p>一直觉得我的<a target="_blank" rel="noopener" href="https://cchealthier.com/"><u>个人网站首页</u></a>（现在不会了）很慢，进去后背景和熊猫头渲染得特别慢。当然这个慢是相对的，就我做过的 TO B 系统单单是前置接口的获取都要几秒了，只是有 loading 效果看起来不难受。但是我这个网页啥都没有，就那么几个图片和动画，着实不该。那就实际一步步看看吧。</p>
 <h3 id="一-服务器连接速度"><a href="#一-服务器连接速度" class="headerlink" title="一. 服务器连接速度"></a>一. 服务器连接速度</h3><p>直接百度搜<code>网站访问速度测试</code>就有很多工具网站。一看都没啥问题，除了极个别的比较远的省份（我这是买的阿里云深圳的服务器）其他都在一秒以内。再 <code>ping</code> 一下，也可以看到并无延迟。也就是 <code>DNS</code> 解析和访问并没有问题。</p>
 <h3 id="二-减小图片体积"><a href="#二-减小图片体积" class="headerlink" title="二. 减小图片体积"></a>二. 减小图片体积</h3><p>那首先考虑资源图片过大，因为确实用了比较高清的图片，那就在不糊的情况下尽量缩小体积。兴冲冲地更新一看，没啥变化。还是有那个等待过程。那好吧，一不做而不休，我尝试把其他图片都去掉，只留下一个熊猫头，还是很慢，就证明不该是图片背锅。当然缩小体积是没有问题的。省流量嘛。</p>
-<h3 id="三-使用-Devtool-Performance"><a href="#三-使用-Devtool-Performance" class="headerlink" title="三. 使用 Devtool Performance"></a>三. 使用 Devtool Performance</h3><p>那就直接用工具看吧，打开开发者工具，切到 <code>Performance</code>，启动录制看看效果。找一下，在 Timings 那里看到 <code>FP</code> <code>FCP</code> 等事件，这里就是影响视觉观看的主要节点了。当然前面还有 <code>Parse HTML</code> 或者 <code>Function call</code> 等等事件。主要看 <code>Parse HTML</code>，因为要解析了 html，才会加载一系列资源，可以看出这一步并没有什么问题，也是很快就响应了。但是到 <code>FCP</code> 却隔了好几秒。也就是中间有东西耽搁了。<br>看了一下，是<strong>必要的 js 文件加载</strong>。有两个，一个是 <code>app.***.js</code>，基础的业务 js， 一个是 <code>chunk-vendor.***.js</code>，vue 框架的打包厂务。毫无疑问，这两者都是不可或缺的。<code>appjs</code> 比较小还好，很快就获取完了。<code>chunk-vendorjs</code>有 300+kb，耗时几秒。可以看到它加载完后，很快就 <code>FCP</code> 了。所以它的加载就是问题关键了。</p>
+<h3 id="三-使用-Devtool-Performance"><a href="#三-使用-Devtool-Performance" class="headerlink" title="三. 使用 Devtool Performance"></a>三. 使用 Devtool Performance</h3><p>那就直接用工具看吧，打开开发者工具，切到 <code>Performance</code>，启动录制看看效果。找一下，在 Timings 那里看到 <code>FP</code> <code>FCP</code> 等事件，这里就是影响视觉观看的主要节点了。当然前面还有 <code>Parse HTML</code> 或者 <code>Function call</code> 等等事件。主要看 <code>Parse HTML</code>，因为要解析了 html，才会加载一系列资源，可以看出这一步并没有什么问题，也是很快就响应了。但是到 <code>FCP</code> 却隔了好几秒。也就是中间有东西耽搁了。<br>看了一下，是<strong>必要的 js 文件加载</strong>。有两个，一个是 <code>app.***.js</code>，基础的业务 js， 一个是 <code>chunk-vendor.***.js</code>，vue 框架的打包产物。毫无疑问，这两者都是不可或缺的。<code>appjs</code> 比较小还好，很快就获取完了。<code>chunk-vendorjs</code>有 300+kb，耗时几秒。可以看到它加载完后，很快就 <code>FCP</code> 了。所以它的加载就是问题关键了。</p>
 <h3 id="四-js-文件太大？"><a href="#四-js-文件太大？" class="headerlink" title="四. js 文件太大？"></a>四. js 文件太大？</h3><p>讲道理，300+kb 的 js 文件不算小，但也不能叫很大啊。怎么要好几秒才能加载完？当然我的服务器没有加速功能，如果放到 CDN 服务，我想应该效果会好点。但是没有这条件，那只能另外想想办法。我代码里用了 <code>Element-UI</code>，测试了一下确实是按需引入，去掉几个组件后，体积变小了。<br>但，这些就是要用到的，减不了。路由页面用的也是 <code>import()</code> 动态引入，也就是到了真正访问那个页面组件，才会去加载相应的 js。再说了业务代码也不会打包到 vendor 去。那体积没法减了。然后在自己本地测试了一下，以及线上的缓存状态下，页面出现都很快，更加印证了我的猜测，就是这个 “大 js 文件” 导致了页面渲染慢。（当然最好有个 CDN 什么的加速可以验证…）</p>
 <img src="/2023/05/19/performance-optimize/%E4%BC%98%E5%8C%96%E5%89%8Dnetwork.png" class="" title="优化前network">
 
@@ -150,9 +146,9 @@
 <h4 id="1-启用文本压缩"><a href="#1-启用文本压缩" class="headerlink" title="1. 启用文本压缩"></a>1. 启用文本压缩</h4><p>对于这个就不啰嗦介绍了。我只是在想怎么一开始没想到！我是用的 nginx 做的服务代理，结果 nginx 是默认没有开启 gzip 压缩。赶紧给加上。</p>
 <figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">http</span> &#123;</span><br><span class="line">  <span class="string">gzip</span> <span class="string">on;</span></span><br><span class="line">  <span class="string">gzip_comp_level</span> <span class="number">6</span><span class="string">;</span>    <span class="comment"># 压缩比例，比例越大，压缩时间越长。默认是1</span></span><br><span class="line">  <span class="string">gzip_types</span> <span class="string">text/xml</span> <span class="string">text/plain</span> <span class="string">text/css</span> <span class="string">application/javascript</span> <span class="string">application/x-javascript</span> <span class="string">application/rss+xml;</span>     <span class="comment"># 哪些文件可以被压缩</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>默认 <code>nginx.conf</code> 的 <code>gzip on</code> 是注释掉的，给打开，然后要注意的是 <code>gzip_types</code> 要声明好 css js 都要压缩。要不然还是默认只有 html 压缩。<br>然后重启服务，看看效果，嘿，体感上果然是快了。300+kb 直接给压缩到 <strong>100+kb</strong>，加载速度从原来的 5s 快到 <strong>1.5s</strong>！当然这个是有波动的，试了好几次也有 2s 多的。但总之是快多了。可以看到 <code>FCP</code> 提前了很多。</p>
-<img src="/2023/05/19/performance-optimize/%E4%BC%98%E5%8C%96%E5%89%8Dnetwork.png" class="" title="优化前network">
+<img src="/2023/05/19/performance-optimize/%E4%BC%98%E5%8C%96%E5%90%8Enetwork.png" class="" title="优化后network">
 
-<p><strong>要注意的是：这里的时间线对的是最上面的那个白色时间间隙，蓝色的其实是下面事件时间轴的视角外。另外查看文件的响应头有 Content-Encoding 字段，即是有开启文本压缩。</strong></p>
+<p><strong>要注意的是：这里的时间线对的是最上面的那个白色时间间隙，蓝色遮罩的其实是下面事件时间轴的视角外。另外查看文件的响应头有 Content-Encoding 字段，即是有开启文本压缩。</strong></p>
 <img src="/2023/05/19/performance-optimize/%E6%96%87%E6%9C%AC%E5%8E%8B%E7%BC%A9.png" class="" title="文本压缩">
 
 <h4 id="2-优化星星跳动动画"><a href="#2-优化星星跳动动画" class="headerlink" title="2. 优化星星跳动动画"></a>2. 优化星星跳动动画</h4><p>因为这个动画方法，其实是当时刚学前端看的教学视频抄的，而我看的还是几年前的过期视频。那时候可能还没有 css3 的 transform 啊，will-change 什么的，用的是 <code>定时器 + left 位移</code>。一直没理，这次也一起优化下吧。当然这其实和首屏展示慢没影响，不过确实也是性能指标的一环了。</p>
@@ -191,7 +187,7 @@
 <p><strong>图片分流优化后</strong></p>
 <img src="/2023/05/19/performance-optimize/%E4%BC%98%E5%8C%96%E5%90%8E%E7%9A%84%E5%9B%BE%E7%89%87%E8%AF%B7%E6%B1%82.png" class="" title="优化后的图片请求">
 
-<p>网络是有波动的，这是我刷新多次截的比较普遍的数据。还是很明显可以看出每张图片都普遍快了几百毫秒。那这一招就算生效了。</p>
+<p>网络是有波动的，这是我刷新多次截的比较普遍的数据。还是很明显可以看出每张图片都普遍快了几百毫秒。<strong>那这一招就算生效了</strong>。</p>
 <h4 id="3-js-css-分流"><a href="#3-js-css-分流" class="headerlink" title="3. js css 分流"></a>3. js css 分流</h4><p>在处理上面的图片分流时，突然又想到，之前公司是这样处理的：前端的东西全部放在一个容器，后端的东西放在一个容器，然后配置好 HAProxy 接口转发规则。也就是前端只有接口和后端打交道，没有所谓后端路由概念。前端也是 HAProxy 配置好静态资源访问路径，前端资源的访问和后端没有任何关系。<br>也就是：之前没有用 nginx，用的 express.static 来做静态资源容器。现在不要这样用了啊，完全可以改成前端由 nginx 来承载。然后配一条 <code>/api</code> 规则打到后端服务就可以了。</p>
 <p><strong>js css 分流优化前</strong></p>
 <img src="/2023/05/19/performance-optimize/%E4%BC%98%E5%8C%96%E5%89%8D%E7%9A%84jscss%E8%AF%B7%E6%B1%82.png" class="" title="优化前的jscss请求">
@@ -199,7 +195,7 @@
 <p><strong>js css 分流优化后</strong></p>
 <img src="/2023/05/19/performance-optimize/%E4%BC%98%E5%8C%96%E5%90%8E%E7%9A%84jscss%E8%AF%B7%E6%B1%82.png" class="" title="优化后的jscss请求">
 
-<p>可以看到，分流后的加载速度也是大小不一的加快了：其中最猛的是 elementui.js，直接快了几秒。那这一招也是有效了。<br>不过这里我有个疑问：<strong>是分流减轻了 express 本身的服务压力所以响应快呢？还是说 nginx 作为专业的服务容器就是比 express.static 快？</strong></p>
+<p>可以看到，分流后的加载速度也是大小不一的加快了：其中最猛的是 elementui.js，直接快了几秒。<strong>那这一招也是有效了</strong>。<br>不过这里我有个疑问：<strong>是分流减轻了 express 本身的服务压力所以响应快呢？还是说 nginx 作为专业的服务容器就是比 express.static 快？</strong></p>
 <h4 id="4-上缓存"><a href="#4-上缓存" class="headerlink" title="4. 上缓存"></a>4. 上缓存</h4><p>要不是“建议”里提到，我还没注意到我都没加缓存，赶紧给 nginx 加上。</p>
 <figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">location</span> <span class="string">/</span> &#123;</span><br><span class="line">  <span class="string">expires</span> <span class="string">365d;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>其实一开始我是写 <code>14d</code> 的，也就是两周。因为之前想起的公司老大说缓存时间跟着发版间隔就好，我觉得有道理，没必要那么长。但是设置 <code>14d</code>，“建议”里具体还是有 warning，然后在 chrome 文档《<a target="_blank" rel="noopener" href="https://developer.chrome.com/docs/lighthouse/performance/uses-long-cache-ttl/?utm_source=lighthouse&utm_medium=lr">Serve static assets with an efficient cache policy</a>》（可能需要科学上网）里示例也是一年的样子，当然里面也提到按照实际来。实际就是我改成一年后，“建议”没有 warning 了。其实在之前的缓存策略文章《<a href="/2020/07/02/cache/">关于缓存的几个关键词</a>》里提到：</p>
@@ -207,6 +203,7 @@
 <p>设定一个期限很大的强缓存，如 max-age&#x3D;31536000 (一年)。文件通过打包工具生成出来都带上哈希。只要文件内容不改哈希就不改，请求的地址就不改，命中强缓存。改了内容自然连请求地址都改了，就会返回新文件。</p>
 </blockquote>
 <p>也是说一年的。按照实际情况设置即可。</p>
+<p><strong>注意：命中强缓存（也就是在 Cache-Control:max-age 缓存时间期限内）的状态码是 200，命中协商缓存的状态码是 304。</strong></p>
 <h3 id="九-继续处理图片"><a href="#九-继续处理图片" class="headerlink" title="九. 继续处理图片"></a>九. 继续处理图片</h3><h4 id="1-转换图片格式，减小体积"><a href="#1-转换图片格式，减小体积" class="headerlink" title="1. 转换图片格式，减小体积"></a>1. 转换图片格式，减小体积</h4><p>那现在基本就是剩下图片大小问题了。那就跟随建议，把图片转为 <code>webp</code> 格式，不得不说，确实图片质量看起来没变化，或者说肉眼看不出来变化，但是体积变小了不少。</p>
 <img src="/2023/05/19/performance-optimize/%E6%94%B9%E5%9B%BE%E7%89%87%E6%A0%BC%E5%BC%8F%E5%90%8E%E7%9A%84%E8%AF%B7%E6%B1%82.png" class="" title="改图片格式后的请求">
 
@@ -238,9 +235,9 @@
     </div>
     <footer class="article-footer">
       
-        <a data-url="https://blog.cchealthier.com/2023/05/19/performance-optimize/" data-id="cllp7v9v50024rl9m06mpgmoq" class="article-thumbs-up">赞一个(<span class="article-thumbs-up-num">0</span>)</a>
+        <a data-url="https://blog.cchealthier.com/2023/05/19/performance-optimize/" data-id="clmbebo0b00200r9m16814rql" class="article-thumbs-up">赞一个(<span class="article-thumbs-up-num">0</span>)</a>
       
-      <!-- <a data-url="https://blog.cchealthier.com/2023/05/19/performance-optimize/" data-id="cllp7v9v50024rl9m06mpgmoq" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2023/05/19/performance-optimize/" data-id="clmbebo0b00200r9m16814rql" class="article-share-link">分享</a> -->
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%80%A7%E8%83%BD/" rel="tag">性能</a></li></ul>

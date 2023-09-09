@@ -19,8 +19,6 @@
 <meta property="article:author" content="ChrisIori">
 <meta name="twitter:card" content="summary">
   
-    <link rel="alternate" href="/atom.xml" title="凝雪密境" type="application/atom+xml">
-  
   
     <link rel="icon" href="/favicon.ico">
   
@@ -65,8 +63,6 @@
         
       </nav>
       <nav id="sub-nav">
-        
-          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
         
         <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
       </nav>
@@ -146,7 +142,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2023/08/24/node-module/" data-id="cllp7v9v3001srl9mdwyd9ps6" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2023/08/24/node-module/" data-id="clmbebo09001r0r9mf1vl847p" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -203,7 +199,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2023/08/23/webpack5-background-url/" data-id="cllp7v9va003jrl9ma79e1ar5" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2023/08/23/webpack5-background-url/" data-id="clmbebo0h003g0r9m3fl6eu4c" class="article-share-link">分享</a> -->
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" rel="tag">工程化</a></li></ul>
@@ -272,7 +268,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2023/07/26/node-stream/" data-id="cllp7v9v3001vrl9m6cqlex8s" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2023/07/26/node-stream/" data-id="clmbebo09001t0r9mhxgwd406" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -342,7 +338,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2023/06/07/webpack-modulefederationplugin/" data-id="cllp7v9va003crl9m4edycrvr" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2023/06/07/webpack-modulefederationplugin/" data-id="clmbebo0g003a0r9m86yacssd" class="article-share-link">分享</a> -->
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" rel="tag">工程化</a></li></ul>
@@ -397,314 +393,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2023/05/31/react-basic-app/" data-id="cllp7v9v6002grl9m0xrr2usb" class="article-share-link">分享</a> -->
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" rel="tag">工程化</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-performance-optimize" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2023/05/19/performance-optimize/" class="article-date">
-  <time datetime="2023-05-18T16:03:11.000Z" itemprop="datePublished">2023-05-19</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2023/05/19/performance-optimize/">一次性能优化的过程（多图）</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>性能优化听多了，又是各个注意点，又是监控什么的，如《<a href="/2020/05/28/js-performance/">JS性能优化探讨</a>》《<a href="/2021/01/09/performance-api/">前端性能监控</a>》，真正遇到了还是得具体场景具体分析。</p>
-<p>一直觉得我的<a target="_blank" rel="noopener" href="https://cchealthier.com/">个人网站首页</a>（现在不会了）很慢，进去后背景和熊猫头渲染得特别慢。当然这个慢是相对的，就我做过的 TO B 系统单单是前置接口的获取都要几秒了，只是有 loading 效果看起来不难受。但是我这个网页啥都没有，就那么几个图片和动画，着实不该。那就实际一步步看看吧。</p>
-<h3 id="一-服务器连接速度"><a href="#一-服务器连接速度" class="headerlink" title="一. 服务器连接速度"></a>一. 服务器连接速度</h3><p>直接百度搜<code>网站访问速度测试</code>就有很多工具网站。一看都没啥问题，除了极个别的比较远的省份（我这是买的阿里云深圳的服务器）其他都在一秒以内。再 <code>ping</code> 一下，也可以看到并无延迟。也就是 <code>DNS</code> 解析和访问并没有问题。</p>
-<h3 id="二-减小图片体积"><a href="#二-减小图片体积" class="headerlink" title="二. 减小图片体积"></a>二. 减小图片体积</h3><p>那首先考虑资源图片过大，因为确实用了比较高清的图片，那就在不糊的情况下尽量缩小体积。兴冲冲地更新一看，没啥变化。还是有那个等待过程。那好吧，一不做而不休，我尝试把其他图片都去掉，只留下一个熊猫头，还是很慢，就证明不该是图片背锅。当然缩小体积是没有问题的。省流量嘛。</p>
-<h3 id="三-使用-Devtool-Performance"><a href="#三-使用-Devtool-Performance" class="headerlink" title="三. 使用 Devtool Performance"></a>三. 使用 Devtool Performance</h3><p>那就直接用工具看吧，打开开发者工具，切到 <code>Performance</code>，启动录制看看效果。找一下，在 Timings 那里看到 <code>FP</code> <code>FCP</code> 等事件，这里就是影响视觉观看的主要节点了。当然前面还有 <code>Parse HTML</code> 或者 <code>Function call</code> 等等事件。主要看 <code>Parse HTML</code>，因为要解析了 html，才会加载一系列资源，可以看出这一步并没有什么问题，也是很快就响应了。但是到 <code>FCP</code> 却隔了好几秒。也就是中间有东西耽搁了。<br>看了一下，是<strong>必要的 js 文件加载</strong>。有两个，一个是 <code>app.***.js</code>，基础的业务 js， 一个是 <code>chunk-vendor.***.js</code>，vue 框架的打包厂务。毫无疑问，这两者都是不可或缺的。<code>appjs</code> 比较小还好，很快就获取完了。<code>chunk-vendorjs</code>有 300+kb，耗时几秒。可以看到它加载完后，很快就 <code>FCP</code> 了。所以它的加载就是问题关键了。</p>
-<h3 id="四-js-文件太大？"><a href="#四-js-文件太大？" class="headerlink" title="四. js 文件太大？"></a>四. js 文件太大？</h3><p>讲道理，300+kb 的 js 文件不算小，但也不能叫很大啊。怎么要好几秒才能加载完？当然我的服务器没有加速功能，如果放到 CDN 服务，我想应该效果会好点。但是没有这条件，那只能另外想想办法。我代码里用了 <code>Element-UI</code>，测试了一下确实是按需引入，去掉几个组件后，体积变小了。<br>但，这些就是要用到的，减不了。路由页面用的也是 <code>import()</code> 动态引入，也就是到了真正访问那个页面组件，才会去加载相应的 js。再说了业务代码也不会打包到 vendor 去。那体积没法减了。然后在自己本地测试了一下，以及线上的缓存状态下，页面出现都很快，更加印证了我的猜测，就是这个 “大 js 文件” 导致了页面渲染慢。（当然最好有个 CDN 什么的加速可以验证…）</p>
-<img src="/2023/05/19/performance-optimize/%E4%BC%98%E5%8C%96%E5%89%8Dnetwork.png" class="" title="优化前network">
-
-<p>事情本到这里就结束了（啥都没干，555…），结果又看到一个神奇的网站，谷歌的性能分析网站，地址：<a target="_blank" rel="noopener" href="https://pagespeed.web.dev/">https://pagespeed.web.dev</a> （可能需要科学上网）</p>
-        
-          <p class="article-more-link">
-            <a href="/2023/05/19/performance-optimize/#more">Read More</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      
-      <!-- <a data-url="https://blog.cchealthier.com/2023/05/19/performance-optimize/" data-id="cllp7v9v50024rl9m06mpgmoq" class="article-share-link">分享</a> -->
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%80%A7%E8%83%BD/" rel="tag">性能</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-file-slice-upload" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2023/05/13/file-slice-upload/" class="article-date">
-  <time datetime="2023-05-13T14:25:47.000Z" itemprop="datePublished">2023-05-13</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2023/05/13/file-slice-upload/">文件切片上传（断点续传）</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>上传文件体积一大，要等很久。如果只是水管小，等一会也就算了。但是如果网络差，上传到 99% 突然断网了又重新开始，就比较难受了。所以又有了文件切片进行断点上传的方法。</p>
-<p>上传的文件对象是一个 <a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/API/File">File</a> 对象，然后它是 <a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/API/Blob">Blob</a> 对象的一个子类。再然后它有一个 <a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/API/Blob/slice">slice</a> 方法，用这个方法就可以对文件进行切片，就和数组的这个方法一样。用法如示例。</p>
-<p>话不多说直接上代码（里面代码是问了 chatgpt 然后改的，哈哈）。把下面两份代码分别保存为 <code>index.html</code> 和 <code>server.js</code>，安装好依赖，然后启动执行 <code>node server.js</code>，访问 <code>http://localhost:3000</code>。</p>
-<p>前端也大概美化了一下上传组件，支持点击选择文件或者拖拽文件上传。原生的 <code>&lt;input type=&quot;file&quot; &gt;&lt;/input&gt;</code> 组件的样式应该没人用吧，那么丑…。其中的 loading 效果出自网上大佬的《<a target="_blank" rel="noopener" href="https://juejin.cn/post/7037036742985121800">纯css实现117个Loading效果</a>》，里面挺多效果不错的。</p>
-        
-          <p class="article-more-link">
-            <a href="/2023/05/13/file-slice-upload/#more">Read More</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      
-      <!-- <a data-url="https://blog.cchealthier.com/2023/05/13/file-slice-upload/" data-id="cllp7v9uz000qrl9m2o00fn0n" class="article-share-link">分享</a> -->
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-nginx-basic" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2023/04/21/nginx-basic/" class="article-date">
-  <time datetime="2023-04-21T13:33:48.000Z" itemprop="datePublished">2023-04-21</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E6%9C%8D%E5%8A%A1/">服务</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2023/04/21/nginx-basic/">nginx 的基础用法 &amp; linux（centos）下支持 https 和 http2</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>其实之前写过一篇相关的《<a href="/2022/03/26/nginx/">记录下 nginx 使用配置</a>》，关于 nginx 的一些稍微复杂的场景。然后发现日常的基础用法，反而记不住。这里就记录一下。</p>
-<p>安装，mac 可以用 brew 下载。windows 的也很简单，去<a target="_blank" rel="noopener" href="http://nginx.org/en/download.html">官网</a>下载个压缩包就行了。至于 linux 的，就网上搜搜啦，我记得也很简单。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 安装</span></span><br><span class="line">brew install nginx</span><br><span class="line"></span><br><span class="line"><span class="comment">#查看</span></span><br><span class="line">brew info nginx</span><br></pre></td></tr></table></figure>
-
-<p>查看信息，可以看到配置文件在 <code>/opt/homebrew/etc/nginx/nginx.conf</code>。</p>
-<p>命令</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 启动</span></span><br><span class="line">nginx</span><br><span class="line"></span><br><span class="line"><span class="comment"># 刷新，改了 nginx.conf 文件，要重新生效</span></span><br><span class="line">nginx -s reload</span><br><span class="line"></span><br><span class="line"><span class="comment"># 关闭</span></span><br><span class="line">nginx -s stop</span><br></pre></td></tr></table></figure>
-
-<p>默认端口是 8080。所以直接访问本地地址 <code>http://localhost:8080/</code>，看到有显示 <strong>Welcome to nginx!</strong> 字样就是启动成功了。</p>
-<p>其实 nginx.conf 已经写了例子和注释，这里只是稍微补充点。</p>
-<p>root：资源文件夹<br>index： 默认的 index 文件</p>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">location</span> <span class="string">/</span> &#123;</span><br><span class="line">  <span class="string">root</span>   <span class="string">/电脑地址/nginx;</span></span><br><span class="line">  <span class="string">index</span>  <span class="string">index.html</span> <span class="string">index.htm;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>如果要配置不同路由访问不同的文件，<code>root</code> 要改成 <code>alias</code>，比如访问 <code>http://localhost:8080/page</code></p>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">location</span> <span class="string">/page</span> &#123;</span><br><span class="line">  <span class="string">alias</span> <span class="string">/电脑地址/nginx;</span></span><br><span class="line">  <span class="string">index</span> <span class="string">page.html;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>当然最好是写个兜底返回。在 vue 或者 react 使用 router 时，兜底返回默认 index.html。不然每增加一个路由就要写多一个配置很麻烦。</p>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">location</span> <span class="string">~*</span> <span class="string">^/*</span> &#123;</span><br><span class="line">  <span class="string">root</span>   <span class="string">/电脑地址/nginx;</span></span><br><span class="line">  <span class="string">try_files</span> <span class="string">$uri</span> <span class="string">$uri/</span> <span class="string">/index.html;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><strong>注意</strong><br>root 与 alias<br>两者区别在于 nginx 如何解释 location 后面的 url</p>
-<p><strong>root:</strong><br>语法：root path<br>默认值：root html<br>配置段：http、server、location、if<br>处理结果：root 路径＋ location 路径</p>
-<p><strong>alias:</strong><br>语法：alias path<br>配置段：location<br>处理结果：使用 alias 路径替换 location 路径</p>
-<p><strong>所以用正则匹配写路径的要注意写好 root 或 alias，不然找不到资源就会出现 403！</strong></p>
-<p>可以写多个server，启动多个服务</p>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">server</span> &#123;</span><br><span class="line">  <span class="string">listen</span>       <span class="number">3000</span><span class="string">;</span></span><br><span class="line">  <span class="string">server_name</span>  <span class="number">0.0</span><span class="number">.0</span><span class="number">.0</span><span class="string">;</span></span><br><span class="line"></span><br><span class="line">  <span class="string">location</span> <span class="string">/</span> &#123;</span><br><span class="line">    <span class="string">root</span>   <span class="string">/电脑地址/nginx;</span></span><br><span class="line">    <span class="string">index</span>  <span class="number">3000.</span><span class="string">html</span> <span class="number">3000.</span><span class="string">htm;</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>代理 ~ 为区分大小写，~*为不区分大小写，其他符号则请查询官网啦。</p>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">location</span> <span class="string">~</span> <span class="string">/api/*</span> &#123;</span><br><span class="line">  <span class="string">proxy_pass</span>   <span class="string">http://localhost:3000;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>https服务，声明好证书即可。这里只是把其中证书配置列出来，实际上 nginx.conf 的例子还有挺多配置，一般我们不是运维，应该默认就够了。作为调试用，可能都不需要启动到 https server。</p>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">server</span> &#123;</span><br><span class="line">  <span class="string">ssl_certificate</span>      <span class="string">/电脑地址/nginx/cert/cert.pem;</span></span><br><span class="line">  <span class="string">ssl_certificate_key</span>  <span class="string">/电脑地址/nginx/cert/server.key;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>开启文本压缩</p>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">http</span> &#123;</span><br><span class="line">  <span class="string">gzip</span> <span class="string">on;</span></span><br><span class="line">  <span class="comment"># 压缩比例，比例越大，压缩时间越长。默认是1</span></span><br><span class="line">  <span class="string">gzip_comp_level</span> <span class="number">6</span><span class="string">;</span></span><br><span class="line">  <span class="comment"># 哪些文件可以被压缩</span></span><br><span class="line">  <span class="string">gzip_types</span> <span class="string">text/xml</span> <span class="string">text/plain</span> <span class="string">text/css</span> <span class="string">application/javascript</span> <span class="string">application/x-javascript</span> <span class="string">application/rss+xml;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>linux 下支持 https 和 http2，也是网上搜集的，实操了可以，这里记录一下。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 安装依赖</span></span><br><span class="line">yum -y install gcc zlib zlib-devel pcre-devel openssl openssl-devel</span><br><span class="line"><span class="comment"># 解压缩</span></span><br><span class="line">tar -zxvf nginx-1.23.4.tar.gz</span><br><span class="line"><span class="built_in">cd</span> nginx-1.23.4</span><br><span class="line"><span class="comment"># 执行配置</span></span><br><span class="line">./configure --with-http_ssl_module --with-http_v2_module</span><br><span class="line"><span class="comment"># 编译安装</span></span><br><span class="line">make</span><br><span class="line">make install</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 默认安装在</span></span><br><span class="line">/usr/local/nginx</span><br><span class="line"><span class="comment"># 启动</span></span><br><span class="line">/usr/local/nginx/sbin/nginx</span><br><span class="line"><span class="comment"># 刷新配置启动</span></span><br><span class="line">/usr/local/nginx/sbin/nginx -s reload</span><br><span class="line"><span class="comment"># 关闭</span></span><br><span class="line">/usr/local/nginx/sbin/nginx -s stop</span><br><span class="line"><span class="comment"># 修改配置</span></span><br><span class="line">vim  /usr/local/nginx/conf/nginx.conf</span><br></pre></td></tr></table></figure>
-
-      
-    </div>
-    <footer class="article-footer">
-      
-      <!-- <a data-url="https://blog.cchealthier.com/2023/04/21/nginx-basic/" data-id="cllp7v9v2001lrl9megda01bv" class="article-share-link">分享</a> -->
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/nginx/" rel="tag">nginx</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-fontend-engineering-2" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2023/04/21/fontend-engineering-2/" class="article-date">
-  <time datetime="2023-04-20T17:19:20.000Z" itemprop="datePublished">2023-04-21</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2023/04/21/fontend-engineering-2/">从零搭建前端工程（下）</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p><em><strong>文章内容太多，分为上下两部分，这里是下半部分。上半部分在《<a href="/2023/03/06/fontend-engineering/">从零搭建前端工程（上）</a>》，此篇的内容有：</strong></em><br><em><strong>4. 使用 eslint + prettier 让代码健壮和优雅</strong></em><br><em><strong>5. 使用 husky + lint-staged 强制增量各类检查</strong></em><br><em><strong>6. 使用 @commitlint&#x2F;cli 规范提交信息</strong></em><br><em><strong>7. 使用 埋点（性能 + 错误） 让项目运行更好</strong></em></p>
-<hr>
-<hr>
-<h2 id="四、使用-eslint-prettier-让代码健壮和优雅"><a href="#四、使用-eslint-prettier-让代码健壮和优雅" class="headerlink" title="四、使用 eslint + prettier 让代码健壮和优雅"></a>四、使用 eslint + prettier 让代码健壮和优雅</h2><p>到 eslint 了，是不是让人又爱又恨。刚接的时候应该很不爽吧，动辄就来个错，这也错那也错。满屏尽是红 error。其实都是没有配好，也有处理好。eslint 是非常必要的，可以尽早发现一些错误及不合理，也可以统一一些写法，减少冲突等。比如，vue template 的属性顺序，import 的顺序等等。</p>
-<p>循例先上代码示例，在项目根目录创建一份 <code>.eslintrc.js</code>，记得前面有个点的，上书代码：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">module</span>.<span class="property">exports</span> = &#123;</span><br><span class="line">  <span class="attr">env</span>: &#123;</span><br><span class="line">    <span class="comment">// 关键字指定你想启用的环境</span></span><br><span class="line">    <span class="attr">browser</span>: <span class="literal">true</span>,</span><br><span class="line">    <span class="attr">es2021</span>: <span class="literal">true</span>,</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">extends</span>: [</span><br><span class="line">    <span class="comment">// 一个配置文件可以被基础配置中的已启用的规则继承</span></span><br><span class="line">    <span class="string">&#x27;plugin:vue/essential&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;plugin:vue/recommended&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;standard&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;plugin:prettier/recommended&#x27;</span>,</span><br><span class="line">  ],</span><br><span class="line">  <span class="attr">parserOptions</span>: &#123;</span><br><span class="line">    <span class="comment">// 允许你指定你想要支持的 JavaScript 语言选项</span></span><br><span class="line">    <span class="attr">ecmaVersion</span>: <span class="number">12</span>,</span><br><span class="line">    <span class="attr">sourceType</span>: <span class="string">&#x27;module&#x27;</span>,</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">plugins</span>: [</span><br><span class="line">    <span class="comment">// 支持使用第三方插件，检查自定义的语法</span></span><br><span class="line">    <span class="string">&#x27;vue&#x27;</span>, <span class="comment">// 省略了 eslint-plugin- 前缀，插件全称为 eslint-plugin-vue</span></span><br><span class="line">    <span class="string">&#x27;prettier&#x27;</span>,</span><br><span class="line">  ],</span><br><span class="line">  <span class="attr">rules</span>: &#123;</span><br><span class="line">    <span class="comment">// 直接声明的 eslint 规则</span></span><br><span class="line">    <span class="attr">semi</span>: [<span class="string">&#x27;error&#x27;</span>, <span class="string">&#x27;always&#x27;</span>], <span class="comment">// 规则为：需要结束分号，优先级为 error，即抛错</span></span><br><span class="line">    <span class="comment">// 当最后一个元素或属性与闭括号 ] 或 &#125; 在 不同的行时，要求使用拖尾逗号</span></span><br><span class="line">    <span class="comment">// 当在 同一行时，禁止使用拖尾逗号。https://eslint.bootcss.com/docs/rules/comma-dangle</span></span><br><span class="line">    <span class="string">&#x27;comma-dangle&#x27;</span>: [<span class="string">&#x27;error&#x27;</span>, <span class="string">&#x27;always-multiline&#x27;</span>],</span><br><span class="line">    <span class="string">&#x27;no-console&#x27;</span>: [<span class="string">&#x27;error&#x27;</span>, &#123; <span class="attr">allow</span>: [<span class="string">&#x27;info&#x27;</span>, <span class="string">&#x27;warn&#x27;</span>, <span class="string">&#x27;error&#x27;</span>] &#125;],</span><br><span class="line">    <span class="string">&#x27;no-unused-vars&#x27;</span>: [<span class="string">&#x27;error&#x27;</span>, &#123; <span class="attr">args</span>: <span class="string">&#x27;after-used&#x27;</span> &#125;],</span><br><span class="line">    <span class="comment">// &quot;plugin1/rule1&quot;: &quot;error&quot; 配置定义在插件中的一个规则的时候，必须使用 插件名/规则ID 的形式</span></span><br><span class="line">    <span class="string">&#x27;prettier/prettier&#x27;</span>: <span class="string">&#x27;error&#x27;</span>,</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">globals</span>: &#123;</span><br><span class="line">    <span class="attr">var1</span>: <span class="string">&#x27;writable&#x27;</span>, <span class="comment">// 对 var1 这个全局变量允许重写</span></span><br><span class="line">    <span class="attr">var2</span>: <span class="string">&#x27;readonly&#x27;</span>, <span class="comment">// 对 var2 这个全局变量只允许读取</span></span><br><span class="line">    <span class="attr">var3</span>: <span class="string">&#x27;off&#x27;</span>, <span class="comment">// 不支持 var3 这个全局变量</span></span><br><span class="line">  &#125;,</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-<p>说一下可能配置较多的。</p>
-        
-          <p class="article-more-link">
-            <a href="/2023/04/21/fontend-engineering-2/#more">Read More</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      
-      <!-- <a data-url="https://blog.cchealthier.com/2023/04/21/fontend-engineering-2/" data-id="cllp7v9uy000grl9m3hg57z84" class="article-share-link">分享</a> -->
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" rel="tag">工程化</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-fontend-engineering" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2023/03/06/fontend-engineering/" class="article-date">
-  <time datetime="2023-03-06T14:22:43.000Z" itemprop="datePublished">2023-03-06</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2023/03/06/fontend-engineering/">从零搭建前端工程（上）</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p><em><strong>文章内容太多，分为上下两部分，这里是上半部分。下半部分在《<a href="/2023/04/21/fontend-engineering-2/">从零搭建前端工程（下）</a>》，此篇的内容有：</strong></em><br><em><strong>1. 使用 webpack 打包（编译）vue</strong></em><br><em><strong>2. 使用 babel 处理 js</strong></em><br><em><strong>3. 使用 webpack-dev-sever 做热调试开发</strong></em></p>
-<hr>
-<hr>
-<p>产生这个的想法来自于某天接手一个项目，eslint 没配好，想着弄好格式化一下，一时之前忘了 cli 命令。<br>想一下，现在我们用的各种框架，都自带了脚手架工具，初始化后基本上不用怎么改造就可以上手开发。导致很多工程化的东西被人忽视了，就容易遇到问题时被卡住或者东找西找翻资料。<br>所以就想着自己从头搭建一个项目看看，遇到的一些配置、工具、命令都给记录下来，方便后面再遇到时候就不会生手了。</p>
-<p>这里我就用 vue 来做基础框架，用 react 也一样，就一些编译工具的差别，大部分是一样的。要做的事有：</p>
-<ol>
-<li>使用 webpack 打包（编译）vue</li>
-<li>使用 babel 处理 js</li>
-<li>使用 webpack-dev-sever 做热调试开发</li>
-<li>使用 eslint + prettier 让代码健壮和优雅</li>
-<li>使用 husky + lint-staged 强制增量各类检查</li>
-<li>使用 @commitlint&#x2F;cli 规范提交信息</li>
-<li>使用 埋点（性能 + 错误） 让项目运行更好</li>
-</ol>
-<h2 id="零、文件初始化"><a href="#零、文件初始化" class="headerlink" title="零、文件初始化"></a>零、文件初始化</h2><p>准备一个和 vue 脚手架创建出来的初始工程一样。有：</p>
-<p>src：项目源代码<br>src&#x2F;main.js：工程入口文件，在这里做 vue 初始化，也是 webpack 的entry<br>src&#x2F;App.vue：一个主页面<br>src&#x2F;components&#x2F;HelloWorld.vue：一个子组件<br>src&#x2F;assets&#x2F;logo.png：一张图片资源<br>src&#x2F;public：公共资源文件夹，这里放的东西依样拷贝进打包里（除了index.html）<br>src&#x2F;public&#x2F;index.html：用来做单页面工程入口 html 的基础模板</p>
-<p>然后初始化一下 npm 环境：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm init -y</span><br></pre></td></tr></table></figure>
-<p><code>-y</code> 就是创建一份默认的，不需要一步步问要填什么。直接生成空信息，有需要自己再去填就好了。</p>
-        
-          <p class="article-more-link">
-            <a href="/2023/03/06/fontend-engineering/#more">Read More</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      
-      <!-- <a data-url="https://blog.cchealthier.com/2023/03/06/fontend-engineering/" data-id="cllp7v9uy000hrl9mci9l9udo" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2023/05/31/react-basic-app/" data-id="clmbebo0c002d0r9mdll2fpqt" class="article-share-link">分享</a> -->
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" rel="tag">工程化</a></li></ul>
@@ -720,7 +409,7 @@
 
   <nav id="page-nav">
     
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/2/">下一页 »</a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/11/">11</a><a class="extend next" rel="next" href="/page/2/">下一页 »</a>
   </nav>
 
 </section>

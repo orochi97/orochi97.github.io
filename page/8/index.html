@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="baidu-site-verification" content="codeva-nIjDp6ZZc0" />
+  <meta name="referrer" content="no-referrer"/>
+  <meta charset="utf-8">
+  
+
+  
+  <title>凝雪密境</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="卡卡希的吐槽圣地">
+<meta property="og:type" content="website">
+<meta property="og:title" content="凝雪密境">
+<meta property="og:url" content="https://blog.cchealthier.com/page/8/index.html">
+<meta property="og:site_name" content="凝雪密境">
+<meta property="og:description" content="卡卡希的吐槽圣地">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:author" content="ChrisIori">
+<meta name="twitter:card" content="summary">
+  
+  
+    <link rel="icon" href="/favicon.ico">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  <link href="https://www.jq22.com/demo/jqueryToast201708310012/css/toast.style.css" rel="stylesheet" type="text/css">
+<meta name="generator" content="Hexo 7.0.0-rc1"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">凝雪密境</a>
+      </h1>
+      
+        <div id="avatar" style="background-image: url( /avatar.jpg )">
+          <div class="container">
+            <div class="ball wind"></div>
+            <div class="ball fire"></div>
+            <div class="ball water"></div>
+            <div class="ball soil"></div>
+          </div>
+        </div>
+      
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://blog.cchealthier.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main">
+  
+    <article id="post-traversal-property" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/07/25/traversal-property/" class="article-date">
+  <time datetime="2020-07-25T04:00:18.000Z" itemprop="datePublished">2020-07-25</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/07/25/traversal-property/">遍历属性的几个方法</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>这里列出五个</p>
+<ul>
+<li>for in</li>
+<li>Object.keys</li>
+<li>Object.getOwnPropertyNames</li>
+<li>Object.getOwnPropertySymbols</li>
+<li>Reflect.ownKeys</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br></pre></td><td class="code"><pre><span class="line"><span class="title class_">Object</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">allattr</span> = <span class="literal">true</span></span><br><span class="line"><span class="title class_">Object</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">allFn</span> = <span class="keyword">function</span>(<span class="params"></span>)&#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 普通对象</span></span><br><span class="line"><span class="keyword">const</span> obj1 = &#123;</span><br><span class="line">  <span class="attr">a</span>: <span class="number">1</span>,</span><br><span class="line">  <span class="attr">b</span>: <span class="number">2</span>,</span><br><span class="line">  [<span class="title class_">Symbol</span>(<span class="string">&#x27;c&#x27;</span>)]: <span class="number">3</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="title class_">Object</span>.<span class="title function_">defineProperty</span>(obj1, <span class="string">&#x27;d&#x27;</span>, &#123;</span><br><span class="line">  <span class="attr">enumerable</span>: <span class="literal">false</span>,</span><br><span class="line">  <span class="attr">value</span>: <span class="number">4</span></span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 原型对象</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">Obj2</span> () &#123;</span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">a</span> = <span class="number">1</span></span><br><span class="line">  <span class="variable language_">this</span>[<span class="title class_">Symbol</span>(<span class="string">&#x27;b&#x27;</span>)] = <span class="number">1</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="title class_">Obj2</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">c</span> = <span class="number">2</span></span><br><span class="line"><span class="title class_">Obj2</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">d</span> = <span class="keyword">function</span>(<span class="params"></span>) &#123;&#125;</span><br><span class="line"><span class="title class_">Obj2</span>.<span class="property">e</span> = <span class="number">1</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 对象实例</span></span><br><span class="line"><span class="keyword">const</span> obj3 = <span class="keyword">new</span> <span class="title class_">Obj2</span>()</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">show</span>(<span class="params">obj</span>) &#123;</span><br><span class="line">  <span class="keyword">let</span> arr = []</span><br><span class="line">  <span class="comment">// 会打出原型的属性，可以用 hasOwnProperty 去除</span></span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">const</span> attr <span class="keyword">in</span> obj) &#123;</span><br><span class="line">    arr.<span class="title function_">push</span>(attr)</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;--- for in ---&#x27;</span>, arr)</span><br><span class="line"></span><br><span class="line">  arr = []</span><br><span class="line">  <span class="comment">// 不会打出原型的属性，相当于 for in 用 hasOwnProperty 去除</span></span><br><span class="line">  <span class="title class_">Object</span>.<span class="title function_">keys</span>(obj).<span class="title function_">forEach</span>(<span class="function">(<span class="params">attr</span>) =&gt;</span> &#123;</span><br><span class="line">    arr.<span class="title function_">push</span>(attr)</span><br><span class="line">  &#125;)</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;--- Object.keys ---&#x27;</span>, arr)</span><br><span class="line"></span><br><span class="line">  arr = []</span><br><span class="line">  <span class="comment">// 上面两个只打出可枚举的，这个不可枚举也可以打出来，不会打出原型的属性</span></span><br><span class="line">  <span class="title class_">Object</span>.<span class="title function_">getOwnPropertyNames</span>(obj).<span class="title function_">forEach</span>(<span class="function">(<span class="params">attr</span>) =&gt;</span> &#123;</span><br><span class="line">    arr.<span class="title function_">push</span>(attr)</span><br><span class="line">  &#125;)</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;--- Object.getOwnPropertyNames ---&#x27;</span>, arr)</span><br><span class="line"></span><br><span class="line">  arr = []</span><br><span class="line">  <span class="comment">// 打出 Symbols 属性</span></span><br><span class="line">  <span class="title class_">Object</span>.<span class="title function_">getOwnPropertySymbols</span>(obj).<span class="title function_">forEach</span>(<span class="function">(<span class="params">attr</span>) =&gt;</span> &#123;</span><br><span class="line">    arr.<span class="title function_">push</span>(attr)</span><br><span class="line">  &#125;)</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;--- Object.getOwnPropertySymbols ---&#x27;</span>, arr)</span><br><span class="line"></span><br><span class="line">  arr = []</span><br><span class="line">  <span class="comment">// Reflect.ownKeys = Object.getOwnPropertyNames + Object.getOwnPropertySymbols</span></span><br><span class="line">  <span class="title class_">Reflect</span>.<span class="title function_">ownKeys</span>(obj).<span class="title function_">forEach</span>(<span class="function">(<span class="params">attr</span>) =&gt;</span> &#123;</span><br><span class="line">    arr.<span class="title function_">push</span>(attr)</span><br><span class="line">  &#125;)</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;--- Reflect.ownKeys ---&#x27;</span>, arr)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="title function_">show</span>(obj1)</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;%c --------------- 分割线 ---------------&#x27;</span>, <span class="string">&#x27;background:#aaa;color:red&#x27;</span>)</span><br><span class="line"><span class="title function_">show</span>(<span class="title class_">Obj2</span>)</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;%c --------------- 分割线 ---------------&#x27;</span>, <span class="string">&#x27;background:#aaa;color:red&#x27;</span>)</span><br><span class="line"><span class="title function_">show</span>(obj3)</span><br></pre></td></tr></table></figure>
+<br/>
+<img src="/2020/07/25/traversal-property/traversal-property.PNG" class="" title="遍历对象属性">
+      
+    </div>
+    <footer class="article-footer">
+      
+      <!-- <a data-url="https://blog.cchealthier.com/2020/07/25/traversal-property/" data-id="clmbebo0f002y0r9md60u4pl5" class="article-share-link">分享</a> -->
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-lazyload" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/07/12/lazyload/" class="article-date">
+  <time datetime="2020-07-11T16:48:49.000Z" itemprop="datePublished">2020-07-12</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/07/12/lazyload/">简单实现图片懒加载、预加载、分批加载</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>图片我这里是随便找了十张图片，起名 0~9 的名字，方便获取。</p>
+<p><strong>懒加载：</strong>原理就是先放一批空图片占位，当图片进入可视区，再来赋予图片src值，让其显示。<br><strong>预加载：</strong>提前请求一批图片资源。下载缓存里。到真的渲染图片时候就可以快速获取到图片。用 new Image() 来请求资源，就不用先创建dom。<br><strong>分批加载：</strong>设定一个距离值，在滑动到距离底部小于这个距离值，则请求下一批图片。</p>
+<p>分批加载可以与其他两者混用，懒加载与预加载应该不混用了，一个减低服务器压力，一个是增加服务器压力换取体验。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">http-equiv</span>=<span class="string">&quot;Content-Type&quot;</span> <span class="attr">content</span>=<span class="string">&quot;text/html; charset=utf-8&quot;</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">title</span>&gt;</span>lazyload<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">style</span> <span class="attr">type</span>=<span class="string">&quot;text/css&quot;</span>&gt;</span><span class="language-css"></span></span><br><span class="line"><span class="language-css">  <span class="selector-id">#box</span> &#123;</span></span><br><span class="line"><span class="language-css">    <span class="attribute">width</span>: <span class="number">100%</span>;</span></span><br><span class="line"><span class="language-css">    <span class="attribute">background</span>: black;</span></span><br><span class="line"><span class="language-css">    <span class="attribute">border-radius</span>: <span class="number">10px</span>;</span></span><br><span class="line"><span class="language-css">  &#125;</span></span><br><span class="line"><span class="language-css">  <span class="selector-tag">ul</span> &#123;</span></span><br><span class="line"><span class="language-css">    <span class="attribute">padding</span>: <span class="number">0</span>;</span></span><br><span class="line"><span class="language-css">    <span class="attribute">margin</span>: <span class="number">0</span>;</span></span><br><span class="line"><span class="language-css">  &#125;</span></span><br><span class="line"><span class="language-css">  <span class="selector-tag">li</span> &#123;</span></span><br><span class="line"><span class="language-css">    <span class="attribute">margin</span>: <span class="number">5px</span>;</span></span><br><span class="line"><span class="language-css">    <span class="attribute">background</span>: gray;</span></span><br><span class="line"><span class="language-css">    <span class="attribute">text-align</span>: center;</span></span><br><span class="line"><span class="language-css">  &#125;</span></span><br><span class="line"><span class="language-css">  <span class="selector-tag">img</span> &#123;</span></span><br><span class="line"><span class="language-css">    <span class="attribute">height</span>: <span class="number">300px</span>;</span></span><br><span class="line"><span class="language-css">    <span class="attribute">width</span>: auto;</span></span><br><span class="line"><span class="language-css">  &#125;</span></span><br><span class="line"><span class="language-css"></span><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">&quot;text/javascript&quot;</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript"><span class="comment">// 简单节流</span></span></span><br><span class="line"><span class="language-javascript"><span class="keyword">function</span> <span class="title function_">throttle</span>(<span class="params">fn, time</span>) &#123;</span></span><br><span class="line"><span class="language-javascript">  <span class="keyword">let</span> timer</span></span><br><span class="line"><span class="language-javascript">  <span class="keyword">return</span> <span class="function">(<span class="params">ev</span>) =&gt;</span> &#123;</span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">if</span> (timer) &#123;</span></span><br><span class="line"><span class="language-javascript">      <span class="keyword">return</span></span></span><br><span class="line"><span class="language-javascript">    &#125;</span></span><br><span class="line"><span class="language-javascript">    timer = <span class="built_in">setTimeout</span>(<span class="function">() =&gt;</span> &#123;</span></span><br><span class="line"><span class="language-javascript">      timer = <span class="literal">null</span></span></span><br><span class="line"><span class="language-javascript">      <span class="title function_">fn</span>(ev)</span></span><br><span class="line"><span class="language-javascript">    &#125;, time)</span></span><br><span class="line"><span class="language-javascript">  &#125;</span></span><br><span class="line"><span class="language-javascript">&#125;</span></span><br><span class="line"><span class="language-javascript"><span class="keyword">function</span> <span class="title function_">getNum</span>(<span class="params">numMin, numMax</span>) &#123;</span></span><br><span class="line"><span class="language-javascript">  <span class="keyword">return</span> <span class="title class_">Math</span>.<span class="title function_">round</span>( <span class="title class_">Math</span>.<span class="title function_">random</span>()*(numMax-numMin) + numMin );</span></span><br><span class="line"><span class="language-javascript">&#125;</span></span><br><span class="line"><span class="language-javascript"><span class="keyword">function</span> <span class="title function_">getImg</span> (len) &#123;</span></span><br><span class="line"><span class="language-javascript">  <span class="keyword">const</span> arr = []</span></span><br><span class="line"><span class="language-javascript">  <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; len; i++) &#123;</span></span><br><span class="line"><span class="language-javascript">    arr.<span class="title function_">push</span>(<span class="title function_">getNum</span>(<span class="number">0</span>, <span class="number">9</span>))</span></span><br><span class="line"><span class="language-javascript">  &#125;</span></span><br><span class="line"><span class="language-javascript">  <span class="comment">// 模拟异步获取图片资源</span></span></span><br><span class="line"><span class="language-javascript">  <span class="keyword">return</span> <span class="title class_">Promise</span>.<span class="title function_">resolve</span>(arr)</span></span><br><span class="line"><span class="language-javascript">&#125;</span></span><br><span class="line"><span class="language-javascript"><span class="variable language_">window</span>.<span class="property">onload</span> = <span class="keyword">function</span> (<span class="params"></span>) &#123;</span></span><br><span class="line"><span class="language-javascript">  <span class="keyword">const</span> $ui = <span class="variable language_">document</span>.<span class="title function_">querySelector</span>(<span class="string">&#x27;#box ul&#x27;</span>)</span></span><br><span class="line"><span class="language-javascript">  <span class="keyword">const</span> loading = <span class="string">&#x27;./img/loading.gif&#x27;</span></span></span><br><span class="line"><span class="language-javascript">  <span class="keyword">const</span> distance = <span class="number">20</span></span></span><br><span class="line"><span class="language-javascript">  <span class="keyword">function</span> <span class="title function_">initImg</span>(<span class="params"></span>) &#123;</span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">return</span> <span class="title function_">getImg</span>(<span class="number">5</span>).<span class="title function_">then</span>(<span class="function">(<span class="params">imgs</span>) =&gt;</span>&#123;</span></span><br><span class="line"><span class="language-javascript">      imgs.<span class="title function_">forEach</span>(<span class="function">(<span class="params">img</span>) =&gt;</span> &#123;</span></span><br><span class="line"><span class="language-javascript">        <span class="keyword">const</span> url = <span class="string">`./img/<span class="subst">$&#123;img&#125;</span>.JPG`</span></span></span><br><span class="line"><span class="language-javascript">        <span class="comment">// 先预加载，演示一下，不然这里懒加载没什么意义了，都是发了请求</span></span></span><br><span class="line"><span class="language-javascript">        <span class="comment">// 用一个img对象来先对资源进行请求</span></span></span><br><span class="line"><span class="language-javascript">        <span class="keyword">const</span> imgObj = <span class="keyword">new</span> <span class="title class_">Image</span>()</span></span><br><span class="line"><span class="language-javascript">        imgObj.<span class="property">src</span> = url</span></span><br><span class="line"><span class="language-javascript">        <span class="comment">// 创建图片dom</span></span></span><br><span class="line"><span class="language-javascript">        <span class="keyword">const</span> $li = <span class="variable language_">document</span>.<span class="title function_">createElement</span>(<span class="string">&#x27;li&#x27;</span>)</span></span><br><span class="line"><span class="language-javascript">        $ui.<span class="title function_">appendChild</span>($li)</span></span><br><span class="line"><span class="language-javascript">        <span class="keyword">const</span> $img = <span class="variable language_">document</span>.<span class="title function_">createElement</span>(<span class="string">&#x27;img&#x27;</span>)</span></span><br><span class="line"><span class="language-javascript">        $img.<span class="property">src</span> = loading</span></span><br><span class="line"><span class="language-javascript">        $img.<span class="property">dataset</span>.<span class="property">src</span> = <span class="string">`./img/<span class="subst">$&#123;img&#125;</span>.JPG`</span></span></span><br><span class="line"><span class="language-javascript">        $li.<span class="title function_">appendChild</span>($img)</span></span><br><span class="line"><span class="language-javascript">      &#125;)</span></span><br><span class="line"><span class="language-javascript">    &#125;)    </span></span><br><span class="line"><span class="language-javascript">  &#125;</span></span><br><span class="line"><span class="language-javascript">  <span class="keyword">function</span> <span class="title function_">checkImg</span>(<span class="params"></span>) &#123;</span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">const</span> $imgs = <span class="variable language_">document</span>.<span class="title function_">querySelectorAll</span>(<span class="string">&#x27;#box li img&#x27;</span>)</span></span><br><span class="line"><span class="language-javascript">    $imgs.<span class="title function_">forEach</span>(<span class="function">(<span class="params">dom</span>) =&gt;</span> &#123;</span></span><br><span class="line"><span class="language-javascript">      <span class="keyword">const</span> dataSrc = dom.<span class="title function_">getAttribute</span>(<span class="string">&#x27;data-src&#x27;</span>)</span></span><br><span class="line"><span class="language-javascript">      <span class="comment">// 此top为该元素距离窗口顶部距离，</span></span></span><br><span class="line"><span class="language-javascript">      <span class="comment">// 所以直接判断该值是否小于窗口可视区的值，即在可视区内</span></span></span><br><span class="line"><span class="language-javascript">      <span class="keyword">const</span> &#123; top &#125; = dom.<span class="title function_">getBoundingClientRect</span>()</span></span><br><span class="line"><span class="language-javascript">      <span class="comment">// 先判断有没有data-src，防止不断修改图片src</span></span></span><br><span class="line"><span class="language-javascript">      <span class="keyword">if</span> (dataSrc &amp;&amp; (top &lt; <span class="variable language_">window</span>.<span class="property">innerHeight</span>)) &#123;</span></span><br><span class="line"><span class="language-javascript">        dom.<span class="property">src</span> = dataSrc</span></span><br><span class="line"><span class="language-javascript">        dom.<span class="title function_">removeAttribute</span>(<span class="string">&#x27;data-src&#x27;</span>)</span></span><br><span class="line"><span class="language-javascript">      &#125;</span></span><br><span class="line"><span class="language-javascript">    &#125;)</span></span><br><span class="line"><span class="language-javascript">  &#125;</span></span><br><span class="line"><span class="language-javascript">  <span class="variable language_">window</span>.<span class="title function_">addEventListener</span>(<span class="string">&#x27;scroll&#x27;</span>, <span class="title function_">throttle</span>(<span class="keyword">function</span>(<span class="params">ev</span>) &#123;</span></span><br><span class="line"><span class="language-javascript">    <span class="comment">// 距离底部还有20px</span></span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">const</span> &#123; scrollTop, clientHeight, offsetHeight &#125; = <span class="variable language_">document</span>.<span class="property">documentElement</span></span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">if</span> (offsetHeight - ( scrollTop + clientHeight ) &lt; distance) &#123;</span></span><br><span class="line"><span class="language-javascript">      <span class="title function_">initImg</span>()</span></span><br><span class="line"><span class="language-javascript">    &#125;</span></span><br><span class="line"><span class="language-javascript">    <span class="title function_">checkImg</span>()</span></span><br><span class="line"><span class="language-javascript">  &#125;, <span class="number">200</span>))</span></span><br><span class="line"><span class="language-javascript">  <span class="comment">// 进行首次的资源获取</span></span></span><br><span class="line"><span class="language-javascript">  <span class="title function_">initImg</span>().<span class="title function_">then</span>(<span class="function">() =&gt;</span> &#123;</span></span><br><span class="line"><span class="language-javascript">    <span class="title function_">checkImg</span>()</span></span><br><span class="line"><span class="language-javascript">  &#125;)</span></span><br><span class="line"><span class="language-javascript">&#125;</span></span><br><span class="line"><span class="language-javascript"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;box&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">ul</span>&gt;</span><span class="tag">&lt;/<span class="name">ul</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>除此之外还有个 api 专门来处理这种可视回调的<a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/API/IntersectionObserver">IntersectionObserver</a>。<br>具体可参阅下<a target="_blank" rel="noopener" href="http://www.ruanyifeng.com/blog/2016/11/intersectionobserver_api.html">阮老师的文章</a>。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      
+      <!-- <a data-url="https://blog.cchealthier.com/2020/07/12/lazyload/" data-id="clmbebo06000x0r9m7ruw1ohp" class="article-share-link">分享</a> -->
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-callapplybind" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/07/09/callapplybind/" class="article-date">
+  <time datetime="2020-07-09T14:58:38.000Z" itemprop="datePublished">2020-07-09</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/07/09/callapplybind/">自己实现call，apply，bind</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>这三个都是改变函数里的 this 指向<br>第一个参数都是用来替换 this 的对象，后面是原来函数的参数，不定个数<br>当第一个参数为 null 或 undefined，则里面 this 指向 window</p>
+<p>call，apply用法一样，区别在于</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">func.<span class="title function_">call</span>(obj, a, b, c, ...) <span class="comment">// 后面的参数是一个一个</span></span><br><span class="line">func.<span class="title function_">apply</span>(obj, []) <span class="comment">// 后面的参数是一个数组</span></span><br><span class="line"><span class="comment">// 这里有个帅气的找出数组最大值</span></span><br><span class="line"><span class="title class_">Math</span>.<span class="property">max</span>.<span class="title function_">apply</span>(<span class="literal">null</span>, [<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>])</span><br></pre></td></tr></table></figure>
+<p>bind 比较特别，返回的是个函数，不执行</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 后面的参数也是一个一个，同时会被锁住，成为原函数的前几个参数</span></span><br><span class="line"><span class="keyword">const</span> newFn = bind.<span class="title function_">call</span>(obj, a, b, c, ...)</span><br><span class="line"><span class="comment">// 再调用的时候，参数为原函数的第n+1个参数</span></span><br><span class="line"><span class="title function_">newFn</span>(e, f, g, ...)</span><br></pre></td></tr></table></figure>
+
+<h3 id="上码"><a href="#上码" class="headerlink" title="上码"></a>上码</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> name = <span class="string">&#x27;windowname&#x27;</span></span><br><span class="line"><span class="keyword">var</span> age = <span class="string">&#x27;windowage&#x27;</span>  </span><br><span class="line"><span class="keyword">const</span> boy = &#123;</span><br><span class="line">  <span class="attr">name</span>: <span class="string">&#x27;xiaoming&#x27;</span>,</span><br><span class="line">  <span class="attr">age</span>: <span class="number">18</span>,</span><br><span class="line">  show (a, b, c) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">`<span class="subst">$&#123;<span class="variable language_">this</span>.name&#125;</span> is <span class="subst">$&#123;<span class="variable language_">this</span>.age&#125;</span>`</span>, a, b, c)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">const</span> girl = &#123;</span><br><span class="line">  <span class="attr">name</span>: <span class="string">&#x27;xiaohong&#x27;</span>,</span><br><span class="line">  <span class="attr">age</span>: <span class="number">16</span></span><br><span class="line">&#125;</span><br><span class="line">boy.<span class="title function_">show</span>(<span class="number">7</span>, <span class="number">8</span>, <span class="number">9</span>) <span class="comment">// xiaoming is 18 7 8 9</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 先来正常的结果</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;------------------- 对比 -------------------&#x27;</span>)</span><br><span class="line">boy.<span class="property">show</span>.<span class="title function_">call</span>(girl, <span class="number">17</span>, <span class="number">18</span>, <span class="number">19</span>, <span class="number">10</span>) <span class="comment">// xiaohong is 16 17 18 19</span></span><br><span class="line">boy.<span class="property">show</span>.<span class="title function_">apply</span>(girl, [<span class="number">27</span>, <span class="number">28</span>, <span class="number">29</span>, <span class="number">20</span>]) <span class="comment">// xiaohong is 16 27 28 29</span></span><br><span class="line">boy.<span class="property">show</span>.<span class="title function_">call</span>(<span class="literal">null</span>, <span class="number">17</span>, <span class="number">18</span>, <span class="number">19</span>, <span class="number">10</span>) <span class="comment">// windowname is windowage 17 18 19</span></span><br><span class="line">boy.<span class="property">show</span>.<span class="title function_">apply</span>(<span class="literal">undefined</span>, [<span class="number">27</span>, <span class="number">28</span>, <span class="number">29</span>, <span class="number">20</span>]) <span class="comment">// windowname is windowage 27 28 29</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> bindFn1 = boy.<span class="property">show</span>.<span class="title function_">bind</span>(girl, <span class="number">17</span>, <span class="number">18</span>, <span class="number">19</span>, <span class="number">10</span>)</span><br><span class="line"><span class="title function_">bindFn1</span>() <span class="comment">// xiaohong is 16 17 18 19</span></span><br><span class="line"><span class="title function_">bindFn1</span>(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>) <span class="comment">// xiaohong is 16 17 18 19</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> bindFn2 = boy.<span class="property">show</span>.<span class="title function_">bind</span>(girl, <span class="number">27</span>)</span><br><span class="line"><span class="title function_">bindFn2</span>() <span class="comment">// xiaohong is 16 27 undefined undefined</span></span><br><span class="line"><span class="title function_">bindFn2</span>(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>) <span class="comment">// xiaohong is 16 27 1 2</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> bindFn3 = boy.<span class="property">show</span>.<span class="title function_">bind</span>(<span class="literal">null</span>, <span class="number">27</span>)</span><br><span class="line"><span class="title function_">bindFn3</span>() <span class="comment">// windowname is windowage 27 undefined undefined</span></span><br><span class="line"><span class="title function_">bindFn3</span>(<span class="number">12</span>, <span class="number">13</span>, <span class="number">14</span>) <span class="comment">// windowname is windowage 27 12 13</span></span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;------------------- 分割线 -------------------&#x27;</span>)</span><br><span class="line"><span class="comment">// 通俗来讲就是哪个对象调用了函数，this就指向谁，当前面没有谁调用则是window</span></span><br><span class="line"><span class="comment">// 绑定对象赋予一个字段为函数，来调用这个函数</span></span><br><span class="line"><span class="comment">// 当绑定对象为 null 或者 undefined，则让这个函数单独运行，自然 this 会指向window</span></span><br><span class="line"><span class="comment">// 随机数的为了不要不小心覆盖到绑定对象原来的属性</span></span><br><span class="line"><span class="comment">// 不能绑定后对象多了个新属性，要删掉多出来的字段函数，雁过不留痕</span></span><br><span class="line"><span class="title class_">Function</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">_call</span> = <span class="keyword">function</span>(<span class="params">context, ...param</span>) &#123;</span><br><span class="line">  <span class="comment">// 随便的随机名字</span></span><br><span class="line">  <span class="keyword">const</span> functionName = <span class="title class_">Math</span>.<span class="title function_">floor</span>(<span class="title class_">Math</span>.<span class="title function_">random</span>() * <span class="number">100000</span>)</span><br><span class="line">  <span class="keyword">let</span> result</span><br><span class="line">  <span class="keyword">if</span> (context) &#123;</span><br><span class="line">    context[functionName] = <span class="variable language_">this</span></span><br><span class="line">    result = context[functionName](...param)</span><br><span class="line">    <span class="keyword">delete</span> context[functionName]</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    result = <span class="title function_">this</span>(...param)</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> result</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 当不能用 ES6 的解构时候，就用字符串拼接起来，然后用 eval 触发</span></span><br><span class="line"><span class="title class_">Function</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">_call2</span> = <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> functionName = <span class="title class_">Math</span>.<span class="title function_">floor</span>(<span class="title class_">Math</span>.<span class="title function_">random</span>() * <span class="number">100000</span>)</span><br><span class="line">  <span class="keyword">const</span> params = []</span><br><span class="line">  <span class="keyword">let</span> _context</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">1</span>, l = <span class="variable language_">arguments</span>.<span class="property">length</span>; i &lt; l; i++) &#123;</span><br><span class="line">    params.<span class="title function_">push</span>(<span class="variable language_">arguments</span>[i])</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span> (<span class="variable language_">arguments</span>[<span class="number">0</span>]) &#123;</span><br><span class="line">    _context = <span class="variable language_">arguments</span>[<span class="number">0</span>]</span><br><span class="line">    _context[functionName] = <span class="variable language_">this</span></span><br><span class="line">    paramStr = <span class="string">`_context[functionName](<span class="subst">$&#123;params.join(<span class="string">&#x27;, &#x27;</span>)&#125;</span>)`</span></span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    _context = <span class="variable language_">this</span></span><br><span class="line">    paramStr = <span class="string">`_context(<span class="subst">$&#123;params.join(<span class="string">&#x27;, &#x27;</span>)&#125;</span>)`</span></span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">const</span> result = <span class="built_in">eval</span>(paramStr)</span><br><span class="line">  <span class="keyword">delete</span> _context[functionName]</span><br><span class="line">  <span class="keyword">return</span> result</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="title class_">Function</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">_apply</span> = <span class="keyword">function</span>(<span class="params">context, arr</span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> functionName = <span class="title class_">Math</span>.<span class="title function_">floor</span>(<span class="title class_">Math</span>.<span class="title function_">random</span>() * <span class="number">100000</span>)</span><br><span class="line">  <span class="keyword">let</span> result</span><br><span class="line">  <span class="keyword">if</span> (context) &#123;</span><br><span class="line">    context[functionName] = <span class="variable language_">this</span></span><br><span class="line">    result = context[functionName](...arr)</span><br><span class="line">    <span class="keyword">delete</span> context[functionName]</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    result = <span class="title function_">this</span>(...arr)</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> result</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="title class_">Function</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">_bind</span> = <span class="keyword">function</span>(<span class="params">context, ...oldParam</span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> fn = <span class="variable language_">this</span></span><br><span class="line">  <span class="keyword">if</span> (context) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="function">(<span class="params">...newParam</span>) =&gt;</span> &#123;</span><br><span class="line">      <span class="keyword">const</span> functionName = <span class="title class_">Math</span>.<span class="title function_">floor</span>(<span class="title class_">Math</span>.<span class="title function_">random</span>() * <span class="number">100000</span>)</span><br><span class="line">      context[functionName] = fn</span><br><span class="line">      <span class="keyword">const</span> result = context[functionName](...oldParam, ...newParam)</span><br><span class="line">      <span class="keyword">delete</span> context[functionName]</span><br><span class="line">      <span class="keyword">return</span> result</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> <span class="function">(<span class="params">...newParam</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="title function_">fn</span>(...oldParam, ...newParam)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">boy.<span class="property">show</span>.<span class="title function_">_call</span>(girl, <span class="number">17</span>, <span class="number">18</span>, <span class="number">19</span>, <span class="number">10</span>)</span><br><span class="line">boy.<span class="property">show</span>.<span class="title function_">_apply</span>(girl, [<span class="number">27</span>, <span class="number">28</span>, <span class="number">29</span>, <span class="number">20</span>])</span><br><span class="line">boy.<span class="property">show</span>.<span class="title function_">_call</span>(<span class="literal">null</span>, <span class="number">17</span>, <span class="number">18</span>, <span class="number">19</span>, <span class="number">10</span>)</span><br><span class="line">boy.<span class="property">show</span>.<span class="title function_">_apply</span>(<span class="literal">undefined</span>, [<span class="number">27</span>, <span class="number">28</span>, <span class="number">29</span>, <span class="number">20</span>])</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> _bindFn1 = boy.<span class="property">show</span>.<span class="title function_">_bind</span>(girl, <span class="number">17</span>, <span class="number">18</span>, <span class="number">19</span>, <span class="number">10</span>)</span><br><span class="line"><span class="title function_">_bindFn1</span>()</span><br><span class="line"><span class="title function_">_bindFn1</span>(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> _bindFn2 = boy.<span class="property">show</span>.<span class="title function_">_bind</span>(girl, <span class="number">27</span>)</span><br><span class="line"><span class="title function_">_bindFn2</span>()</span><br><span class="line"><span class="title function_">_bindFn2</span>(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> _bindFn3 = boy.<span class="property">show</span>.<span class="title function_">_bind</span>(<span class="literal">null</span>, <span class="number">27</span>)</span><br><span class="line"><span class="title function_">_bindFn3</span>()</span><br><span class="line"><span class="title function_">_bindFn3</span>(<span class="number">12</span>, <span class="number">13</span>, <span class="number">14</span>)</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      
+      <!-- <a data-url="https://blog.cchealthier.com/2020/07/09/callapplybind/" data-id="clmbebo0100070r9m73zd4jgk" class="article-share-link">分享</a> -->
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-cache" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/07/02/cache/" class="article-date">
+  <time datetime="2020-07-02T15:32:38.000Z" itemprop="datePublished">2020-07-02</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/07/02/cache/">关于缓存的几个关键词</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>缓存可以看成浏览器开辟了一个区域来放缓存的东西。有些放在内存有些放在硬盘。<br>从缓存返回的状态码为304。缓存分两种</p>
+<h4 id="强缓存："><a href="#强缓存：" class="headerlink" title="强缓存："></a>强缓存：</h4><p>设定一个期限，期限的重复访问都会去缓存获取，有两个字符来表示这个期限：<br>__http1__的是__Expires__，Expires: Wed, 22 Oct 2018 08:41:00 GMT表示资源会在 Wed, 22 Oct 2018 08:41:00 GMT 后过期，需要再次请求。<br>__http1.1__的是__Cache-Control__，当Cache-Control:max-age&#x3D;300，表示5分钟缓存时间。还有其他几个值。直接看另外一个比较有影响的：no-cache。这个看做就是不强缓存，继续去判断协商缓存。</p>
+<p>Cache-Control优先级高于Expires，现在基本都是http1.1，Expires也就是兼容用。</p>
+<h4 id="协商缓存："><a href="#协商缓存：" class="headerlink" title="协商缓存："></a>协商缓存：</h4><p>首次访问资源，响应头会返回标识符（__Last-Modified&#x2F;ETag__），下次访问请求头会带上标识符（__If-Modified-Since&#x2F;If-None-Match__），去服务器查询是否启用缓存。也就是请求还是要发，但是至少东西是省发了。</p>
+<p>响应头和请求头的缓存标识符字段名不一样，但值一样。</p>
+<p>Last-Modified和If-Modified-Since，就是资源最后修改时间，发送到服务器去判断有没有更新，无则返回304。<br>缺点就很明显，如果文件有被打开或者别的什么改动了时间，那缓存失效。同时最低也是精确到秒，一秒内的改动判断不出来。</p>
+<p>ETag和If-None-Match<br>Etag可以看成根据文件算出的哈希，唯一的，文件一改肯定就改。<br>缺点就是要消耗资源去计算。</p>
+<p>当然ETag明显精度高于Last-Modified，所以优先级也是ETag高。</p>
+<h4 id="应用中的策略"><a href="#应用中的策略" class="headerlink" title="应用中的策略"></a>应用中的策略</h4><p>设定一个期限很大的强缓存，如 max-age&#x3D;31536000 (一年)。文件通过打包工具生成出来都带上哈希。只要文件内容不改哈希就不改，请求的地址就不改，命中强缓存。改了内容自然连请求地址都改了，就会返回新文件。</p>
+<h4 id="代码的角度，"><a href="#代码的角度，" class="headerlink" title="代码的角度，"></a>代码的角度，</h4><p>看到的资料几乎都是服务端的，比如node的express可以在请求资源的返回里设置响应头</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">app.<span class="title function_">get</span>(<span class="string">&#x27;/foo.js&#x27;</span>, <span class="keyword">function</span> (<span class="params">req, res</span>) &#123;</span><br><span class="line">  res.<span class="title function_">set</span>(&#123;</span><br><span class="line">    <span class="string">&#x27;Content-Type&#x27;</span>: <span class="string">&#x27;text/javascript&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;Cache-Control&#x27;</span>: <span class="string">&#x27;no-cache&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;ETag&#x27;</span>: <span class="string">&#x27;12345&#x27;</span></span><br><span class="line">  &#125;)</span><br><span class="line">  res.<span class="title function_">sendFile</span>(<span class="string">&#x27;foo.js&#x27;</span>)</span><br><span class="line">&#125;)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>当然每个都这样搞未免太麻烦了，在静态资源那里可以统一设置</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> options = &#123;</span><br><span class="line">  <span class="attr">dotfiles</span>: <span class="string">&#x27;ignore&#x27;</span>,</span><br><span class="line">  <span class="attr">etag</span>: <span class="literal">false</span>,</span><br><span class="line">  <span class="attr">extensions</span>: [<span class="string">&#x27;htm&#x27;</span>, <span class="string">&#x27;html&#x27;</span>],</span><br><span class="line">  <span class="attr">index</span>: <span class="literal">false</span>,</span><br><span class="line">  <span class="attr">maxAge</span>: <span class="string">&#x27;1d&#x27;</span>,</span><br><span class="line">  <span class="attr">redirect</span>: <span class="literal">false</span>,</span><br><span class="line">  <span class="attr">setHeaders</span>: <span class="keyword">function</span> (<span class="params">res, path, stat</span>) &#123;</span><br><span class="line">    res.<span class="title function_">set</span>(<span class="string">&#x27;x-timestamp&#x27;</span>, <span class="title class_">Date</span>.<span class="title function_">now</span>())</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">app.<span class="title function_">use</span>(express.<span class="title function_">static</span>(<span class="string">&#x27;public&#x27;</span>, options))</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>上面是默认设置，自己也可以修改。</p>
+<p>至于前端的设置，似乎只有</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">http-equiv</span>=<span class="string">&quot;expires&quot;</span> <span class="attr">content</span>=<span class="string">&quot;Wed, 20 Jun 2007 22:33:00 GMT&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">http-equiv</span>=<span class="string">&quot;cache-control&quot;</span> <span class="attr">content</span>=<span class="string">&quot;no-cache&quot;</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>尝试设置为强缓存好像没生效。而且这还是只是针对该份html，其他的资源似乎无能为力，可能也是了解不够。</p>
+<h4 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h4><p>上面提到的利用打包工具来做这个哈希名字的事，首先想到的当然是webpack</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">module</span>.<span class="property">exports</span> = &#123;</span><br><span class="line">  <span class="attr">output</span>:&#123;</span><br><span class="line">    <span class="attr">path</span>:path.<span class="title function_">join</span>(__dirname, <span class="string">&#x27;/dist/js&#x27;</span>),</span><br><span class="line">    <span class="attr">filename</span>: <span class="string">&#x27;[name].[chunkhash].js&#x27;</span>,</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>都知道输出文件名字可配置成带哈希字符的，也就是上面的 [chunkhash] 部分，这里有三个值可以写：<br><strong>hash、chunkhash、contenthash</strong></p>
+<p>__hash：__利用整个工程内容来计算，所以改一点点全部都改。<br>__chunkhash：__计算的单独chunk（这个是webpack的概念，相当于每个要输出的文件，一般一个entry对应一个chunk）的哈希。<br>__contenthash：__在使用抽离的css插件的时候，抽离的css文件会与引用它的js共用一份chunkhash，那js一改css也得改。当然反过来也是。此时用contenthash就只针对该份文件内容做哈希，就不会互相影响到了。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      
+      <!-- <a data-url="https://blog.cchealthier.com/2020/07/02/cache/" data-id="clmbebo02000b0r9mgtw42v5y" class="article-share-link">分享</a> -->
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-ssl-lts" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/06/22/ssl-lts/" class="article-date">
+  <time datetime="2020-06-21T16:08:00.000Z" itemprop="datePublished">2020-06-22</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/http%E5%8D%8F%E8%AE%AE/">http协议</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/06/22/ssl-lts/">ssl-lts 协议过程</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>资料来源于网上，自己大概归纳一下，部分文字照抄，省得到处找。</p>
+<img src="/2020/06/22/ssl-lts/SSL&TLS%E8%BF%87%E7%A8%8B.PNG" class="" title="SSL&amp;TLS">
+      
+    </div>
+    <footer class="article-footer">
+      
+      <!-- <a data-url="https://blog.cchealthier.com/2020/06/22/ssl-lts/" data-id="clmbebo0d002m0r9m7z1geol4" class="article-share-link">分享</a> -->
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+
+
+  <nav id="page-nav">
+    
+    <a class="extend prev" rel="prev" href="/page/7/">« 上一页</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><a class="page-number" href="/page/7/">7</a><span class="page-number current">8</span><a class="page-number" href="/page/9/">9</a><a class="page-number" href="/page/10/">10</a><a class="page-number" href="/page/11/">11</a><a class="extend next" rel="next" href="/page/9/">下一页 »</a>
+  </nav>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/http%E5%8D%8F%E8%AE%AE/">http协议</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/%E6%9C%8D%E5%8A%A1/">服务</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/%E7%AE%97%E6%B3%95/">算法</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%97%85%E8%A1%8C/">旅行</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%97%85%E8%A1%8C/%E8%AE%B0%E5%BD%95/">记录</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%83%B9%E9%A5%AA/">烹饪</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%83%B9%E9%A5%AA/%E4%BC%A0%E7%BB%9F/">传统</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%9A%8F%E6%83%B3/">随想</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%9A%8F%E6%83%B3/%E5%BF%83%E6%83%85/">心情</a></li></ul></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nginx/" rel="tag">nginx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" rel="tag">工程化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%80%A7%E8%83%BD/" rel="tag">性能</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/nginx/" style="font-size: 13.33px;">nginx</a> <a href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" style="font-size: 20px;">工程化</a> <a href="/tags/%E6%80%A7%E8%83%BD/" style="font-size: 16.67px;">性能</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/08/">八月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">七月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/06/">六月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/05/">五月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/04/">四月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/03/">三月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/02/">二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">十一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">十月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">九月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2023/08/24/node-module/">NodeJS 的 commonjs、esm 模块使用以及一些字段释义</a>
+          </li>
+        
+          <li>
+            <a href="/2023/08/23/webpack5-background-url/">webpack5 下 background url 图片打包失败</a>
+          </li>
+        
+          <li>
+            <a href="/2023/07/26/node-stream/">NodeJS 里的 stream（流）</a>
+          </li>
+        
+          <li>
+            <a href="/2023/06/07/webpack-modulefederationplugin/">用 webpack ModuleFederationPlugin 搭建微前端</a>
+          </li>
+        
+          <li>
+            <a href="/2023/05/31/react-basic-app/">react 基础工程（react-redux &amp; react-router）</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2023 ChrisIori<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//cdn.staticfile.org/jquery/2.0.3/jquery.min.js"></script>
+<script type="text/javascript" src="https://www.jq22.com/demo/jqueryToast201708310012/js/toast.script.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>

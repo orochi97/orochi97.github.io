@@ -21,8 +21,6 @@
 <meta property="article:author" content="ChrisIori">
 <meta name="twitter:card" content="summary">
   
-    <link rel="alternate" href="/atom.xml" title="凝雪密境" type="application/atom+xml">
-  
   
     <link rel="icon" href="/favicon.ico">
   
@@ -67,8 +65,6 @@
         
       </nav>
       <nav id="sub-nav">
-        
-          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
         
         <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
       </nav>
@@ -141,7 +137,7 @@
 <span id="more"></span>
 
 <h3 id="四、esm-文件可以直接写-await-方法"><a href="#四、esm-文件可以直接写-await-方法" class="headerlink" title="四、esm 文件可以直接写 await 方法"></a>四、esm 文件可以直接写 await 方法</h3><p>意思就是整份文件在被引入的时候已经是 <code>async</code> 的形式引入，所以直接在文件最顶层就可以直接写 <code>await</code> 关键字。和上面说的 .js&#x2F;.cjs 文件需要用 <code>import()</code> 引用 esm 模块是不是有点关联起来。</p>
-<p>这里可以了解一下 NodeJS 的模块加载机制，很有意思。整个模块是包在一个函数体执行一样，<code>require</code> 和上面说到的 <code>__filename</code>，<code>__dirname</code> 都是这个函数的入参，从外部传进来的，而不是挂载在全局。这里不展开，有兴趣可以自行搜索。</p>
+<p>这里可以了解一下 NodeJS 的模块加载机制，很有意思。整个模块是包在一个函数体执行一样，<code>require</code> 和上面说到的 <code>__filename</code>，<code>__dirname</code> 都是这个函数的入参，从外部传进来的，而不是挂载在全局。<br>这里不展开，有兴趣可以自行搜索。或者看看网上大佬文章，虽然比较考古，不过应该也是大差不差《<a target="_blank" rel="noopener" href="https://www.ruanyifeng.com/blog/2015/05/require.html">require() 源码解读</a>》。</p>
 <h3 id="五、commonjs-里-module-exports-和-exports-的关系"><a href="#五、commonjs-里-module-exports-和-exports-的关系" class="headerlink" title="五、commonjs 里 module.exports 和 exports 的关系"></a>五、commonjs 里 module.exports 和 exports 的关系</h3><p>一开始这两个确实是指向同个对象，打印能看出： <code>console.log(module.exports === exports) // =&gt; true</code>。<br>也就是 <code>module.exports.funA = xxx</code> 和 <code>exports.funA = xxx</code> 确实效果是一样的。<br>但是现在很习惯会统一导出，很少一个个声明：<code>module.exports = &#123; ... &#125;</code>。这样子就把 <code>module.exports</code> 的指向对象给改了。再也和 <code>exports</code> 聊不到一块儿去了。</p>
 <h3 id="六、package-json-声明导出相关的字段"><a href="#六、package-json-声明导出相关的字段" class="headerlink" title="六、package.json 声明导出相关的字段"></a>六、package.json 声明导出相关的字段</h3><p><strong>module：</strong><br>用于指向 esm 模块的库入口。</p>
 <p><strong>main：</strong><br>用于指向 commonjs 模块的库入口。</p>
@@ -155,9 +151,9 @@
     </div>
     <footer class="article-footer">
       
-        <a data-url="https://blog.cchealthier.com/2023/08/24/node-module/" data-id="cllp7v9v3001srl9mdwyd9ps6" class="article-thumbs-up">赞一个(<span class="article-thumbs-up-num">0</span>)</a>
+        <a data-url="https://blog.cchealthier.com/2023/08/24/node-module/" data-id="clmbebo09001r0r9mf1vl847p" class="article-thumbs-up">赞一个(<span class="article-thumbs-up-num">0</span>)</a>
       
-      <!-- <a data-url="https://blog.cchealthier.com/2023/08/24/node-module/" data-id="cllp7v9v3001srl9mdwyd9ps6" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2023/08/24/node-module/" data-id="clmbebo09001r0r9mf1vl847p" class="article-share-link">分享</a> -->
       
       
     </footer>

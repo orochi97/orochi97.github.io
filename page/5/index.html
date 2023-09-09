@@ -19,8 +19,6 @@
 <meta property="article:author" content="ChrisIori">
 <meta name="twitter:card" content="summary">
   
-    <link rel="alternate" href="/atom.xml" title="凝雪密境" type="application/atom+xml">
-  
   
     <link rel="icon" href="/favicon.ico">
   
@@ -66,8 +64,6 @@
       </nav>
       <nav id="sub-nav">
         
-          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
-        
         <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
       </nav>
       <div id="search-form-wrap">
@@ -79,12 +75,16 @@
       <div class="outer">
         <section id="main">
   
-    <article id="post-html-resource" class="article article-type-post" itemscope itemprop="blogPost">
+    <article id="post-performance-api" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2020/05/31/html-resource/" class="article-date">
-  <time datetime="2020-05-31T04:12:50.000Z" itemprop="datePublished">2020-05-31</time>
+    <a href="/2021/01/09/performance-api/" class="article-date">
+  <time datetime="2021-01-09T13:52:41.000Z" itemprop="datePublished">2021-01-09</time>
 </a>
     
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a>
+  </div>
+
   </div>
   <div class="article-inner">
     
@@ -93,7 +93,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2020/05/31/html-resource/">HTML几个资源异步属性</a>
+      <a class="article-title" href="/2021/01/09/performance-api/">前端性能监控</a>
     </h1>
   
 
@@ -101,17 +101,23 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h4 id="async"><a href="#async" class="headerlink" title="async"></a>async</h4><p>异步加载，乱序，只要它加载完了就会立刻执行。不阻塞页面解析。在window.onload前执行完。</p>
-<h4 id="defer"><a href="#defer" class="headerlink" title="defer"></a>defer</h4><p>异步加载，DOMContentLoaded 事件触发之前完成，并且是安装加载顺序运行，相当于把js放在body最后。</p>
-<h4 id="prefetch"><a href="#prefetch" class="headerlink" title="prefetch"></a>prefetch</h4><p>用于告诉浏览器，这段资源将会在未来某个导航或者功能要用到，但是本资源的下载顺序权重比较低。也就是说prefetch通常用于加速下一次导航，而不是本次的。被标记为prefetch的资源，将会被浏览器在空闲时间加载。</p>
-<h4 id="preload"><a href="#preload" class="headerlink" title="preload"></a>preload</h4><p>通常用于本页面要用到的关键资源，包括关键js、字体、css文件。preload将会把资源得下载顺序权重提高，使得关键数据提前下载好，优化页面打开速度。</p>
-<p>__注：__这个影响到浏览器下载资源的优先级，具体可参阅下这篇文章：<br><a target="_blank" rel="noopener" href="https://www.cnblogs.com/xiaohuochai/p/9183874.html">https://www.cnblogs.com/xiaohuochai/p/9183874.html</a><br>css的优先级居然比js高…</p>
+        <p>前端性能参数，可以直接敲 <code>performance</code>。里面记录了各个性能指标。具体的各个参数，可以查看大佬们的<a target="_blank" rel="noopener" href="http://www.alloyteam.com/2015/09/explore-performance/#prettyPhoto">总结</a>。</p>
+<p>这里记录几个参数</p>
+<h4 id="1、首屏绘制（First-Paint，FP）"><a href="#1、首屏绘制（First-Paint，FP）" class="headerlink" title="1、首屏绘制（First Paint，FP）"></a>1、首屏绘制（First Paint，FP）</h4><p>就是白屏时间啦。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">performance.<span class="title function_">getEntriesByType</span>(<span class="string">&#x27;paint&#x27;</span>)[<span class="number">0</span>]</span><br></pre></td></tr></table></figure>
 
+<h4 id="2、首屏内容绘制（First-Contentful-Paint，FCP）"><a href="#2、首屏内容绘制（First-Contentful-Paint，FCP）" class="headerlink" title="2、首屏内容绘制（First Contentful Paint，FCP）"></a>2、首屏内容绘制（First Contentful Paint，FCP）</h4><p>就是首屏加载时间啦</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">performance.<span class="title function_">getEntriesByType</span>(<span class="string">&#x27;paint&#x27;</span>)[<span class="number">1</span>]</span><br></pre></td></tr></table></figure>
+        
+          <p class="article-more-link">
+            <a href="/2021/01/09/performance-api/#more">Read More</a>
+          </p>
+        
       
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2020/05/31/html-resource/" data-id="cllp7v9uz000url9m7ehz75zx" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2021/01/09/performance-api/" data-id="clmbebo0b001w0r9m15xz3prz" class="article-share-link">分享</a> -->
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%80%A7%E8%83%BD/" rel="tag">性能</a></li></ul>
@@ -123,14 +129,14 @@
 
 
   
-    <article id="post-protocol" class="article article-type-post" itemscope itemprop="blogPost">
+    <article id="post-autumn" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2020/05/31/protocol/" class="article-date">
-  <time datetime="2020-05-31T02:50:08.000Z" itemprop="datePublished">2020-05-31</time>
+    <a href="/2020/12/06/autumn/" class="article-date">
+  <time datetime="2020-12-06T04:09:51.000Z" itemprop="datePublished">2020-12-06</time>
 </a>
     
   <div class="article-category">
-    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/http%E5%8D%8F%E8%AE%AE/">http协议</a>
+    <a class="article-category-link" href="/categories/%E6%97%85%E8%A1%8C/">旅行</a>►<a class="article-category-link" href="/categories/%E6%97%85%E8%A1%8C/%E8%AE%B0%E5%BD%95/">记录</a>
   </div>
 
   </div>
@@ -141,7 +147,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2020/05/31/protocol/">http协议等内容</a>
+      <a class="article-title" href="/2020/12/06/autumn/">我言秋日胜春朝</a>
     </h1>
   
 
@@ -149,120 +155,18 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h3 id="注：资料来源于网络，省得到处找"><a href="#注：资料来源于网络，省得到处找" class="headerlink" title="注：资料来源于网络，省得到处找"></a>注：资料来源于网络，省得到处找</h3><h4 id="TCP冷启动："><a href="#TCP冷启动：" class="headerlink" title="TCP冷启动："></a>TCP冷启动：</h4><p>TCP连接有一个预热和保护的过程，先检查数据是否传送成功，一旦成功过，则慢慢加大传输速度。因此对应瞬时并发的连接，服务器的响应就会变慢。所以最好能使用一个建立好的连接，并且这个连接可以支持瞬时并发的请求。</p>
-<h4 id="HTTP1-1"><a href="#HTTP1-1" class="headerlink" title="HTTP1.1"></a>HTTP1.1</h4><p><strong>1、长连接</strong><br>        在一个TCP连接上可以传送多个HTTP请求和响应，减少了建立和关闭连接的消耗和延迟。<br>一个包含有许多图像的网页文件的多个请求和应答可以在一个连接中传输，但每个单独的网页文件的请求和应答仍<br>然需要使用各自的连接。HTTP 1.1还允许客户端不用等待上一次请求结果返回，就可以发出下一次请求，但服务器<br>端必须按照接收到客户端请求的先后顺序依次回送响应结果，以保证客户端能够区分出每次请求的响应内容，这样<br>也显著地减少了整个下载过程所需要的时间。基于HTTP 1.1协议的客户机与服务器的信息交换过程。</p>
-<p><strong>2、丰富缓存</strong><br>        在HTTP1.0中主要使用header里的If-Modified-Since,Expires来做为缓存判断的标准，HTTP1.1则引入了<br>更多的缓存控制策略例如Entity tag，If-Unmodified-Since, If-Match,<br>If-None-Match等更多可供选择的缓存头来控制缓存策略。</p>
-<p><strong>3、节约带宽</strong><br>HTTP 1.1支持只发送header信息(不带任何body信息)，如果服务器认为客户端有权限请求服务器，则返回100，<br>否则返回401。客户端如果接受到100，才开始把请求body发送到服务器。<br>这样当服务器返回401的时候，客户端就可以不用发送请求body了，节约了带宽。<br>另外HTTP还支持传送内容的一部分。这样当客户端已经有一部分的资源后，只需要跟服务器请求另外的部分资源即可。这是支持文件断点续传的基础。</p>
-<p><strong>4、host域</strong><br>在HTTP1.0中认为每台服务器都绑定一个唯一的IP地址，因此，请求消息中的URL并没有传递主机名（hostname），HTTP1.0没有host域。随着虚拟主机技术的发展，在一台物理服务器上可以存在多个虚拟主机（Multi-homed Web Servers），并且它们共享一个IP地址。HTTP1.1的请求消息和响应消息都支持host域，且请求消息中如果没有host域会报告一个错误（400 Bad Request）。</p>
-<p><strong>5、丰富报错码</strong><br>在HTTP1.1中新增了24个错误状态响应码。</p>
-<h4 id="HTTP2-0"><a href="#HTTP2-0" class="headerlink" title="HTTP2.0"></a>HTTP2.0</h4><p><strong>1、多路复用</strong><br>所有的HTTP2.0通信都在一个TCP连接上完成，这个连接可以承载任意数量的双向数据流。<br>每个数据流以消息的形式发送，而消息由一或多个帧组成。这些帧可以乱序发送，然后再根据每个帧头部的流标识符（stream id）重新组装。</p>
-<p>举个例子，每个请求是一个数据流，数据流以消息的方式发送，而消息又分为多个帧，帧头部记录着stream id用来标识所属的数据流，不同属的帧可以在连接中随机混杂在一起。接收方可以根据stream id将帧再归属到各自不同的请求当中去。</p>
-<p>另外，多路复用（连接共享）可能会导致关键请求被阻塞。HTTP2.0里每个数据流都可以设置优先级和依赖，优先级高的数据流会被服务器优先处理和返回给客户端，数据流还可以依赖其他的子数据流。<br>可见，HTTP2.0实现了真正的并行传输，它能够在一个TCP上进行任意数量HTTP请求。而这个强大的功能则是基于“二进制分帧”的特性。</p>
-<p><strong>2、头部数据压缩</strong><br>在HTTP1.1中，HTTP请求和响应都是由状态行、请求&#x2F;响应头部、消息主体三部分组成。一般而言，消息主体都会经过gzip压缩，或者本身传输的就是压缩过后的二进制文件，但状态行和头部却没有经过任何压缩，直接以纯文本传输。随着Web功能越来越复杂，每个页面产生的请求数也越来越多，导致消耗在头部的流量越来越多，尤其是每次都要传输UserAgent、Cookie这类不会频繁变动的内容，完全是一种浪费。<br>HTTP1.1不支持header数据的压缩，HTTP2.0使用HPACK算法对header的数据进行压缩，这样数据体积小了，在网络上传输就会更快。</p>
-<p><strong>3、服务器推送</strong><br>当我们对支持HTTP2.0的web server请求数据的时候，服务器会顺便把一些客户端需要的资源一起推送到客户端，免得客户端再次创建连接发送请求到服务器端获取。这种方式非常合适加载静态资源。<br>服务器端推送的这些资源其实存在客户端的某处地方，客户端直接从本地加载这些资源就可以了，不用走网络，速度自然是快很多的。</p>
-<h4 id="UDP和TCP的区别"><a href="#UDP和TCP的区别" class="headerlink" title="UDP和TCP的区别"></a>UDP和TCP的区别</h4><p><strong>1、连接方面区别</strong><br>TCP面向连接（如打电话要先拨号建立连接）。<br>UDP是无连接的，即发送数据之前不需要建立连接。</p>
-<p><strong>2、安全方面的区别</strong><br>TCP提供可靠的服务，通过TCP连接传送的数据，无差错，不丢失，不重复，且按序到达。<br>UDP尽最大努力交付，即不保证可靠交付。</p>
-<p><strong>3、传输效率的区别</strong><br>TCP传输效率相对较低。<br>UDP传输效率高，适用于对高速传输和实时性有较高的通信或广播通信。</p>
-<p><strong>4、连接对象数量的区别</strong><br>TCP连接只能是点到点、一对一的。<br>UDP支持一对一，一对多，多对一和多对多的交互通信。</p>
-<p>TCP 是面向字节流（流模式）的，UDP 是基于数据报的</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      
-      <!-- <a data-url="https://blog.cchealthier.com/2020/05/31/protocol/" data-id="cllp7v9v5002brl9m6v0zfey5" class="article-share-link">分享</a> -->
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-database" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/05/31/database/" class="article-date">
-  <time datetime="2020-05-31T02:32:42.000Z" itemprop="datePublished">2020-05-31</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
+        <p>10月11月交界去了趟北京，看看红叶枫叶。不得不说，北方就是比南方有秋意。毕竟广东没秋天，哈哈。</p>
+<p><img src="https://file.cchealthier.com/file/blog/autumn/beijing1.jpg" alt="1.jpg"></p>
         
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/05/31/database/">MySql 基本指令</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>不做后端开发，不常操作数据库，很容易忘记。记录下自己用到过几条数据库命令。（持续）</p>
-<p>连上数据库</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">// -u 指向用户， -p 需要密码</span><br><span class="line">mysql -u root -p</span><br></pre></td></tr></table></figure>
-
-<p>显示数据库</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">show databases;</span><br></pre></td></tr></table></figure>
-
-<p>创建数据库</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">create database 数据库名字;</span><br></pre></td></tr></table></figure>
-
-<p>删除数据库</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">drop table 数据库名字;</span><br></pre></td></tr></table></figure>
-
-<p>选择数据库</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">use 数据库名字;</span><br></pre></td></tr></table></figure>
-
-<p>显示表</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">show tables;</span><br></pre></td></tr></table></figure>
-
-<p>创建表</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">create table 表名字;</span><br></pre></td></tr></table></figure>
-
-<p>删除表</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">drop table 表名字;</span><br></pre></td></tr></table></figure>
-
-<p>查看表结构</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">show create table 表名字;</span><br></pre></td></tr></table></figure>
-
-<p>查看表内容</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select * from 表名字;</span><br></pre></td></tr></table></figure>
-
-<p>查看表条数</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select count(*) from 表名字;</span><br></pre></td></tr></table></figure>
-
-<p>查看表索引</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">show index table 表名字;</span><br></pre></td></tr></table></figure>
-
-<p>清空表</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">truncate</span> table 表名字;</span><br></pre></td></tr></table></figure>
-
-<p>更新数据，注意搜索的值字符串的话要加引号</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">update table_name <span class="built_in">set</span> 要更新的字段=要更新的值 <span class="built_in">where</span> 搜索的字段=搜索的值;</span><br></pre></td></tr></table></figure>
-
-<p>设置密码</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">// <span class="built_in">set</span> password <span class="keyword">for</span> 用户名@localhost = password(‘新密码’);</span><br><span class="line"><span class="built_in">set</span> password <span class="keyword">for</span> root@localhost = password(<span class="string">&#x27;123456&#x27;</span>);</span><br></pre></td></tr></table></figure>
-
-<p>更新数据是从另外一张表拿的值</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">update 表A,表B <span class="built_in">set</span> 表A.字段A=表B.字段A <span class="built_in">where</span> 表A.字段B=表B.字段B and 表A.字段A=字段值;</span><br></pre></td></tr></table></figure>
-
-<p>增加字段名</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">// 字段类型可以先看表结构参考其他字段 show create table 表名字;</span><br><span class="line">alter table 表名 add 字段名 字段类型 default 默认值;</span><br></pre></td></tr></table></figure>
-
+          <p class="article-more-link">
+            <a href="/2020/12/06/autumn/#more">Read More</a>
+          </p>
+        
       
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2020/05/31/database/" data-id="cllp7v9ux000drl9m333camtn" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2020/12/06/autumn/" data-id="clmbebo0100080r9malzf5sh3" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -272,10 +176,10 @@
 
 
   
-    <article id="post-js-performance" class="article article-type-post" itemscope itemprop="blogPost">
+    <article id="post-webpack-speed" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2020/05/28/js-performance/" class="article-date">
-  <time datetime="2020-05-28T15:56:30.000Z" itemprop="datePublished">2020-05-28</time>
+    <a href="/2020/12/06/webpack-speed/" class="article-date">
+  <time datetime="2020-12-06T02:34:40.000Z" itemprop="datePublished">2020-12-06</time>
 </a>
     
   <div class="article-category">
@@ -290,7 +194,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2020/05/28/js-performance/">JS性能优化探讨</a>
+      <a class="article-title" href="/2020/12/06/webpack-speed/">webpack 的快</a>
     </h1>
   
 
@@ -298,41 +202,59 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h3 id="一、最核心一点，减少http请求，3次握手，冷启动，成本昂贵"><a href="#一、最核心一点，减少http请求，3次握手，冷启动，成本昂贵" class="headerlink" title="一、最核心一点，减少http请求，3次握手，冷启动，成本昂贵"></a>一、最核心一点，减少http请求，3次握手，冷启动，成本昂贵</h3><ol>
-<li>合并小js文件</li>
-<li>使用雪碧图</li>
-<li>小图转换成base64放到代码里</li>
-<li>设置缓存</li>
+        <p>现在啥都离不开性能。性能其实就是讲快的问题。一般 webpack 的快，都是讲它的构建（打包）的速度，但其实也可以有辅助运行时候的快的。<br>简单记录一下。</p>
+<h3 id="构建速度"><a href="#构建速度" class="headerlink" title="构建速度"></a>构建速度</h3><h4 id="一、缓存"><a href="#一、缓存" class="headerlink" title="一、缓存"></a>一、缓存</h4><p>基本上只要讲到快的肯定都有缓存。</p>
+<ol>
+<li><p><a target="_blank" rel="noopener" href="https://webpack.js.org/configuration/other-options/#cache">webpack5 的持久化缓存</a></p>
+</li>
+<li><p>各类 loader 自带的缓存功能（比如 babel-loader的 cacheDirectory: true）</p>
+</li>
+<li><p>cache-loader</p>
+</li>
+<li><p>hard-source-webpack-plugin</p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://webpack.js.org/plugins/dll-plugin">DllPlugin 和 DllReferencePlugin</a></p>
+</li>
 </ol>
-<h3 id="二、加快响应"><a href="#二、加快响应" class="headerlink" title="二、加快响应"></a>二、加快响应</h3><ol>
-<li>CDN</li>
-<li>减少DNS查询次数</li>
-<li>提前加载，延迟加载</li>
-<li>首页最小内容显示，将样式表置顶渲染页面，将js放到底部不阻塞页面渲染。</li>
+<p>前面四个是编译一次后产生缓存，也就是用以第二次缓存。<br>最后一个 Dll 是把一些不常变化的先打包好，然后引进来就可以了，不要每次都花时间构建。另类缓存。</p>
+<h4 id="二、加速文件查找"><a href="#二、加速文件查找" class="headerlink" title="二、加速文件查找"></a>二、加速文件查找</h4><ol>
+<li><p>对文件进行编译，那文件多少，找文件也是个耗时的工作。webpack 配置的 resolve 字段，就是用来告诉查找规则。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">module</span>.<span class="property">exports</span> = &#123;</span><br><span class="line">  <span class="attr">resolve</span>: &#123; <span class="comment">// 配置一系列搜索资源的规则</span></span><br><span class="line">    <span class="attr">alias</span>: &#123; <span class="comment">// 起别名，相当于转换成绝对路径了，所以比相对路径快</span></span><br><span class="line">      @<span class="attr">src</span>: path.<span class="title function_">resolve</span>(process.<span class="title function_">cwd</span>(), <span class="string">&#x27;src&#x27;</span>)</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="comment">// 引用的文件可以不加后缀，会找这些后缀的文件，引用文件详细到后缀名最快了</span></span><br><span class="line">    <span class="comment">// 但是一般也习惯不写后缀名，但这字段不要太多吧</span></span><br><span class="line">    <span class="attr">extensions</span>: [<span class="string">&#x27;.wasm&#x27;</span>, <span class="string">&#x27;.mjs&#x27;</span>, <span class="string">&#x27;.js&#x27;</span>, <span class="string">&#x27;.json&#x27;</span>],</span><br><span class="line">    <span class="comment">// 明确告诉 webpack 搜索哪个依赖文件，可以用绝对路径写死</span></span><br><span class="line">    <span class="attr">modules</span>: [<span class="string">&#x27;node_modules&#x27;</span>]</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>以及 loader 配置里的 <code>include</code> 和 <code>exclude</code> 来告诉 webpack 哪些需要编译哪些不需要，不干活当然最省时间。</p>
+</li>
 </ol>
-<h3 id="三、资源层面"><a href="#三、资源层面" class="headerlink" title="三、资源层面"></a>三、资源层面</h3><ol>
-<li>能用不那么高清图片，就用体积小的图片</li>
-<li>压缩业务代码</li>
-<li>压缩减少或不要cookie，每次请求头都会带上</li>
-<li>把静态资源放在另外一个域名，根据域名划分内容。<br>浏览器一般对同一个域的下载连接数有所限制，按照域名划分下载内容可以浏览器增大并行下载连接。<br>但是注意控制域名使用在2-4个之间，不然dns查询也是个问题。<br>一般网站规划会将静态资源放在类似于static.example.com，动态内容放在<a target="_blank" rel="noopener" href="http://www.example.com上./">www.example.com上。</a><br>这样做还有一个好处是可以在静态的域名上避免使用cookie。页面内容使用无cookie域名</li>
-<li>使用小且可缓存的favicon.ico网站图标文件favicon.ico。<br>不管你服务器有还是没有，浏览器都会去尝试请求这个图标。所以我们要确保这个图标存在文件尽量小，最好小于1k设置一个长的过期时间</li>
+<h4 id="三、多进程打包"><a href="#三、多进程打包" class="headerlink" title="三、多进程打包"></a>三、多进程打包</h4><ol>
+<li><p>happypack（作者都推荐用 thread-loader 了。。。）</p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://webpack.js.org/loaders/thread-loader/">thread-loader</a></p>
+</li>
 </ol>
-<h3 id="四、代码层面"><a href="#四、代码层面" class="headerlink" title="四、代码层面"></a>四、代码层面</h3><ol>
-<li>html尽量减少dom的数量（可以 document.getElementsByTagName(‘*’).length 查看有多少个）</li>
-<li>避免CSS表达式，CSS表达式的问题在于它被重新计算的次数远比我们想象的要多，不仅在网页绘制或大小改变时计算，即使我们滚动屏幕或者移动鼠标的时候也在计算，因此我们还是尽量避免使用它来防止使用不当而造成的性能损耗。</li>
-<li>减少对dom的操作</li>
-<li>用<link>代替@import，避免使用@import的原因很简单，因为它相当于将css放在网页内容底部。</li>
-<li>使用智能事件处理<br>这里说智能的事件处理需要开发者对事件处理有更深入的了解，通过不同的方式尽量少去触发事件，如果必要就尽早的去处理事件。比如一个div中10个按钮都需要事件句柄，那么我们可以将事件放在div上，在事件冒泡过程中捕获该事件然后判断事件来源。</li>
+<h3 id="运行速度"><a href="#运行速度" class="headerlink" title="运行速度"></a>运行速度</h3><h4 id="一、缓存-1"><a href="#一、缓存-1" class="headerlink" title="一、缓存"></a>一、缓存</h4><p>还是避不开缓存，这个结合《<a href="2020/07/02/cache/">关于缓存的几个关键词</a>》最下面内容来看。就是跟浏览器的缓存策略搭配起来。</p>
+<h4 id="二、花样减少代码"><a href="#二、花样减少代码" class="headerlink" title="二、花样减少代码"></a>二、花样减少代码</h4><ol>
+<li><p>压缩代码，现在 prodcution 模式，webpack 会自定开启混淆压缩功能了。（当然也可以自己<a target="_blank" rel="noopener" href="https://webpack.js.org/configuration/optimization/">配置压缩功能</a>）</p>
+</li>
+<li><p>减去不被触及的代码，<a target="_blank" rel="noopener" href="https://webpack.js.org/guides/tree-shaking">Tree Shaking</a>，但我想还是尽量不要写这种代码吧，Tree Shaking 也不是百分百靠谱。</p>
+</li>
+<li><p>按需加载，配合 ES6 的 <code>import export</code>，webpack就会处理了。没有用到的模块就不打包进来。<br><strong>注意：</strong>这里提一下，require 也可以使用，但并不是浏览器支持 require，而是 webpack 对其做了方法处理。<br>无论是 import 还是 require，最终都会变成 <code>__webpack_require__</code>。使用 require 就没有按需这种功效了。代码都会全部打进去。<br>而且因为 import 语法原因，所以需要放在最上面声明，是静态解析，所以才能分析出哪些要不要。（其实这部分是 babel 干的活）<br>当然 require 也有用处，代码虽然都打进来，但是不会一开始就运行（调用 require 了才会），也就是省去一开始的解析时间，最关键的还是，可以条件引入：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">getModule</span>(<span class="params">flag</span>) &#123;</span><br><span class="line">  <span class="keyword">if</span> (flag) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">require</span>(<span class="string">&#x27;./a.js&#x27;</span>)</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> <span class="built_in">require</span>(<span class="string">&#x27;./b.js&#x27;</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>抽出公共js，虽然大部分工程都会打成一个 js，但有些还是会有多份，就可能存在重复代码，然后这个相当复杂的 <a target="_blank" rel="noopener" href="https://webpack.js.org/plugins/split-chunks-plugin">SplitChunksPlugin</a> （<a target="_blank" rel="noopener" href="https://webpack.js.org/plugins/commons-chunk-plugin/">CommonsChunkPlugin</a>的升级版，不过这家伙已经是时代的眼泪了）就出场了。可以抽出公共组件，可以很精细地配置，当然官网说他们的默认配置最优了，没什么事就不要瞎改了。</p>
+</li>
+<li><p>异步加载，这个就跟上面那个有千丝的关系。我们运行性能讲究一个最小展示，可以看下<a href="/2020/05/28/js-performance/">JS性能优化探讨</a>里的加快响应。<br>有些功能不一定会被点到，那这部分功能就可以延后初始化。那相关的 js 就可以延迟加载。也即是动态加载，对应上面说的 import 是静态加载。使用 webpack 的语法 <a target="_blank" rel="noopener" href="https://webpack.js.org/guides/code-splitting/#dynamic-imports">import()</a>。这个跟 require 不同，不会被打包进去，而是抽多一份 js 出来。延迟去下载。</p>
+</li>
+<li><p>合并js文件，这个就跟上面那两个有万缕的关系。抽的 js 太多就会增多 http 请求，这是最耗性能的，走多一次 http 的消耗可能比一次请求多点内容更消耗，当然 http2 的多路复用另说。<br><a target="_blank" rel="noopener" href="https://webpack.js.org/plugins/limit-chunk-count-plugin/">LimitChunkCountPlugin</a> 和 <a target="_blank" rel="noopener" href="https://webpack.js.org/plugins/min-chunk-size-plugin/">MinChunkSizePlugin</a>（LimitChunkCountPlugin功能多一点，没具体使用过） 用于合并小 js 文件。实际场景中，我们就曾在使用 monaco-editor（vscode的网页版）的时候，打包出来有很多细碎的 js，然后用了 MinChunkSizePlugin 把小 js 文件给合成一份。</p>
+</li>
 </ol>
 
       
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2020/05/28/js-performance/" data-id="cllp7v9v00011rl9m9cpe5jqv" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2020/12/06/webpack-speed/" data-id="clmbebo0h003c0r9m742i9r10" class="article-share-link">分享</a> -->
       
       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%80%A7%E8%83%BD/" rel="tag">性能</a></li></ul>
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" rel="tag">工程化</a></li></ul>
 
     </footer>
   </div>
@@ -341,10 +263,10 @@
 
 
   
-    <article id="post-eventloop" class="article article-type-post" itemscope itemprop="blogPost">
+    <article id="post-api-defference" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2020/05/27/eventloop/" class="article-date">
-  <time datetime="2020-05-27T14:45:46.000Z" itemprop="datePublished">2020-05-27</time>
+    <a href="/2020/11/29/api-defference/" class="article-date">
+  <time datetime="2020-11-29T15:15:36.000Z" itemprop="datePublished">2020-11-29</time>
 </a>
     
   <div class="article-category">
@@ -359,7 +281,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2020/05/27/eventloop/">JS 事件循环</a>
+      <a class="article-title" href="/2020/11/29/api-defference/">几个相似（splice slice，substr substring）方法的区别</a>
     </h1>
   
 
@@ -367,28 +289,33 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h3 id="web："><a href="#web：" class="headerlink" title="web："></a>web：</h3><p><strong>1、</strong><br>浏览器有多线程，GUI渲染线程，定时器线程，IO线程（ajax）线程，事件触发线程，js线程。<br><strong>2、</strong><br>对于js而言，是单线程，一条线走到底。其他线程都是异步任务，处理把回调推入任务队列。<br><strong>3、</strong><br>js开始运行，把同步任务一个个入栈执行，这其中由于同步任务产生的异步回调都进入<br>任务队列了。执行完毕后，栈空。开始查询异步队列，一个个压入栈再执行，直至清空队列，其中过程再产生异步任务再次推入异步队列。不断循环的检查任务队列，执行任务队列的任务，压入任务队列。<br>其中任务队列有细分有宏任务，微任务。<br><strong>4、</strong><br>优先执行微任务，并且微任务清一列，宏任务清一个。<br><strong>5、</strong><br>同步任务执行可以看做第一个宏任务执行完毕。接着清空微任务队列，清一个宏任务，接着再清空微任务队列，再继续清一个宏任务，不断循环，直到没有，也可以看成微任务只有一列但是一列有多个，宏任务有多列但是一列只有一个。这是js的事件循环机制。<br><strong>6、</strong><br>属于微任务（microtask）的事件有以下几种：<br>Promise.then<br>MutationObserver<br>Object.observe<br>process.nextTick<br><strong>7、</strong><br>属于宏任务（macrotask）的事件有以下几种：<br>setTimeout<br>setInterval<br>setImmediate<br>MessageChannel<br>requestAnimationFrame<br>I&#x2F;O<br>UI交互事件</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">setTimeout</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;宏任务--1&#x27;</span>)</span><br><span class="line">  <span class="title class_">Promise</span>.<span class="title function_">resolve</span>()</span><br><span class="line">  .<span class="title function_">then</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;微任务2--1&#x27;</span>)</span><br><span class="line">  &#125;)</span><br><span class="line">  .<span class="title function_">then</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;微任务2--2&#x27;</span>)</span><br><span class="line">    <span class="built_in">setTimeout</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">      <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;宏任务--3&#x27;</span>)</span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;)</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;同步任务--1&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">new</span> <span class="title class_">Promise</span>(<span class="function">(<span class="params">resolve</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;同步任务--2&#x27;</span>)</span><br><span class="line">  <span class="title function_">resolve</span>()</span><br><span class="line">&#125;).<span class="title function_">then</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;微任务1--1&#x27;</span>)</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="title class_">Promise</span>.<span class="title function_">resolve</span>().<span class="title function_">then</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;微任务1--2&#x27;</span>)</span><br><span class="line">&#125;)</span><br><span class="line"><span class="built_in">setTimeout</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;宏任务--2&#x27;</span>)</span><br><span class="line">  <span class="title class_">Promise</span>.<span class="title function_">resolve</span>().<span class="title function_">then</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;微任务3--1&#x27;</span>)</span><br><span class="line">  &#125;)</span><br><span class="line">  <span class="built_in">setTimeout</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;宏任务--4&#x27;</span>)</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;)</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;同步任务--3&#x27;</span>)</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;同步任务--4&#x27;</span>)</span><br></pre></td></tr></table></figure>
-<br>
-<img src="/2020/05/27/eventloop/web.PNG" class="" title="web">
-<br>
+        <p>数组有 splice，slice 这两个方法，字符串也有类似的，长得很像，经常混了，这里记录下。</p>
+<h4 id="arrayObject-splice-index-howmany-item1-…-itemX"><a href="#arrayObject-splice-index-howmany-item1-…-itemX" class="headerlink" title="arrayObject.splice(index, howmany, item1, ….., itemX)"></a>arrayObject.splice(index, howmany, item1, ….., itemX)</h4><p>splice：绞接，捻接(两段绳子)的意思。该方法向&#x2F;从数组中添加&#x2F;删除项目，然后返回被删除的项目。该方法会直接对数组进行修改。</p>
+<p>index：必需。整数，规定添加&#x2F;删除项目的位置，使用负数可从数组结尾处规定位置。<br>howmany：必需。要删除的项目数量。如果设置为 0，则不会删除项目。<br>item1, …, itemX：可选。向数组添加的新项目。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> arr = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>]</span><br><span class="line">arr.<span class="title function_">splice</span>(<span class="number">2</span>, <span class="number">0</span>, <span class="number">7</span>, <span class="number">7</span>, <span class="number">7</span>) <span class="comment">// 返回[]，arr = [1, 2, 7, 7, 7, 3, 4]</span></span><br><span class="line">arr.<span class="title function_">splice</span>(<span class="number">2</span>, <span class="number">1</span>, <span class="number">7</span>, <span class="number">7</span>, <span class="number">7</span>) <span class="comment">// 返回[3]，arr = [1, 2, 7, 7, 7, 4]</span></span><br><span class="line">arr.<span class="title function_">splice</span>(<span class="number">0</span>, <span class="number">1</span>) <span class="comment">// 返回[1]，arr = [2, 3, 4]</span></span><br><span class="line">arr.<span class="title function_">splice</span>(-<span class="number">1</span>, <span class="number">1</span>, <span class="number">7</span>, <span class="number">7</span>, <span class="number">7</span>) <span class="comment">// 返回[4]，arr = [1, 2, 3, 7, 7, 7]</span></span><br></pre></td></tr></table></figure>
 
-<h3 id="Node："><a href="#Node：" class="headerlink" title="Node："></a>Node：</h3><p><a target="_blank" rel="noopener" href="https://nodejs.org/zh-cn/docs/guides/event-loop-timers-and-nexttick/">https://nodejs.org/zh-cn/docs/guides/event-loop-timers-and-nexttick/</a></p>
-<p><strong>1、</strong><br>node的事件分阶段来循环，<br>timers -&gt; IO callbacks -&gt; idle, prepare -&gt; poll(incoming) -&gt; check -&gt; close<br><strong>2、</strong><br>入口在poll阶段，每个阶段都有自己的队列<br><strong>3、</strong><br>__定时器：__本阶段执行已经被 setTimeout() 和 setInterval() 的调度回调函数。<br>__待定回调：__执行延迟到下一个循环迭代的 I&#x2F;O 回调。<br>__idle, prepare：__仅系统内部使用。<br>__轮询：__检索新的 I&#x2F;O 事件;执行与 I&#x2F;O 相关的回调（几乎所有情况下，除了关闭的回调函数，那些由计时器和 setImmediate() 调度的之外），其余情况 node 将在适当的时候在此阻塞。<br>__检测：__setImmediate() 回调函数在这里执行。<br>__关闭的回调函数：__一些关闭的回调函数，如：socket.on(‘close’, …)。<br><strong>4、</strong><br>轮询（poll）阶段有两个重要的功能：<br>计算应该阻塞和轮询 I&#x2F;O 的时间。<br>然后，处理 轮询 队列里的事件。<br>这里会循环到清楚队列任务，或者达到node限制<br><strong>5、</strong><br>每个阶段结束都会查询清空process.nextTick的回调队列</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> fs = <span class="built_in">require</span>(<span class="string">&#x27;fs&#x27;</span>)</span><br><span class="line">fs.<span class="title function_">readFile</span>(<span class="string">&#x27;lib.js&#x27;</span>, <span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">setTimeout</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;cb setTimeout--1&#x27;</span>)</span><br><span class="line">  &#125;, <span class="number">0</span>)</span><br><span class="line">  <span class="title function_">setImmediate</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;cb setImmediate--1&#x27;</span>)</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">process.<span class="title function_">nextTick</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;nextTick--1&#x27;</span>)</span><br><span class="line">&#125;)</span><br><span class="line"><span class="title function_">setImmediate</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;setImmediate--1&#x27;</span>)</span><br><span class="line">&#125;)</span><br><span class="line"><span class="built_in">setTimeout</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;setTimeout--1&#x27;</span>)</span><br><span class="line">  process.<span class="title function_">nextTick</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;nextTick--3&#x27;</span>)</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;, <span class="number">0</span>)</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;script--1&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="title class_">Promise</span>.<span class="title function_">resolve</span>().<span class="title function_">then</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;resolve then--1&#x27;</span>)</span><br><span class="line">&#125;)</span><br><span class="line"><span class="keyword">new</span> <span class="title class_">Promise</span>(<span class="function">(<span class="params">resolve</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;Promise--1&#x27;</span>)</span><br><span class="line">  <span class="title function_">resolve</span>()</span><br><span class="line">&#125;).<span class="title function_">then</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;then--1&#x27;</span>)</span><br><span class="line">  process.<span class="title function_">nextTick</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;nextTick--3&#x27;</span>)</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="built_in">setTimeout</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;setTimeout--2&#x27;</span>)</span><br><span class="line">  <span class="title class_">Promise</span>.<span class="title function_">resolve</span>().<span class="title function_">then</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;setTimeout -- resolve then--1&#x27;</span>)</span><br><span class="line">  &#125;)</span><br><span class="line">  <span class="title function_">setImmediate</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;setImmediate--3&#x27;</span>)</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;, <span class="number">0</span>)</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;script--3&#x27;</span>)</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;script--4&#x27;</span>)</span><br><span class="line"></span><br><span class="line">process.<span class="title function_">nextTick</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;nextTick--2&#x27;</span>)</span><br><span class="line">  <span class="title function_">setImmediate</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;setImmediate--2&#x27;</span>)</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-<br>
-<img src="/2020/05/27/eventloop/node.PNG" class="" title="node">
-<br>
+<h4 id="arrayObject-slice-start-end"><a href="#arrayObject-slice-start-end" class="headerlink" title="arrayObject.slice(start, end)"></a>arrayObject.slice(start, end)</h4><p>slice：切片的意思。该方法可从已有的数组中返回选定的元素。返回一个新的数组，包含从 start 到 end （不包括该元素）的 arrayObject 中的元素。不会改变原数组。</p>
+<p>start：必需。规定从何处开始选取。如果是负数，那么它规定从数组尾部开始算起的位置。也就是说，-1 指最后一个元素，-2 指倒数第二个元素，以此类推。<br>end：可选。规定从何处结束选取。该参数是数组片断结束处的数组下标。如果没有指定该参数，那么切分的数组包含从 start 到数组结束的所有元素。如果这个参数是负数，那么它规定的是从数组尾部开始算起的元素。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> arr = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>]</span><br><span class="line">arr.<span class="title function_">slice</span>(<span class="number">0</span>, <span class="number">0</span>) <span class="comment">// []</span></span><br><span class="line">arr.<span class="title function_">slice</span>(<span class="number">0</span>, <span class="number">1</span>) <span class="comment">// [1]</span></span><br><span class="line">arr.<span class="title function_">slice</span>(<span class="number">2</span>, <span class="number">3</span>) <span class="comment">// [3]</span></span><br><span class="line">arr.<span class="title function_">slice</span>(<span class="number">0</span>) <span class="comment">// [1, 2, 3, 4]</span></span><br><span class="line">arr.<span class="title function_">slice</span>(-<span class="number">2</span>) <span class="comment">// [3, 4]</span></span><br><span class="line">arr.<span class="title function_">slice</span>(-<span class="number">2</span>, -<span class="number">1</span>) <span class="comment">// [3]</span></span><br></pre></td></tr></table></figure>
 
-<h4 id="补充"><a href="#补充" class="headerlink" title="补充"></a>补充</h4><p>宿主环境提供的叫宏任务，由语言标准提供的叫微任务。</p>
-<p>宏任务每次执行一个的原因：浏览器为了能够使得JS内部task与DOM任务能够有序的执行，会在一个task执行结束后，在下一个 task 执行开始前，对页面进行重新渲染 （task-&gt;渲染-&gt;task-&gt;…）</p>
-<p>参考：<a target="_blank" rel="noopener" href="https://segmentfault.com/a/1190000014940904?utm_source=tag-newest">https://segmentfault.com/a/1190000014940904?utm_source=tag-newest</a></p>
+<p>字符串的 slice，substr，substring 方法</p>
+<h4 id="stringObject-slice-start-end"><a href="#stringObject-slice-start-end" class="headerlink" title="stringObject.slice(start, end)"></a>stringObject.slice(start, end)</h4><p>该方法可提取字符串的某个部分，并以新的字符串返回被提取的部分。跟数组一样不赘述</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&#x27;1234567&#x27;</span>.<span class="title function_">slice</span>(<span class="number">1</span>, <span class="number">3</span>) <span class="comment">// 23</span></span><br><span class="line"><span class="string">&#x27;1234567&#x27;</span>.<span class="title function_">slice</span>(-<span class="number">4</span>, -<span class="number">1</span>) <span class="comment">// 456</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="stringObject-substr-start-length"><a href="#stringObject-substr-start-length" class="headerlink" title="stringObject.substr(start, length)"></a>stringObject.substr(start, length)</h4><p>该方法可在字符串中抽取从 start 下标开始的指定数目的字符。<br><em><strong>注意：ECMAscript 没有对该方法进行标准化，因此反对使用它。</strong></em></p>
+<p>start：必需。要抽取的子串的起始下标。必须是数值。如果是负数，那么该参数声明从字符串的尾部开始算起的位置。也就是说，-1 指字符串中最后一个字符，-2 指倒数第二个字符，以此类推。<br>length：可选。子串中的字符数。必须是数值。如果省略了该参数，那么返回从 stringObject 的开始位置到结尾的字串。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&#x27;1234567&#x27;</span>.<span class="title function_">substr</span>(<span class="number">1</span>, <span class="number">3</span>) <span class="comment">// 234</span></span><br><span class="line"><span class="string">&#x27;1234567&#x27;</span>.<span class="title function_">substr</span>(<span class="number">0</span>) <span class="comment">// 1234567</span></span><br><span class="line"><span class="string">&#x27;1234567&#x27;</span>.<span class="title function_">substr</span>(-<span class="number">4</span>, <span class="number">2</span>) <span class="comment">// 45</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="stringObject-substring-start-stop"><a href="#stringObject-substring-start-stop" class="headerlink" title="stringObject.substring(start, stop)"></a>stringObject.substring(start, stop)</h4><p>该方法用于提取字符串中介于两个指定下标之间的字符。</p>
+<p>start：必需。一个非负的整数，规定要提取的子串的第一个字符在 stringObject 中的位置。<br>stop：可选。一个非负的整数，比要提取的子串的最后一个字符在 stringObject 中的位置多 1。如果省略该参数，那么返回的子串会一直到字符串的结尾。</p>
+<p><em><strong>注意：与 slice 和 substr 方法不同的是，substring 不接受负的参数。substring 功能与 slice 一样。</strong></em></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&#x27;1234567&#x27;</span>.<span class="title function_">substring</span>(<span class="number">1</span>, <span class="number">3</span>) <span class="comment">// 23</span></span><br><span class="line"><span class="string">&#x27;1234567&#x27;</span>.<span class="title function_">substring</span>(<span class="number">3</span>, <span class="number">1</span>) <span class="comment">// 23，如果 start 比 stop 大，那么该方法在提取子串之前会先交换这两个参数。</span></span><br><span class="line"><span class="string">&#x27;1234567&#x27;</span>.<span class="title function_">substring</span>(<span class="number">3</span>) <span class="comment">// 4567</span></span><br><span class="line"><span class="string">&#x27;1234567&#x27;</span>.<span class="title function_">substring</span>(-<span class="number">1</span>, <span class="number">1</span>) <span class="comment">// 1，参数 -1 被解析成 0</span></span><br></pre></td></tr></table></figure>
 
       
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2020/05/27/eventloop/" data-id="cllp7v9uz000nrl9m4si4h9it" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2020/11/29/api-defference/" data-id="clmbebo02000a0r9m0yhl985i" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -398,10 +325,10 @@
 
 
   
-    <article id="post-new-object" class="article article-type-post" itemscope itemprop="blogPost">
+    <article id="post-webpack-config" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2020/05/25/new-object/" class="article-date">
-  <time datetime="2020-05-25T15:59:18.000Z" itemprop="datePublished">2020-05-25</time>
+    <a href="/2020/11/22/webpack-config/" class="article-date">
+  <time datetime="2020-11-22T14:27:35.000Z" itemprop="datePublished">2020-11-22</time>
 </a>
     
   <div class="article-category">
@@ -416,7 +343,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2020/05/25/new-object/">JS new 一个对象干了什么事</a>
+      <a class="article-title" href="/2020/11/22/webpack-config/">webpack的配置</a>
     </h1>
   
 
@@ -424,249 +351,21 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <br>
+        <p>webpack也用了好久，想来短期内前端暂时也离不开它。虽然现在很多框架都集成了，但难免还是会遇到需要自己配置的时候。在这里记录下一些基础配置。<br>以下基于 webpack5，不过一般差别不大</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> path = <span class="built_in">require</span>(<span class="string">&#x27;path&#x27;</span>)</span><br><span class="line"><span class="keyword">const</span> &#123; execSync &#125; = <span class="built_in">require</span>(<span class="string">&#x27;child_process&#x27;</span>)</span><br><span class="line"><span class="keyword">const</span> webpack = <span class="built_in">require</span>(<span class="string">&#x27;webpack&#x27;</span>)</span><br><span class="line"><span class="keyword">const</span> <span class="title class_">Customplugin</span> = <span class="built_in">require</span>(<span class="string">&#x27;./custom-plugin&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 默认也会覆盖，不过我习惯删了，windows不支持命令的话，可以改用 fs 模块</span></span><br><span class="line"><span class="title function_">execSync</span>(<span class="string">`rm -rf build`</span>)</span><br><span class="line"></span><br><span class="line"><span class="variable language_">module</span>.<span class="property">exports</span> = &#123;</span><br><span class="line">  <span class="attr">context</span>: process.<span class="title function_">cwd</span>(), <span class="comment">// 当前上下文，一般也不用配置</span></span><br><span class="line">  <span class="attr">mode</span>: <span class="string">&#x27;development&#x27;</span>, <span class="comment">// 打包模式，production模式自动压缩混淆</span></span><br><span class="line">   <span class="comment">// source-map 类型 </span></span><br><span class="line">   <span class="comment">// https://webpack.js.org/configuration/devtool/#root</span></span><br><span class="line">  <span class="attr">devtool</span>: <span class="literal">false</span>,</span><br><span class="line">   <span class="comment">// 编译信息，一般也不需要那么多，可以精细配置 </span></span><br><span class="line">   <span class="comment">// https://webpack.js.org/configuration/stats/#root</span></span><br><span class="line">  <span class="attr">stats</span>: <span class="string">&#x27;none&#x27;</span>,</span><br><span class="line">  <span class="attr">entry</span>:  &#123; </span><br><span class="line">    <span class="attr">a</span>: __dirname + <span class="string">&#x27;/a.js&#x27;</span>,</span><br><span class="line">    <span class="attr">b</span>: __dirname + <span class="string">&#x27;/b.js&#x27;</span>,</span><br><span class="line">    <span class="attr">c</span>: __dirname + <span class="string">&#x27;/c.js&#x27;</span></span><br><span class="line">  &#125;, <span class="comment">// 指定文件入口</span></span><br><span class="line">  <span class="attr">output</span>: &#123;</span><br><span class="line">    <span class="attr">path</span>: __dirname + <span class="string">&#x27;/build&#x27;</span>,<span class="comment">// 打包后的文件存放的地方</span></span><br><span class="line">    <span class="attr">filename</span>: <span class="string">&#x27;[name].js&#x27;</span><span class="comment">// 打包后输出文件的文件名，比如上面打出来就会是 a.js b.js c.js</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="comment">// externals：不打包某些库 https://webpack.js.org/configuration/externals/#externals</span></span><br><span class="line">  <span class="attr">optimization</span>: &#123;</span><br><span class="line">    <span class="attr">minimize</span>: <span class="literal">false</span>, <span class="comment">// 不要压缩</span></span><br><span class="line">     <span class="comment">// 抽出公共js，贼复杂，一般用默认的就可以了 </span></span><br><span class="line">     <span class="comment">// https://webpack.js.org/plugins/split-chunks-plugin/#root</span></span><br><span class="line">    <span class="attr">splitChunks</span>: &#123;</span><br><span class="line">      <span class="attr">chunks</span>: <span class="string">&#x27;all&#x27;</span>,</span><br><span class="line">      <span class="comment">// minChunks: 3,</span></span><br><span class="line">      <span class="comment">// minSize: 0,</span></span><br><span class="line">      <span class="attr">cacheGroups</span>: &#123;</span><br><span class="line">        <span class="attr">default</span>: &#123;</span><br><span class="line">          <span class="attr">priority</span>: <span class="number">1</span>,</span><br><span class="line">          <span class="attr">reuseExistingChunk</span>: <span class="literal">true</span>,</span><br><span class="line">          <span class="attr">enforce</span>: <span class="literal">true</span></span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">module</span>: &#123;</span><br><span class="line">    <span class="attr">rules</span>: [</span><br><span class="line">      &#123; <span class="comment">// 添加自定义 loader</span></span><br><span class="line">        <span class="attr">loader</span>: <span class="string">&#x27;./custom-loader.js&#x27;</span>,</span><br><span class="line">        <span class="attr">options</span>: &#123;</span><br><span class="line">          <span class="attr">param</span>: <span class="number">1</span></span><br><span class="line">        &#125;</span><br><span class="line">      &#125;,</span><br><span class="line">      &#123;</span><br><span class="line">        <span class="attr">test</span>: <span class="regexp">/\.js$/</span>,</span><br><span class="line">        <span class="attr">exclude</span>: <span class="regexp">/node_modules/</span>,</span><br><span class="line">        <span class="attr">use</span>: <span class="string">&#x27;babel-loader&#x27;</span>,</span><br><span class="line">        <span class="attr">options</span>: &#123;</span><br><span class="line">          <span class="attr">cacheDirectory</span>: <span class="literal">true</span>,</span><br><span class="line">          <span class="attr">presets</span>: [<span class="string">&#x27;@babel/preset-env&#x27;</span>],</span><br><span class="line">          <span class="attr">plugins</span>: [<span class="string">&#x27;@babel/transform-runtime&#x27;</span>]</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;,</span><br><span class="line">      &#123;</span><br><span class="line">        <span class="attr">use</span>: [</span><br><span class="line">          <span class="string">&#x27;style-loader&#x27;</span>,</span><br><span class="line">          &#123;</span><br><span class="line">            <span class="attr">loader</span>: <span class="string">&#x27;css-loader&#x27;</span>,</span><br><span class="line">            <span class="attr">options</span>: &#123;</span><br><span class="line">              <span class="attr">importLoaders</span>: <span class="number">1</span></span><br><span class="line">            &#125;</span><br><span class="line">          &#125;,</span><br><span class="line">          &#123;</span><br><span class="line">            <span class="attr">loader</span>: <span class="string">&#x27;less-loader&#x27;</span>,</span><br><span class="line">            <span class="attr">options</span>: &#123;</span><br><span class="line">              <span class="attr">noIeCompat</span>: <span class="literal">true</span></span><br><span class="line">            &#125;</span><br><span class="line">          &#125;</span><br><span class="line">        ]</span><br><span class="line">      &#125;</span><br><span class="line">    ]</span><br><span class="line">  &#125;, </span><br><span class="line">  <span class="attr">plugins</span>: [</span><br><span class="line">    <span class="keyword">new</span> webpack.<span class="title class_">DefinePlugin</span>(&#123;</span><br><span class="line">      <span class="string">&#x27;process.env.NODE_ENV&#x27;</span>: <span class="string">&#x27;&quot;development&quot;&#x27;</span>,</span><br><span class="line">    &#125;),</span><br><span class="line">    <span class="keyword">new</span> <span class="title class_">Customplugin</span>(&#123; <span class="attr">params</span>: <span class="number">1</span> &#125;) <span class="comment">// 添加自定义 plugin</span></span><br><span class="line">  ],</span><br><span class="line">  <span class="attr">resolve</span>: &#123; <span class="comment">// 配置一系列搜索资源的规则</span></span><br><span class="line">    <span class="attr">alias</span>: &#123; <span class="comment">// 起别名，方便资源引用</span></span><br><span class="line">      @<span class="attr">src</span>: path.<span class="title function_">resolve</span>(process.<span class="title function_">cwd</span>(), <span class="string">&#x27;src&#x27;</span>)</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="comment">// 引用的文件可以不加后缀，会找这些后缀的文件</span></span><br><span class="line">    <span class="attr">extensions</span>: [<span class="string">&#x27;.wasm&#x27;</span>, <span class="string">&#x27;.mjs&#x27;</span>, <span class="string">&#x27;.js&#x27;</span>, <span class="string">&#x27;.json&#x27;</span>],</span><br><span class="line">    <span class="comment">// 告诉 webpack 搜索哪些文件夹，可以用绝对路径写死</span></span><br><span class="line">    <span class="attr">modules</span>: [<span class="string">&#x27;node_modules&#x27;</span>],</span><br><span class="line">    <span class="comment">// 从npm包导入时，例如import * as D3 from &#x27;d3&#x27;，此选项将确定package.json选中其中的哪些字段</span></span><br><span class="line">    <span class="attr">mainFields</span>: [<span class="string">&#x27;browser&#x27;</span>, <span class="string">&#x27;module&#x27;</span>, <span class="string">&#x27;main&#x27;</span>],</span><br><span class="line">    <span class="comment">// 解析目录时要使用的文件名，一般都是 index 了，不要瞎改</span></span><br><span class="line">    <span class="attr">mainFiles</span>: [<span class="string">&#x27;index&#x27;</span>]</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>自定义loader：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> loaderUtils = <span class="built_in">require</span>(<span class="string">&#x27;loader-utils&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">// https://webpack.js.org/api/loaders/</span></span><br><span class="line"><span class="variable language_">module</span>.<span class="property">exports</span> = <span class="keyword">function</span> (<span class="params">content, map, meta</span>) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="variable language_">this</span>.<span class="property">data</span>.<span class="property">value</span>) <span class="comment">// 123，具体场景看文档</span></span><br><span class="line">  <span class="comment">// 用 loaderUtils 解析这个 loader 的参数</span></span><br><span class="line">  <span class="keyword">const</span> options = loaderUtils.<span class="title function_">getOptions</span>(<span class="variable language_">this</span>)</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 最后要以一个模块的导出形式</span></span><br><span class="line">  content = <span class="string">`module.exports = function () &#123; <span class="subst">$&#123;content&#125;</span> &#125;`</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// 同步</span></span><br><span class="line">  <span class="variable language_">this</span>.<span class="title function_">callback</span>(<span class="literal">null</span>, content, map, meta)</span><br><span class="line">  <span class="keyword">return</span><span class="comment">// 当调用 callback() 时总是返回 undefined</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// 同步</span></span><br><span class="line">  <span class="comment">// return content</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// 异步</span></span><br><span class="line">  <span class="comment">// const callback = this.async()</span></span><br><span class="line">  <span class="comment">// callback(null, result, map, meta)</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 可以定义一个 pitch 方法，要写在 loader 方法下面，但是会先于 loader 方法执行</span></span><br><span class="line"><span class="variable language_">module</span>.<span class="property">exports</span>.<span class="property">pitch</span> = <span class="keyword">function</span>(<span class="params">remainingRequest, precedingRequest, data</span>) &#123;</span><br><span class="line">  data.<span class="property">value</span> = <span class="number">123</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">Person</span>(<span class="params">name, age</span>) &#123;</span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">name</span> = name</span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">age</span> = age</span><br><span class="line">&#125;</span><br><span class="line"><span class="title class_">Person</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">attr</span> = <span class="string">&#x27;human&#x27;</span></span><br><span class="line"><span class="keyword">const</span> man1 = <span class="keyword">new</span> <span class="title class_">Person</span>(<span class="string">&#x27;123&#x27;</span>, <span class="number">18</span>)</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(man1.<span class="property">name</span>)</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(man1.<span class="property">age</span>)</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(man1.<span class="property">attr</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">_new</span>(<span class="params">Constructor, ...param</span>) &#123;</span><br><span class="line">  <span class="comment">// 新建一个对象</span></span><br><span class="line">  <span class="keyword">const</span> obj = &#123;&#125; <span class="comment">// Object.create(null)</span></span><br><span class="line">  <span class="comment">// 建立继承关系，__proto__指向构造函数原型，获得原型属性与方法</span></span><br><span class="line">  <span class="comment">// 这里获得 attr 属性</span></span><br><span class="line">  obj.<span class="property">__proto__</span> = <span class="title class_">Constructor</span>.<span class="property"><span class="keyword">prototype</span></span></span><br><span class="line">  <span class="comment">// 开始执行这个构造函数，就是这个构造函数的this方法属性挂到这个新对象上</span></span><br><span class="line">  <span class="comment">// 这里就是把 name 和 age 挂上去</span></span><br><span class="line">  <span class="keyword">const</span> ret = <span class="title class_">Constructor</span>.<span class="title function_">call</span>(obj, ...param)</span><br><span class="line">  <span class="comment">// const ret = Constructor.apply(obj, param)</span></span><br><span class="line">  <span class="comment">// 若构造函数中没有返回值或返回值是基本类型（Number、String、Boolean）的值，则返回新实例对象；</span></span><br><span class="line">  <span class="comment">// 若返回值是引用类型的值，则实际返回值为这个引用类型。</span></span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">typeof</span> ret === <span class="string">&#x27;object&#x27;</span> ? ret : obj</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">const</span> man2 = <span class="title function_">_new</span>(<span class="title class_">Person</span>, <span class="string">&#x27;456&#x27;</span>, <span class="number">20</span>)</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(man2.<span class="property">name</span>)</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(man2.<span class="property">age</span>)</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(man2.<span class="property">attr</span>)</span><br></pre></td></tr></table></figure>
+<p>自定义plugin：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> pluginName = <span class="string">&#x27;CustomPlugin&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// https://webpack.js.org/api/plugins/</span></span><br><span class="line"><span class="comment">// 写成 ES5 prototype 形式也可以，一定要有 apply 方法</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">CustomPlugin</span> &#123;</span><br><span class="line">  <span class="title function_">constructor</span> (options) &#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">options</span> = options</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="title function_">apply</span>(<span class="params">compiler</span>) &#123;</span><br><span class="line">    <span class="comment">// compiler 和 compilation 有很多生命周期钩子</span></span><br><span class="line">    compiler.<span class="property">hooks</span>.<span class="property">run</span>.<span class="title function_">tap</span>(pluginName, <span class="function"><span class="params">compilation</span> =&gt;</span> &#123;</span><br><span class="line">      <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;The webpack build process is starting!!!&#x27;</span>)</span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">module</span>.<span class="property">exports</span> = <span class="title class_">CustomPlugin</span></span><br></pre></td></tr></table></figure>
       
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2020/05/25/new-object/" data-id="cllp7v9v1001drl9m4wen4vpj" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2020/11/22/webpack-config/" data-id="clmbebo0g00330r9meovh4dy4" class="article-share-link">分享</a> -->
       
       
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-js-inherit" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/05/21/js-inherit/" class="article-date">
-  <time datetime="2020-05-21T15:26:20.000Z" itemprop="datePublished">2020-05-21</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/05/21/js-inherit/">JS的继承方式</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="1、原型链继承"><a href="#1、原型链继承" class="headerlink" title="1、原型链继承"></a>1、原型链继承</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">SuperType</span>(<span class="params">type</span>) &#123;</span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">property</span> = <span class="literal">true</span></span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">colors</span> = [<span class="string">&#x27;red&#x27;</span>, <span class="string">&#x27;blue&#x27;</span>]</span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">type</span> = type</span><br><span class="line">&#125;</span><br><span class="line"><span class="title class_">SuperType</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">getSuperValue</span> = <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="variable language_">this</span>.<span class="property">property</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">SubType</span>(<span class="params">type</span>) &#123;</span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">subproperty</span> = <span class="literal">false</span></span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">subtype</span> = type</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 如果这里是 SubType.prototype = SuperType.prototype</span></span><br><span class="line"><span class="comment">// 则 this.property 值为 undefined</span></span><br><span class="line"><span class="title class_">SubType</span>.<span class="property"><span class="keyword">prototype</span></span> = <span class="keyword">new</span> <span class="title class_">SuperType</span>(<span class="string">&#x27;super&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="title class_">SubType</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">getSubValue</span> = <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="variable language_">this</span>.<span class="property">subproperty</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> instance = <span class="keyword">new</span> <span class="title class_">SubType</span>(<span class="string">&#x27;one&#x27;</span>)</span><br><span class="line"></span><br><span class="line">instance.<span class="title function_">getSuperValue</span>()</span><br><span class="line">instance.<span class="title function_">getSubValue</span>()</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(instance <span class="keyword">instanceof</span> <span class="title class_">SubType</span>, instance.<span class="property">constructor</span>)</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(instance <span class="keyword">instanceof</span> <span class="title class_">SuperType</span>)</span><br><span class="line"></span><br><span class="line">instance.<span class="property">colors</span>.<span class="title function_">push</span>(<span class="string">&#x27;black&#x27;</span>)</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(instance.<span class="property">colors</span>, instance.<span class="property">type</span>, instance.<span class="property">subtype</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> instance2 = <span class="keyword">new</span> <span class="title class_">SubType</span>(<span class="string">&#x27;two&#x27;</span>)</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(instance2.<span class="property">colors</span>, instance2.<span class="property">type</span>, instance2.<span class="property">subtype</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 所有实例的 colors 属性指向同一个对象，一改全改</span></span><br><span class="line"><span class="comment">// 如果父类有参数，没法带进去</span></span><br></pre></td></tr></table></figure>
-<br>
-<img src="/2020/05/21/js-inherit/%E5%8E%9F%E5%9E%8B%E9%93%BE%E7%BB%A7%E6%89%BF.PNG" class="" title="原型链继承">
-
-<h3 id="2、构造函数继承"><a href="#2、构造函数继承" class="headerlink" title="2、构造函数继承"></a>2、构造函数继承</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">SuperType</span>(<span class="params">type</span>) &#123;</span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">property</span> = <span class="literal">true</span></span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">colors</span> = [<span class="string">&#x27;red&#x27;</span>, <span class="string">&#x27;blue&#x27;</span>]</span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">type</span> = type</span><br><span class="line">&#125;</span><br><span class="line"><span class="title class_">SuperType</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">getSuperValue</span> = <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="variable language_">this</span>.<span class="property">property</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">SubType</span>(<span class="params">type</span>) &#123;</span><br><span class="line">  <span class="title class_">SuperType</span>.<span class="title function_">call</span>(<span class="variable language_">this</span>, type)</span><br><span class="line">  <span class="comment">// 为了确保不被父级的属性覆盖，可以在这之后再赋值子类的属性</span></span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">subproperty</span> = <span class="literal">true</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> instance1 = <span class="keyword">new</span> <span class="title class_">SubType</span>(<span class="string">&#x27;one&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(instance1 <span class="keyword">instanceof</span> <span class="title class_">SubType</span>, instance1.<span class="property">constructor</span>)</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(instance1 <span class="keyword">instanceof</span> <span class="title class_">SuperType</span>, instance1.<span class="property">type</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 没有用到原型的方法属性</span></span><br><span class="line"><span class="comment">// instance1.getSuperValue()</span></span><br><span class="line"></span><br><span class="line">instance1.<span class="property">colors</span>.<span class="title function_">push</span>(<span class="string">&#x27;black&#x27;</span>)</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(instance1.<span class="property">colors</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> instance2 = <span class="keyword">new</span> <span class="title class_">SubType</span>(<span class="string">&#x27;two&#x27;</span>)</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(instance2.<span class="property">colors</span>, instance2.<span class="property">type</span>)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<br>
-<img src="/2020/05/21/js-inherit/%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0%E7%BB%A7%E6%89%BF.PNG" class="" title="构造函数继承">
-
-<h3 id="3、组合继承（原型链继承-构造函数继承）"><a href="#3、组合继承（原型链继承-构造函数继承）" class="headerlink" title="3、组合继承（原型链继承 + 构造函数继承）"></a>3、组合继承（原型链继承 + 构造函数继承）</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">SuperType</span>(<span class="params">type</span>) &#123;</span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">property</span> = <span class="string">&#x27;true111&#x27;</span></span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">colors</span> = [<span class="string">&#x27;red&#x27;</span>, <span class="string">&#x27;blue&#x27;</span>]</span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">type</span> = type</span><br><span class="line">&#125;</span><br><span class="line"><span class="title class_">SuperType</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">getSuperValue</span> = <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="variable language_">this</span>.<span class="property">property</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">SubType</span>(<span class="params">type</span>) &#123;</span><br><span class="line">  <span class="title class_">SuperType</span>.<span class="title function_">call</span>(<span class="variable language_">this</span>, type) <span class="comment">// 调用一次</span></span><br><span class="line">  <span class="comment">// 为了确保不被父级的属性覆盖，可以在这之后再赋值子类的属性</span></span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">subproperty</span> = <span class="literal">true</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="title class_">SubType</span>.<span class="property"><span class="keyword">prototype</span></span> = <span class="keyword">new</span> <span class="title class_">SuperType</span>() <span class="comment">// 调用两次</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 如果没有这一步，最终顺着父类的原型链指向父类SuperType</span></span><br><span class="line"><span class="title class_">SubType</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">constructor</span> = <span class="title class_">SubType</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> instance1 = <span class="keyword">new</span> <span class="title class_">SubType</span>(<span class="string">&#x27;one&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(instance1 <span class="keyword">instanceof</span> <span class="title class_">SubType</span>, instance1.<span class="property">constructor</span>)</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(instance1 <span class="keyword">instanceof</span> <span class="title class_">SuperType</span>, instance1.<span class="property">type</span>)</span><br><span class="line"></span><br><span class="line">instance1.<span class="title function_">getSuperValue</span>()</span><br><span class="line"></span><br><span class="line">instance1.<span class="property">colors</span>.<span class="title function_">push</span>(<span class="string">&#x27;black&#x27;</span>)</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(instance1.<span class="property">colors</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> instance2 = <span class="keyword">new</span> <span class="title class_">SubType</span>(<span class="string">&#x27;two&#x27;</span>)</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(instance2.<span class="property">colors</span>, instance2.<span class="property">type</span>)</span><br></pre></td></tr></table></figure>
-<br>
-<img src="/2020/05/21/js-inherit/%E7%BB%84%E5%90%88%E7%BB%A7%E6%89%BF.PNG" class="" title="组合继承">
-
-<h3 id="4、原型式继承"><a href="#4、原型式继承" class="headerlink" title="4、原型式继承"></a>4、原型式继承</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 缺点：引用类型属性依然是共享的</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">object</span>(<span class="params">o</span>) &#123;</span><br><span class="line">  <span class="keyword">function</span> <span class="title function_">F</span>(<span class="params"></span>)&#123;&#125;</span><br><span class="line">  F.<span class="property"><span class="keyword">prototype</span></span> = o</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">new</span> <span class="title function_">F</span>()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> person = &#123;</span><br><span class="line">  <span class="attr">name</span>: <span class="string">&#x27;xiaoming&#x27;</span>,</span><br><span class="line">  <span class="attr">colors</span>: [<span class="string">&#x27;1&#x27;</span>, <span class="string">&#x27;2&#x27;</span>]</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> p1 = <span class="title function_">object</span>(person)</span><br><span class="line"><span class="keyword">const</span> p2 = <span class="title function_">object</span>(person)</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(p1.<span class="property">colors</span>, p2.<span class="property">colors</span>)</span><br><span class="line"></span><br><span class="line">p2.<span class="property">colors</span>.<span class="title function_">push</span>(<span class="string">&#x27;3&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(p1.<span class="property">colors</span>, p2.<span class="property">colors</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 等同于</span></span><br><span class="line"><span class="keyword">const</span> p3 = <span class="title class_">Object</span>.<span class="title function_">create</span>(person, &#123;</span><br><span class="line">  <span class="attr">name1</span>: &#123;</span><br><span class="line">    <span class="attr">value</span>: <span class="string">&#x27;xiaohong&#x27;</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(p1, p2, p3, p3.<span class="property">name</span>)</span><br></pre></td></tr></table></figure>
-<br>
-<img src="/2020/05/21/js-inherit/%E5%8E%9F%E5%9E%8B%E5%BC%8F%E7%BB%A7%E6%89%BF.PNG" class="" title="原型式继承">
-
-<h3 id="5、寄生式继承"><a href="#5、寄生式继承" class="headerlink" title="5、寄生式继承"></a>5、寄生式继承</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">object</span>(<span class="params">o</span>) &#123;</span><br><span class="line">  <span class="keyword">function</span> <span class="title function_">F</span>(<span class="params"></span>)&#123;&#125;</span><br><span class="line">  F.<span class="property"><span class="keyword">prototype</span></span> = o</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">new</span> <span class="title function_">F</span>()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 包了一层，定义了个方法增强对象，</span></span><br><span class="line"><span class="comment">// 缺点是函数没法复用，引用类型属性依然是共享的</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">createObject</span>(<span class="params">o</span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> clone = <span class="title function_">object</span>(o)</span><br><span class="line">  clone.<span class="property">say</span> = <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="variable language_">this</span>.<span class="property">colors</span>)</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> clone</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> person = &#123;</span><br><span class="line">  <span class="attr">name</span>: <span class="string">&#x27;xiaoming&#x27;</span>,</span><br><span class="line">  <span class="attr">colors</span>: [<span class="string">&#x27;1&#x27;</span>, <span class="string">&#x27;2&#x27;</span>]</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> p1 = <span class="title function_">createObject</span>(person)</span><br><span class="line"><span class="keyword">const</span> p2 = <span class="title function_">createObject</span>(person)</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(p1.<span class="property">colors</span>, p2.<span class="property">colors</span>)</span><br><span class="line"></span><br><span class="line">p2.<span class="property">colors</span>.<span class="title function_">push</span>(<span class="string">&#x27;3&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(p1.<span class="property">colors</span>, p2.<span class="property">colors</span>)</span><br><span class="line"></span><br><span class="line">p2.<span class="title function_">say</span>()</span><br></pre></td></tr></table></figure>
-<br>
-<img src="/2020/05/21/js-inherit/%E5%AF%84%E7%94%9F%E5%BC%8F%E7%BB%A7%E6%89%BF.PNG" class="" title="寄生式继承">
-
-<h3 id="6、寄生式组合继承"><a href="#6、寄生式组合继承" class="headerlink" title="6、寄生式组合继承"></a>6、寄生式组合继承</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">SuperType</span>(<span class="params">type</span>) &#123;</span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">name</span> = <span class="string">&#x27;true111&#x27;</span></span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">colors</span> = [<span class="string">&#x27;red&#x27;</span>, <span class="string">&#x27;blue&#x27;</span>]</span><br><span class="line">&#125;</span><br><span class="line"><span class="title class_">SuperType</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">getSuperValue</span> = <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="variable language_">this</span>.<span class="property">colors</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">SubType</span>(<span class="params">name, age</span>) &#123;</span><br><span class="line">  <span class="title class_">SuperType</span>.<span class="title function_">call</span>(<span class="variable language_">this</span>, name) <span class="comment">// 调用一次</span></span><br><span class="line">  <span class="comment">// 为了确保不被父级的属性覆盖，可以在这之后再赋值子类的属性</span></span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">age</span> = age</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="title class_">SubType</span>.<span class="property"><span class="keyword">prototype</span></span> = <span class="keyword">new</span> <span class="title class_">SuperType</span>() <span class="comment">// 调用两次</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 如果没有这一步，最终顺着父类的原型链指向父类SuperType</span></span><br><span class="line"><span class="title class_">SubType</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">constructor</span> = <span class="title class_">SubType</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> s1 = <span class="keyword">new</span> <span class="title class_">SubType</span>(<span class="string">&#x27;saaa&#x27;</span>, <span class="number">18</span>)</span><br><span class="line"><span class="keyword">const</span> s2 = <span class="keyword">new</span> <span class="title class_">SubType</span>(<span class="string">&#x27;sbbb&#x27;</span>, <span class="number">19</span>)</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;~1~&#x27;</span>, s1, s2)</span><br><span class="line"></span><br><span class="line">s2.<span class="property">colors</span>.<span class="title function_">push</span>(<span class="string">&#x27;yellow&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;~2~&#x27;</span>, s1, s2)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 这样每个 SubType 实例都有两组 name 和 colors，</span></span><br><span class="line"><span class="comment">// 一组是自身属性下，一组是原型链指向父类实例的</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">inherit</span>(<span class="params">newType, superType</span>) &#123;</span><br><span class="line">  newType.<span class="property"><span class="keyword">prototype</span></span> = <span class="title class_">Object</span>.<span class="title function_">create</span>(superType.<span class="property"><span class="keyword">prototype</span></span>)</span><br><span class="line">  newType.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">constructor</span> = newType</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">NewType</span>(<span class="params">name, age</span>) &#123;</span><br><span class="line">  <span class="title class_">SuperType</span>.<span class="title function_">call</span>(<span class="variable language_">this</span>, name) <span class="comment">// 调用一次</span></span><br><span class="line">  <span class="comment">// 为了确保不被父级的属性覆盖，可以在这之后再赋值子类的属性</span></span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">age</span> = age</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="title function_">inherit</span>(<span class="title class_">NewType</span>, <span class="title class_">SuperType</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> n1 = <span class="keyword">new</span> <span class="title class_">NewType</span>(<span class="string">&#x27;nbbb&#x27;</span>, <span class="number">20</span>)</span><br><span class="line"><span class="keyword">const</span> n2 = <span class="keyword">new</span> <span class="title class_">NewType</span>(<span class="string">&#x27;nccc&#x27;</span>, <span class="number">21</span>)</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;~3~&#x27;</span>, n1, n2, n1.<span class="property">constructor</span>)</span><br><span class="line"></span><br><span class="line">n1.<span class="property">colors</span>.<span class="title function_">push</span>(<span class="string">&#x27;yellow&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;~4~&#x27;</span>, n1, n2)</span><br></pre></td></tr></table></figure>
-<br>
-<img src="/2020/05/21/js-inherit/%E5%AF%84%E7%94%9F%E7%BB%84%E5%90%88%E5%BC%8F%E7%BB%A7%E6%89%BF-1.PNG" class="" title="寄生组合式继承">
-<br>
-<img src="/2020/05/21/js-inherit/%E5%AF%84%E7%94%9F%E7%BB%84%E5%90%88%E5%BC%8F%E7%BB%A7%E6%89%BF-2.PNG" class="" title="寄生组合式继承">
-<br>
-<img src="/2020/05/21/js-inherit/%E5%AF%84%E7%94%9F%E7%BB%84%E5%90%88%E5%BC%8F%E7%BB%A7%E6%89%BF-3.PNG" class="" title="寄生组合式继承">
-<br>
-<img src="/2020/05/21/js-inherit/%E5%AF%84%E7%94%9F%E7%BB%84%E5%90%88%E5%BC%8F%E7%BB%A7%E6%89%BF-4.PNG" class="" title="寄生组合式继承">
-
-<h3 id="7、ES6-Class-继承（略）"><a href="#7、ES6-Class-继承（略）" class="headerlink" title="7、ES6 Class 继承（略）"></a>7、ES6 Class 继承（略）</h3><h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>&amp;emsp;&amp;emsp;寄生式组合继承是 ES5 最完善的继承方式。细细一看，不就是跟 new 一个实例所做的操作差不多吗。不同之处在于复制的对象原型不一样。当然具体还是有差别，一个是原型，一个实例化。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      
-      <!-- <a data-url="https://blog.cchealthier.com/2020/05/21/js-inherit/" data-id="cllp7v9v0000xrl9mbxrr6q8z" class="article-share-link">分享</a> -->
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-mood" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/05/14/mood/" class="article-date">
-  <time datetime="2020-05-14T15:55:33.000Z" itemprop="datePublished">2020-05-14</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E9%9A%8F%E6%83%B3/">随想</a>►<a class="article-category-link" href="/categories/%E9%9A%8F%E6%83%B3/%E5%BF%83%E6%83%85/">心情</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/05/14/mood/">空间起源</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>&amp;emsp;&amp;emsp;好记性不如烂笔头。从小听到大，真的很有道理。但其实小时候仗着记忆力好，就懒得动笔。无论是记作业还是上课记笔记。当然所谓的好记忆其实那一瞬间，犹如内存，断电就没了。随着年纪增大，可能记忆力变差，可能经历的事多，确实遗忘的东西变多了。所以琢磨着找个地方给记下来。当然这种地方很多，自己搭建一个纯属好（第四声）玩。记录一些心情随想，所见所闻，所接触到的开发技术，烹饪煮食。<br>&amp;emsp;&amp;emsp;另外一个就是照片，以前老是觉得在于精不在于多，明明身处随时随地可照相的时代。后来在看一些地方旅游照片的时候，发现自己喜欢的街头巷尾照片太少了，就感觉缺失了那一环一样。以后也多给拍下来。<br>&amp;emsp;&amp;emsp;放两张偶然拍的自己觉得好的照片。</p>
-<img src="/2020/05/14/mood/suzhou.JPG" class="" title="苏州公车站">
-</br>
-</br>
-</br>
-<img src="/2020/05/14/mood/taibei.JPG" class="" title="台北淡水捷运站">
-
-      
-    </div>
-    <footer class="article-footer">
-      
-      <!-- <a data-url="https://blog.cchealthier.com/2020/05/14/mood/" data-id="cllp7v9v1001arl9mbt894g8p" class="article-share-link">分享</a> -->
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-buyu" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/05/03/buyu/" class="article-date">
-  <time datetime="2020-05-03T12:15:41.000Z" itemprop="datePublished">2020-05-03</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E7%83%B9%E9%A5%AA/">烹饪</a>►<a class="article-category-link" href="/categories/%E7%83%B9%E9%A5%AA/%E4%BC%A0%E7%BB%9F/">传统</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/05/03/buyu/">“bu”鱼</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>5.1那天家里寄了些生鲜小鱼，用传统的“bu”法，我也不知这个是什么做法，用普通话怎么念。</p>
-<h3 id="做法"><a href="#做法" class="headerlink" title="做法"></a>做法</h3><p>取一铁盆，加水没过鱼，倒入酱油，撒上盐，量全凭自己把握。滚 15~20 分钟即可。期间注意翻身，以免粘锅和受热不均匀。</p>
-<img src="/2020/05/03/buyu/fish.png" class="" title="fish">
-<br />
-
-      
-    </div>
-    <footer class="article-footer">
-      
-      <!-- <a data-url="https://blog.cchealthier.com/2020/05/03/buyu/" data-id="cllp7v9uv0008rl9me4948gl7" class="article-share-link">分享</a> -->
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-hexo-githubpage" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/05/03/hexo-githubpage/" class="article-date">
-  <time datetime="2020-05-03T09:30:27.000Z" itemprop="datePublished">2020-05-03</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/05/03/hexo-githubpage/">Hexo结合Github Page注意点</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>新手记录一些使用 hexo 和 Github Page 搭建个人空间遇到的。<br>其实不难，只是为了找个地方记录下来，方便后面可能的再次搭建。</p>
-<h2 id="一、Github-Page"><a href="#一、Github-Page" class="headerlink" title="一、Github Page"></a>一、Github Page</h2><h3 id="1、使用-username-github-io"><a href="#1、使用-username-github-io" class="headerlink" title="1、使用 username.github.io"></a>1、使用 username.github.io</h3><p>如果想通过 username.github.io 就访问到相应的静态页面，那么必须有一个 username.github.io 名字的项目。<br>username 指的是个人或者组织的名字。如下图第一个红框是用户的名字，则第二个红框处必须一模一样。</p>
-<img src="/2020/05/03/hexo-githubpage/img1.png" class="" title="github_page">
-
-<h3 id="2、使用-username-github-io-x2F-projectName"><a href="#2、使用-username-github-io-x2F-projectName" class="headerlink" title="2、使用 username.github.io&#x2F;projectName"></a>2、使用 username.github.io&#x2F;projectName</h3><p>主的 username.github.io 域名只对应一个项目，其他项目就通过 username.github.io&#x2F;项目名 来访问。</p>
-<h3 id="3、使用自定义域名"><a href="#3、使用自定义域名" class="headerlink" title="3、使用自定义域名"></a>3、使用自定义域名</h3><p>由于是直接在阿里云买的域名，所以对应的阿里云的操作，其他平台不确定。</p>
-<ul>
-<li><p>首先购买一个域名，进入域名服务</p>
-<img src="/2020/05/03/hexo-githubpage/img2.png" class="" title="阿里云域名">
-</li>
-<li><p>添加下图两道记录，1的ip是 ping 2 的域名出来</p>
-<img src="/2020/05/03/hexo-githubpage/img3.png" class="" title="阿里云域名2">
-</li>
-<li><p>进入 github 项目，右上方的 setting，到下图的地方设置相应域名。这个博客域名是买的域名的二级域名。</p>
-<img src="/2020/05/03/hexo-githubpage/img4.png" class="" title="custom_domain"></li>
-</ul>
-<h2 id="二、Hexo"><a href="#二、Hexo" class="headerlink" title="二、Hexo"></a>二、Hexo</h2><h3 id="1、设置-config-yml"><a href="#1、设置-config-yml" class="headerlink" title="1、设置_config.yml"></a>1、设置_config.yml</h3><ul>
-<li>打开 hexo 项目下的 _config.yml，进行下图设置，git的地址就是使用的工程地址。<img src="/2020/05/03/hexo-githubpage/img5.png" class="" title="_config.yml"></li>
-</ul>
-<h3 id="2、CNAME"><a href="#2、CNAME" class="headerlink" title="2、CNAME"></a>2、CNAME</h3><ul>
-<li><p>上面的工程 setting 部分，实际上就是在工程根目录创建了一份CNAME名字的文件，没有后缀的文件类型。里面的内容为设置的那个二级域名，也就是原来是访问 username.github.io 地址的，就会跳到自定义的域名。</p>
-</li>
-<li><p>为了防止每次部署都会清除掉该文件，从而要重复设置，可以将 CNAME 文件防止到 source 文件里，到时会依样拷贝过去。</p>
-</li>
-</ul>
-<hr>
-<p>相关传送门：<br><a target="_blank" rel="noopener" href="https://hexo.io/zh-cn/">Hexo</a><br><a target="_blank" rel="noopener" href="https://pages.github.com/">Github Page</a></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      
-      <!-- <a data-url="https://blog.cchealthier.com/2020/05/03/hexo-githubpage/" data-id="cllp7v9v00014rl9m5gjzhc5i" class="article-share-link">分享</a> -->
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/hexo/" rel="tag">hexo</a></li></ul>
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" rel="tag">工程化</a></li></ul>
 
     </footer>
   </div>
@@ -679,7 +378,7 @@
 
   <nav id="page-nav">
     
-    <a class="extend prev" rel="prev" href="/page/4/">« 上一页</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/6/">下一页 »</a>
+    <a class="extend prev" rel="prev" href="/page/4/">« 上一页</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><a class="page-number" href="/page/7/">7</a><span class="space">&hellip;</span><a class="page-number" href="/page/11/">11</a><a class="extend next" rel="next" href="/page/6/">下一页 »</a>
   </nav>
 
 </section>
