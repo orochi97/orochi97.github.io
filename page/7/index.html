@@ -23,13 +23,12 @@
     <link rel="icon" href="/favicon.ico">
   
   
-    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
-  
   
 <link rel="stylesheet" href="/css/style.css">
 
   <link href="https://www.jq22.com/demo/jqueryToast201708310012/css/toast.style.css" rel="stylesheet" type="text/css">
-<meta name="generator" content="Hexo 7.0.0-rc1"></head>
+  <link rel="stylesheet" href="/css/highlight/styles/monokai-sublime.min.css">
+<meta name="generator" content="Hexo 6.3.0"></head>
 
 <body>
   <div id="container">
@@ -57,9 +56,9 @@
       <nav id="main-nav">
         <a id="main-nav-toggle" class="nav-icon"></a>
         
-          <a class="main-nav-link" href="/">Home</a>
+          <a class="main-nav-link" href="/">首页</a>
         
-          <a class="main-nav-link" href="/archives">Archives</a>
+          <a class="main-nav-link" href="/archives">归档</a>
         
       </nav>
       <nav id="sub-nav">
@@ -74,6 +73,169 @@
 </header>
       <div class="outer">
         <section id="main">
+  
+    <article id="post-promise-api" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/08/30/promise-api/" class="article-date">
+  <time datetime="2020-08-30T02:10:37.000Z" itemprop="datePublished">2020-08-30</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/08/30/promise-api/">Promise的几个api用法</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promise</a> 应该大家都很熟悉了。大部分的库也都用上了Promise。<br>这文章主要记录下 Promise.all、Promise.allSettled、Promise.race 这几个的用法。</p>
+<p><strong>Promise.all：</strong><br>参数是一个数组，数组元素是各个Promise。要数组里面所有的 Promise 都返回成功，那这个 Promise.all 的结果才会是成功。成功返回数组，就是元素成功的结果集合。失败的话返回单值，是元素里第一个失败的结果。</p>
+<p><strong>Promise.allSettled：</strong><br>跟 Promise.all 参数一样，是一个数组，数组元素是各个Promise。不同的是这个不会因为数组元素的成败来返回成功失败。返回的是个数组，记录着元素 Promise 的各个结果，包括成败。</p>
+<p>先准备四个小函数，然后再混起来用：</p>
+<pre><code class="js">function PromiseSuccess0() &#123;
+  return new Promise((resolve) =&gt; &#123;
+    setTimeout(() =&gt; &#123;
+      resolve(&#39;PromiseSuccess0&#39;)
+    &#125;, 0)
+  &#125;)
+&#125;
+function PromiseSuccess1000() &#123;
+  return new Promise((resolve) =&gt; &#123;
+    setTimeout(() =&gt; &#123;
+      resolve(&#39;PromiseSuccess1000&#39;)
+    &#125;, 1000)
+  &#125;)
+&#125;
+function PromiseError2000() &#123;
+  return new Promise((resolve, reject) =&gt; &#123;
+    setTimeout(() =&gt; &#123;
+      reject(&#39;PromiseError2000&#39;)
+    &#125;, 2000)
+  &#125;)
+&#125;
+function PromiseError3000() &#123;
+  return new Promise((resolve, reject) =&gt; &#123;
+    setTimeout(() =&gt; &#123;
+      reject(&#39;PromiseError3000&#39;)
+    &#125;, 3000)
+  &#125;)
+&#125;
+
+Promise.all([PromiseSuccess0(), PromiseError3000(), PromiseError2000()])
+ .then((data) =&gt; &#123;
+   console.log(&#39;success all-1: &#39;, data)
+ &#125;)
+ .catch((error) =&gt; &#123;
+   console.error(&#39;error all-1: &#39;, error)
+    // error all-1:  PromiseError2000
+ &#125;)
+
+Promise.all([PromiseSuccess0(), PromiseSuccess1000()])
+ .then((data) =&gt; &#123;
+   console.log(&#39;success all-2: &#39;, data)
+    // success all-2:  (2) [&quot;PromiseSuccess0&quot;, &quot;PromiseSuccess1000&quot;]
+ &#125;)
+ .catch((error) =&gt; &#123;
+   console.error(&#39;error all-2: &#39;, error)
+ &#125;)
+
+Promise.allSettled([PromiseError2000(), PromiseSuccess1000()])
+  .then((data) =&gt; &#123;
+    console.log(&#39;success allSettled: &#39;, data)
+    // success allSettled:  
+    // (2) [&#123;…&#125;, &#123;…&#125;]
+    // 0: &#123;status: &quot;rejected&quot;, reason: &quot;PromiseError2000&quot;&#125;
+    // 1: &#123;status: &quot;fulfilled&quot;, value: &quot;PromiseSuccess1000&quot;&#125;
+  &#125;)
+  .catch((error) =&gt; &#123;
+    console.error(&#39;error allSettled: &#39;, error)
+  &#125;)
+</code></pre>
+<p><strong>Promise.race</strong><br>顾名思义，竞赛。参数依然是个元素为 Promise 的数组。会返回第一个跑完的元素结果。话不多说，上码：</p>
+<pre><code class="js">function load1000() &#123;
+  return new Promise((resolve) =&gt; &#123;
+    setTimeout(() =&gt; &#123;
+      resolve(&#39;load1000&#39;)
+    &#125;, 1000)
+  &#125;)
+&#125;
+function load3000() &#123;
+  return new Promise((resolve) =&gt; &#123;
+    setTimeout(() =&gt; &#123;
+      resolve(&#39;load3000&#39;)
+    &#125;, 3000)
+  &#125;)
+&#125;
+function errorTimer() &#123;
+ return new Promise((resolve, reject) =&gt; &#123;
+   setTimeout(() =&gt; &#123;
+     reject(new Error(&#39;timeout&#39;))
+   &#125;, 2000)
+ &#125;)
+&#125;
+
+Promise.race([load1000(), errorTimer()])
+ .then((data) =&gt; &#123;
+   console.log(&#39;success race-1: &#39;, data)
+   // success race-1:  load1000
+ &#125;)
+ .catch((error) =&gt; &#123;
+   console.error(&#39;error race-1: &#39;, error)
+ &#125;)
+
+Promise.race([load3000(), errorTimer()])
+ .then((data) =&gt; &#123;
+   console.log(&#39;success race-2: &#39;, data)
+ &#125;)
+ .catch((error) =&gt; &#123;
+   console.error(&#39;error race-2: &#39;, error)
+   // error race-2:  Error: timeout
+ &#125;)
+</code></pre>
+<p>具体的使用场景可以是，比如下载个东西，给其设定个时间限定，超过这个时间就报错。稍微封装一下：</p>
+<pre><code class="js">function addTimer(fn, time) &#123;
+ const errorTimer = new Promise((resolve, reject) =&gt; &#123;
+   setTimeout(() =&gt; &#123;
+     reject(new Error(&#39;timeout&#39;))
+   &#125;, time)
+ &#125;)
+ return Promise.race([fn(), errorTimer])
+&#125;
+
+addTimer(load1000, 2000)
+ .then((data) =&gt; &#123;
+   console.log(&#39;success addTimer: &#39;, data)
+ &#125;)
+ .catch((error) =&gt; &#123;
+   console.error(&#39;error addTimer: &#39;, error)
+ &#125;)
+</code></pre>
+
+      
+    </div>
+    <footer class="article-footer">
+      
+      <!-- <a data-url="https://blog.cchealthier.com/2020/08/30/promise-api/" data-id="clmxk7z0d0028c39mdltr658z" class="article-share-link">分享</a> -->
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
   
     <article id="post-webpackJsonp" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
@@ -103,23 +265,322 @@
       
         <p>webpack一般是打成一份文件，但有时也需要打成几份，生成的文件可以把其中的公共部分抽取出来，省点代码。<br>这里就免不了依赖文件顺序的问题。这里用了很巧妙的方法，来连接不同的文件，以及依赖的前置性问题。<br>相当用心思，这里稍微记录下。</p>
 <p>先准备两份文件 foo.js，bar.js，util.js：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// foo.js</span></span><br><span class="line"><span class="keyword">import</span> util <span class="keyword">from</span> <span class="string">&#x27;./util&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;foo&#x27;</span>)</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">util</span>(<span class="string">&#x27;foo&#x27;</span>))</span><br><span class="line"></span><br><span class="line"><span class="comment">// bar.js</span></span><br><span class="line"><span class="keyword">import</span> util <span class="keyword">from</span> <span class="string">&#x27;./util&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">util</span>(<span class="string">&#x27;bar&#x27;</span>))</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;bar&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">	<span class="keyword">return</span> <span class="string">&#x27;bar-function&#x27;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// util.js</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;util&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="keyword">function</span> (<span class="params">flag</span>) &#123;</span><br><span class="line">	<span class="keyword">return</span> <span class="string">&#x27;util&#x27;</span> + flag</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="js">// foo.js
+import util from &#39;./util&#39;
+
+console.log(&#39;foo&#39;)
+console.log(util(&#39;foo&#39;))
+
+// bar.js
+import util from &#39;./util&#39;
+
+console.log(util(&#39;bar&#39;))
+console.log(&#39;bar&#39;)
+
+export default function () &#123;
+    return &#39;bar-function&#39;
+&#125;
+
+// util.js
+console.log(&#39;util&#39;)
+
+export default function (flag) &#123;
+    return &#39;util&#39; + flag
+&#125;
+</code></pre>
 <p>webpack配置文件：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> &#123; execSync &#125; = <span class="built_in">require</span>(<span class="string">&#x27;child_process&#x27;</span>)</span><br><span class="line"><span class="keyword">var</span> webpack = <span class="built_in">require</span>(<span class="string">&#x27;webpack&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="title function_">execSync</span>(<span class="string">`rm -rf build`</span>)</span><br><span class="line"></span><br><span class="line"><span class="variable language_">module</span>.<span class="property">exports</span> = &#123;</span><br><span class="line">    <span class="attr">mode</span>: <span class="string">&#x27;development&#x27;</span>,</span><br><span class="line">    <span class="attr">devtool</span>: <span class="string">&#x27;none&#x27;</span>,<span class="comment">//配置生成Source Maps，选择合适的选项</span></span><br><span class="line">    <span class="attr">entry</span>:  &#123; </span><br><span class="line">        <span class="attr">foo</span>: __dirname + <span class="string">&quot;/foo.js&quot;</span>,</span><br><span class="line">        <span class="attr">bar</span>: __dirname + <span class="string">&quot;/bar.js&quot;</span></span><br><span class="line">    &#125;,<span class="comment">//已多次提及的唯一入口文件</span></span><br><span class="line">    <span class="attr">output</span>: &#123;</span><br><span class="line">        <span class="attr">path</span>: __dirname + <span class="string">&quot;/build&quot;</span>,<span class="comment">//打包后的文件存放的地方</span></span><br><span class="line">        <span class="attr">filename</span>: <span class="string">&quot;[name].js&quot;</span><span class="comment">//打包后输出文件的文件名</span></span><br><span class="line">    &#125;,</span><br><span class="line">     <span class="attr">optimization</span>: &#123;</span><br><span class="line">        <span class="attr">splitChunks</span>: &#123;</span><br><span class="line">          <span class="attr">chunks</span>: <span class="string">&#x27;all&#x27;</span>,</span><br><span class="line">          <span class="attr">minSize</span>: <span class="number">1</span>,</span><br><span class="line">          <span class="attr">maxSize</span>: <span class="number">0</span>,</span><br><span class="line">          <span class="attr">minChunks</span>: <span class="number">1</span>,</span><br><span class="line">          <span class="attr">maxAsyncRequests</span>: <span class="number">6</span>,</span><br><span class="line">          <span class="attr">maxInitialRequests</span>: <span class="number">4</span>,</span><br><span class="line">          <span class="attr">automaticNameDelimiter</span>: <span class="string">&#x27;~&#x27;</span>,</span><br><span class="line">          <span class="attr">automaticNameMaxLength</span>: <span class="number">30</span>,</span><br><span class="line">          <span class="attr">cacheGroups</span>: &#123;</span><br><span class="line">            <span class="attr">vendors</span>: &#123;</span><br><span class="line">              <span class="attr">test</span>: <span class="regexp">/[\\/]node_modules[\\/]/</span>,</span><br><span class="line">              <span class="attr">priority</span>: -<span class="number">10</span></span><br><span class="line">            &#125;,</span><br><span class="line">            <span class="attr">default</span>: &#123;</span><br><span class="line">              <span class="attr">minChunks</span>: <span class="number">2</span>,</span><br><span class="line">              <span class="attr">priority</span>: -<span class="number">20</span>,</span><br><span class="line">              <span class="attr">reuseExistingChunk</span>: <span class="literal">true</span></span><br><span class="line">            &#125;</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="js">const &#123; execSync &#125; = require(&#39;child_process&#39;)
+var webpack = require(&#39;webpack&#39;);
+
+execSync(`rm -rf build`)
+
+module.exports = &#123;
+    mode: &#39;development&#39;,
+    devtool: &#39;none&#39;,//配置生成Source Maps，选择合适的选项
+    entry:  &#123; 
+        foo: __dirname + &quot;/foo.js&quot;,
+        bar: __dirname + &quot;/bar.js&quot;
+    &#125;,//已多次提及的唯一入口文件
+    output: &#123;
+        path: __dirname + &quot;/build&quot;,//打包后的文件存放的地方
+        filename: &quot;[name].js&quot;//打包后输出文件的文件名
+    &#125;,
+     optimization: &#123;
+        splitChunks: &#123;
+          chunks: &#39;all&#39;,
+          minSize: 1,
+          maxSize: 0,
+          minChunks: 1,
+          maxAsyncRequests: 6,
+          maxInitialRequests: 4,
+          automaticNameDelimiter: &#39;~&#39;,
+          automaticNameMaxLength: 30,
+          cacheGroups: &#123;
+            vendors: &#123;
+              test: /[\\/]node_modules[\\/]/,
+              priority: -10
+            &#125;,
+            default: &#123;
+              minChunks: 2,
+              priority: -20,
+              reuseExistingChunk: true
+            &#125;
+          &#125;
+        &#125;
+      &#125;
+&#125;
+</code></pre>
 <p>会在 dist 文件夹生成三个文件：foo.js，bar.js，default<del>bar</del>foo.js<br>看得出 default-bar-foo.js 就是共用代码，这里就是 util.js，代码是：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// window[&quot;webpackJsonp&quot;]是个数组，push了一个数组。元素1还是一个数组，里面只有一个值&quot;default~bar~foo&quot;</span></span><br><span class="line"><span class="comment">// 其实就是这份文件名字，或者说是这份chunk名字</span></span><br><span class="line"><span class="comment">// 而第二个值就又是各个module的集合。比如这里只有一个util.js，结合chunk名就很明显了，</span></span><br><span class="line"><span class="comment">// util.js就是foo.js和bar.js共同用到的。如果还有其他共用到的，那么还有多几个字段</span></span><br><span class="line">(<span class="variable language_">window</span>[<span class="string">&quot;webpackJsonp&quot;</span>] = <span class="variable language_">window</span>[<span class="string">&quot;webpackJsonp&quot;</span>] || []).<span class="title function_">push</span>([[<span class="string">&quot;default~bar~foo&quot;</span>],&#123;</span><br><span class="line"><span class="comment">/***/</span> <span class="string">&quot;./util.js&quot;</span>:</span><br><span class="line"><span class="comment">/*!*****************!*\</span></span><br><span class="line"><span class="comment">  !*** ./util.js ***!</span></span><br><span class="line"><span class="comment">  \*****************/</span></span><br><span class="line"><span class="comment">/*! exports provided: default */</span></span><br><span class="line">      <span class="comment">// __webpack_exports__=module.exports</span></span><br><span class="line"><span class="comment">/***/</span> (<span class="keyword">function</span>(<span class="params"><span class="variable language_">module</span>, __webpack_exports__, __webpack_require__</span>) &#123;</span><br><span class="line"><span class="meta">&quot;use strict&quot;</span>;</span><br><span class="line">__webpack_require__.<span class="title function_">r</span>(__webpack_exports__);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;util&#x27;</span>)</span><br><span class="line"><span class="comment">/* harmony default export */</span> __webpack_exports__[<span class="string">&quot;default&quot;</span>] = (<span class="keyword">function</span> (<span class="params">flag</span>) &#123;</span><br><span class="line">	<span class="keyword">return</span> <span class="string">&#x27;util&#x27;</span> + flag</span><br><span class="line">&#125;);</span><br><span class="line"><span class="comment">/***/</span> &#125;)</span><br><span class="line">&#125;]);</span><br></pre></td></tr></table></figure>
+<pre><code class="js">// window[&quot;webpackJsonp&quot;]是个数组，push了一个数组。元素1还是一个数组，里面只有一个值&quot;default~bar~foo&quot;
+// 其实就是这份文件名字，或者说是这份chunk名字
+// 而第二个值就又是各个module的集合。比如这里只有一个util.js，结合chunk名就很明显了，
+// util.js就是foo.js和bar.js共同用到的。如果还有其他共用到的，那么还有多几个字段
+(window[&quot;webpackJsonp&quot;] = window[&quot;webpackJsonp&quot;] || []).push([[&quot;default~bar~foo&quot;],&#123;
+/***/ &quot;./util.js&quot;:
+/*!*****************!*\
+  !*** ./util.js ***!
+  \*****************/
+/*! exports provided: default */
+      // __webpack_exports__=module.exports
+/***/ (function(module, __webpack_exports__, __webpack_require__) &#123;
+&quot;use strict&quot;;
+__webpack_require__.r(__webpack_exports__);
+console.log(&#39;util&#39;)
+/* harmony default export */ __webpack_exports__[&quot;default&quot;] = (function (flag) &#123;
+    return &#39;util&#39; + flag
+&#125;);
+/***/ &#125;)
+&#125;]);
+</code></pre>
 <p>如果平时有看过 webpack 生成的代码的话，就能很明显看出与入口文件打出来的内容很不一样，缺少了<code>webpackBootstrap</code>。<br>看看 foo.js，（bar.js也长得差不多），几个名词先说一下：</p>
 <p><strong>module：</strong>每一份文件的js代码。比如a.js引入了b.js，把a.js作为entry。那么到时打出来的就是只有一份a.js（该输出文件就是一份chunk，输出文件名字可变）。里面有两个模module，a.js和b.js。<br><strong>chunk：</strong>要输出的每一份文件就是一个chunk（一个或多个module组成一份chunk），一般是一个entry对应一个chunk。如果像这种抽离公共js的，也是一个chunk，也会多于entry数。</p>
 <p><strong>foo.js是</strong><br>一个自执行的函数，传入一个json对象。只有一个key值，是”.&#x2F;foo.js”。相对应的value其实是一个函数模块，就是foo.js的代码内容。<br>打包出来的js靠全局变量维系，window[“webpackJsonp”]。在每个entry chunk的最上面都有webpack加载代码，而附属chunk则没有，只有看起来像数组push的代码，如default-bar-foo.js文件所示。</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/******/</span> (<span class="keyword">function</span>(<span class="params">modules</span>) &#123; <span class="comment">// webpackBootstrap</span></span><br><span class="line"><span class="comment">/******/</span> 	<span class="comment">// install a JSONP callback for chunk loading</span></span><br><span class="line">					<span class="comment">// 这data就是window[&quot;webpackJsonp&quot;] push进来的东西</span></span><br><span class="line"><span class="comment">/******/</span> 	<span class="keyword">function</span> <span class="title function_">webpackJsonpCallback</span>(<span class="params">data</span>) &#123;</span><br><span class="line"><span class="comment">/******/</span> 		<span class="keyword">var</span> chunkIds = data[<span class="number">0</span>];<span class="comment">// chunkId=&quot;default~bar~foo&quot;</span></span><br><span class="line"><span class="comment">/******/</span> 		<span class="keyword">var</span> moreModules = data[<span class="number">1</span>];<span class="comment">// &#123;&#x27;./util.js&#x27;:f&#125;</span></span><br><span class="line"><span class="comment">/******/</span> 		<span class="keyword">var</span> executeModules = data[<span class="number">2</span>]; <span class="comment">// 暂不知何用</span></span><br><span class="line"><span class="comment">/******/</span></span><br><span class="line"><span class="comment">/******/</span> 		<span class="comment">// add &quot;moreModules&quot; to the modules object,</span></span><br><span class="line"><span class="comment">/******/</span> 		<span class="comment">// then flag all &quot;chunkIds&quot; as loaded and fire callback</span></span><br><span class="line"><span class="comment">/******/</span> 		<span class="keyword">var</span> moduleId, chunkId, i = <span class="number">0</span>, resolves = [];</span><br><span class="line"><span class="comment">/******/</span> 		<span class="keyword">for</span>(;i &lt; chunkIds.<span class="property">length</span>; i++) &#123;</span><br><span class="line"><span class="comment">/******/</span> 			chunkId = chunkIds[i];</span><br><span class="line"><span class="comment">/******/</span> 			<span class="keyword">if</span>(<span class="title class_">Object</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">hasOwnProperty</span>.<span class="title function_">call</span>(installedChunks, chunkId) &amp;&amp; installedChunks[chunkId]) &#123;</span><br><span class="line">                <span class="comment">// resolves暂不知作何用</span></span><br><span class="line"><span class="comment">/******/</span> 				resolves.<span class="title function_">push</span>(installedChunks[chunkId][<span class="number">0</span>]);</span><br><span class="line"><span class="comment">/******/</span> 			&#125;</span><br><span class="line">              <span class="comment">// 标记chunk安装</span></span><br><span class="line"><span class="comment">/******/</span> 			installedChunks[chunkId] = <span class="number">0</span>;</span><br><span class="line"><span class="comment">/******/</span> 		&#125;</span><br><span class="line"><span class="comment">/******/</span> 		<span class="keyword">for</span>(moduleId <span class="keyword">in</span> moreModules) &#123;</span><br><span class="line"><span class="comment">/******/</span> 			<span class="keyword">if</span>(<span class="title class_">Object</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">hasOwnProperty</span>.<span class="title function_">call</span>(moreModules, moduleId)) &#123;</span><br><span class="line">                <span class="comment">// 把每个chunk的每份module记录在modules，用以调用运行</span></span><br><span class="line"><span class="comment">/******/</span> 				modules[moduleId] = moreModules[moduleId];</span><br><span class="line"><span class="comment">/******/</span> 			&#125;</span><br><span class="line"><span class="comment">/******/</span> 		&#125;</span><br><span class="line">            <span class="comment">// 当有parentJsonpFunction这方法适合，就执行这个方法，参数为每个chunk代码</span></span><br><span class="line">            <span class="comment">// window[&quot;webpackJsonp&quot;]里面的元素其实就是非入口chunk代码块</span></span><br><span class="line">            <span class="comment">// parentJsonpFunction取自上一个window[&quot;webpackJsonp&quot;]的push的方法，</span></span><br><span class="line">            <span class="comment">// 当第一个script的入口chunk，它的parentJsonpFunction就是普通数组的push</span></span><br><span class="line">            <span class="comment">// 同时在第一个script的入口chunk，把window[&quot;webpackJsonp&quot;]的push改写为第一个script的入口chunk的webpackJsonpCallback方法</span></span><br><span class="line">            <span class="comment">// 也就是第二个script的入口chunk里，这个parentJsonpFunction就是第一个script的入口chunk的webpackJsonpCallback方法</span></span><br><span class="line">            <span class="comment">// 这样就把两份chunk的代码通过这种方式联系起来</span></span><br><span class="line">            <span class="comment">// 当push（改写后的push）了非入口chunk，可以通过这种联系一层层传递到各个chunk的webpackJsonpCallback方法</span></span><br><span class="line">            <span class="comment">// webpackJsonpCallback里面再调用checkDeferredModules方法，来检查并执行相应的模块代码</span></span><br><span class="line">            <span class="comment">// 这样一来无论script顺序怎样，只要调用webpackJsonpCallback方法，就能达到加载的模块（chunk即为模块合集）传递到各个入口chunk</span></span><br><span class="line"><span class="comment">/******/</span> 		<span class="keyword">if</span>(parentJsonpFunction) <span class="title function_">parentJsonpFunction</span>(data);</span><br><span class="line"><span class="comment">/******/</span></span><br><span class="line"><span class="comment">/******/</span> 		<span class="keyword">while</span>(resolves.<span class="property">length</span>) &#123;</span><br><span class="line"><span class="comment">/******/</span> 			resolves.<span class="title function_">shift</span>()();</span><br><span class="line"><span class="comment">/******/</span> 		&#125;</span><br><span class="line"><span class="comment">/******/</span></span><br><span class="line"><span class="comment">/******/</span> 		<span class="comment">// add entry modules from loaded chunk to deferred list</span></span><br><span class="line">            <span class="comment">// 看原注释是添加新的前置依赖</span></span><br><span class="line">            <span class="comment">// 暂不知为何是添加executeModules而不是一开始就写在deferredModules</span></span><br><span class="line"><span class="comment">/******/</span> 		deferredModules.<span class="property">push</span>.<span class="title function_">apply</span>(deferredModules, executeModules || []);</span><br><span class="line"><span class="comment">/******/</span></span><br><span class="line"><span class="comment">/******/</span> 		<span class="comment">// run deferred modules when all chunks ready</span></span><br><span class="line"><span class="comment">/******/</span> 		<span class="keyword">return</span> <span class="title function_">checkDeferredModules</span>();</span><br><span class="line"><span class="comment">/******/</span> 	&#125;;</span><br><span class="line">          <span class="comment">// 检查依赖到齐没有，并执行</span></span><br><span class="line">          <span class="comment">// 在主流程里会运行一次</span></span><br><span class="line">          <span class="comment">// 在webpackJsonpCallback里最后再运行一次，也就是每次有chunk的加载都会检查运行一次</span></span><br><span class="line"><span class="comment">/******/</span> 	<span class="keyword">function</span> <span class="title function_">checkDeferredModules</span>(<span class="params"></span>) &#123;</span><br><span class="line"><span class="comment">/******/</span> 		<span class="keyword">var</span> result;</span><br><span class="line"><span class="comment">/******/</span> 		<span class="keyword">for</span>(<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; deferredModules.<span class="property">length</span>; i++) &#123;</span><br><span class="line"><span class="comment">/******/</span> 			<span class="keyword">var</span> deferredModule = deferredModules[i];</span><br><span class="line"><span class="comment">/******/</span> 			<span class="keyword">var</span> fulfilled = <span class="literal">true</span>;</span><br><span class="line"><span class="comment">/******/</span> 			<span class="keyword">for</span>(<span class="keyword">var</span> j = <span class="number">1</span>; j &lt; deferredModule.<span class="property">length</span>; j++) &#123;</span><br><span class="line">                <span class="comment">// depId=&quot;./foo.js&quot;,&quot;default~bar~foo&quot;</span></span><br><span class="line"><span class="comment">/******/</span> 				<span class="keyword">var</span> depId = deferredModule[j];</span><br><span class="line">                <span class="comment">// 是否已安装记录在installedChunks</span></span><br><span class="line"><span class="comment">/******/</span> 				<span class="keyword">if</span>(installedChunks[depId] !== <span class="number">0</span>) fulfilled = <span class="literal">false</span>;</span><br><span class="line"><span class="comment">/******/</span> 			&#125;</span><br><span class="line">              <span class="comment">// 全部安装完毕</span></span><br><span class="line"><span class="comment">/******/</span> 			<span class="keyword">if</span>(fulfilled) &#123;</span><br><span class="line">                <span class="comment">// 把 deferredModules 清空</span></span><br><span class="line"><span class="comment">/******/</span> 				deferredModules.<span class="title function_">splice</span>(i--, <span class="number">1</span>);</span><br><span class="line">                <span class="comment">// deferredModule[0]本chunk的名字，这里是&quot;./foo.js&quot;</span></span><br><span class="line"><span class="comment">/******/</span> 				result = <span class="title function_">__webpack_require__</span>(__webpack_require__.<span class="property">s</span> = deferredModule[<span class="number">0</span>]);</span><br><span class="line"><span class="comment">/******/</span> 			&#125;</span><br><span class="line"><span class="comment">/******/</span> 		&#125;</span><br><span class="line"><span class="comment">/******/</span></span><br><span class="line"><span class="comment">/******/</span> 		<span class="keyword">return</span> result;</span><br><span class="line"><span class="comment">/******/</span> 	&#125;</span><br><span class="line"><span class="comment">/******/</span></span><br><span class="line">          <span class="comment">// 先看同步代码，从这里开始看起</span></span><br><span class="line"><span class="comment">/******/</span> 	<span class="comment">// The module cache</span></span><br><span class="line"><span class="comment">/******/</span> 	<span class="keyword">var</span> installedModules = &#123;&#125;;</span><br><span class="line"><span class="comment">/******/</span></span><br><span class="line"><span class="comment">/******/</span> 	<span class="comment">// object to store loaded and loading chunks</span></span><br><span class="line"><span class="comment">/******/</span> 	<span class="comment">// undefined = chunk not loaded, null = chunk preloaded/prefetched</span></span><br><span class="line"><span class="comment">/******/</span> 	<span class="comment">// Promise = chunk loading, 0 = chunk loaded</span></span><br><span class="line">          <span class="comment">// 执行到这里，代表本身这个chunk也就是这个文件已加载</span></span><br><span class="line">          <span class="comment">// 这里同时也会标记别的chunk加载了没有，来判断前置依赖有了没有</span></span><br><span class="line"><span class="comment">/******/</span> 	<span class="keyword">var</span> installedChunks = &#123;</span><br><span class="line"><span class="comment">/******/</span> 		<span class="string">&quot;foo&quot;</span>: <span class="number">0</span></span><br><span class="line"><span class="comment">/******/</span> 	&#125;;</span><br><span class="line"><span class="comment">/******/</span></span><br><span class="line"><span class="comment">/******/</span> 	<span class="keyword">var</span> deferredModules = [];</span><br><span class="line"><span class="comment">/******/</span></span><br><span class="line"><span class="comment">/******/</span> 	<span class="comment">// The require function</span></span><br><span class="line"><span class="comment">/******/</span> 	<span class="keyword">function</span> <span class="title function_">__webpack_require__</span>(<span class="params">moduleId</span>) &#123;</span><br><span class="line"><span class="comment">/******/</span></span><br><span class="line"><span class="comment">/******/</span> 		<span class="comment">// Check if module is in cache</span></span><br><span class="line"><span class="comment">/******/</span> 		<span class="keyword">if</span>(installedModules[moduleId]) &#123;</span><br><span class="line"><span class="comment">/******/</span> 			<span class="keyword">return</span> installedModules[moduleId].<span class="property">exports</span>;</span><br><span class="line"><span class="comment">/******/</span> 		&#125;</span><br><span class="line"><span class="comment">/******/</span> 		<span class="comment">// Create a new module (and put it into the cache)</span></span><br><span class="line">            <span class="comment">// 每个加载的模块结果缓存起来</span></span><br><span class="line">            <span class="comment">// 这里每个module就是未打包前的每一份js</span></span><br><span class="line"><span class="comment">/******/</span> 		<span class="keyword">var</span> <span class="variable language_">module</span> = installedModules[moduleId] = &#123;</span><br><span class="line"><span class="comment">/******/</span> 			<span class="attr">i</span>: moduleId,</span><br><span class="line"><span class="comment">/******/</span> 			<span class="attr">l</span>: <span class="literal">false</span>,</span><br><span class="line"><span class="comment">/******/</span> 			<span class="attr">exports</span>: &#123;&#125;</span><br><span class="line"><span class="comment">/******/</span> 		&#125;;</span><br><span class="line"><span class="comment">/******/</span></span><br><span class="line"><span class="comment">/******/</span> 		<span class="comment">// Execute the module function</span></span><br><span class="line">            <span class="comment">// 这里注意到具体模块去看，会把这个模块的导出值赋值到module.exports</span></span><br><span class="line">            <span class="comment">// 然后再 return 出去，所以 __webpack_require__ 模块会返回加载运行模块的结果</span></span><br><span class="line"><span class="comment">/******/</span> 		modules[moduleId].<span class="title function_">call</span>(<span class="variable language_">module</span>.<span class="property">exports</span>, <span class="variable language_">module</span>, <span class="variable language_">module</span>.<span class="property">exports</span>, __webpack_require__);</span><br><span class="line"><span class="comment">/******/</span></span><br><span class="line"><span class="comment">/******/</span> 		<span class="comment">// Flag the module as loaded</span></span><br><span class="line">            <span class="comment">// 标记这个 module 加载过</span></span><br><span class="line"><span class="comment">/******/</span> 		<span class="variable language_">module</span>.<span class="property">l</span> = <span class="literal">true</span>;</span><br><span class="line"><span class="comment">/******/</span></span><br><span class="line"><span class="comment">/******/</span> 		<span class="comment">// Return the exports of the module</span></span><br><span class="line"><span class="comment">/******/</span> 		<span class="keyword">return</span> <span class="variable language_">module</span>.<span class="property">exports</span>;</span><br><span class="line"><span class="comment">/******/</span> 	&#125;</span><br><span class="line"><span class="comment">/******/</span></span><br><span class="line"><span class="comment">/******/</span>  <span class="comment">// 部分 __webpack_require__.字段 这里未体现作用</span></span><br><span class="line"><span class="comment">/******/</span> 	<span class="comment">// expose the modules object (__webpack_modules__)</span></span><br><span class="line"><span class="comment">/******/</span> 	__webpack_require__.<span class="property">m</span> = modules;</span><br><span class="line"><span class="comment">/******/</span></span><br><span class="line"><span class="comment">/******/</span> 	<span class="comment">// expose the module cache</span></span><br><span class="line"><span class="comment">/******/</span> 	__webpack_require__.<span class="property">c</span> = installedModules;</span><br><span class="line"><span class="comment">/******/</span></span><br><span class="line"><span class="comment">/******/</span> 	<span class="comment">// define getter function for harmony exports</span></span><br><span class="line"><span class="comment">/******/</span> 	__webpack_require__.<span class="property">d</span> = <span class="keyword">function</span>(<span class="params"><span class="built_in">exports</span>, name, getter</span>) &#123;</span><br><span class="line"><span class="comment">/******/</span> 		<span class="keyword">if</span>(!__webpack_require__.<span class="title function_">o</span>(<span class="built_in">exports</span>, name)) &#123;</span><br><span class="line"><span class="comment">/******/</span> 			<span class="title class_">Object</span>.<span class="title function_">defineProperty</span>(<span class="built_in">exports</span>, name, &#123; <span class="attr">enumerable</span>: <span class="literal">true</span>, <span class="attr">get</span>: getter &#125;);</span><br><span class="line"><span class="comment">/******/</span> 		&#125;</span><br><span class="line"><span class="comment">/******/</span> 	&#125;;</span><br><span class="line"><span class="comment">/******/</span></span><br><span class="line"><span class="comment">/******/</span> 	<span class="comment">// define __esModule on exports</span></span><br><span class="line">          <span class="comment">// 打上 ES6 </span></span><br><span class="line"><span class="comment">/******/</span> 	__webpack_require__.<span class="property">r</span> = <span class="keyword">function</span>(<span class="params"><span class="built_in">exports</span></span>) &#123;</span><br><span class="line"><span class="comment">/******/</span> 		<span class="keyword">if</span>(<span class="keyword">typeof</span> <span class="title class_">Symbol</span> !== <span class="string">&#x27;undefined&#x27;</span> &amp;&amp; <span class="title class_">Symbol</span>.<span class="property">toStringTag</span>) &#123;</span><br><span class="line"><span class="comment">/******/</span> 			<span class="title class_">Object</span>.<span class="title function_">defineProperty</span>(<span class="built_in">exports</span>, <span class="title class_">Symbol</span>.<span class="property">toStringTag</span>, &#123; <span class="attr">value</span>: <span class="string">&#x27;Module&#x27;</span> &#125;);</span><br><span class="line"><span class="comment">/******/</span> 		&#125;</span><br><span class="line"><span class="comment">/******/</span> 		<span class="title class_">Object</span>.<span class="title function_">defineProperty</span>(<span class="built_in">exports</span>, <span class="string">&#x27;__esModule&#x27;</span>, &#123; <span class="attr">value</span>: <span class="literal">true</span> &#125;);</span><br><span class="line"><span class="comment">/******/</span> 	&#125;;</span><br><span class="line"><span class="comment">/******/</span></span><br><span class="line"><span class="comment">/******/</span> 	<span class="comment">// create a fake namespace object</span></span><br><span class="line"><span class="comment">/******/</span> 	<span class="comment">// mode &amp; 1: value is a module id, require it</span></span><br><span class="line"><span class="comment">/******/</span> 	<span class="comment">// mode &amp; 2: merge all properties of value into the ns</span></span><br><span class="line"><span class="comment">/******/</span> 	<span class="comment">// mode &amp; 4: return value when already ns object</span></span><br><span class="line"><span class="comment">/******/</span> 	<span class="comment">// mode &amp; 8|1: behave like require</span></span><br><span class="line"><span class="comment">/******/</span> 	__webpack_require__.<span class="property">t</span> = <span class="keyword">function</span>(<span class="params">value, mode</span>) &#123;</span><br><span class="line"><span class="comment">/******/</span> 		<span class="keyword">if</span>(mode &amp; <span class="number">1</span>) value = <span class="title function_">__webpack_require__</span>(value);</span><br><span class="line"><span class="comment">/******/</span> 		<span class="keyword">if</span>(mode &amp; <span class="number">8</span>) <span class="keyword">return</span> value;</span><br><span class="line"><span class="comment">/******/</span> 		<span class="keyword">if</span>((mode &amp; <span class="number">4</span>) &amp;&amp; <span class="keyword">typeof</span> value === <span class="string">&#x27;object&#x27;</span> &amp;&amp; value &amp;&amp; value.<span class="property">__esModule</span>) <span class="keyword">return</span> value;</span><br><span class="line"><span class="comment">/******/</span> 		<span class="keyword">var</span> ns = <span class="title class_">Object</span>.<span class="title function_">create</span>(<span class="literal">null</span>);</span><br><span class="line"><span class="comment">/******/</span> 		__webpack_require__.<span class="title function_">r</span>(ns);</span><br><span class="line"><span class="comment">/******/</span> 		<span class="title class_">Object</span>.<span class="title function_">defineProperty</span>(ns, <span class="string">&#x27;default&#x27;</span>, &#123; <span class="attr">enumerable</span>: <span class="literal">true</span>, <span class="attr">value</span>: value &#125;);</span><br><span class="line"><span class="comment">/******/</span> 		<span class="keyword">if</span>(mode &amp; <span class="number">2</span> &amp;&amp; <span class="keyword">typeof</span> value != <span class="string">&#x27;string&#x27;</span>) <span class="keyword">for</span>(<span class="keyword">var</span> key <span class="keyword">in</span> value) __webpack_require__.<span class="title function_">d</span>(ns, key, <span class="keyword">function</span>(<span class="params">key</span>) &#123; <span class="keyword">return</span> value[key]; &#125;.<span class="title function_">bind</span>(<span class="literal">null</span>, key));</span><br><span class="line"><span class="comment">/******/</span> 		<span class="keyword">return</span> ns;</span><br><span class="line"><span class="comment">/******/</span> 	&#125;;</span><br><span class="line"><span class="comment">/******/</span></span><br><span class="line"><span class="comment">/******/</span> 	<span class="comment">// getDefaultExport function for compatibility with non-harmony modules</span></span><br><span class="line"><span class="comment">/******/</span> 	__webpack_require__.<span class="property">n</span> = <span class="keyword">function</span>(<span class="params"><span class="variable language_">module</span></span>) &#123;</span><br><span class="line"><span class="comment">/******/</span> 		<span class="keyword">var</span> getter = <span class="variable language_">module</span> &amp;&amp; <span class="variable language_">module</span>.<span class="property">__esModule</span> ?</span><br><span class="line"><span class="comment">/******/</span> 			<span class="keyword">function</span> <span class="title function_">getDefault</span>(<span class="params"></span>) &#123; <span class="keyword">return</span> <span class="variable language_">module</span>[<span class="string">&#x27;default&#x27;</span>]; &#125; :</span><br><span class="line"><span class="comment">/******/</span> 			<span class="keyword">function</span> <span class="title function_">getModuleExports</span>(<span class="params"></span>) &#123; <span class="keyword">return</span> <span class="variable language_">module</span>; &#125;;</span><br><span class="line"><span class="comment">/******/</span> 		__webpack_require__.<span class="title function_">d</span>(getter, <span class="string">&#x27;a&#x27;</span>, getter);</span><br><span class="line"><span class="comment">/******/</span> 		<span class="keyword">return</span> getter;</span><br><span class="line"><span class="comment">/******/</span> 	&#125;;</span><br><span class="line"><span class="comment">/******/</span></span><br><span class="line"><span class="comment">/******/</span> 	<span class="comment">// Object.prototype.hasOwnProperty.call</span></span><br><span class="line"><span class="comment">/******/</span> 	__webpack_require__.<span class="property">o</span> = <span class="keyword">function</span>(<span class="params">object, property</span>) &#123; <span class="keyword">return</span> <span class="title class_">Object</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">hasOwnProperty</span>.<span class="title function_">call</span>(object, property); &#125;;</span><br><span class="line"><span class="comment">/******/</span></span><br><span class="line"><span class="comment">/******/</span> 	<span class="comment">// __webpack_public_path__</span></span><br><span class="line"><span class="comment">/******/</span> 	__webpack_require__.<span class="property">p</span> = <span class="string">&quot;&quot;</span>;</span><br><span class="line"><span class="comment">/******/</span></span><br><span class="line">          <span class="comment">// 初始化window[&quot;webpackJsonp&quot;]为一个数组</span></span><br><span class="line"><span class="comment">/******/</span> 	<span class="keyword">var</span> jsonpArray = <span class="variable language_">window</span>[<span class="string">&quot;webpackJsonp&quot;</span>] = <span class="variable language_">window</span>[<span class="string">&quot;webpackJsonp&quot;</span>] || [];</span><br><span class="line">          <span class="comment">// 把旧的window[&quot;webpackJsonp&quot;]的push方法缓存起来，当然第一个就是数组的push方法</span></span><br><span class="line"><span class="comment">/******/</span> 	<span class="keyword">var</span> oldJsonpFunction = jsonpArray.<span class="property">push</span>.<span class="title function_">bind</span>(jsonpArray);</span><br><span class="line">          <span class="comment">// 改写window[&quot;webpackJsonp&quot;]的push方法为webpackJsonpCallback</span></span><br><span class="line"><span class="comment">/******/</span> 	jsonpArray.<span class="property">push</span> = webpackJsonpCallback;</span><br><span class="line"><span class="comment">/******/</span> 	jsonpArray = jsonpArray.<span class="title function_">slice</span>();</span><br><span class="line">          <span class="comment">// 把window[&quot;webpackJsonp&quot;]的chunk传入webpackJsonpCallback执行一下</span></span><br><span class="line"><span class="comment">/******/</span> 	<span class="keyword">for</span>(<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; jsonpArray.<span class="property">length</span>; i++) <span class="title function_">webpackJsonpCallback</span>(jsonpArray[i]);</span><br><span class="line">          <span class="comment">// 这里再次把旧的window[&quot;webpackJsonp&quot;]的push方法赋值到parentJsonpFunction</span></span><br><span class="line">          <span class="comment">// parentJsonpFunction会存在在这个chunk的作用域，在这个chunk的webpackJsonpCallback里被调用</span></span><br><span class="line"><span class="comment">/******/</span> 	<span class="keyword">var</span> parentJsonpFunction = oldJsonpFunction;</span><br><span class="line"><span class="comment">/******/</span></span><br><span class="line"><span class="comment">/******/</span></span><br><span class="line"><span class="comment">/******/</span> 	<span class="comment">// add entry module to deferred list</span></span><br><span class="line">					<span class="comment">// 首位为本身chunk，后面为所依赖的chunk</span></span><br><span class="line">					<span class="comment">// 所以可以得知靠着installedChunks和deferredModules这两个变量来判断到底所需的文件加载好了没有</span></span><br><span class="line">					<span class="comment">// 以至于在script标签里的引入顺序会干扰到依赖加载从而影响执行</span></span><br><span class="line">          <span class="comment">// 注意这里是二维数组</span></span><br><span class="line"><span class="comment">/******/</span> 	deferredModules.<span class="title function_">push</span>([<span class="string">&quot;./foo.js&quot;</span>,<span class="string">&quot;default~bar~foo&quot;</span>]);</span><br><span class="line"><span class="comment">/******/</span> 	<span class="comment">// run deferred modules when ready</span></span><br><span class="line"><span class="comment">/******/</span> 	<span class="keyword">return</span> <span class="title function_">checkDeferredModules</span>();</span><br><span class="line"><span class="comment">/******/</span> &#125;)</span><br><span class="line"><span class="comment">/************************************************************************/</span></span><br><span class="line"><span class="comment">/******/</span> (&#123;</span><br><span class="line"></span><br><span class="line"><span class="comment">/***/</span> <span class="string">&quot;./foo.js&quot;</span>:</span><br><span class="line"><span class="comment">/*!****************!*\</span></span><br><span class="line"><span class="comment">  !*** ./foo.js ***!</span></span><br><span class="line"><span class="comment">  \****************/</span></span><br><span class="line"><span class="comment">/*! no exports provided */</span></span><br><span class="line"><span class="comment">/***/</span> (<span class="keyword">function</span>(<span class="params"><span class="variable language_">module</span>, __webpack_exports__, __webpack_require__</span>) &#123;</span><br><span class="line"></span><br><span class="line"><span class="meta">&quot;use strict&quot;</span>;</span><br><span class="line"><span class="comment">// 标记为 ES6 模块</span></span><br><span class="line">__webpack_require__.<span class="title function_">r</span>(__webpack_exports__);</span><br><span class="line"><span class="comment">/* harmony import */</span> <span class="keyword">var</span> _util__WEBPACK_IMPORTED_MODULE_0__ = <span class="title function_">__webpack_require__</span>(<span class="comment">/*! ./util */</span> <span class="string">&quot;./util.js&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;foo&#x27;</span>)</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">Object</span>(_util__WEBPACK_IMPORTED_MODULE_0__[<span class="string">&quot;default&quot;</span>])(<span class="string">&#x27;foo&#x27;</span>))</span><br><span class="line"></span><br><span class="line"><span class="comment">/***/</span> &#125;)</span><br><span class="line"></span><br><span class="line"><span class="comment">/******/</span> &#125;);</span><br></pre></td></tr></table></figure>
+<pre><code class="js">/******/ (function(modules) &#123; // webpackBootstrap
+/******/ 	// install a JSONP callback for chunk loading
+                    // 这data就是window[&quot;webpackJsonp&quot;] push进来的东西
+/******/ 	function webpackJsonpCallback(data) &#123;
+/******/ 		var chunkIds = data[0];// chunkId=&quot;default~bar~foo&quot;
+/******/ 		var moreModules = data[1];// &#123;&#39;./util.js&#39;:f&#125;
+/******/ 		var executeModules = data[2]; // 暂不知何用
+/******/
+/******/ 		// add &quot;moreModules&quot; to the modules object,
+/******/ 		// then flag all &quot;chunkIds&quot; as loaded and fire callback
+/******/ 		var moduleId, chunkId, i = 0, resolves = [];
+/******/ 		for(;i &lt; chunkIds.length; i++) &#123;
+/******/ 			chunkId = chunkIds[i];
+/******/ 			if(Object.prototype.hasOwnProperty.call(installedChunks, chunkId) &amp;&amp; installedChunks[chunkId]) &#123;
+                // resolves暂不知作何用
+/******/ 				resolves.push(installedChunks[chunkId][0]);
+/******/ 			&#125;
+              // 标记chunk安装
+/******/ 			installedChunks[chunkId] = 0;
+/******/ 		&#125;
+/******/ 		for(moduleId in moreModules) &#123;
+/******/ 			if(Object.prototype.hasOwnProperty.call(moreModules, moduleId)) &#123;
+                // 把每个chunk的每份module记录在modules，用以调用运行
+/******/ 				modules[moduleId] = moreModules[moduleId];
+/******/ 			&#125;
+/******/ 		&#125;
+            // 当有parentJsonpFunction这方法适合，就执行这个方法，参数为每个chunk代码
+            // window[&quot;webpackJsonp&quot;]里面的元素其实就是非入口chunk代码块
+            // parentJsonpFunction取自上一个window[&quot;webpackJsonp&quot;]的push的方法，
+            // 当第一个script的入口chunk，它的parentJsonpFunction就是普通数组的push
+            // 同时在第一个script的入口chunk，把window[&quot;webpackJsonp&quot;]的push改写为第一个script的入口chunk的webpackJsonpCallback方法
+            // 也就是第二个script的入口chunk里，这个parentJsonpFunction就是第一个script的入口chunk的webpackJsonpCallback方法
+            // 这样就把两份chunk的代码通过这种方式联系起来
+            // 当push（改写后的push）了非入口chunk，可以通过这种联系一层层传递到各个chunk的webpackJsonpCallback方法
+            // webpackJsonpCallback里面再调用checkDeferredModules方法，来检查并执行相应的模块代码
+            // 这样一来无论script顺序怎样，只要调用webpackJsonpCallback方法，就能达到加载的模块（chunk即为模块合集）传递到各个入口chunk
+/******/ 		if(parentJsonpFunction) parentJsonpFunction(data);
+/******/
+/******/ 		while(resolves.length) &#123;
+/******/ 			resolves.shift()();
+/******/ 		&#125;
+/******/
+/******/ 		// add entry modules from loaded chunk to deferred list
+            // 看原注释是添加新的前置依赖
+            // 暂不知为何是添加executeModules而不是一开始就写在deferredModules
+/******/ 		deferredModules.push.apply(deferredModules, executeModules || []);
+/******/
+/******/ 		// run deferred modules when all chunks ready
+/******/ 		return checkDeferredModules();
+/******/ 	&#125;;
+          // 检查依赖到齐没有，并执行
+          // 在主流程里会运行一次
+          // 在webpackJsonpCallback里最后再运行一次，也就是每次有chunk的加载都会检查运行一次
+/******/ 	function checkDeferredModules() &#123;
+/******/ 		var result;
+/******/ 		for(var i = 0; i &lt; deferredModules.length; i++) &#123;
+/******/ 			var deferredModule = deferredModules[i];
+/******/ 			var fulfilled = true;
+/******/ 			for(var j = 1; j &lt; deferredModule.length; j++) &#123;
+                // depId=&quot;./foo.js&quot;,&quot;default~bar~foo&quot;
+/******/ 				var depId = deferredModule[j];
+                // 是否已安装记录在installedChunks
+/******/ 				if(installedChunks[depId] !== 0) fulfilled = false;
+/******/ 			&#125;
+              // 全部安装完毕
+/******/ 			if(fulfilled) &#123;
+                // 把 deferredModules 清空
+/******/ 				deferredModules.splice(i--, 1);
+                // deferredModule[0]本chunk的名字，这里是&quot;./foo.js&quot;
+/******/ 				result = __webpack_require__(__webpack_require__.s = deferredModule[0]);
+/******/ 			&#125;
+/******/ 		&#125;
+/******/
+/******/ 		return result;
+/******/ 	&#125;
+/******/
+          // 先看同步代码，从这里开始看起
+/******/ 	// The module cache
+/******/ 	var installedModules = &#123;&#125;;
+/******/
+/******/ 	// object to store loaded and loading chunks
+/******/ 	// undefined = chunk not loaded, null = chunk preloaded/prefetched
+/******/ 	// Promise = chunk loading, 0 = chunk loaded
+          // 执行到这里，代表本身这个chunk也就是这个文件已加载
+          // 这里同时也会标记别的chunk加载了没有，来判断前置依赖有了没有
+/******/ 	var installedChunks = &#123;
+/******/ 		&quot;foo&quot;: 0
+/******/ 	&#125;;
+/******/
+/******/ 	var deferredModules = [];
+/******/
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) &#123;
+/******/
+/******/ 		// Check if module is in cache
+/******/ 		if(installedModules[moduleId]) &#123;
+/******/ 			return installedModules[moduleId].exports;
+/******/ 		&#125;
+/******/ 		// Create a new module (and put it into the cache)
+            // 每个加载的模块结果缓存起来
+            // 这里每个module就是未打包前的每一份js
+/******/ 		var module = installedModules[moduleId] = &#123;
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: &#123;&#125;
+/******/ 		&#125;;
+/******/
+/******/ 		// Execute the module function
+            // 这里注意到具体模块去看，会把这个模块的导出值赋值到module.exports
+            // 然后再 return 出去，所以 __webpack_require__ 模块会返回加载运行模块的结果
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/
+/******/ 		// Flag the module as loaded
+            // 标记这个 module 加载过
+/******/ 		module.l = true;
+/******/
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	&#125;
+/******/
+/******/  // 部分 __webpack_require__.字段 这里未体现作用
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__webpack_require__.m = modules;
+/******/
+/******/ 	// expose the module cache
+/******/ 	__webpack_require__.c = installedModules;
+/******/
+/******/ 	// define getter function for harmony exports
+/******/ 	__webpack_require__.d = function(exports, name, getter) &#123;
+/******/ 		if(!__webpack_require__.o(exports, name)) &#123;
+/******/ 			Object.defineProperty(exports, name, &#123; enumerable: true, get: getter &#125;);
+/******/ 		&#125;
+/******/ 	&#125;;
+/******/
+/******/ 	// define __esModule on exports
+          // 打上 ES6 
+/******/ 	__webpack_require__.r = function(exports) &#123;
+/******/ 		if(typeof Symbol !== &#39;undefined&#39; &amp;&amp; Symbol.toStringTag) &#123;
+/******/ 			Object.defineProperty(exports, Symbol.toStringTag, &#123; value: &#39;Module&#39; &#125;);
+/******/ 		&#125;
+/******/ 		Object.defineProperty(exports, &#39;__esModule&#39;, &#123; value: true &#125;);
+/******/ 	&#125;;
+/******/
+/******/ 	// create a fake namespace object
+/******/ 	// mode &amp; 1: value is a module id, require it
+/******/ 	// mode &amp; 2: merge all properties of value into the ns
+/******/ 	// mode &amp; 4: return value when already ns object
+/******/ 	// mode &amp; 8|1: behave like require
+/******/ 	__webpack_require__.t = function(value, mode) &#123;
+/******/ 		if(mode &amp; 1) value = __webpack_require__(value);
+/******/ 		if(mode &amp; 8) return value;
+/******/ 		if((mode &amp; 4) &amp;&amp; typeof value === &#39;object&#39; &amp;&amp; value &amp;&amp; value.__esModule) return value;
+/******/ 		var ns = Object.create(null);
+/******/ 		__webpack_require__.r(ns);
+/******/ 		Object.defineProperty(ns, &#39;default&#39;, &#123; enumerable: true, value: value &#125;);
+/******/ 		if(mode &amp; 2 &amp;&amp; typeof value != &#39;string&#39;) for(var key in value) __webpack_require__.d(ns, key, function(key) &#123; return value[key]; &#125;.bind(null, key));
+/******/ 		return ns;
+/******/ 	&#125;;
+/******/
+/******/ 	// getDefaultExport function for compatibility with non-harmony modules
+/******/ 	__webpack_require__.n = function(module) &#123;
+/******/ 		var getter = module &amp;&amp; module.__esModule ?
+/******/ 			function getDefault() &#123; return module[&#39;default&#39;]; &#125; :
+/******/ 			function getModuleExports() &#123; return module; &#125;;
+/******/ 		__webpack_require__.d(getter, &#39;a&#39;, getter);
+/******/ 		return getter;
+/******/ 	&#125;;
+/******/
+/******/ 	// Object.prototype.hasOwnProperty.call
+/******/ 	__webpack_require__.o = function(object, property) &#123; return Object.prototype.hasOwnProperty.call(object, property); &#125;;
+/******/
+/******/ 	// __webpack_public_path__
+/******/ 	__webpack_require__.p = &quot;&quot;;
+/******/
+          // 初始化window[&quot;webpackJsonp&quot;]为一个数组
+/******/ 	var jsonpArray = window[&quot;webpackJsonp&quot;] = window[&quot;webpackJsonp&quot;] || [];
+          // 把旧的window[&quot;webpackJsonp&quot;]的push方法缓存起来，当然第一个就是数组的push方法
+/******/ 	var oldJsonpFunction = jsonpArray.push.bind(jsonpArray);
+          // 改写window[&quot;webpackJsonp&quot;]的push方法为webpackJsonpCallback
+/******/ 	jsonpArray.push = webpackJsonpCallback;
+/******/ 	jsonpArray = jsonpArray.slice();
+          // 把window[&quot;webpackJsonp&quot;]的chunk传入webpackJsonpCallback执行一下
+/******/ 	for(var i = 0; i &lt; jsonpArray.length; i++) webpackJsonpCallback(jsonpArray[i]);
+          // 这里再次把旧的window[&quot;webpackJsonp&quot;]的push方法赋值到parentJsonpFunction
+          // parentJsonpFunction会存在在这个chunk的作用域，在这个chunk的webpackJsonpCallback里被调用
+/******/ 	var parentJsonpFunction = oldJsonpFunction;
+/******/
+/******/
+/******/ 	// add entry module to deferred list
+                    // 首位为本身chunk，后面为所依赖的chunk
+                    // 所以可以得知靠着installedChunks和deferredModules这两个变量来判断到底所需的文件加载好了没有
+                    // 以至于在script标签里的引入顺序会干扰到依赖加载从而影响执行
+          // 注意这里是二维数组
+/******/ 	deferredModules.push([&quot;./foo.js&quot;,&quot;default~bar~foo&quot;]);
+/******/ 	// run deferred modules when ready
+/******/ 	return checkDeferredModules();
+/******/ &#125;)
+/************************************************************************/
+/******/ (&#123;
 
+/***/ &quot;./foo.js&quot;:
+/*!****************!*\
+  !*** ./foo.js ***!
+  \****************/
+/*! no exports provided */
+/***/ (function(module, __webpack_exports__, __webpack_require__) &#123;
+
+&quot;use strict&quot;;
+// 标记为 ES6 模块
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _util__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./util */ &quot;./util.js&quot;);
+
+console.log(&#39;foo&#39;)
+console.log(Object(_util__WEBPACK_IMPORTED_MODULE_0__[&quot;default&quot;])(&#39;foo&#39;))
+
+/***/ &#125;)
+
+/******/ &#125;);
+</code></pre>
 <p>通过全局的 webpackJsonp 这个数组来连接多份文件。改写了这个数组的 push 方法。让其在每次 push 的时候，都一层一层找上之前加载过的文件。<br>触发每份入口文件里的<code>检查依赖（checkDeferredModules）</code>，来判断前置依赖是否准备好。好则开始执行。</p>
 
       
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2020/08/16/webpackJsonp/" data-id="clmbeu7ra005itf9mgod90e43" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2020/08/16/webpackJsonp/" data-id="clmxk7z0l005kc39m9m83a48c" class="article-share-link">分享</a> -->
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" rel="tag">工程化</a></li></ul>
@@ -159,15 +620,168 @@
       
         <p>用过 vue 的同学应该都知道，双向绑定中，更改了数据会去更新dom，但不是马上更新的。<br>直接跟在修改数据后，拿到的 dom 还是旧的。<br>vue有个<code>this.$nextTick</code>用法，用这个的回调可以保证拿到更新后的dom。</p>
 <p>直接看看 <a target="_blank" rel="noopener" href="https://github.com/vuejs/vue/blob/dev/src/core/util/next-tick.js">next-tick</a> 源码</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; noop &#125; <span class="keyword">from</span> <span class="string">&#x27;shared/util&#x27;</span></span><br><span class="line"><span class="keyword">import</span> &#123; handleError &#125; <span class="keyword">from</span> <span class="string">&#x27;./error&#x27;</span></span><br><span class="line"><span class="keyword">import</span> &#123; isIE, isIOS, isNative &#125; <span class="keyword">from</span> <span class="string">&#x27;./env&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">let</span> isUsingMicroTask = <span class="literal">false</span></span><br><span class="line"><span class="keyword">const</span> callbacks = []</span><br><span class="line"><span class="keyword">let</span> pending = <span class="literal">false</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 清异步队列，全部执行</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">flushCallbacks</span> () &#123;</span><br><span class="line">  pending = <span class="literal">false</span></span><br><span class="line">  <span class="keyword">const</span> copies = callbacks.<span class="title function_">slice</span>(<span class="number">0</span>)</span><br><span class="line">  callbacks.<span class="property">length</span> = <span class="number">0</span></span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; copies.<span class="property">length</span>; i++) &#123;</span><br><span class="line">    copies[i]()</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">let</span> timerFunc</span><br><span class="line"><span class="keyword">if</span> (<span class="keyword">typeof</span> <span class="title class_">Promise</span> !== <span class="string">&#x27;undefined&#x27;</span> &amp;&amp; <span class="title function_">isNative</span>(<span class="title class_">Promise</span>)) &#123;</span><br><span class="line">  <span class="comment">// 判断有没有 promise 且有没有被重写过，</span></span><br><span class="line">  <span class="comment">// promise完好无损就使用 promise 做异步队列的触发，设置使用微任务标志为true</span></span><br><span class="line">  <span class="keyword">const</span> p = <span class="title class_">Promise</span>.<span class="title function_">resolve</span>()</span><br><span class="line">  timerFunc = <span class="function">() =&gt;</span> &#123;</span><br><span class="line">    p.<span class="title function_">then</span>(flushCallbacks)</span><br><span class="line">    <span class="keyword">if</span> (isIOS) <span class="built_in">setTimeout</span>(noop)</span><br><span class="line">  &#125;</span><br><span class="line">  isUsingMicroTask = <span class="literal">true</span></span><br><span class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span> (!isIE &amp;&amp; <span class="keyword">typeof</span> <span class="title class_">MutationObserver</span> !== <span class="string">&#x27;undefined&#x27;</span> &amp;&amp; (</span><br><span class="line">  <span class="title function_">isNative</span>(<span class="title class_">MutationObserver</span>) ||</span><br><span class="line">  <span class="comment">// PhantomJS and iOS 7.x</span></span><br><span class="line">  <span class="comment">// 特殊场景用MutationObserver</span></span><br><span class="line">  <span class="title class_">MutationObserver</span>.<span class="title function_">toString</span>() === <span class="string">&#x27;[object MutationObserverConstructor]&#x27;</span></span><br><span class="line">)) &#123;</span><br><span class="line">  <span class="comment">// Use MutationObserver where native Promise is not available,</span></span><br><span class="line">  <span class="comment">// e.g. PhantomJS, iOS7, Android 4.4</span></span><br><span class="line">  <span class="comment">// (#6466 MutationObserver is unreliable in IE11)</span></span><br><span class="line">  <span class="keyword">let</span> counter = <span class="number">1</span></span><br><span class="line">  <span class="keyword">const</span> observer = <span class="keyword">new</span> <span class="title class_">MutationObserver</span>(flushCallbacks)</span><br><span class="line">  <span class="keyword">const</span> textNode = <span class="variable language_">document</span>.<span class="title function_">createTextNode</span>(<span class="title class_">String</span>(counter))</span><br><span class="line">  observer.<span class="title function_">observe</span>(textNode, &#123;</span><br><span class="line">    <span class="attr">characterData</span>: <span class="literal">true</span></span><br><span class="line">  &#125;)</span><br><span class="line">  timerFunc = <span class="function">() =&gt;</span> &#123;</span><br><span class="line">    counter = (counter + <span class="number">1</span>) % <span class="number">2</span></span><br><span class="line">    textNode.<span class="property">data</span> = <span class="title class_">String</span>(counter)</span><br><span class="line">  &#125;</span><br><span class="line">  isUsingMicroTask = <span class="literal">true</span></span><br><span class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span> (<span class="keyword">typeof</span> setImmediate !== <span class="string">&#x27;undefined&#x27;</span> &amp;&amp; <span class="title function_">isNative</span>(setImmediate)) &#123;</span><br><span class="line">  <span class="comment">// Fallback to setImmediate.</span></span><br><span class="line">  <span class="comment">// Techinically it leverages the (macro) task queue,</span></span><br><span class="line">  <span class="comment">// but it is still a better choice than setTimeout.</span></span><br><span class="line">  <span class="comment">// 再不济看看有没有 setImmediate，虽然也是宏任务，但总比 setTimeout 强</span></span><br><span class="line">  timerFunc = <span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="title function_">setImmediate</span>(flushCallbacks)</span><br><span class="line">  &#125;</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">  <span class="comment">// Fallback to setTimeout.</span></span><br><span class="line">  <span class="comment">// 实在没办法了，setTimeout 兜底</span></span><br><span class="line">  timerFunc = <span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="built_in">setTimeout</span>(flushCallbacks, <span class="number">0</span>)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// nextTick 具体操作所在，其他队列方法也是用这个，比如 data 改动后通知 dom 修改，也是用这个</span></span><br><span class="line"><span class="comment">// 即 vue 里面的响应式，不是实时更新的，而是存在一个队列，在下一回合进行任务更新。不然太耗损性能</span></span><br><span class="line"><span class="comment">// 也就是解释了，在修改了 data 之后，dom 是没有马上更新，而在 $nextTick 的回调后，则可以看到 dom 更新</span></span><br><span class="line"><span class="comment">// 原因就在于同样的异步任务，$nextTick 的回调，是在 dom 修改的操作后面，所以 $nextTick 能看到 dom 更新</span></span><br><span class="line"><span class="comment">// 以下以 this.$nextTick(()=&gt;&#123;&#125;) 为例子，cb 为回调，ctx 为 vue 实例</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">function</span> <span class="title function_">nextTick</span> (cb?: <span class="title class_">Function</span>, ctx?: <span class="title class_">Object</span>) &#123;</span><br><span class="line">  <span class="keyword">let</span> _resolve</span><br><span class="line">  <span class="comment">// 把任务塞进异步队列</span></span><br><span class="line">  callbacks.<span class="title function_">push</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="comment">// 有回调就触发回调</span></span><br><span class="line">    <span class="keyword">if</span> (cb) &#123;</span><br><span class="line">      <span class="keyword">try</span> &#123;</span><br><span class="line">        cb.<span class="title function_">call</span>(ctx)</span><br><span class="line">      &#125; <span class="keyword">catch</span> (e) &#123;</span><br><span class="line">        <span class="title function_">handleError</span>(e, ctx, <span class="string">&#x27;nextTick&#x27;</span>)</span><br><span class="line">      &#125; </span><br><span class="line">      <span class="comment">// 这里注意，结合下面来看</span></span><br><span class="line">      <span class="comment">//用 promise 的 resolve 触发，把 vue 实例当成参数传进去</span></span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (_resolve) &#123;</span><br><span class="line">      <span class="title function_">_resolve</span>(ctx)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;)</span><br><span class="line">  <span class="comment">// 在清任务 flushCallbacks 里赋值 pending 为 false</span></span><br><span class="line">  <span class="comment">// 目的为了 timerFunc 在周期内只触发一次</span></span><br><span class="line">  <span class="comment">// 执行 timerFunc，让其下一周期执行清异步队列任务</span></span><br><span class="line">  <span class="keyword">if</span> (!pending) &#123;</span><br><span class="line">    pending = <span class="literal">true</span></span><br><span class="line">    <span class="title function_">timerFunc</span>()</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 当没有回调且 Promise 正常</span></span><br><span class="line">  <span class="comment">// $nextTick 返回的是一个 promise，触发时机与上面有回调一样</span></span><br><span class="line">  <span class="keyword">if</span> (!cb &amp;&amp; <span class="keyword">typeof</span> <span class="title class_">Promise</span> !== <span class="string">&#x27;undefined&#x27;</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">Promise</span>(<span class="function"><span class="params">resolve</span> =&gt;</span> &#123;</span><br><span class="line">      _resolve = resolve</span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="js">import &#123; noop &#125; from &#39;shared/util&#39;
+import &#123; handleError &#125; from &#39;./error&#39;
+import &#123; isIE, isIOS, isNative &#125; from &#39;./env&#39;
 
+export let isUsingMicroTask = false
+const callbacks = []
+let pending = false
+
+// 清异步队列，全部执行
+function flushCallbacks () &#123;
+  pending = false
+  const copies = callbacks.slice(0)
+  callbacks.length = 0
+  for (let i = 0; i &lt; copies.length; i++) &#123;
+    copies[i]()
+  &#125;
+&#125;
+let timerFunc
+if (typeof Promise !== &#39;undefined&#39; &amp;&amp; isNative(Promise)) &#123;
+  // 判断有没有 promise 且有没有被重写过，
+  // promise完好无损就使用 promise 做异步队列的触发，设置使用微任务标志为true
+  const p = Promise.resolve()
+  timerFunc = () =&gt; &#123;
+    p.then(flushCallbacks)
+    if (isIOS) setTimeout(noop)
+  &#125;
+  isUsingMicroTask = true
+&#125; else if (!isIE &amp;&amp; typeof MutationObserver !== &#39;undefined&#39; &amp;&amp; (
+  isNative(MutationObserver) ||
+  // PhantomJS and iOS 7.x
+  // 特殊场景用MutationObserver
+  MutationObserver.toString() === &#39;[object MutationObserverConstructor]&#39;
+)) &#123;
+  // Use MutationObserver where native Promise is not available,
+  // e.g. PhantomJS, iOS7, Android 4.4
+  // (#6466 MutationObserver is unreliable in IE11)
+  let counter = 1
+  const observer = new MutationObserver(flushCallbacks)
+  const textNode = document.createTextNode(String(counter))
+  observer.observe(textNode, &#123;
+    characterData: true
+  &#125;)
+  timerFunc = () =&gt; &#123;
+    counter = (counter + 1) % 2
+    textNode.data = String(counter)
+  &#125;
+  isUsingMicroTask = true
+&#125; else if (typeof setImmediate !== &#39;undefined&#39; &amp;&amp; isNative(setImmediate)) &#123;
+  // Fallback to setImmediate.
+  // Techinically it leverages the (macro) task queue,
+  // but it is still a better choice than setTimeout.
+  // 再不济看看有没有 setImmediate，虽然也是宏任务，但总比 setTimeout 强
+  timerFunc = () =&gt; &#123;
+    setImmediate(flushCallbacks)
+  &#125;
+&#125; else &#123;
+  // Fallback to setTimeout.
+  // 实在没办法了，setTimeout 兜底
+  timerFunc = () =&gt; &#123;
+    setTimeout(flushCallbacks, 0)
+  &#125;
+&#125;
+// nextTick 具体操作所在，其他队列方法也是用这个，比如 data 改动后通知 dom 修改，也是用这个
+// 即 vue 里面的响应式，不是实时更新的，而是存在一个队列，在下一回合进行任务更新。不然太耗损性能
+// 也就是解释了，在修改了 data 之后，dom 是没有马上更新，而在 $nextTick 的回调后，则可以看到 dom 更新
+// 原因就在于同样的异步任务，$nextTick 的回调，是在 dom 修改的操作后面，所以 $nextTick 能看到 dom 更新
+// 以下以 this.$nextTick(()=&gt;&#123;&#125;) 为例子，cb 为回调，ctx 为 vue 实例
+export function nextTick (cb?: Function, ctx?: Object) &#123;
+  let _resolve
+  // 把任务塞进异步队列
+  callbacks.push(() =&gt; &#123;
+    // 有回调就触发回调
+    if (cb) &#123;
+      try &#123;
+        cb.call(ctx)
+      &#125; catch (e) &#123;
+        handleError(e, ctx, &#39;nextTick&#39;)
+      &#125; 
+      // 这里注意，结合下面来看
+      //用 promise 的 resolve 触发，把 vue 实例当成参数传进去
+    &#125; else if (_resolve) &#123;
+      _resolve(ctx)
+    &#125;
+  &#125;)
+  // 在清任务 flushCallbacks 里赋值 pending 为 false
+  // 目的为了 timerFunc 在周期内只触发一次
+  // 执行 timerFunc，让其下一周期执行清异步队列任务
+  if (!pending) &#123;
+    pending = true
+    timerFunc()
+  &#125;
+  // 当没有回调且 Promise 正常
+  // $nextTick 返回的是一个 promise，触发时机与上面有回调一样
+  if (!cb &amp;&amp; typeof Promise !== &#39;undefined&#39;) &#123;
+    return new Promise(resolve =&gt; &#123;
+      _resolve = resolve
+    &#125;)
+  &#125;
+&#125;
+</code></pre>
 <p>除了常规的回调用法之外，还可以这样用</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">this</span>.$nextTick().<span class="title function_">then</span>( vue实例 =&gt; &#123; <span class="variable language_">console</span>.<span class="title function_">log</span>(vue实例 === <span class="variable language_">this</span>) &#125;) <span class="comment">// =&gt; true</span></span><br></pre></td></tr></table></figure>
-
+<pre><code class="js">this.$nextTick().then( vue实例 =&gt; &#123; console.log(vue实例 === this) &#125;) // =&gt; true
+</code></pre>
 <p>如果不传入回调，则返回promise，因为是 promise，也可以直接就 await 等待。参考<a target="_blank" rel="noopener" href="https://cn.vuejs.org/v2/guide/reactivity.html#%E5%BC%82%E6%AD%A5%E6%9B%B4%E6%96%B0%E9%98%9F%E5%88%97">官网</a>。</p>
 <p>接着来个简陋版简单模拟一下这个 nextTick 的实现。这其中还涉及到<a href="/2020/05/27/eventloop/">事件循环</a>的知识。</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 模拟vue nextTick</span></span><br><span class="line"><span class="comment">// 存储所有$nextTick的回调，变量的set修改后通知dom更新的，与$nextTick的回调进入同个微队列</span></span><br><span class="line"><span class="keyword">const</span> callbacks = []</span><br><span class="line"><span class="comment">// 微队列的触发载体，这里是Promise.resolve()</span></span><br><span class="line"><span class="comment">// vue是先找Promise.resolve，没有就找setTimeout</span></span><br><span class="line"><span class="keyword">let</span> run = <span class="literal">null</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">next</span>(<span class="params"></span>) &#123;</span><br><span class="line">  callbacks.<span class="title function_">forEach</span>(<span class="function">(<span class="params">cb</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="title function_">cb</span>()</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 这里的change可以看成修改了变量，里面的回调就是与nextTick的回调如出一辙</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">change</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="title function_">nextTick</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="comment">// 这里面是同步</span></span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;update dom -- 1&#x27;</span>)</span><br><span class="line">    <span class="keyword">const</span> child = <span class="variable language_">document</span>.<span class="title function_">createElement</span>(<span class="string">&#x27;div&#x27;</span>)</span><br><span class="line">    child.<span class="property">id</span> = <span class="string">&#x27;new&#x27;</span></span><br><span class="line">    <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;box&#x27;</span>).<span class="title function_">appendChild</span>(child)</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;update dom&#x27;</span>)</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;update dom -- 2&#x27;</span>)</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">nextTick</span>(<span class="params">cb</span>) &#123;</span><br><span class="line">  <span class="keyword">if</span>(!run) &#123;</span><br><span class="line">    <span class="comment">// 初始化下个队列</span></span><br><span class="line">    run = <span class="title class_">Promise</span>.<span class="title function_">resolve</span>()</span><br><span class="line">    <span class="comment">// 把next方法放在下个队列运行</span></span><br><span class="line">    <span class="comment">// 看上面的next函数，是把callbacks的函数遍历执行</span></span><br><span class="line">    run.<span class="title function_">then</span>(next)</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// nextTick的回调加入数组等着，遍历触发里面的每个函数</span></span><br><span class="line">  <span class="comment">// 由于是同步，所以其实只是一个微任务，</span></span><br><span class="line">  callbacks.<span class="title function_">push</span>(cb)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 调用了第一次nextTick</span></span><br><span class="line"><span class="title function_">nextTick</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="comment">// 表示该次微队列任务开始</span></span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;nextTick -- 1&#x27;</span>)</span><br><span class="line">&#125;)</span><br><span class="line"><span class="title class_">Promise</span>.<span class="title function_">resolve</span>().<span class="title function_">then</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;then -- &#x27;</span>)</span><br><span class="line">&#125;)</span><br><span class="line"><span class="comment">// 修改变量，更改了dom</span></span><br><span class="line"><span class="title function_">change</span>()</span><br><span class="line"><span class="comment">// 同步任务，最早打印，但此时没有new元素</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;script -- &#x27;</span>, <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;new&#x27;</span>))</span><br><span class="line"><span class="comment">// 调用了第二次nextTick</span></span><br><span class="line"><span class="title function_">nextTick</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="comment">// 在修改变量之后调nextTick，已有new元素</span></span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;nextTick -- 2&#x27;</span>, <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;new&#x27;</span>))</span><br><span class="line">&#125;)</span><br><span class="line"><span class="comment">// nextTick -- 2 之所以在 then -- 前打印，是因为回调都放在callbacks里，同步触发了</span></span><br></pre></td></tr></table></figure>
+<pre><code class="js">// 模拟vue nextTick
+// 存储所有$nextTick的回调，变量的set修改后通知dom更新的，与$nextTick的回调进入同个微队列
+const callbacks = []
+// 微队列的触发载体，这里是Promise.resolve()
+// vue是先找Promise.resolve，没有就找setTimeout
+let run = null
 
+function next() &#123;
+  callbacks.forEach((cb) =&gt; &#123;
+    cb()
+  &#125;)
+&#125;
+// 这里的change可以看成修改了变量，里面的回调就是与nextTick的回调如出一辙
+function change() &#123;
+  nextTick(() =&gt; &#123;
+    // 这里面是同步
+    console.log(&#39;update dom -- 1&#39;)
+    const child = document.createElement(&#39;div&#39;)
+    child.id = &#39;new&#39;
+    document.getElementById(&#39;box&#39;).appendChild(child)
+    console.log(&#39;update dom&#39;)
+    console.log(&#39;update dom -- 2&#39;)
+  &#125;)
+&#125;
+
+function nextTick(cb) &#123;
+  if(!run) &#123;
+    // 初始化下个队列
+    run = Promise.resolve()
+    // 把next方法放在下个队列运行
+    // 看上面的next函数，是把callbacks的函数遍历执行
+    run.then(next)
+  &#125;
+  // nextTick的回调加入数组等着，遍历触发里面的每个函数
+  // 由于是同步，所以其实只是一个微任务，
+  callbacks.push(cb)
+&#125;
+
+// 调用了第一次nextTick
+nextTick(() =&gt; &#123;
+  // 表示该次微队列任务开始
+  console.log(&#39;nextTick -- 1&#39;)
+&#125;)
+Promise.resolve().then(() =&gt; &#123;
+  console.log(&#39;then -- &#39;)
+&#125;)
+// 修改变量，更改了dom
+change()
+// 同步任务，最早打印，但此时没有new元素
+console.log(&#39;script -- &#39;, document.getElementById(&#39;new&#39;))
+// 调用了第二次nextTick
+nextTick(() =&gt; &#123;
+  // 在修改变量之后调nextTick，已有new元素
+  console.log(&#39;nextTick -- 2&#39;, document.getElementById(&#39;new&#39;))
+&#125;)
+// nextTick -- 2 之所以在 then -- 前打印，是因为回调都放在callbacks里，同步触发了
+</code></pre>
 <br>
 <img src="/2020/08/16/next-tick/next.PNG" class="" title="next">
 <br>
@@ -175,7 +789,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2020/08/16/next-tick/" data-id="clmbeu7qz001ltf9m2k49f0pd" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2020/08/16/next-tick/" data-id="clmxk7z0a001lc39mh2rd030l" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -212,15 +826,78 @@
     <div class="article-entry" itemprop="articleBody">
       
         <p>四种方法，先在外面放四个容器, 赋予 “.container” 类。让其子元素居中，先赋予 “.box” 类，水平居中。</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">xmlns</span>=<span class="string">&quot;http://www.w3.org/1999/xhtml&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">http-equiv</span>=<span class="string">&quot;Content-Type&quot;</span> <span class="attr">content</span>=<span class="string">&quot;text/html; charset=utf-8&quot;</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">title</span>&gt;</span>baidu<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">style</span> <span class="attr">type</span>=<span class="string">&quot;text/css&quot;</span>&gt;</span><span class="language-css"></span></span><br><span class="line"><span class="language-css"><span class="selector-class">.container</span> &#123;</span></span><br><span class="line"><span class="language-css">  <span class="attribute">width</span>: <span class="number">22%</span>;</span></span><br><span class="line"><span class="language-css">  <span class="attribute">height</span>: <span class="number">300px</span>;</span></span><br><span class="line"><span class="language-css">  <span class="attribute">float</span>: left;</span></span><br><span class="line"><span class="language-css">  <span class="attribute">background-color</span>: <span class="number">#abcdef</span>;</span></span><br><span class="line"><span class="language-css">  <span class="attribute">margin</span>: <span class="number">0</span> <span class="number">10px</span>;</span></span><br><span class="line"><span class="language-css">  <span class="attribute">position</span>: relative;</span></span><br><span class="line"><span class="language-css">&#125;</span></span><br><span class="line"><span class="language-css"><span class="selector-class">.box</span> &#123;</span></span><br><span class="line"><span class="language-css">  <span class="attribute">width</span>: <span class="number">100px</span>;</span></span><br><span class="line"><span class="language-css">  <span class="attribute">height</span>: <span class="number">100px</span>;</span></span><br><span class="line"><span class="language-css">  <span class="attribute">background-color</span>: red;</span></span><br><span class="line"><span class="language-css">  <span class="attribute">text-align</span>: center;</span></span><br><span class="line"><span class="language-css">&#125;</span></span><br><span class="line"><span class="language-css">&lt;!-- 绝对定位大法，设置为绝对定位，四个方向位移为<span class="number">0</span>，外边距设为auto --&gt;</span></span><br><span class="line"><span class="language-css"><span class="selector-class">.middle1</span> &#123;</span></span><br><span class="line"><span class="language-css">  <span class="attribute">position</span>: absolute;</span></span><br><span class="line"><span class="language-css">  <span class="attribute">left</span>: <span class="number">0</span>;</span></span><br><span class="line"><span class="language-css">  <span class="attribute">right</span>: <span class="number">0</span>;</span></span><br><span class="line"><span class="language-css">  <span class="attribute">top</span>: <span class="number">0</span>;</span></span><br><span class="line"><span class="language-css">  <span class="attribute">bottom</span>: <span class="number">0</span>;</span></span><br><span class="line"><span class="language-css">  <span class="attribute">margin</span>: auto;</span></span><br><span class="line"><span class="language-css">&#125;</span></span><br><span class="line"><span class="language-css">&lt;!-- <span class="attribute">flex</span>弹性布局，特别容易完成这个事 --&gt;</span></span><br><span class="line"><span class="language-css"><span class="selector-class">.middle2</span> &#123;</span></span><br><span class="line"><span class="language-css">  <span class="attribute">display</span>: flex;</span></span><br><span class="line"><span class="language-css">  <span class="attribute">justify-content</span>: center;</span></span><br><span class="line"><span class="language-css">  <span class="attribute">align-items</span>: center;</span></span><br><span class="line"><span class="language-css">&#125;</span></span><br><span class="line"><span class="language-css">&lt;!-- 利用表格居中，注意的是还要多一层<span class="selector-tag">table</span>-cell，真正居中是在<span class="selector-tag">table</span>-cell --&gt;</span></span><br><span class="line"><span class="language-css"><span class="selector-class">.middle3</span> &#123;</span></span><br><span class="line"><span class="language-css">  <span class="attribute">display</span>: table-cell;</span></span><br><span class="line"><span class="language-css">  <span class="attribute">vertical-align</span>: middle;</span></span><br><span class="line"><span class="language-css">  <span class="attribute">background-color</span>: initial;</span></span><br><span class="line"><span class="language-css">&#125;</span></span><br><span class="line"><span class="language-css"><span class="selector-class">.block</span> &#123;</span></span><br><span class="line"><span class="language-css">  <span class="attribute">display</span>: inline-block;</span></span><br><span class="line"><span class="language-css">&#125;</span></span><br><span class="line"><span class="language-css">&lt;!-- 绝对定位加translate大法，水平垂直位移<span class="number">50%</span>，translate里面的<span class="number">50%</span>是相对于自己的，所以不知宽高也可以使用 --&gt;</span></span><br><span class="line"><span class="language-css"><span class="selector-class">.middle4</span> &#123;</span></span><br><span class="line"><span class="language-css">  <span class="attribute">position</span>: absolute;</span></span><br><span class="line"><span class="language-css">  <span class="attribute">left</span>: <span class="number">50%</span>;</span></span><br><span class="line"><span class="language-css">  <span class="attribute">top</span>: <span class="number">50%</span>;</span></span><br><span class="line"><span class="language-css">  <span class="attribute">transform</span>: <span class="built_in">translateX</span>(-<span class="number">50%</span>) <span class="built_in">translateY</span>(-<span class="number">50%</span>);</span></span><br><span class="line"><span class="language-css">&#125;</span></span><br><span class="line"><span class="language-css"></span><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;container&quot;</span>&gt;</span><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;box middle1&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;container middle2&quot;</span>&gt;</span><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;box&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;container&quot;</span> <span class="attr">style</span>=<span class="string">&quot;display: table;&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;box middle3&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span> <span class="attr">class</span>=<span class="string">&quot;box block&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;container&quot;</span>&gt;</span><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;box middle4&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
+<pre><code class="xml">&lt;!DOCTYPE&gt;
+&lt;html xmlns=&quot;http://www.w3.org/1999/xhtml&quot;&gt;
+&lt;head&gt;
+&lt;meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=utf-8&quot; /&gt;
+&lt;title&gt;baidu&lt;/title&gt;
+&lt;/head&gt;
+&lt;style type=&quot;text/css&quot;&gt;
+.container &#123;
+  width: 22%;
+  height: 300px;
+  float: left;
+  background-color: #abcdef;
+  margin: 0 10px;
+  position: relative;
+&#125;
+.box &#123;
+  width: 100px;
+  height: 100px;
+  background-color: red;
+  text-align: center;
+&#125;
+&lt;!-- 绝对定位大法，设置为绝对定位，四个方向位移为0，外边距设为auto --&gt;
+.middle1 &#123;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+&#125;
+&lt;!-- flex弹性布局，特别容易完成这个事 --&gt;
+.middle2 &#123;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+&#125;
+&lt;!-- 利用表格居中，注意的是还要多一层table-cell，真正居中是在table-cell --&gt;
+.middle3 &#123;
+  display: table-cell;
+  vertical-align: middle;
+  background-color: initial;
+&#125;
+.block &#123;
+  display: inline-block;
+&#125;
+&lt;!-- 绝对定位加translate大法，水平垂直位移50%，translate里面的50%是相对于自己的，所以不知宽高也可以使用 --&gt;
+.middle4 &#123;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translateX(-50%) translateY(-50%);
+&#125;
+&lt;/style&gt;
+&lt;body&gt;
+&lt;div class=&quot;container&quot;&gt;&lt;div class=&quot;box middle1&quot;&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;div class=&quot;container middle2&quot;&gt;&lt;div class=&quot;box&quot;&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;div class=&quot;container&quot; style=&quot;display: table;&quot;&gt;
+  &lt;div class=&quot;box middle3&quot;&gt;
+    &lt;p class=&quot;box block&quot;&gt;&lt;/p&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;container&quot;&gt;&lt;div class=&quot;box middle4&quot;&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
 <p>总结：个人觉得，首先 <a target="_blank" rel="noopener" href="http://www.ruanyifeng.com/blog/2015/07/flex-grammar.html">flex</a> 布局最方便也最帅气。然后绝对定位加 <a target="_blank" rel="noopener" href="https://developer.mozilla.org/en-US/docs/Web/CSS/transform-function/translate">translate</a> 也好理解。至于第一种绝对定位加四个方向位移为0，其实不太理解其原理~ &#x3D; &#x3D;！</p>
 
       
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2020/07/29/vertical-middle/" data-id="clmbeu7r5002xtf9m2bis4gis" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2020/07/29/vertical-middle/" data-id="clmxk7z0g0033c39mhg5j998z" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -258,91 +935,137 @@
       
         <p>对于 vue 的几个生命周期老是记不住，应该还是理解不够透彻，这里记录一下。</p>
 <p>代码与注释参考了 <a target="_blank" rel="noopener" href="https://segmentfault.com/a/1190000011381906">segmentfault</a> 和 <a target="_blank" rel="noopener" href="https://www.imooc.com/article/293328">imooc</a> 这两篇文章，感谢。</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">title</span>&gt;</span><span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">&quot;text/javascript&quot;</span> <span class="attr">src</span>=<span class="string">&quot;https://cdn.jsdelivr.net/vue/2.1.3/vue.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;app&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">p</span>&gt;</span>&#123;&#123; message &#125;&#125;<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">a</span> @<span class="attr">click</span>=<span class="string">&quot;change&quot;</span>&gt;</span>change<span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">a</span> @<span class="attr">click</span>=<span class="string">&quot;destroy&quot;</span>&gt;</span>destroy<span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">span</span> <span class="attr">v-if</span>=<span class="string">&quot;false&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">&quot;text/javascript&quot;</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript"><span class="keyword">var</span> i = <span class="number">0</span></span></span><br><span class="line"><span class="language-javascript"><span class="keyword">var</span> app = <span class="keyword">new</span> <span class="title class_">Vue</span>(&#123;</span></span><br><span class="line"><span class="language-javascript">  <span class="comment">// render &gt; template &gt; el，但 el 不能缺少</span></span></span><br><span class="line"><span class="language-javascript">  <span class="attr">el</span>: <span class="string">&#x27;#app&#x27;</span>,</span></span><br><span class="line"><span class="language-javascript">  <span class="comment">// template: &#x27;&lt;div id=&quot;app&quot;&gt;&#123;&#123;message1&#125;&#125;&lt;/div&gt;&#x27;,</span></span></span><br><span class="line"><span class="language-javascript">  <span class="comment">// render: function(createElement) &#123;</span></span></span><br><span class="line"><span class="language-javascript">  <span class="comment">//   const menu_items = [&quot;首页&quot;,&quot;搜索&quot;,&quot;分类&quot;,&quot;系统&quot;]</span></span></span><br><span class="line"><span class="language-javascript">  <span class="comment">//   return createElement(&#x27;ul&#x27;, </span></span></span><br><span class="line"><span class="language-javascript">  <span class="comment">//     menu_items.map(item =&gt; &#123;</span></span></span><br><span class="line"><span class="language-javascript">  <span class="comment">//       return createElement(&#x27;li&#x27;, &#123;</span></span></span><br><span class="line"><span class="language-javascript">  <span class="comment">//         class: &#123;</span></span></span><br><span class="line"><span class="language-javascript">  <span class="comment">//           &#x27;uk-nav&#x27;: true</span></span></span><br><span class="line"><span class="language-javascript">  <span class="comment">//         &#125;,</span></span></span><br><span class="line"><span class="language-javascript">  <span class="comment">//         domProps: &#123;</span></span></span><br><span class="line"><span class="language-javascript">  <span class="comment">//           innerHTML: item</span></span></span><br><span class="line"><span class="language-javascript">  <span class="comment">//         &#125;</span></span></span><br><span class="line"><span class="language-javascript">  <span class="comment">//       &#125;)</span></span></span><br><span class="line"><span class="language-javascript">  <span class="comment">//     &#125;)</span></span></span><br><span class="line"><span class="language-javascript">  <span class="comment">//   )</span></span></span><br><span class="line"><span class="language-javascript">  <span class="comment">// &#125;,</span></span></span><br><span class="line"><span class="language-javascript">  <span class="attr">data</span>: &#123;</span></span><br><span class="line"><span class="language-javascript">    message : <span class="string">&#x27;init&#x27;</span>,</span></span><br><span class="line"><span class="language-javascript">    message1 : <span class="string">&#x27;ok&#x27;</span>  </span></span><br><span class="line"><span class="language-javascript">  &#125;,</span></span><br><span class="line"><span class="language-javascript">  <span class="attr">methods</span>: &#123;</span></span><br><span class="line"><span class="language-javascript">    change () &#123;</span></span><br><span class="line"><span class="language-javascript">      <span class="variable language_">this</span>.<span class="property">message</span> = <span class="string">&#x27;ok&#x27;</span> + i++</span></span><br><span class="line"><span class="language-javascript">    &#125;,</span></span><br><span class="line"><span class="language-javascript">    destroy () &#123;</span></span><br><span class="line"><span class="language-javascript">      <span class="variable language_">this</span>.$destroy()</span></span><br><span class="line"><span class="language-javascript">    &#125;</span></span><br><span class="line"><span class="language-javascript">  &#125;,</span></span><br><span class="line"><span class="language-javascript">  <span class="attr">beforeCreate</span>: <span class="keyword">function</span> (<span class="params"></span>) &#123;</span></span><br><span class="line"><span class="language-javascript">    <span class="comment">// 创建实例前，此时虚拟dom和属性全都拿不到</span></span></span><br><span class="line"><span class="language-javascript">    <span class="comment">// 主要就是给vm对象添加了 $parent、$root、$children 属性，以及一些其它的生命周期相关的标识</span></span></span><br><span class="line"><span class="language-javascript">    <span class="comment">// 初始化事件相关的属性</span></span></span><br><span class="line"><span class="language-javascript">    <span class="comment">// vm 添加了一些虚拟 dom、slot 等相关的属性和方法</span></span></span><br><span class="line"><span class="language-javascript">    <span class="variable language_">console</span>.<span class="title function_">info</span>(<span class="string">&#x27;beforeCreate 创建前状态===============》&#x27;</span>)</span></span><br><span class="line"><span class="language-javascript">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;%c%s&#x27;</span>, <span class="string">&#x27;color:red&#x27;</span> , <span class="string">&#x27;el     : &#x27;</span> + <span class="variable language_">this</span>.<span class="property">$el</span>) <span class="comment">//undefined</span></span></span><br><span class="line"><span class="language-javascript">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;%c%s&#x27;</span>, <span class="string">&#x27;color:red&#x27;</span>,<span class="string">&#x27;data   : &#x27;</span> + <span class="variable language_">this</span>.<span class="property">$data</span>) <span class="comment">//undefined </span></span></span><br><span class="line"><span class="language-javascript">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;%c%s&#x27;</span>, <span class="string">&#x27;color:red&#x27;</span>,<span class="string">&#x27;message: &#x27;</span> + <span class="variable language_">this</span>.<span class="property">message</span>) <span class="comment">//undefined </span></span></span><br><span class="line"><span class="language-javascript">  &#125;,</span></span><br><span class="line"><span class="language-javascript">  <span class="attr">created</span>: <span class="keyword">function</span> (<span class="params"></span>) &#123;</span></span><br><span class="line"><span class="language-javascript">    <span class="comment">// 初始化，可以拿到属性，应该是完成了数据劫持，但dom依旧拿不到</span></span></span><br><span class="line"><span class="language-javascript">    <span class="comment">// props、methods、data、watch、computed等数据初始化</span></span></span><br><span class="line"><span class="language-javascript">    <span class="variable language_">console</span>.<span class="title function_">info</span>(<span class="string">&#x27;created 创建完毕状态===============》&#x27;</span>)</span></span><br><span class="line"><span class="language-javascript">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;%c%s&#x27;</span>, <span class="string">&#x27;color:red&#x27;</span>,<span class="string">&#x27;el     : &#x27;</span> + <span class="variable language_">this</span>.<span class="property">$el</span>) <span class="comment">//undefined</span></span></span><br><span class="line"><span class="language-javascript">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;%c%s&#x27;</span>, <span class="string">&#x27;color:red&#x27;</span>,<span class="string">&#x27;data   : &#x27;</span> + <span class="title class_">JSON</span>.<span class="title function_">stringify</span>(<span class="variable language_">this</span>.<span class="property">$data</span>)) <span class="comment">//已被初始化 </span></span></span><br><span class="line"><span class="language-javascript">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;%c%s&#x27;</span>, <span class="string">&#x27;color:red&#x27;</span>,<span class="string">&#x27;message: &#x27;</span> + <span class="variable language_">this</span>.<span class="property">message</span>) <span class="comment">//已被初始化</span></span></span><br><span class="line"><span class="language-javascript">  &#125;,</span></span><br><span class="line"><span class="language-javascript">  <span class="attr">beforeMount</span>: <span class="keyword">function</span> (<span class="params"></span>) &#123;</span></span><br><span class="line"><span class="language-javascript">    <span class="comment">// 根据el和template属性来初始化dom</span></span></span><br><span class="line"><span class="language-javascript">    <span class="variable language_">console</span>.<span class="title function_">info</span>(<span class="string">&#x27;beforeMount 挂载前状态===============》&#x27;</span>)</span></span><br><span class="line"><span class="language-javascript">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;%c%s&#x27;</span>, <span class="string">&#x27;color:red&#x27;</span>,<span class="string">&#x27;el     : &#x27;</span> + (<span class="variable language_">this</span>.<span class="property">$el</span>)) <span class="comment">//已被初始化</span></span></span><br><span class="line"><span class="language-javascript">    <span class="comment">// 这里的dom还没进行模板替换，也就是还显示着 &#123;&#123;message&#125;&#125; 这种占位符，span 元素也还在</span></span></span><br><span class="line"><span class="language-javascript">    <span class="comment">// 这里就算有 template render，也是出现 outer html</span></span></span><br><span class="line"><span class="language-javascript">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="variable language_">this</span>.<span class="property">$el</span>)</span></span><br><span class="line"><span class="language-javascript">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;%c%s&#x27;</span>, <span class="string">&#x27;color:red&#x27;</span>,<span class="string">&#x27;data   : &#x27;</span> + <span class="variable language_">this</span>.<span class="property">$data</span>) <span class="comment">//已被初始化  </span></span></span><br><span class="line"><span class="language-javascript">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;%c%s&#x27;</span>, <span class="string">&#x27;color:red&#x27;</span>,<span class="string">&#x27;message: &#x27;</span> + <span class="variable language_">this</span>.<span class="property">message</span>) <span class="comment">//已被初始化 </span></span></span><br><span class="line"><span class="language-javascript">  &#125;,</span></span><br><span class="line"><span class="language-javascript">  <span class="attr">mounted</span>: <span class="keyword">function</span> (<span class="params"></span>) &#123;</span></span><br><span class="line"><span class="language-javascript">    <span class="comment">// 完成挂载，&#123;&#123;message&#125;&#125; 被数据替换，span 元素也被移除</span></span></span><br><span class="line"><span class="language-javascript">    <span class="variable language_">console</span>.<span class="title function_">info</span>(<span class="string">&#x27;mounted 挂载结束状态===============》&#x27;</span>)</span></span><br><span class="line"><span class="language-javascript">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;%c%s&#x27;</span>, <span class="string">&#x27;color:red&#x27;</span>,<span class="string">&#x27;el     : &#x27;</span> + <span class="variable language_">this</span>.<span class="property">$el</span>) <span class="comment">//已被初始化</span></span></span><br><span class="line"><span class="language-javascript">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="variable language_">this</span>.<span class="property">$el</span>)    </span></span><br><span class="line"><span class="language-javascript">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;%c%s&#x27;</span>, <span class="string">&#x27;color:red&#x27;</span>,<span class="string">&#x27;data   : &#x27;</span> + <span class="variable language_">this</span>.<span class="property">$data</span>) <span class="comment">//已被初始化</span></span></span><br><span class="line"><span class="language-javascript">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;%c%s&#x27;</span>, <span class="string">&#x27;color:red&#x27;</span>,<span class="string">&#x27;message: &#x27;</span> + <span class="variable language_">this</span>.<span class="property">message</span>) <span class="comment">//已被初始化 </span></span></span><br><span class="line"><span class="language-javascript">  &#125;,</span></span><br><span class="line"><span class="language-javascript">  <span class="attr">beforeUpdate</span>: <span class="keyword">function</span> (<span class="params"></span>) &#123;</span></span><br><span class="line"><span class="language-javascript">    <span class="variable language_">console</span>.<span class="title function_">info</span>(<span class="string">&#x27;beforeUpdate 更新前状态===============》&#x27;</span>)</span></span><br><span class="line"><span class="language-javascript">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;%c%s&#x27;</span>, <span class="string">&#x27;color:red&#x27;</span>,<span class="string">&#x27;el     : &#x27;</span> + <span class="variable language_">this</span>.<span class="property">$el</span>)</span></span><br><span class="line"><span class="language-javascript">    <span class="comment">// 这里的dom还是旧的</span></span></span><br><span class="line"><span class="language-javascript">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="variable language_">this</span>.<span class="property">$el</span>)   </span></span><br><span class="line"><span class="language-javascript">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;%c%s&#x27;</span>, <span class="string">&#x27;color:red&#x27;</span>,<span class="string">&#x27;data   : &#x27;</span> + <span class="title class_">JSON</span>.<span class="title function_">stringify</span>(<span class="variable language_">this</span>.<span class="property">$data</span>))</span></span><br><span class="line"><span class="language-javascript">    <span class="comment">// 数据已更新,，这里修改数据会引起死循环</span></span></span><br><span class="line"><span class="language-javascript">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;%c%s&#x27;</span>, <span class="string">&#x27;color:red&#x27;</span>,<span class="string">&#x27;message: &#x27;</span> + <span class="variable language_">this</span>.<span class="property">message</span>)</span></span><br><span class="line"><span class="language-javascript">  &#125;,</span></span><br><span class="line"><span class="language-javascript">  <span class="attr">updated</span>: <span class="keyword">function</span> (<span class="params"></span>) &#123;</span></span><br><span class="line"><span class="language-javascript">    <span class="variable language_">console</span>.<span class="title function_">info</span>(<span class="string">&#x27;updated 更新完成状态===============》&#x27;</span>)</span></span><br><span class="line"><span class="language-javascript">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;%c%s&#x27;</span>, <span class="string">&#x27;color:red&#x27;</span>,<span class="string">&#x27;el     : &#x27;</span> + <span class="variable language_">this</span>.<span class="property">$el</span>)</span></span><br><span class="line"><span class="language-javascript">    <span class="comment">// dom已更新，这里修改数据会引起死循环</span></span></span><br><span class="line"><span class="language-javascript">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="variable language_">this</span>.<span class="property">$el</span>) </span></span><br><span class="line"><span class="language-javascript">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;%c%s&#x27;</span>, <span class="string">&#x27;color:red&#x27;</span>,<span class="string">&#x27;data   : &#x27;</span> + <span class="variable language_">this</span>.<span class="property">$data</span>) </span></span><br><span class="line"><span class="language-javascript">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;%c%s&#x27;</span>, <span class="string">&#x27;color:red&#x27;</span>,<span class="string">&#x27;message: &#x27;</span> + <span class="variable language_">this</span>.<span class="property">message</span>)</span></span><br><span class="line"><span class="language-javascript">  &#125;,</span></span><br><span class="line"><span class="language-javascript">  <span class="attr">beforeDestroy</span>: <span class="keyword">function</span> (<span class="params"></span>) &#123;</span></span><br><span class="line"><span class="language-javascript">    <span class="comment">// 所有东西还在</span></span></span><br><span class="line"><span class="language-javascript">    <span class="variable language_">console</span>.<span class="title function_">info</span>(<span class="string">&#x27;beforeDestroy 销毁前状态===============》&#x27;</span>)</span></span><br><span class="line"><span class="language-javascript">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;%c%s&#x27;</span>, <span class="string">&#x27;color:red&#x27;</span>,<span class="string">&#x27;el     : &#x27;</span> + <span class="variable language_">this</span>.<span class="property">$el</span>)</span></span><br><span class="line"><span class="language-javascript">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="variable language_">this</span>.<span class="property">$el</span>)    </span></span><br><span class="line"><span class="language-javascript">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;%c%s&#x27;</span>, <span class="string">&#x27;color:red&#x27;</span>,<span class="string">&#x27;data   : &#x27;</span> + <span class="variable language_">this</span>.<span class="property">$data</span>) </span></span><br><span class="line"><span class="language-javascript">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;%c%s&#x27;</span>, <span class="string">&#x27;color:red&#x27;</span>,<span class="string">&#x27;message: &#x27;</span> + <span class="variable language_">this</span>.<span class="property">message</span>)</span></span><br><span class="line"><span class="language-javascript">    <span class="variable language_">this</span>.<span class="property">message</span> = <span class="string">&#x27;destroy&#x27;</span></span></span><br><span class="line"><span class="language-javascript">  &#125;,</span></span><br><span class="line"><span class="language-javascript">  <span class="attr">destroyed</span>: <span class="keyword">function</span> (<span class="params"></span>) &#123;</span></span><br><span class="line"><span class="language-javascript">    <span class="comment">// 数据绑定被卸除，监听被移出，子实例也统统被销毁，dom保留着</span></span></span><br><span class="line"><span class="language-javascript">    <span class="variable language_">console</span>.<span class="title function_">info</span>(<span class="string">&#x27;destroyed 销毁完成状态===============》&#x27;</span>)</span></span><br><span class="line"><span class="language-javascript">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;%c%s&#x27;</span>, <span class="string">&#x27;color:red&#x27;</span>,<span class="string">&#x27;el     : &#x27;</span> + <span class="variable language_">this</span>.<span class="property">$el</span>)</span></span><br><span class="line"><span class="language-javascript">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="variable language_">this</span>.<span class="property">$el</span>)  </span></span><br><span class="line"><span class="language-javascript">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;%c%s&#x27;</span>, <span class="string">&#x27;color:red&#x27;</span>,<span class="string">&#x27;data   : &#x27;</span> + <span class="variable language_">this</span>.<span class="property">$data</span>) </span></span><br><span class="line"><span class="language-javascript">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;%c%s&#x27;</span>, <span class="string">&#x27;color:red&#x27;</span>,<span class="string">&#x27;message: &#x27;</span> + <span class="variable language_">this</span>.<span class="property">message</span>)</span></span><br><span class="line"><span class="language-javascript">    <span class="built_in">setTimeout</span>(<span class="function">() =&gt;</span> &#123;</span></span><br><span class="line"><span class="language-javascript">      <span class="comment">// 实例还在</span></span></span><br><span class="line"><span class="language-javascript">      <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;vue 实例===============》&#x27;</span>, app)</span></span><br><span class="line"><span class="language-javascript">    &#125;, <span class="number">1000</span>)</span></span><br><span class="line"><span class="language-javascript">  &#125;</span></span><br><span class="line"><span class="language-javascript">&#125;)</span></span><br><span class="line"><span class="language-javascript"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<pre><code class="xml">&lt;!DOCTYPE&gt;
+&lt;html&gt;
+&lt;head&gt;
+  &lt;title&gt;&lt;/title&gt;
+  &lt;script type=&quot;text/javascript&quot; src=&quot;https://cdn.jsdelivr.net/vue/2.1.3/vue.js&quot;&gt;&lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;div id=&quot;app&quot;&gt;
+  &lt;p&gt;&#123;&#123; message &#125;&#125;&lt;/p&gt;
+  &lt;a @click=&quot;change&quot;&gt;change&lt;/a&gt;
+  &lt;a @click=&quot;destroy&quot;&gt;destroy&lt;/a&gt;
+  &lt;span v-if=&quot;false&quot;&gt;&lt;/span&gt;
+&lt;/div&gt;
+&lt;script type=&quot;text/javascript&quot;&gt;
+var i = 0
+var app = new Vue(&#123;
+  // render &gt; template &gt; el，但 el 不能缺少
+  el: &#39;#app&#39;,
+  // template: &#39;&lt;div id=&quot;app&quot;&gt;&#123;&#123;message1&#125;&#125;&lt;/div&gt;&#39;,
+  // render: function(createElement) &#123;
+  //   const menu_items = [&quot;首页&quot;,&quot;搜索&quot;,&quot;分类&quot;,&quot;系统&quot;]
+  //   return createElement(&#39;ul&#39;, 
+  //     menu_items.map(item =&gt; &#123;
+  //       return createElement(&#39;li&#39;, &#123;
+  //         class: &#123;
+  //           &#39;uk-nav&#39;: true
+  //         &#125;,
+  //         domProps: &#123;
+  //           innerHTML: item
+  //         &#125;
+  //       &#125;)
+  //     &#125;)
+  //   )
+  // &#125;,
+  data: &#123;
+    message : &#39;init&#39;,
+    message1 : &#39;ok&#39;  
+  &#125;,
+  methods: &#123;
+    change () &#123;
+      this.message = &#39;ok&#39; + i++
+    &#125;,
+    destroy () &#123;
+      this.$destroy()
+    &#125;
+  &#125;,
+  beforeCreate: function () &#123;
+    // 创建实例前，此时虚拟dom和属性全都拿不到
+    // 主要就是给vm对象添加了 $parent、$root、$children 属性，以及一些其它的生命周期相关的标识
+    // 初始化事件相关的属性
+    // vm 添加了一些虚拟 dom、slot 等相关的属性和方法
+    console.info(&#39;beforeCreate 创建前状态===============》&#39;)
+    console.log(&#39;%c%s&#39;, &#39;color:red&#39; , &#39;el     : &#39; + this.$el) //undefined
+    console.log(&#39;%c%s&#39;, &#39;color:red&#39;,&#39;data   : &#39; + this.$data) //undefined 
+    console.log(&#39;%c%s&#39;, &#39;color:red&#39;,&#39;message: &#39; + this.message) //undefined 
+  &#125;,
+  created: function () &#123;
+    // 初始化，可以拿到属性，应该是完成了数据劫持，但dom依旧拿不到
+    // props、methods、data、watch、computed等数据初始化
+    console.info(&#39;created 创建完毕状态===============》&#39;)
+    console.log(&#39;%c%s&#39;, &#39;color:red&#39;,&#39;el     : &#39; + this.$el) //undefined
+    console.log(&#39;%c%s&#39;, &#39;color:red&#39;,&#39;data   : &#39; + JSON.stringify(this.$data)) //已被初始化 
+    console.log(&#39;%c%s&#39;, &#39;color:red&#39;,&#39;message: &#39; + this.message) //已被初始化
+  &#125;,
+  beforeMount: function () &#123;
+    // 根据el和template属性来初始化dom
+    console.info(&#39;beforeMount 挂载前状态===============》&#39;)
+    console.log(&#39;%c%s&#39;, &#39;color:red&#39;,&#39;el     : &#39; + (this.$el)) //已被初始化
+    // 这里的dom还没进行模板替换，也就是还显示着 &#123;&#123;message&#125;&#125; 这种占位符，span 元素也还在
+    // 这里就算有 template render，也是出现 outer html
+    console.log(this.$el)
+    console.log(&#39;%c%s&#39;, &#39;color:red&#39;,&#39;data   : &#39; + this.$data) //已被初始化  
+    console.log(&#39;%c%s&#39;, &#39;color:red&#39;,&#39;message: &#39; + this.message) //已被初始化 
+  &#125;,
+  mounted: function () &#123;
+    // 完成挂载，&#123;&#123;message&#125;&#125; 被数据替换，span 元素也被移除
+    console.info(&#39;mounted 挂载结束状态===============》&#39;)
+    console.log(&#39;%c%s&#39;, &#39;color:red&#39;,&#39;el     : &#39; + this.$el) //已被初始化
+    console.log(this.$el)    
+    console.log(&#39;%c%s&#39;, &#39;color:red&#39;,&#39;data   : &#39; + this.$data) //已被初始化
+    console.log(&#39;%c%s&#39;, &#39;color:red&#39;,&#39;message: &#39; + this.message) //已被初始化 
+  &#125;,
+  beforeUpdate: function () &#123;
+    console.info(&#39;beforeUpdate 更新前状态===============》&#39;)
+    console.log(&#39;%c%s&#39;, &#39;color:red&#39;,&#39;el     : &#39; + this.$el)
+    // 这里的dom还是旧的
+    console.log(this.$el)   
+    console.log(&#39;%c%s&#39;, &#39;color:red&#39;,&#39;data   : &#39; + JSON.stringify(this.$data))
+    // 数据已更新,，这里修改数据会引起死循环
+    console.log(&#39;%c%s&#39;, &#39;color:red&#39;,&#39;message: &#39; + this.message)
+  &#125;,
+  updated: function () &#123;
+    console.info(&#39;updated 更新完成状态===============》&#39;)
+    console.log(&#39;%c%s&#39;, &#39;color:red&#39;,&#39;el     : &#39; + this.$el)
+    // dom已更新，这里修改数据会引起死循环
+    console.log(this.$el) 
+    console.log(&#39;%c%s&#39;, &#39;color:red&#39;,&#39;data   : &#39; + this.$data) 
+    console.log(&#39;%c%s&#39;, &#39;color:red&#39;,&#39;message: &#39; + this.message)
+  &#125;,
+  beforeDestroy: function () &#123;
+    // 所有东西还在
+    console.info(&#39;beforeDestroy 销毁前状态===============》&#39;)
+    console.log(&#39;%c%s&#39;, &#39;color:red&#39;,&#39;el     : &#39; + this.$el)
+    console.log(this.$el)    
+    console.log(&#39;%c%s&#39;, &#39;color:red&#39;,&#39;data   : &#39; + this.$data) 
+    console.log(&#39;%c%s&#39;, &#39;color:red&#39;,&#39;message: &#39; + this.message)
+    this.message = &#39;destroy&#39;
+  &#125;,
+  destroyed: function () &#123;
+    // 数据绑定被卸除，监听被移出，子实例也统统被销毁，dom保留着
+    console.info(&#39;destroyed 销毁完成状态===============》&#39;)
+    console.log(&#39;%c%s&#39;, &#39;color:red&#39;,&#39;el     : &#39; + this.$el)
+    console.log(this.$el)  
+    console.log(&#39;%c%s&#39;, &#39;color:red&#39;,&#39;data   : &#39; + this.$data) 
+    console.log(&#39;%c%s&#39;, &#39;color:red&#39;,&#39;message: &#39; + this.message)
+    setTimeout(() =&gt; &#123;
+      // 实例还在
+      console.log(&#39;vue 实例===============》&#39;, app)
+    &#125;, 1000)
+  &#125;
+&#125;)
+&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+
       
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2020/07/26/vue-life/" data-id="clmbeu7r50032tf9mbfhmbdej" class="article-share-link">分享</a> -->
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-variable-type" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/07/25/variable-type/" class="article-date">
-  <time datetime="2020-07-25T09:44:02.000Z" itemprop="datePublished">2020-07-25</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/07/25/variable-type/">判断变量类型的几个方法</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>前置</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">Person</span>(<span class="params"></span>) &#123;&#125;</span><br><span class="line"><span class="keyword">const</span> p = <span class="keyword">new</span> <span class="title class_">Person</span>()</span><br></pre></td></tr></table></figure>
-
-<h2 id="一、-typeof"><a href="#一、-typeof" class="headerlink" title="一、 typeof"></a>一、 typeof</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="keyword">typeof</span> []) <span class="comment">// object</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="keyword">typeof</span> &#123;&#125;) <span class="comment">// object</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="keyword">typeof</span> <span class="keyword">function</span>(<span class="params"></span>)&#123;&#125;) <span class="comment">// function</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="keyword">typeof</span> <span class="string">&#x27;&#x27;</span>) <span class="comment">// string</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="keyword">typeof</span> <span class="number">1</span>) <span class="comment">// number</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="keyword">typeof</span> <span class="literal">true</span>) <span class="comment">// boolean</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="keyword">typeof</span> <span class="literal">undefined</span>) <span class="comment">// undefined</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="keyword">typeof</span> <span class="literal">null</span>) <span class="comment">// object</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="keyword">typeof</span> <span class="title class_">NaN</span>) <span class="comment">// number</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="keyword">typeof</span> /abc/) <span class="comment">// object</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="keyword">typeof</span> <span class="title class_">Symbol</span>()) <span class="comment">// symbol</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="keyword">typeof</span> <span class="keyword">new</span> <span class="title class_">Date</span>()) <span class="comment">// object</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="keyword">typeof</span> <span class="keyword">new</span> <span class="title class_">Map</span>()) <span class="comment">// object</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="keyword">typeof</span> <span class="keyword">new</span> <span class="title class_">Set</span>()) <span class="comment">// object</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="keyword">typeof</span> <span class="title class_">Person</span>) <span class="comment">// function</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="keyword">typeof</span> p) <span class="comment">// object</span></span><br></pre></td></tr></table></figure>
-
-<p>区分不了更精细的对象，比如数组和后面三个也被判断为对象。虽说数组和函数也是对象的一种。但函数都有自己的姓名。<br>参考了 <a target="_blank" rel="noopener" href="http://www.w3help.org/zh-cn/causes/SD9028">w3help</a> 上的资料来看，标准如此：</p>
-<img src="/2020/07/25/variable-type/typeof.PNG" class="" title="typeof">
-
-<p>最新的 <a target="_blank" rel="noopener" href="https://tc39.es/ecma262/#sec-typeof-operator">标准</a> 图是这样子：</p>
-<img src="/2020/07/25/variable-type/typeof2.PNG" class="" title="typeof">
-
-<p><strong>PS：</strong><br>__native object：__原生对象，ECMAScript 实现中，并非由宿主环境，而是完全由本规范定义其语义的对象。这些引用类型在运行过程中需要通过new来创建所需的实例对象。如：Object、Array、Date、RegExp、Function、Boolean、Number、String。（听起来就是语言标准自带的）<br>__built-in object：__内置对象，由 ECMAScript 实现提供，独立于宿主环境的对象，ECMAScript 程序开始执行时就存在。内置对象是本地对象的子集。包含：Global和Math、JSON。<br>__host object：__宿主对象，由宿主环境提供的对象，用于完善 ECMAScript 执行环境，如 Window 和 Document。</p>
-<p>看起来数组属于 <strong>native object</strong>，同时没有 <strong>implement [[Call]]</strong> （没有这个内置属性？），所以返回会是个对象。</p>
-<p>不过如果不需要判断得那么精细，那也够用了。而且这个可以直接 typeof 一个没有定义过的变量，会返回undefined。或许有些地方也可以利用起来。<br>另，可以看下 <a target="_blank" rel="noopener" href="https://segmentfault.com/q/1010000011846328">segmentfault</a> 大佬对于 <code>typeof(null) === &#39;object&#39;</code> 的回答。</p>
-<h2 id="二、-constructor"><a href="#二、-constructor" class="headerlink" title="二、 constructor"></a>二、 constructor</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>([].<span class="property">constructor</span>.<span class="property">name</span>) <span class="comment">// Array</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(&#123;&#125;.<span class="property">constructor</span>.<span class="property">name</span>) <span class="comment">// Object</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="keyword">function</span>(<span class="params"></span>)&#123;&#125;.<span class="property">constructor</span>.<span class="property">name</span>) <span class="comment">// Function</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;&#x27;</span>.<span class="property">constructor</span>.<span class="property">name</span>) <span class="comment">// String</span></span><br><span class="line"><span class="keyword">const</span> number = <span class="number">1</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(number.<span class="property">constructor</span>.<span class="property">name</span>) <span class="comment">// Number</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="literal">true</span>.<span class="property">constructor</span>.<span class="property">name</span>) <span class="comment">// Boolean</span></span><br><span class="line"><span class="comment">// console.log(undefined.constructor.name) // 报错</span></span><br><span class="line"><span class="comment">// console.log(null.constructor.name) // 报错</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">NaN</span>.<span class="property">constructor</span>.<span class="property">name</span>) <span class="comment">// Number</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="regexp">/abc/</span>.<span class="property">constructor</span>.<span class="property">name</span>) <span class="comment">// RegExp</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">Symbol</span>().<span class="property">constructor</span>.<span class="property">name</span>) <span class="comment">// Symbol</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="keyword">new</span> <span class="title class_">Date</span>().<span class="property">constructor</span>.<span class="property">name</span>) <span class="comment">// Date</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="keyword">new</span> <span class="title class_">Map</span>().<span class="property">constructor</span>.<span class="property">name</span>) <span class="comment">// Map</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="keyword">new</span> <span class="title class_">Set</span>().<span class="property">constructor</span>.<span class="property">name</span>) <span class="comment">// Set</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">Person</span>.<span class="property">constructor</span>.<span class="property">name</span>) <span class="comment">// Function</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(p.<span class="property">constructor</span>.<span class="property">name</span>) <span class="comment">// Person</span></span><br></pre></td></tr></table></figure>
-
-<p>只有 constructor 也行，返回就是这个这个变量的原型。</p>
-<p>需要注意的是实例 p 返回的是 Person 这个原型。</p>
-<h2 id="三、-instanceof"><a href="#三、-instanceof" class="headerlink" title="三、 instanceof"></a>三、 instanceof</h2><p>先看 <a target="_blank" rel="noopener" href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/instanceof">定义</a>。从名字上看，该变量是否为某原型的实例。</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>([] <span class="keyword">instanceof</span> <span class="title class_">Array</span>) <span class="comment">// true</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>([] <span class="keyword">instanceof</span> <span class="title class_">Object</span>) <span class="comment">// true</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(&#123;&#125; <span class="keyword">instanceof</span> <span class="title class_">Object</span>) <span class="comment">// true</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="keyword">function</span>(<span class="params"></span>)&#123;&#125; <span class="keyword">instanceof</span> <span class="title class_">Function</span>) <span class="comment">// true</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;&#x27;</span> <span class="keyword">instanceof</span> <span class="title class_">String</span>) <span class="comment">// false</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="number">1</span> <span class="keyword">instanceof</span> <span class="title class_">Number</span>) <span class="comment">// false</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="literal">true</span> <span class="keyword">instanceof</span> <span class="title class_">Boolean</span>) <span class="comment">// false</span></span><br><span class="line"><span class="comment">// console.log(undefined instanceof undefined)</span></span><br><span class="line"><span class="comment">// 报错：Right-hand side of &#x27;instanceof&#x27; is not an object</span></span><br><span class="line"><span class="comment">// console.log(null instanceof null)</span></span><br><span class="line"><span class="comment">// 报错：Right-hand side of &#x27;instanceof&#x27; is not an object</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">NaN</span> <span class="keyword">instanceof</span> <span class="title class_">Number</span>) <span class="comment">// false</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="regexp">/abc/</span> <span class="keyword">instanceof</span> <span class="title class_">RegExp</span>) <span class="comment">// true</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">Symbol</span>() <span class="keyword">instanceof</span> <span class="title class_">Symbol</span>) <span class="comment">// false</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="keyword">new</span> <span class="title class_">Date</span>() <span class="keyword">instanceof</span> <span class="title class_">Date</span>) <span class="comment">// true</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="keyword">new</span> <span class="title class_">Map</span>() <span class="keyword">instanceof</span> <span class="title class_">Map</span>) <span class="comment">// true</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="keyword">new</span> <span class="title class_">Set</span>() <span class="keyword">instanceof</span> <span class="title class_">Set</span>) <span class="comment">// true</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">Person</span> <span class="keyword">instanceof</span> <span class="title class_">Function</span>) <span class="comment">// true</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(p <span class="keyword">instanceof</span> <span class="title class_">Person</span>) <span class="comment">// true</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(p <span class="keyword">instanceof</span> <span class="title class_">Object</span>) <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
-
-<p><code>[]</code>既是数组的实例，又是对象的实例。</p>
-<p>可参阅此<a target="_blank" rel="noopener" href="https://developer.ibm.com/zh/articles/1306-jiangjj-jsinstanceof/">文章</a>介绍，这里直接摘取下里面的翻译与代码</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">instance_of</span>(<span class="params">L, R</span>) &#123;<span class="comment">//L 表示左表达式，R 表示右表达式</span></span><br><span class="line">  <span class="keyword">var</span> O = R.<span class="property"><span class="keyword">prototype</span></span>;<span class="comment">// 取 R 的显示原型</span></span><br><span class="line">  L = L.<span class="property">__proto__</span>;<span class="comment">// 取 L 的隐式原型</span></span><br><span class="line">  <span class="keyword">while</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">    <span class="keyword">if</span> (L === <span class="literal">null</span>)</span><br><span class="line">      <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    <span class="keyword">if</span> (O === L)<span class="comment">// 这里重点：当 O 严格等于 L 时，返回 true</span></span><br><span class="line">      <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    L = L.<span class="property">__proto__</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 上面的代码就很好地解释了，根据原型链的知识，我们知道以下两条等式成立，所以 [] 也是 Object 的实例</span></span><br><span class="line">[].<span class="property">__proto__</span> === <span class="title class_">Array</span>.<span class="property"><span class="keyword">prototype</span></span></span><br><span class="line"><span class="title class_">Array</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">__proto__</span> === <span class="title class_">Object</span>.<span class="property"><span class="keyword">prototype</span></span></span><br></pre></td></tr></table></figure>
-<p>这时候又出现了个问题，<code>NaN instanceof Number === false</code>…真是没完没了。按照上面的方法来应该是true的。<br>其实这个可以跟上面的 <code>&#39;&#39; instanceof String === false</code> <code>1 instanceof Number === false</code> <code>true instanceof Boolean === false</code> 一起看。<br>NaN也是一个数字值，跟1、2、3这种一样。上面那样写就是返回 false，写出 new 出来的实例就为 true。比如：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> num = <span class="keyword">new</span> <span class="title class_">Number</span>(<span class="number">1</span>)</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(num <span class="keyword">instanceof</span> <span class="title class_">Number</span>) <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
-<p><strong>个人理解：</strong>这里的 num 是 Number 的一个实例，但其实它是对象。实例首先肯定是个对象。比如 1 ‘’ true，都是基础类型。上面的方法是站在真正的实例对象来判断，是一个简单化步骤的方法。<br>但标准里面说的，还有调用内部方法与内部属性，当判断到不是对象，其实就返回 false 了。<strong>这里与 typeof 联系起来，typeof 不是 object 的，用 instanceof 都是 false 了</strong>。</p>
-<h2 id="四、-Object-prototype-toString-call"><a href="#四、-Object-prototype-toString-call" class="headerlink" title="四、 Object.prototype.toString.call"></a>四、 Object.prototype.toString.call</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">Object</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">toString</span>.<span class="title function_">call</span>([])) <span class="comment">// [object Array]</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">Object</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">toString</span>.<span class="title function_">call</span>(&#123;&#125;)) <span class="comment">// [object Object]</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">Object</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">toString</span>.<span class="title function_">call</span>(<span class="keyword">function</span>(<span class="params"></span>)&#123;&#125;)) <span class="comment">// [object Function]</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">Object</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">toString</span>.<span class="title function_">call</span>(<span class="string">&#x27;&#x27;</span>)) <span class="comment">// [object String]</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">Object</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">toString</span>.<span class="title function_">call</span>(<span class="number">1</span>)) <span class="comment">// [object Number]</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">Object</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">toString</span>.<span class="title function_">call</span>(<span class="literal">true</span>)) <span class="comment">// [object Boolean]</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">Object</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">toString</span>.<span class="title function_">call</span>(<span class="literal">undefined</span>)) <span class="comment">// [object Undefined]</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">Object</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">toString</span>.<span class="title function_">call</span>(<span class="literal">null</span>)) <span class="comment">// [object Null]</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">Object</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">toString</span>.<span class="title function_">call</span>(<span class="title class_">NaN</span>)) <span class="comment">// [object Number]</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">Object</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">toString</span>.<span class="title function_">call</span>(<span class="regexp">/abc/</span>)) <span class="comment">// [object RegExp]</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">Object</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">toString</span>.<span class="title function_">call</span>(<span class="title class_">Symbol</span>())) <span class="comment">// [object Symbol]</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">Object</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">toString</span>.<span class="title function_">call</span>(<span class="keyword">new</span> <span class="title class_">Date</span>())) <span class="comment">// [object Date]</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">Object</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">toString</span>.<span class="title function_">call</span>(<span class="keyword">new</span> <span class="title class_">Map</span>())) <span class="comment">// [object Map]</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">Object</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">toString</span>.<span class="title function_">call</span>(<span class="keyword">new</span> <span class="title class_">Set</span>())) <span class="comment">// [object Set]</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">Object</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">toString</span>.<span class="title function_">call</span>(<span class="title class_">Person</span>)) <span class="comment">// [object Function]</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">Object</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">toString</span>.<span class="title function_">call</span>(p)) <span class="comment">// [object Object]</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>([<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>].<span class="title function_">toString</span>()) <span class="comment">// 1,2,3,4</span></span><br></pre></td></tr></table></figure>
-
-<p>这个就厉害了，居然精确到每一个都不一样。细看跟 typeof 还有点像，但是精细很多。所以一定也是有个什么内置属性在记录着这个东西。<br>要写成 <code>Object.prototype.toString.call</code> 这个样子，是因为别的原型重写了该方法，比如最后一个数组的 <code>toString</code> 方法返回就不一样了。<br>在控制台打印一个数组看看，就能清晰看到 Array 本身也有一个 <code>toString</code> 方法。</p>
-<p>简而言之，分两种，一种是对象内置了 <code>Symbol.toStringTag</code> 这个属性，来返回 <code>[object $&#123;tag&#125;]</code> tag 部分的值。<br>另外一种是没有这个内置属性，但是 <a target="_blank" rel="noopener" href="https://tc39.es/ecma262/#sec-object.prototype.tostring">语言标准tc39</a> 为其指定了返回 tag，比如：Array String 等这几个老面孔。<br>这也就意味着可以自定义自己的tag。</p>
-<img src="/2020/07/25/variable-type/Object.prototype.toString.PNG" class="" title="Object.prototype.toString">
-<br/>
-
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">Promise</span>.<span class="property"><span class="keyword">prototype</span></span>[<span class="title class_">Symbol</span>.<span class="property">toStringTag</span>]) <span class="comment">// Promise</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">Array</span>.<span class="property"><span class="keyword">prototype</span></span>[<span class="title class_">Symbol</span>.<span class="property">toStringTag</span>]) <span class="comment">// undefined</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">Tag</span>(<span class="params"></span>) &#123;&#125;</span><br><span class="line"><span class="title class_">Tag</span>.<span class="property"><span class="keyword">prototype</span></span>[<span class="title class_">Symbol</span>.<span class="property">toStringTag</span>] = <span class="string">&#x27;newTag&#x27;</span></span><br><span class="line"><span class="keyword">const</span> t = <span class="keyword">new</span> <span class="title class_">Tag</span>()</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">Object</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">toString</span>.<span class="title function_">call</span>(t)) <span class="comment">// [object newTag]</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">Tag1</span>(<span class="params"></span>) &#123;&#125;</span><br><span class="line"><span class="title class_">Tag1</span>.<span class="property"><span class="keyword">prototype</span></span>[<span class="title class_">Symbol</span>.<span class="property">toStringTag</span>] = &#123;&#125;</span><br><span class="line"><span class="keyword">const</span> t1 = <span class="keyword">new</span> <span class="title class_">Tag1</span>()</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">Object</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">toString</span>.<span class="title function_">call</span>(t1)) <span class="comment">// [object Object]</span></span><br><span class="line"><span class="comment">// 从上面 tc39 的介绍14，15，16来看，当 [Symbol.toStringTag] 不为 string，则将内置 tag 设置为 Object</span></span><br></pre></td></tr></table></figure>
-
-<p>里面还涉及其他知识，可以参阅 <a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/118793721">知乎</a> 和 <a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Symbol/toStringTag">MDN-Symbol.toStringTag</a>、<a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Object/toString">MDN-toString</a>。</p>
-<p>码后感：几个判断类型方法，居然有这么多细节点在里面。平时可能用了就用了，都不知道其中原理。真是路漫漫啊。。。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      
-      <!-- <a data-url="https://blog.cchealthier.com/2020/07/25/variable-type/" data-id="clmbeu7r4002vtf9m3fp15n9f" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2020/07/26/vue-life/" data-id="clmxk7z0h0038c39m4jrtgvc9" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -362,6 +1085,37 @@
 </section>
         
           <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2023/09/23/react-basic-app-2/">react 基础工程 Ⅱ（@reduxjs/toolkit &amp; @craco/craco &amp; vite）</a>
+          </li>
+        
+          <li>
+            <a href="/2023/08/24/node-module/">NodeJS 的 commonjs、esm 模块使用以及一些字段释义</a>
+          </li>
+        
+          <li>
+            <a href="/2023/08/23/webpack5-background-url/">webpack5 下 background url 图片打包失败</a>
+          </li>
+        
+          <li>
+            <a href="/2023/07/26/node-stream/">NodeJS 里的 stream（流）</a>
+          </li>
+        
+          <li>
+            <a href="/2023/06/07/webpack-modulefederationplugin/">用 webpack ModuleFederationPlugin 搭建微前端</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
   
     
   <div class="widget-wrap">
@@ -396,41 +1150,10 @@
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/08/">八月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">七月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/06/">六月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/05/">五月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/04/">四月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/03/">三月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/02/">二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">十一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">十月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">九月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/09/">九月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/08/">八月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">七月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/06/">六月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/05/">五月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/04/">四月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/03/">三月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/02/">二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">十一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">十月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">九月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a></li></ul>
     </div>
   </div>
 
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">最新文章</h3>
-    <div class="widget">
-      <ul>
-        
-          <li>
-            <a href="/2023/08/24/node-module/">NodeJS 的 commonjs、esm 模块使用以及一些字段释义</a>
-          </li>
-        
-          <li>
-            <a href="/2023/08/23/webpack5-background-url/">webpack5 下 background url 图片打包失败</a>
-          </li>
-        
-          <li>
-            <a href="/2023/07/26/node-stream/">NodeJS 里的 stream（流）</a>
-          </li>
-        
-          <li>
-            <a href="/2023/06/07/webpack-modulefederationplugin/">用 webpack ModuleFederationPlugin 搭建微前端</a>
-          </li>
-        
-          <li>
-            <a href="/2023/05/31/react-basic-app/">react 基础工程（react-redux &amp; react-router）</a>
-          </li>
-        
-      </ul>
-    </div>
-  </div>
 
   
 </aside>
@@ -448,15 +1171,27 @@
     </div>
     <nav id="mobile-nav">
   
-    <a href="/" class="mobile-nav-link">Home</a>
+    <a href="/" class="mobile-nav-link">首页</a>
   
-    <a href="/archives" class="mobile-nav-link">Archives</a>
+    <a href="/archives" class="mobile-nav-link">归档</a>
   
 </nav>
     
 
 <script src="//cdn.staticfile.org/jquery/2.0.3/jquery.min.js"></script>
 <script type="text/javascript" src="https://www.jq22.com/demo/jqueryToast201708310012/js/toast.script.js"></script>
+<script src="/js/highlight.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlightjs-line-numbers.js/2.8.0/highlightjs-line-numbers.min.js"></script>
+<script>
+  $(function(){
+    $('pre code').each((i, el) => {
+    hljs.highlightElement(el);
+  });
+  $('code.hljs').each(function(i, el) {
+     hljs.lineNumbersBlock(el);
+  });
+  }());
+</script>
 
 
   

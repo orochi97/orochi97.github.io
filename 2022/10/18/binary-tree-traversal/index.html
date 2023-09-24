@@ -9,12 +9,12 @@
   
   <title>二叉树前序中序后序遍历 | 凝雪密境</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="二叉树的遍历，详细概念还是看搜索引擎总结吧，二叉树遍历 二叉树，前序、中序、后序，遍历，都是深度优先遍历前中后指的是根节点的访问顺序对最底层的节点而言，前中后就是三个节点对于非最底层的节点而言，左右两个节点就是分支，不仅仅是三个节点 123456789101112131415161718192021222324252627282930313233343536373839404142434445co">
+  <meta name="description" content="二叉树的遍历，详细概念还是看搜索引擎总结吧，二叉树遍历 二叉树，前序、中序、后序，遍历，都是深度优先遍历前中后指的是根节点的访问顺序对最底层的节点而言，前中后就是三个节点对于非最底层的节点而言，左右两个节点就是分支，不仅仅是三个节点 const tree &#x3D; &amp;#123;   value: 1,   left: &amp;#123;     value: 2,     left: &amp;#123;">
 <meta property="og:type" content="article">
 <meta property="og:title" content="二叉树前序中序后序遍历">
 <meta property="og:url" content="https://blog.cchealthier.com/2022/10/18/binary-tree-traversal/index.html">
 <meta property="og:site_name" content="凝雪密境">
-<meta property="og:description" content="二叉树的遍历，详细概念还是看搜索引擎总结吧，二叉树遍历 二叉树，前序、中序、后序，遍历，都是深度优先遍历前中后指的是根节点的访问顺序对最底层的节点而言，前中后就是三个节点对于非最底层的节点而言，左右两个节点就是分支，不仅仅是三个节点 123456789101112131415161718192021222324252627282930313233343536373839404142434445co">
+<meta property="og:description" content="二叉树的遍历，详细概念还是看搜索引擎总结吧，二叉树遍历 二叉树，前序、中序、后序，遍历，都是深度优先遍历前中后指的是根节点的访问顺序对最底层的节点而言，前中后就是三个节点对于非最底层的节点而言，左右两个节点就是分支，不仅仅是三个节点 const tree &#x3D; &amp;#123;   value: 1,   left: &amp;#123;     value: 2,     left: &amp;#123;">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2022-10-18T13:35:33.000Z">
 <meta property="article:modified_time" content="2023-04-21T03:44:31.064Z">
@@ -25,13 +25,12 @@
     <link rel="icon" href="/favicon.ico">
   
   
-    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
-  
   
 <link rel="stylesheet" href="/css/style.css">
 
   <link href="https://www.jq22.com/demo/jqueryToast201708310012/css/toast.style.css" rel="stylesheet" type="text/css">
-<meta name="generator" content="Hexo 7.0.0-rc1"></head>
+  <link rel="stylesheet" href="/css/highlight/styles/monokai-sublime.min.css">
+<meta name="generator" content="Hexo 6.3.0"></head>
 
 <body>
   <div id="container">
@@ -59,9 +58,9 @@
       <nav id="main-nav">
         <a id="main-nav-toggle" class="nav-icon"></a>
         
-          <a class="main-nav-link" href="/">Home</a>
+          <a class="main-nav-link" href="/">首页</a>
         
-          <a class="main-nav-link" href="/archives">Archives</a>
+          <a class="main-nav-link" href="/archives">归档</a>
         
       </nav>
       <nav id="sub-nav">
@@ -103,18 +102,215 @@
       
         <p>二叉树的遍历，详细概念还是看搜索引擎总结吧，<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E4%BA%8C%E5%8F%89%E6%A0%91%E9%81%8D%E5%8E%86/9796049">二叉树遍历</a></p>
 <p>二叉树，前序、中序、后序，遍历，都是深度优先遍历<br>前中后指的是根节点的访问顺序<br>对最底层的节点而言，前中后就是三个节点<br>对于非最底层的节点而言，左右两个节点就是分支，不仅仅是三个节点</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> tree = &#123;</span><br><span class="line">  <span class="attr">value</span>: <span class="number">1</span>,</span><br><span class="line">  <span class="attr">left</span>: &#123;</span><br><span class="line">    <span class="attr">value</span>: <span class="number">2</span>,</span><br><span class="line">    <span class="attr">left</span>: &#123;</span><br><span class="line">      <span class="attr">value</span>: <span class="number">4</span>,</span><br><span class="line">      <span class="attr">left</span>: &#123;</span><br><span class="line">        <span class="attr">value</span>: <span class="number">8</span>,</span><br><span class="line">      &#125;,</span><br><span class="line">      <span class="attr">right</span>: &#123;</span><br><span class="line">        <span class="attr">value</span>: <span class="number">9</span>,</span><br><span class="line">      &#125;,</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">right</span>: &#123;</span><br><span class="line">      <span class="attr">value</span>: <span class="number">5</span>,</span><br><span class="line">      <span class="attr">left</span>: &#123;</span><br><span class="line">        <span class="attr">value</span>: <span class="number">10</span>,</span><br><span class="line">      &#125;,</span><br><span class="line">      <span class="attr">right</span>: &#123;</span><br><span class="line">        <span class="attr">value</span>: <span class="number">11</span>,</span><br><span class="line">      &#125;,</span><br><span class="line">    &#125;,</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">right</span>: &#123;</span><br><span class="line">    <span class="attr">value</span>: <span class="number">3</span>,</span><br><span class="line">    <span class="attr">left</span>: &#123;</span><br><span class="line">      <span class="attr">value</span>: <span class="number">6</span>,</span><br><span class="line">      <span class="attr">left</span>: &#123;</span><br><span class="line">        <span class="attr">value</span>: <span class="number">12</span>,</span><br><span class="line">      &#125;,</span><br><span class="line">      <span class="attr">right</span>: &#123;</span><br><span class="line">        <span class="attr">value</span>: <span class="number">13</span>,</span><br><span class="line">      &#125;,</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">right</span>: &#123;</span><br><span class="line">      <span class="attr">value</span>: <span class="number">7</span>,</span><br><span class="line">      <span class="attr">left</span>: &#123;</span><br><span class="line">        <span class="attr">value</span>: <span class="number">14</span>,</span><br><span class="line">      &#125;,</span><br><span class="line">      <span class="attr">right</span>: &#123;</span><br><span class="line">        <span class="attr">value</span>: <span class="number">15</span>,</span><br><span class="line">      &#125;,</span><br><span class="line">    &#125;,</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-
+<pre><code class="js">const tree = &#123;
+  value: 1,
+  left: &#123;
+    value: 2,
+    left: &#123;
+      value: 4,
+      left: &#123;
+        value: 8,
+      &#125;,
+      right: &#123;
+        value: 9,
+      &#125;,
+    &#125;,
+    right: &#123;
+      value: 5,
+      left: &#123;
+        value: 10,
+      &#125;,
+      right: &#123;
+        value: 11,
+      &#125;,
+    &#125;,
+  &#125;,
+  right: &#123;
+    value: 3,
+    left: &#123;
+      value: 6,
+      left: &#123;
+        value: 12,
+      &#125;,
+      right: &#123;
+        value: 13,
+      &#125;,
+    &#125;,
+    right: &#123;
+      value: 7,
+      left: &#123;
+        value: 14,
+      &#125;,
+      right: &#123;
+        value: 15,
+      &#125;,
+    &#125;,
+  &#125;,
+&#125;;
+</code></pre>
 <span id="more"></span>
 
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// 前序遍历</span></span><br><span class="line"><span class="comment">// 前序遍历：首先访问根结点，然后遍历左子树，最后遍历右子树（根-&gt;左-&gt;右）</span></span><br><span class="line"><span class="comment">// 顺序：访问根节点-&gt;前序遍历左子树-&gt;前序遍历右子树</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 递归解法</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">preorderTraversal1</span>(<span class="params">tree</span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> arr = [];</span><br><span class="line">  <span class="keyword">function</span> <span class="title function_">recursion</span>(<span class="params">node</span>) &#123;</span><br><span class="line">    <span class="keyword">if</span> (!node) <span class="keyword">return</span>;</span><br><span class="line">    arr.<span class="title function_">push</span>(node.<span class="property">value</span>);</span><br><span class="line">    <span class="title function_">recursion</span>(node.<span class="property">left</span>);</span><br><span class="line">    <span class="title function_">recursion</span>(node.<span class="property">right</span>);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="title function_">recursion</span>(tree);</span><br><span class="line">  <span class="keyword">return</span> arr;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 栈迭代解法</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">preorderTraversal2</span>(<span class="params">tree</span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> arr = [];</span><br><span class="line">  <span class="keyword">const</span> stack = [tree];</span><br><span class="line">  <span class="keyword">while</span>(stack.<span class="property">length</span>) &#123;</span><br><span class="line">    <span class="keyword">const</span> node = stack.<span class="title function_">pop</span>();</span><br><span class="line">    <span class="keyword">if</span> (node) &#123;</span><br><span class="line">      arr.<span class="title function_">push</span>(node.<span class="property">value</span>);</span><br><span class="line">      <span class="comment">// 注意这里由于先进后出，所以右节点先进入</span></span><br><span class="line">      stack.<span class="title function_">push</span>(node.<span class="property">right</span>);</span><br><span class="line">      <span class="comment">// 注意这里由于先进后出，看起来是根右左，其实是根左右</span></span><br><span class="line">      stack.<span class="title function_">push</span>(node.<span class="property">left</span>);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> arr;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 中序遍历</span></span><br><span class="line"><span class="comment">// 中序遍历：首先遍历左子树，然后访问根节点，最后遍历右子树（左-&gt;根-&gt;右）</span></span><br><span class="line"><span class="comment">// 顺序：中序遍历左子树-&gt;访问根节点-&gt;中序遍历右子树</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 递归解法</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">inorderTraversal1</span>(<span class="params">tree</span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> arr = [];</span><br><span class="line">  <span class="keyword">function</span> <span class="title function_">recursion</span>(<span class="params">node</span>) &#123;</span><br><span class="line">    <span class="keyword">if</span> (!node) <span class="keyword">return</span>;</span><br><span class="line">    <span class="title function_">recursion</span>(node.<span class="property">left</span>);</span><br><span class="line">    arr.<span class="title function_">push</span>(node.<span class="property">value</span>);</span><br><span class="line">    <span class="title function_">recursion</span>(node.<span class="property">right</span>);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="title function_">recursion</span>(tree);</span><br><span class="line">  <span class="keyword">return</span> arr;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 栈迭代解法</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">inorderTraversal2</span>(<span class="params">node</span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> arr = [];</span><br><span class="line">  <span class="keyword">const</span> stack = [];</span><br><span class="line">  <span class="keyword">while</span>(stack.<span class="property">length</span> || node) &#123;</span><br><span class="line">    <span class="comment">// 第一次大循环进来 node 是 1</span></span><br><span class="line">    <span class="comment">// 第二次大循环进来 node 是 undefined</span></span><br><span class="line">    <span class="comment">// 第三次大循环进来 node 是 9</span></span><br><span class="line">    <span class="comment">// 第四次大循环进来 node 是undefined</span></span><br><span class="line">    <span class="keyword">while</span>(node) &#123;</span><br><span class="line">      <span class="comment">// 第一次小循环后，[1,2,4,8]</span></span><br><span class="line">      <span class="comment">// 第二次没有小循环</span></span><br><span class="line">      <span class="comment">// 第三次小循环后，[1,2,9]</span></span><br><span class="line">      <span class="comment">// 第四次没有小循环</span></span><br><span class="line">      stack.<span class="title function_">push</span>(node);</span><br><span class="line">      node = node.<span class="property">left</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 第一次大循环访问 8 这个节点</span></span><br><span class="line">    <span class="comment">// 第二次大循环访问 4 这个节点，注意这里的 4 是根节点，接下来要访问它的右分支</span></span><br><span class="line">    <span class="comment">// 第三次大循环访问 9 这个节点</span></span><br><span class="line">    <span class="comment">// 第四次大循环访问 2 这个节点，注意这里的 2 是根节点，接下来要访问它的右分支</span></span><br><span class="line">    node = stack.<span class="title function_">pop</span>();</span><br><span class="line">    arr.<span class="title function_">push</span>(node.<span class="property">value</span>);</span><br><span class="line">    <span class="comment">// 第一次大循环的 8 没有子节点，node 为 undefined</span></span><br><span class="line">    <span class="comment">// 第二次大循环的 4 right 节点是 </span></span><br><span class="line">    <span class="comment">/* right: &#123;</span></span><br><span class="line"><span class="comment">      value: 9,</span></span><br><span class="line"><span class="comment">    &#125; */</span></span><br><span class="line">    <span class="comment">// 第三次大循环的 9 没有子节点，node 为 undefined</span></span><br><span class="line">    <span class="comment">// 第四次大循环的 2 right 节点是</span></span><br><span class="line">    <span class="comment">/* &#123;</span></span><br><span class="line"><span class="comment">      value: 5,</span></span><br><span class="line"><span class="comment">      left: &#123;</span></span><br><span class="line"><span class="comment">        value: 10,</span></span><br><span class="line"><span class="comment">      &#125;,</span></span><br><span class="line"><span class="comment">      right: &#123;</span></span><br><span class="line"><span class="comment">        value: 11,</span></span><br><span class="line"><span class="comment">      &#125;,</span></span><br><span class="line"><span class="comment">    &#125; */</span></span><br><span class="line">    <span class="comment">// 然后每个小节点就又如上述描述的过程，根据“左根右”顺序遍历</span></span><br><span class="line">    node = node.<span class="property">right</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> arr;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 后序遍历</span></span><br><span class="line"><span class="comment">// 后序遍历：首先遍历左子树，然后遍历右子树，最后访问根节点（左-&gt;右-&gt;根）</span></span><br><span class="line"><span class="comment">// 顺序：后序遍历左子树-&gt;后序遍历右子树-&gt;访问根节点</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 递归解法</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">postorderTraversal1</span>(<span class="params">tree</span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> arr = [];</span><br><span class="line">  <span class="keyword">function</span> <span class="title function_">recursion</span>(<span class="params">node</span>) &#123;</span><br><span class="line">    <span class="keyword">if</span> (!node) <span class="keyword">return</span>;</span><br><span class="line">    <span class="title function_">recursion</span>(node.<span class="property">left</span>);</span><br><span class="line">    <span class="title function_">recursion</span>(node.<span class="property">right</span>);</span><br><span class="line">    arr.<span class="title function_">push</span>(node.<span class="property">value</span>);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="title function_">recursion</span>(tree);</span><br><span class="line">  <span class="keyword">return</span> arr;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 栈迭代解法</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">postorderTraversal2</span>(<span class="params">node</span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> arr = [];</span><br><span class="line">  <span class="keyword">const</span> stack = [node];</span><br><span class="line"></span><br><span class="line">  <span class="comment">// // 可以采用前序遍历的方法，最后整个数组反转</span></span><br><span class="line">  <span class="comment">// while(stack.length) &#123;</span></span><br><span class="line">  <span class="comment">//   node = stack.pop();</span></span><br><span class="line">  <span class="comment">//   if (node) &#123;</span></span><br><span class="line">  <span class="comment">//     arr.push(node.value);</span></span><br><span class="line">  <span class="comment">//     // 注意这里由于先进后出，看起来是根左右，但其实是根右左</span></span><br><span class="line">  <span class="comment">//     // 在下面 reverse 之后，就是左右根，变成后序了</span></span><br><span class="line">  <span class="comment">//     stack.push(node.left);</span></span><br><span class="line">  <span class="comment">//     stack.push(node.right);</span></span><br><span class="line">  <span class="comment">//   &#125;</span></span><br><span class="line">  <span class="comment">// &#125;</span></span><br><span class="line">  <span class="comment">// return arr.reverse();</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// 可以采用前序遍历的方法，先进的放在最后，变成后序遍历了</span></span><br><span class="line">  <span class="keyword">while</span>(stack.<span class="property">length</span>) &#123;</span><br><span class="line">    node = stack.<span class="title function_">pop</span>();</span><br><span class="line">    <span class="keyword">if</span> (node) &#123;</span><br><span class="line">      arr.<span class="title function_">unshift</span>(node.<span class="property">value</span>);</span><br><span class="line">      stack.<span class="title function_">push</span>(node.<span class="property">left</span>);</span><br><span class="line">      stack.<span class="title function_">push</span>(node.<span class="property">right</span>);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> arr;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;前序遍历-递归: &#x27;</span>, <span class="title function_">preorderTraversal1</span>(tree));</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;前序遍历-迭代:&#x27;</span>, <span class="title function_">preorderTraversal2</span>(tree));</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;中序遍历-递归: &#x27;</span>, <span class="title function_">inorderTraversal1</span>(tree));</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;中序遍历-迭代: &#x27;</span>, <span class="title function_">inorderTraversal2</span>(tree));</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;后序遍历-递归: &#x27;</span>, <span class="title function_">postorderTraversal1</span>(tree));</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;后序遍历-迭代: &#x27;</span>, <span class="title function_">postorderTraversal2</span>(tree));</span><br></pre></td></tr></table></figure>
+<pre><code class="js">
+// 前序遍历
+// 前序遍历：首先访问根结点，然后遍历左子树，最后遍历右子树（根-&gt;左-&gt;右）
+// 顺序：访问根节点-&gt;前序遍历左子树-&gt;前序遍历右子树
+
+// 递归解法
+function preorderTraversal1(tree) &#123;
+  const arr = [];
+  function recursion(node) &#123;
+    if (!node) return;
+    arr.push(node.value);
+    recursion(node.left);
+    recursion(node.right);
+  &#125;
+  recursion(tree);
+  return arr;
+&#125;
+// 栈迭代解法
+function preorderTraversal2(tree) &#123;
+  const arr = [];
+  const stack = [tree];
+  while(stack.length) &#123;
+    const node = stack.pop();
+    if (node) &#123;
+      arr.push(node.value);
+      // 注意这里由于先进后出，所以右节点先进入
+      stack.push(node.right);
+      // 注意这里由于先进后出，看起来是根右左，其实是根左右
+      stack.push(node.left);
+    &#125;
+  &#125;
+  return arr;
+&#125;
+
+// 中序遍历
+// 中序遍历：首先遍历左子树，然后访问根节点，最后遍历右子树（左-&gt;根-&gt;右）
+// 顺序：中序遍历左子树-&gt;访问根节点-&gt;中序遍历右子树
+
+// 递归解法
+function inorderTraversal1(tree) &#123;
+  const arr = [];
+  function recursion(node) &#123;
+    if (!node) return;
+    recursion(node.left);
+    arr.push(node.value);
+    recursion(node.right);
+  &#125;
+  recursion(tree);
+  return arr;
+&#125;
+// 栈迭代解法
+function inorderTraversal2(node) &#123;
+  const arr = [];
+  const stack = [];
+  while(stack.length || node) &#123;
+    // 第一次大循环进来 node 是 1
+    // 第二次大循环进来 node 是 undefined
+    // 第三次大循环进来 node 是 9
+    // 第四次大循环进来 node 是undefined
+    while(node) &#123;
+      // 第一次小循环后，[1,2,4,8]
+      // 第二次没有小循环
+      // 第三次小循环后，[1,2,9]
+      // 第四次没有小循环
+      stack.push(node);
+      node = node.left;
+    &#125;
+    // 第一次大循环访问 8 这个节点
+    // 第二次大循环访问 4 这个节点，注意这里的 4 是根节点，接下来要访问它的右分支
+    // 第三次大循环访问 9 这个节点
+    // 第四次大循环访问 2 这个节点，注意这里的 2 是根节点，接下来要访问它的右分支
+    node = stack.pop();
+    arr.push(node.value);
+    // 第一次大循环的 8 没有子节点，node 为 undefined
+    // 第二次大循环的 4 right 节点是 
+    /* right: &#123;
+      value: 9,
+    &#125; */
+    // 第三次大循环的 9 没有子节点，node 为 undefined
+    // 第四次大循环的 2 right 节点是
+    /* &#123;
+      value: 5,
+      left: &#123;
+        value: 10,
+      &#125;,
+      right: &#123;
+        value: 11,
+      &#125;,
+    &#125; */
+    // 然后每个小节点就又如上述描述的过程，根据“左根右”顺序遍历
+    node = node.right;
+  &#125;
+  return arr;
+&#125;
+
+// 后序遍历
+// 后序遍历：首先遍历左子树，然后遍历右子树，最后访问根节点（左-&gt;右-&gt;根）
+// 顺序：后序遍历左子树-&gt;后序遍历右子树-&gt;访问根节点
+
+// 递归解法
+function postorderTraversal1(tree) &#123;
+  const arr = [];
+  function recursion(node) &#123;
+    if (!node) return;
+    recursion(node.left);
+    recursion(node.right);
+    arr.push(node.value);
+  &#125;
+  recursion(tree);
+  return arr;
+&#125;
+// 栈迭代解法
+function postorderTraversal2(node) &#123;
+  const arr = [];
+  const stack = [node];
+
+  // // 可以采用前序遍历的方法，最后整个数组反转
+  // while(stack.length) &#123;
+  //   node = stack.pop();
+  //   if (node) &#123;
+  //     arr.push(node.value);
+  //     // 注意这里由于先进后出，看起来是根左右，但其实是根右左
+  //     // 在下面 reverse 之后，就是左右根，变成后序了
+  //     stack.push(node.left);
+  //     stack.push(node.right);
+  //   &#125;
+  // &#125;
+  // return arr.reverse();
+
+  // 可以采用前序遍历的方法，先进的放在最后，变成后序遍历了
+  while(stack.length) &#123;
+    node = stack.pop();
+    if (node) &#123;
+      arr.unshift(node.value);
+      stack.push(node.left);
+      stack.push(node.right);
+    &#125;
+  &#125;
+  return arr;
+&#125;
+
+console.log(&#39;前序遍历-递归: &#39;, preorderTraversal1(tree));
+
+console.log(&#39;前序遍历-迭代:&#39;, preorderTraversal2(tree));
+
+console.log(&#39;中序遍历-递归: &#39;, inorderTraversal1(tree));
+
+console.log(&#39;中序遍历-迭代: &#39;, inorderTraversal2(tree));
+
+console.log(&#39;后序遍历-递归: &#39;, postorderTraversal1(tree));
+
+console.log(&#39;后序遍历-迭代: &#39;, postorderTraversal2(tree));
+</code></pre>
+
       
     </div>
     <footer class="article-footer">
       
-        <a data-url="https://blog.cchealthier.com/2022/10/18/binary-tree-traversal/" data-id="clmbeu7qr0007tf9ma0tx943j" class="article-thumbs-up">赞一个(<span class="article-thumbs-up-num">0</span>)</a>
+        <a data-url="https://blog.cchealthier.com/2022/10/18/binary-tree-traversal/" data-id="clmxk7z020007c39m9ikka0ml" class="article-thumbs-up">赞一个(<span class="article-thumbs-up-num">0</span>)</a>
       
-      <!-- <a data-url="https://blog.cchealthier.com/2022/10/18/binary-tree-traversal/" data-id="clmbeu7qr0007tf9ma0tx943j" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2022/10/18/binary-tree-traversal/" data-id="clmxk7z020007c39m9ikka0ml" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -149,6 +345,37 @@
   
     
   <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2023/09/23/react-basic-app-2/">react 基础工程 Ⅱ（@reduxjs/toolkit &amp; @craco/craco &amp; vite）</a>
+          </li>
+        
+          <li>
+            <a href="/2023/08/24/node-module/">NodeJS 的 commonjs、esm 模块使用以及一些字段释义</a>
+          </li>
+        
+          <li>
+            <a href="/2023/08/23/webpack5-background-url/">webpack5 下 background url 图片打包失败</a>
+          </li>
+        
+          <li>
+            <a href="/2023/07/26/node-stream/">NodeJS 里的 stream（流）</a>
+          </li>
+        
+          <li>
+            <a href="/2023/06/07/webpack-modulefederationplugin/">用 webpack ModuleFederationPlugin 搭建微前端</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
     <h3 class="widget-title">分类</h3>
     <div class="widget">
       <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/http%E5%8D%8F%E8%AE%AE/">http协议</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/%E6%9C%8D%E5%8A%A1/">服务</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/%E7%AE%97%E6%B3%95/">算法</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%97%85%E8%A1%8C/">旅行</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%97%85%E8%A1%8C/%E8%AE%B0%E5%BD%95/">记录</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%83%B9%E9%A5%AA/">烹饪</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%83%B9%E9%A5%AA/%E4%BC%A0%E7%BB%9F/">传统</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%9A%8F%E6%83%B3/">随想</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%9A%8F%E6%83%B3/%E5%BF%83%E6%83%85/">心情</a></li></ul></li></ul>
@@ -180,41 +407,10 @@
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/08/">八月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">七月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/06/">六月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/05/">五月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/04/">四月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/03/">三月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/02/">二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">十一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">十月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">九月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/09/">九月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/08/">八月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">七月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/06/">六月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/05/">五月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/04/">四月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/03/">三月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/02/">二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">十一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">十月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">九月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a></li></ul>
     </div>
   </div>
 
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">最新文章</h3>
-    <div class="widget">
-      <ul>
-        
-          <li>
-            <a href="/2023/08/24/node-module/">NodeJS 的 commonjs、esm 模块使用以及一些字段释义</a>
-          </li>
-        
-          <li>
-            <a href="/2023/08/23/webpack5-background-url/">webpack5 下 background url 图片打包失败</a>
-          </li>
-        
-          <li>
-            <a href="/2023/07/26/node-stream/">NodeJS 里的 stream（流）</a>
-          </li>
-        
-          <li>
-            <a href="/2023/06/07/webpack-modulefederationplugin/">用 webpack ModuleFederationPlugin 搭建微前端</a>
-          </li>
-        
-          <li>
-            <a href="/2023/05/31/react-basic-app/">react 基础工程（react-redux &amp; react-router）</a>
-          </li>
-        
-      </ul>
-    </div>
-  </div>
 
   
 </aside>
@@ -232,15 +428,27 @@
     </div>
     <nav id="mobile-nav">
   
-    <a href="/" class="mobile-nav-link">Home</a>
+    <a href="/" class="mobile-nav-link">首页</a>
   
-    <a href="/archives" class="mobile-nav-link">Archives</a>
+    <a href="/archives" class="mobile-nav-link">归档</a>
   
 </nav>
     
 
 <script src="//cdn.staticfile.org/jquery/2.0.3/jquery.min.js"></script>
 <script type="text/javascript" src="https://www.jq22.com/demo/jqueryToast201708310012/js/toast.script.js"></script>
+<script src="/js/highlight.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlightjs-line-numbers.js/2.8.0/highlightjs-line-numbers.min.js"></script>
+<script>
+  $(function(){
+    $('pre code').each((i, el) => {
+    hljs.highlightElement(el);
+  });
+  $('code.hljs').each(function(i, el) {
+     hljs.lineNumbersBlock(el);
+  });
+  }());
+</script>
 
 
   

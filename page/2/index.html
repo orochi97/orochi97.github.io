@@ -23,13 +23,12 @@
     <link rel="icon" href="/favicon.ico">
   
   
-    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
-  
   
 <link rel="stylesheet" href="/css/style.css">
 
   <link href="https://www.jq22.com/demo/jqueryToast201708310012/css/toast.style.css" rel="stylesheet" type="text/css">
-<meta name="generator" content="Hexo 7.0.0-rc1"></head>
+  <link rel="stylesheet" href="/css/highlight/styles/monokai-sublime.min.css">
+<meta name="generator" content="Hexo 6.3.0"></head>
 
 <body>
   <div id="container">
@@ -57,9 +56,9 @@
       <nav id="main-nav">
         <a id="main-nav-toggle" class="nav-icon"></a>
         
-          <a class="main-nav-link" href="/">Home</a>
+          <a class="main-nav-link" href="/">首页</a>
         
-          <a class="main-nav-link" href="/archives">Archives</a>
+          <a class="main-nav-link" href="/archives">归档</a>
         
       </nav>
       <nav id="sub-nav">
@@ -74,6 +73,107 @@
 </header>
       <div class="outer">
         <section id="main">
+  
+    <article id="post-react-basic-app" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2023/05/31/react-basic-app/" class="article-date">
+  <time datetime="2023-05-31T09:06:08.000Z" itemprop="datePublished">2023-05-31</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2023/05/31/react-basic-app/">react 基础工程（react-redux &amp; react-router）</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>vue 已经很熟悉。react 虽然也用过，但是对于整体的搭建还不是很熟。这次就使用 <a target="_blank" rel="noopener" href="https://react-redux.js.org/introduction/getting-started">react-redux(^8.0.5)</a> 和 <a target="_blank" rel="noopener" href="https://reactrouter.com/en/main/start/tutorial#tutorial">react-router(^6.11.2)</a>，<br>结合上次的《<a href="/2023/03/06/fontend-engineering/">从零搭建前端工程</a>》，搭建一个基础的 react 项目。加上一点注释，后面有用到也可以代码直接拷。</p>
+<p><strong>代码仓库：<a target="_blank" rel="noopener" href="https://github.com/orochi97/react-app">github</a>。</strong></p>
+<h2 id="一、Router"><a href="#一、Router" class="headerlink" title="一、Router"></a>一、Router</h2><p>当前最新版本为 v6，据说有些大改动，旧版本请参考《<a target="_blank" rel="noopener" href="https://reactrouter.com/en/main/upgrading/v5">升级指南</a>》。</p>
+<p>路由文件声明：</p>
+<pre><code class="js">import &#123; createBrowserRouter, Navigate &#125; from &#39;react-router-dom&#39;;
+import Home from &#39;@/views/Home&#39;;
+import NotFound from &#39;@/views/NotFound&#39;;
+
+const router = createBrowserRouter([
+  &#123;
+    path: &#39;/home&#39;,
+    element: &lt;Home /&gt;,
+  &#125;,
+  &#123;
+    path: &#39;/game&#39;,
+    // element: &lt;CardGame /&gt;,
+    async lazy() &#123; // 路由页面懒加载，也就是真的访问到再下载，打包也是独立的 js
+      const comp = await import(&#39;@/views/CardGame&#39;);
+      // 这里的 default 是 webpack 的处理，会把 export default 挂在 default 属性上
+      return &#123; Component: comp.default &#125;;
+    &#125;,
+  &#125;,
+  &#123;
+    path: &#39;/demo/:id&#39;,
+    // element: &lt;Demo /&gt;,
+    async lazy() &#123;
+      // 注意：这里要 loader 结果返回，才会渲染组件。也就是会阻塞页面。
+      const comp = await import(&#39;@/views/Demo&#39;);
+      return &#123; Component: comp.default, loader: comp.loader &#125;;
+    &#125;,
+  &#125;,
+  &#123;
+    path: &#39;/&#39;, // v6 的重定向改为 Navigate 组件
+    element: &lt;Navigate to=&#123;&#39;/home&#39;&#125;/&gt;,
+  &#125;,
+  &#123;
+    path: &#39;*&#39;, // 404页面兜底，我觉得改成和上面的一样的重定向处理应该也可以
+    element: &lt;NotFound /&gt;,
+  &#125;,
+]);
+
+export default router;
+</code></pre>
+<p>然后路由声明对象的使用：</p>
+<pre><code class="js">import &#123; RouterProvider &#125; from &#39;react-router-dom&#39;;
+import router from &#39;@/router&#39;;
+
+function App() &#123;
+  return (
+    &lt;RouterProvider router=&#123;router&#125; /&gt;
+  );
+&#125;
+export default App;
+</code></pre>
+        
+          <p class="article-more-link">
+            <a href="/2023/05/31/react-basic-app/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      
+      <!-- <a data-url="https://blog.cchealthier.com/2023/05/31/react-basic-app/" data-id="clmxk7z0e002kc39m7cl069mw" class="article-share-link">分享</a> -->
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" rel="tag">工程化</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
   
     <article id="post-performance-optimize" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
@@ -119,7 +219,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2023/05/19/performance-optimize/" data-id="clmbeu7r10024tf9m6qs76kij" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2023/05/19/performance-optimize/" data-id="clmxk7z0c0024c39mhkzd4k7y" class="article-share-link">分享</a> -->
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%80%A7%E8%83%BD/" rel="tag">性能</a></li></ul>
@@ -170,7 +270,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2023/05/13/file-slice-upload/" data-id="clmbeu7qu000gtf9mfbflh5qq" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2023/05/13/file-slice-upload/" data-id="clmxk7z06000jc39m2mli9wi3" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -208,49 +308,107 @@
       
         <p>其实之前写过一篇相关的《<a href="/2022/03/26/nginx/">记录下 nginx 使用配置</a>》，关于 nginx 的一些稍微复杂的场景。然后发现日常的基础用法，反而记不住。这里就记录一下。</p>
 <p>安装，mac 可以用 brew 下载。windows 的也很简单，去<a target="_blank" rel="noopener" href="http://nginx.org/en/download.html">官网</a>下载个压缩包就行了。至于 linux 的，就网上搜搜啦，我记得也很简单。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 安装</span></span><br><span class="line">brew install nginx</span><br><span class="line"></span><br><span class="line"><span class="comment">#查看</span></span><br><span class="line">brew info nginx</span><br></pre></td></tr></table></figure>
+<pre><code class="bash"># 安装
+brew install nginx
 
+#查看
+brew info nginx
+</code></pre>
 <p>查看信息，可以看到配置文件在 <code>/opt/homebrew/etc/nginx/nginx.conf</code>。</p>
 <p>命令</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 启动</span></span><br><span class="line">nginx</span><br><span class="line"></span><br><span class="line"><span class="comment"># 刷新，改了 nginx.conf 文件，要重新生效</span></span><br><span class="line">nginx -s reload</span><br><span class="line"></span><br><span class="line"><span class="comment"># 关闭</span></span><br><span class="line">nginx -s stop</span><br></pre></td></tr></table></figure>
+<pre><code class="bash"># 启动
+nginx
 
+# 刷新，改了 nginx.conf 文件，要重新生效
+nginx -s reload
+
+# 关闭
+nginx -s stop
+</code></pre>
 <p>默认端口是 8080。所以直接访问本地地址 <code>http://localhost:8080/</code>，看到有显示 <strong>Welcome to nginx!</strong> 字样就是启动成功了。</p>
 <p>其实 nginx.conf 已经写了例子和注释，这里只是稍微补充点。</p>
 <p>root：资源文件夹<br>index： 默认的 index 文件</p>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">location</span> <span class="string">/</span> &#123;</span><br><span class="line">  <span class="string">root</span>   <span class="string">/电脑地址/nginx;</span></span><br><span class="line">  <span class="string">index</span>  <span class="string">index.html</span> <span class="string">index.htm;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
+<pre><code class="yaml">location / &#123;
+  root   /电脑地址/nginx;
+  index  index.html index.htm;
+&#125;
+</code></pre>
 <p>如果要配置不同路由访问不同的文件，<code>root</code> 要改成 <code>alias</code>，比如访问 <code>http://localhost:8080/page</code></p>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">location</span> <span class="string">/page</span> &#123;</span><br><span class="line">  <span class="string">alias</span> <span class="string">/电脑地址/nginx;</span></span><br><span class="line">  <span class="string">index</span> <span class="string">page.html;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
+<pre><code class="yaml">location /page &#123;
+  alias /电脑地址/nginx;
+  index page.html;
+&#125;
+</code></pre>
 <p>当然最好是写个兜底返回。在 vue 或者 react 使用 router 时，兜底返回默认 index.html。不然每增加一个路由就要写多一个配置很麻烦。</p>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">location</span> <span class="string">~*</span> <span class="string">^/*</span> &#123;</span><br><span class="line">  <span class="string">root</span>   <span class="string">/电脑地址/nginx;</span></span><br><span class="line">  <span class="string">try_files</span> <span class="string">$uri</span> <span class="string">$uri/</span> <span class="string">/index.html;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
+<pre><code class="yaml">location ~* ^/* &#123;
+  root   /电脑地址/nginx;
+  try_files $uri $uri/ /index.html;
+&#125;
+</code></pre>
 <p><strong>注意</strong><br>root 与 alias<br>两者区别在于 nginx 如何解释 location 后面的 url</p>
 <p><strong>root:</strong><br>语法：root path<br>默认值：root html<br>配置段：http、server、location、if<br>处理结果：root 路径＋ location 路径</p>
 <p><strong>alias:</strong><br>语法：alias path<br>配置段：location<br>处理结果：使用 alias 路径替换 location 路径</p>
 <p><strong>所以用正则匹配写路径的要注意写好 root 或 alias，不然找不到资源就会出现 403！</strong></p>
 <p>可以写多个server，启动多个服务</p>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">server</span> &#123;</span><br><span class="line">  <span class="string">listen</span>       <span class="number">3000</span><span class="string">;</span></span><br><span class="line">  <span class="string">server_name</span>  <span class="number">0.0</span><span class="number">.0</span><span class="number">.0</span><span class="string">;</span></span><br><span class="line"></span><br><span class="line">  <span class="string">location</span> <span class="string">/</span> &#123;</span><br><span class="line">    <span class="string">root</span>   <span class="string">/电脑地址/nginx;</span></span><br><span class="line">    <span class="string">index</span>  <span class="number">3000.</span><span class="string">html</span> <span class="number">3000.</span><span class="string">htm;</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="yaml">server &#123;
+  listen       3000;
+  server_name  0.0.0.0;
 
+  location / &#123;
+    root   /电脑地址/nginx;
+    index  3000.html 3000.htm;
+  &#125;
+&#125;
+</code></pre>
 <p>代理 ~ 为区分大小写，~*为不区分大小写，其他符号则请查询官网啦。</p>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">location</span> <span class="string">~</span> <span class="string">/api/*</span> &#123;</span><br><span class="line">  <span class="string">proxy_pass</span>   <span class="string">http://localhost:3000;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
+<pre><code class="yaml">location ~ /api/* &#123;
+  proxy_pass   http://localhost:3000;
+&#125;
+</code></pre>
 <p>https服务，声明好证书即可。这里只是把其中证书配置列出来，实际上 nginx.conf 的例子还有挺多配置，一般我们不是运维，应该默认就够了。作为调试用，可能都不需要启动到 https server。</p>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">server</span> &#123;</span><br><span class="line">  <span class="string">ssl_certificate</span>      <span class="string">/电脑地址/nginx/cert/cert.pem;</span></span><br><span class="line">  <span class="string">ssl_certificate_key</span>  <span class="string">/电脑地址/nginx/cert/server.key;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
+<pre><code class="yaml">server &#123;
+  ssl_certificate      /电脑地址/nginx/cert/cert.pem;
+  ssl_certificate_key  /电脑地址/nginx/cert/server.key;
+&#125;
+</code></pre>
 <p>开启文本压缩</p>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">http</span> &#123;</span><br><span class="line">  <span class="string">gzip</span> <span class="string">on;</span></span><br><span class="line">  <span class="comment"># 压缩比例，比例越大，压缩时间越长。默认是1</span></span><br><span class="line">  <span class="string">gzip_comp_level</span> <span class="number">6</span><span class="string">;</span></span><br><span class="line">  <span class="comment"># 哪些文件可以被压缩</span></span><br><span class="line">  <span class="string">gzip_types</span> <span class="string">text/xml</span> <span class="string">text/plain</span> <span class="string">text/css</span> <span class="string">application/javascript</span> <span class="string">application/x-javascript</span> <span class="string">application/rss+xml;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
+<pre><code class="yaml">http &#123;
+  gzip on;
+  # 压缩比例，比例越大，压缩时间越长。默认是1
+  gzip_comp_level 6;
+  # 哪些文件可以被压缩
+  gzip_types text/xml text/plain text/css application/javascript application/x-javascript application/rss+xml;
+&#125;
+</code></pre>
 <p>linux 下支持 https 和 http2，也是网上搜集的，实操了可以，这里记录一下。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 安装依赖</span></span><br><span class="line">yum -y install gcc zlib zlib-devel pcre-devel openssl openssl-devel</span><br><span class="line"><span class="comment"># 解压缩</span></span><br><span class="line">tar -zxvf nginx-1.23.4.tar.gz</span><br><span class="line"><span class="built_in">cd</span> nginx-1.23.4</span><br><span class="line"><span class="comment"># 执行配置</span></span><br><span class="line">./configure --with-http_ssl_module --with-http_v2_module</span><br><span class="line"><span class="comment"># 编译安装</span></span><br><span class="line">make</span><br><span class="line">make install</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 默认安装在</span></span><br><span class="line">/usr/local/nginx</span><br><span class="line"><span class="comment"># 启动</span></span><br><span class="line">/usr/local/nginx/sbin/nginx</span><br><span class="line"><span class="comment"># 刷新配置启动</span></span><br><span class="line">/usr/local/nginx/sbin/nginx -s reload</span><br><span class="line"><span class="comment"># 关闭</span></span><br><span class="line">/usr/local/nginx/sbin/nginx -s stop</span><br><span class="line"><span class="comment"># 修改配置</span></span><br><span class="line">vim  /usr/local/nginx/conf/nginx.conf</span><br></pre></td></tr></table></figure>
+<pre><code class="bash"># 安装依赖
+yum -y install gcc zlib zlib-devel pcre-devel openssl openssl-devel
+# 解压缩
+tar -zxvf nginx-1.23.4.tar.gz
+cd nginx-1.23.4
+# 执行配置
+./configure --with-http_ssl_module --with-http_v2_module
+# 编译安装
+make
+make install
+</code></pre>
+<pre><code class="bash"># 默认安装在
+/usr/local/nginx
+# 启动
+/usr/local/nginx/sbin/nginx
+# 刷新配置启动
+/usr/local/nginx/sbin/nginx -s reload
+# 关闭
+/usr/local/nginx/sbin/nginx -s stop
+# 修改配置
+vim  /usr/local/nginx/conf/nginx.conf
+</code></pre>
 
       
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2023/04/21/nginx-basic/" data-id="clmbeu7qz001ptf9mh58qdh3b" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2023/04/21/nginx-basic/" data-id="clmxk7z0a001pc39mgxcnd5t4" class="article-share-link">分享</a> -->
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/nginx/" rel="tag">nginx</a></li></ul>
@@ -293,7 +451,47 @@
 <hr>
 <h2 id="四、使用-eslint-prettier-让代码健壮和优雅"><a href="#四、使用-eslint-prettier-让代码健壮和优雅" class="headerlink" title="四、使用 eslint + prettier 让代码健壮和优雅"></a>四、使用 eslint + prettier 让代码健壮和优雅</h2><p>到 eslint 了，是不是让人又爱又恨。刚接的时候应该很不爽吧，动辄就来个错，这也错那也错。满屏尽是红 error。其实都是没有配好，也有处理好。eslint 是非常必要的，可以尽早发现一些错误及不合理，也可以统一一些写法，减少冲突等。比如，vue template 的属性顺序，import 的顺序等等。</p>
 <p>循例先上代码示例，在项目根目录创建一份 <code>.eslintrc.js</code>，记得前面有个点的，上书代码：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">module</span>.<span class="property">exports</span> = &#123;</span><br><span class="line">  <span class="attr">env</span>: &#123;</span><br><span class="line">    <span class="comment">// 关键字指定你想启用的环境</span></span><br><span class="line">    <span class="attr">browser</span>: <span class="literal">true</span>,</span><br><span class="line">    <span class="attr">es2021</span>: <span class="literal">true</span>,</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">extends</span>: [</span><br><span class="line">    <span class="comment">// 一个配置文件可以被基础配置中的已启用的规则继承</span></span><br><span class="line">    <span class="string">&#x27;plugin:vue/essential&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;plugin:vue/recommended&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;standard&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;plugin:prettier/recommended&#x27;</span>,</span><br><span class="line">  ],</span><br><span class="line">  <span class="attr">parserOptions</span>: &#123;</span><br><span class="line">    <span class="comment">// 允许你指定你想要支持的 JavaScript 语言选项</span></span><br><span class="line">    <span class="attr">ecmaVersion</span>: <span class="number">12</span>,</span><br><span class="line">    <span class="attr">sourceType</span>: <span class="string">&#x27;module&#x27;</span>,</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">plugins</span>: [</span><br><span class="line">    <span class="comment">// 支持使用第三方插件，检查自定义的语法</span></span><br><span class="line">    <span class="string">&#x27;vue&#x27;</span>, <span class="comment">// 省略了 eslint-plugin- 前缀，插件全称为 eslint-plugin-vue</span></span><br><span class="line">    <span class="string">&#x27;prettier&#x27;</span>,</span><br><span class="line">  ],</span><br><span class="line">  <span class="attr">rules</span>: &#123;</span><br><span class="line">    <span class="comment">// 直接声明的 eslint 规则</span></span><br><span class="line">    <span class="attr">semi</span>: [<span class="string">&#x27;error&#x27;</span>, <span class="string">&#x27;always&#x27;</span>], <span class="comment">// 规则为：需要结束分号，优先级为 error，即抛错</span></span><br><span class="line">    <span class="comment">// 当最后一个元素或属性与闭括号 ] 或 &#125; 在 不同的行时，要求使用拖尾逗号</span></span><br><span class="line">    <span class="comment">// 当在 同一行时，禁止使用拖尾逗号。https://eslint.bootcss.com/docs/rules/comma-dangle</span></span><br><span class="line">    <span class="string">&#x27;comma-dangle&#x27;</span>: [<span class="string">&#x27;error&#x27;</span>, <span class="string">&#x27;always-multiline&#x27;</span>],</span><br><span class="line">    <span class="string">&#x27;no-console&#x27;</span>: [<span class="string">&#x27;error&#x27;</span>, &#123; <span class="attr">allow</span>: [<span class="string">&#x27;info&#x27;</span>, <span class="string">&#x27;warn&#x27;</span>, <span class="string">&#x27;error&#x27;</span>] &#125;],</span><br><span class="line">    <span class="string">&#x27;no-unused-vars&#x27;</span>: [<span class="string">&#x27;error&#x27;</span>, &#123; <span class="attr">args</span>: <span class="string">&#x27;after-used&#x27;</span> &#125;],</span><br><span class="line">    <span class="comment">// &quot;plugin1/rule1&quot;: &quot;error&quot; 配置定义在插件中的一个规则的时候，必须使用 插件名/规则ID 的形式</span></span><br><span class="line">    <span class="string">&#x27;prettier/prettier&#x27;</span>: <span class="string">&#x27;error&#x27;</span>,</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">globals</span>: &#123;</span><br><span class="line">    <span class="attr">var1</span>: <span class="string">&#x27;writable&#x27;</span>, <span class="comment">// 对 var1 这个全局变量允许重写</span></span><br><span class="line">    <span class="attr">var2</span>: <span class="string">&#x27;readonly&#x27;</span>, <span class="comment">// 对 var2 这个全局变量只允许读取</span></span><br><span class="line">    <span class="attr">var3</span>: <span class="string">&#x27;off&#x27;</span>, <span class="comment">// 不支持 var3 这个全局变量</span></span><br><span class="line">  &#125;,</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<pre><code class="js">module.exports = &#123;
+  env: &#123;
+    // 关键字指定你想启用的环境
+    browser: true,
+    es2021: true,
+  &#125;,
+  extends: [
+    // 一个配置文件可以被基础配置中的已启用的规则继承
+    &#39;plugin:vue/essential&#39;,
+    &#39;plugin:vue/recommended&#39;,
+    &#39;standard&#39;,
+    &#39;plugin:prettier/recommended&#39;,
+  ],
+  parserOptions: &#123;
+    // 允许你指定你想要支持的 JavaScript 语言选项
+    ecmaVersion: 12,
+    sourceType: &#39;module&#39;,
+  &#125;,
+  plugins: [
+    // 支持使用第三方插件，检查自定义的语法
+    &#39;vue&#39;, // 省略了 eslint-plugin- 前缀，插件全称为 eslint-plugin-vue
+    &#39;prettier&#39;,
+  ],
+  rules: &#123;
+    // 直接声明的 eslint 规则
+    semi: [&#39;error&#39;, &#39;always&#39;], // 规则为：需要结束分号，优先级为 error，即抛错
+    // 当最后一个元素或属性与闭括号 ] 或 &#125; 在 不同的行时，要求使用拖尾逗号
+    // 当在 同一行时，禁止使用拖尾逗号。https://eslint.bootcss.com/docs/rules/comma-dangle
+    &#39;comma-dangle&#39;: [&#39;error&#39;, &#39;always-multiline&#39;],
+    &#39;no-console&#39;: [&#39;error&#39;, &#123; allow: [&#39;info&#39;, &#39;warn&#39;, &#39;error&#39;] &#125;],
+    &#39;no-unused-vars&#39;: [&#39;error&#39;, &#123; args: &#39;after-used&#39; &#125;],
+    // &quot;plugin1/rule1&quot;: &quot;error&quot; 配置定义在插件中的一个规则的时候，必须使用 插件名/规则ID 的形式
+    &#39;prettier/prettier&#39;: &#39;error&#39;,
+  &#125;,
+  globals: &#123;
+    var1: &#39;writable&#39;, // 对 var1 这个全局变量允许重写
+    var2: &#39;readonly&#39;, // 对 var2 这个全局变量只允许读取
+    var3: &#39;off&#39;, // 不支持 var3 这个全局变量
+  &#125;,
+&#125;;
+</code></pre>
 <p>说一下可能配置较多的。</p>
         
           <p class="article-more-link">
@@ -304,73 +502,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2023/04/21/fontend-engineering-2/" data-id="clmbeu7qu000htf9mdc7kcumy" class="article-share-link">分享</a> -->
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" rel="tag">工程化</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-fontend-engineering" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2023/03/06/fontend-engineering/" class="article-date">
-  <time datetime="2023-03-06T14:22:43.000Z" itemprop="datePublished">2023-03-06</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2023/03/06/fontend-engineering/">从零搭建前端工程（上）</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p><em><strong>文章内容太多，分为上下两部分，这里是上半部分。下半部分在《<a href="/2023/04/21/fontend-engineering-2/">从零搭建前端工程（下）</a>》，此篇的内容有：</strong></em><br><em><strong>1. 使用 webpack 打包（编译）vue</strong></em><br><em><strong>2. 使用 babel 处理 js</strong></em><br><em><strong>3. 使用 webpack-dev-sever 做热调试开发</strong></em></p>
-<hr>
-<hr>
-<p>产生这个的想法来自于某天接手一个项目，eslint 没配好，想着弄好格式化一下，一时之前忘了 cli 命令。<br>想一下，现在我们用的各种框架，都自带了脚手架工具，初始化后基本上不用怎么改造就可以上手开发。导致很多工程化的东西被人忽视了，就容易遇到问题时被卡住或者东找西找翻资料。<br>所以就想着自己从头搭建一个项目看看，遇到的一些配置、工具、命令都给记录下来，方便后面再遇到时候就不会生手了。</p>
-<p>这里我就用 vue 来做基础框架，用 react 也一样，就一些编译工具的差别，大部分是一样的。要做的事有：</p>
-<ol>
-<li>使用 webpack 打包（编译）vue</li>
-<li>使用 babel 处理 js</li>
-<li>使用 webpack-dev-sever 做热调试开发</li>
-<li>使用 eslint + prettier 让代码健壮和优雅</li>
-<li>使用 husky + lint-staged 强制增量各类检查</li>
-<li>使用 @commitlint&#x2F;cli 规范提交信息</li>
-<li>使用 埋点（性能 + 错误） 让项目运行更好</li>
-</ol>
-<h2 id="零、文件初始化"><a href="#零、文件初始化" class="headerlink" title="零、文件初始化"></a>零、文件初始化</h2><p>准备一个和 vue 脚手架创建出来的初始工程一样。有：</p>
-<p>src：项目源代码<br>src&#x2F;main.js：工程入口文件，在这里做 vue 初始化，也是 webpack 的entry<br>src&#x2F;App.vue：一个主页面<br>src&#x2F;components&#x2F;HelloWorld.vue：一个子组件<br>src&#x2F;assets&#x2F;logo.png：一张图片资源<br>src&#x2F;public：公共资源文件夹，这里放的东西依样拷贝进打包里（除了index.html）<br>src&#x2F;public&#x2F;index.html：用来做单页面工程入口 html 的基础模板</p>
-<p>然后初始化一下 npm 环境：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm init -y</span><br></pre></td></tr></table></figure>
-<p><code>-y</code> 就是创建一份默认的，不需要一步步问要填什么。直接生成空信息，有需要自己再去填就好了。</p>
-        
-          <p class="article-more-link">
-            <a href="/2023/03/06/fontend-engineering/#more">Read More</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      
-      <!-- <a data-url="https://blog.cchealthier.com/2023/03/06/fontend-engineering/" data-id="clmbeu7qv000ktf9m84nagh0c" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2023/04/21/fontend-engineering-2/" data-id="clmxk7z05000hc39m68b10gx7" class="article-share-link">分享</a> -->
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" rel="tag">工程化</a></li></ul>
@@ -392,6 +524,37 @@
 </section>
         
           <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2023/09/23/react-basic-app-2/">react 基础工程 Ⅱ（@reduxjs/toolkit &amp; @craco/craco &amp; vite）</a>
+          </li>
+        
+          <li>
+            <a href="/2023/08/24/node-module/">NodeJS 的 commonjs、esm 模块使用以及一些字段释义</a>
+          </li>
+        
+          <li>
+            <a href="/2023/08/23/webpack5-background-url/">webpack5 下 background url 图片打包失败</a>
+          </li>
+        
+          <li>
+            <a href="/2023/07/26/node-stream/">NodeJS 里的 stream（流）</a>
+          </li>
+        
+          <li>
+            <a href="/2023/06/07/webpack-modulefederationplugin/">用 webpack ModuleFederationPlugin 搭建微前端</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
   
     
   <div class="widget-wrap">
@@ -426,41 +589,10 @@
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/08/">八月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">七月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/06/">六月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/05/">五月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/04/">四月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/03/">三月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/02/">二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">十一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">十月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">九月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/09/">九月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/08/">八月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">七月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/06/">六月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/05/">五月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/04/">四月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/03/">三月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/02/">二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">十一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">十月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">九月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a></li></ul>
     </div>
   </div>
 
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">最新文章</h3>
-    <div class="widget">
-      <ul>
-        
-          <li>
-            <a href="/2023/08/24/node-module/">NodeJS 的 commonjs、esm 模块使用以及一些字段释义</a>
-          </li>
-        
-          <li>
-            <a href="/2023/08/23/webpack5-background-url/">webpack5 下 background url 图片打包失败</a>
-          </li>
-        
-          <li>
-            <a href="/2023/07/26/node-stream/">NodeJS 里的 stream（流）</a>
-          </li>
-        
-          <li>
-            <a href="/2023/06/07/webpack-modulefederationplugin/">用 webpack ModuleFederationPlugin 搭建微前端</a>
-          </li>
-        
-          <li>
-            <a href="/2023/05/31/react-basic-app/">react 基础工程（react-redux &amp; react-router）</a>
-          </li>
-        
-      </ul>
-    </div>
-  </div>
 
   
 </aside>
@@ -478,15 +610,27 @@
     </div>
     <nav id="mobile-nav">
   
-    <a href="/" class="mobile-nav-link">Home</a>
+    <a href="/" class="mobile-nav-link">首页</a>
   
-    <a href="/archives" class="mobile-nav-link">Archives</a>
+    <a href="/archives" class="mobile-nav-link">归档</a>
   
 </nav>
     
 
 <script src="//cdn.staticfile.org/jquery/2.0.3/jquery.min.js"></script>
 <script type="text/javascript" src="https://www.jq22.com/demo/jqueryToast201708310012/js/toast.script.js"></script>
+<script src="/js/highlight.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlightjs-line-numbers.js/2.8.0/highlightjs-line-numbers.min.js"></script>
+<script>
+  $(function(){
+    $('pre code').each((i, el) => {
+    hljs.highlightElement(el);
+  });
+  $('code.hljs').each(function(i, el) {
+     hljs.lineNumbersBlock(el);
+  });
+  }());
+</script>
 
 
   

@@ -23,13 +23,12 @@
     <link rel="icon" href="/favicon.ico">
   
   
-    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
-  
   
 <link rel="stylesheet" href="/css/style.css">
 
   <link href="https://www.jq22.com/demo/jqueryToast201708310012/css/toast.style.css" rel="stylesheet" type="text/css">
-<meta name="generator" content="Hexo 7.0.0-rc1"></head>
+  <link rel="stylesheet" href="/css/highlight/styles/monokai-sublime.min.css">
+<meta name="generator" content="Hexo 6.3.0"></head>
 
 <body>
   <div id="container">
@@ -57,9 +56,9 @@
       <nav id="main-nav">
         <a id="main-nav-toggle" class="nav-icon"></a>
         
-          <a class="main-nav-link" href="/">Home</a>
+          <a class="main-nav-link" href="/">首页</a>
         
-          <a class="main-nav-link" href="/archives">Archives</a>
+          <a class="main-nav-link" href="/archives">归档</a>
         
       </nav>
       <nav id="sub-nav">
@@ -74,6 +73,76 @@
 </header>
       <div class="outer">
         <section id="main">
+  
+    <article id="post-hexo-githubpage" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/05/03/hexo-githubpage/" class="article-date">
+  <time datetime="2020-05-03T09:30:27.000Z" itemprop="datePublished">2020-05-03</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/05/03/hexo-githubpage/">Hexo结合Github Page注意点</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>新手记录一些使用 hexo 和 Github Page 搭建个人空间遇到的。<br>其实不难，只是为了找个地方记录下来，方便后面可能的再次搭建。</p>
+<h2 id="一、Github-Page"><a href="#一、Github-Page" class="headerlink" title="一、Github Page"></a>一、Github Page</h2><h3 id="1、使用-username-github-io"><a href="#1、使用-username-github-io" class="headerlink" title="1、使用 username.github.io"></a>1、使用 username.github.io</h3><p>如果想通过 username.github.io 就访问到相应的静态页面，那么必须有一个 username.github.io 名字的项目。<br>username 指的是个人或者组织的名字。如下图第一个红框是用户的名字，则第二个红框处必须一模一样。</p>
+<img src="/2020/05/03/hexo-githubpage/img1.png" class="" title="github_page">
+
+<h3 id="2、使用-username-github-io-x2F-projectName"><a href="#2、使用-username-github-io-x2F-projectName" class="headerlink" title="2、使用 username.github.io&#x2F;projectName"></a>2、使用 username.github.io&#x2F;projectName</h3><p>主的 username.github.io 域名只对应一个项目，其他项目就通过 username.github.io&#x2F;项目名 来访问。</p>
+<h3 id="3、使用自定义域名"><a href="#3、使用自定义域名" class="headerlink" title="3、使用自定义域名"></a>3、使用自定义域名</h3><p>由于是直接在阿里云买的域名，所以对应的阿里云的操作，其他平台不确定。</p>
+<ul>
+<li><p>首先购买一个域名，进入域名服务</p>
+<img src="/2020/05/03/hexo-githubpage/img2.png" class="" title="阿里云域名">
+</li>
+<li><p>添加下图两道记录，1的ip是 ping 2 的域名出来</p>
+<img src="/2020/05/03/hexo-githubpage/img3.png" class="" title="阿里云域名2">
+</li>
+<li><p>进入 github 项目，右上方的 setting，到下图的地方设置相应域名。这个博客域名是买的域名的二级域名。</p>
+<img src="/2020/05/03/hexo-githubpage/img4.png" class="" title="custom_domain"></li>
+</ul>
+<h2 id="二、Hexo"><a href="#二、Hexo" class="headerlink" title="二、Hexo"></a>二、Hexo</h2><h3 id="1、设置-config-yml"><a href="#1、设置-config-yml" class="headerlink" title="1、设置_config.yml"></a>1、设置_config.yml</h3><ul>
+<li>打开 hexo 项目下的 _config.yml，进行下图设置，git的地址就是使用的工程地址。<img src="/2020/05/03/hexo-githubpage/img5.png" class="" title="_config.yml"></li>
+</ul>
+<h3 id="2、CNAME"><a href="#2、CNAME" class="headerlink" title="2、CNAME"></a>2、CNAME</h3><ul>
+<li><p>上面的工程 setting 部分，实际上就是在工程根目录创建了一份CNAME名字的文件，没有后缀的文件类型。里面的内容为设置的那个二级域名，也就是原来是访问 username.github.io 地址的，就会跳到自定义的域名。</p>
+</li>
+<li><p>为了防止每次部署都会清除掉该文件，从而要重复设置，可以将 CNAME 文件防止到 source 文件里，到时会依样拷贝过去。</p>
+</li>
+</ul>
+<hr>
+<p>相关传送门：<br><a target="_blank" rel="noopener" href="https://hexo.io/zh-cn/">Hexo</a><br><a target="_blank" rel="noopener" href="https://pages.github.com/">Github Page</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      
+      <!-- <a data-url="https://blog.cchealthier.com/2020/05/03/hexo-githubpage/" data-id="clmxk7z07000qc39m1di49n0w" class="article-share-link">分享</a> -->
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/hexo/" rel="tag">hexo</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
   
     <article id="post-hello-world" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
@@ -98,24 +167,24 @@
     <div class="article-entry" itemprop="articleBody">
       
         <p>Welcome to <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a target="_blank" rel="noopener" href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a target="_blank" rel="noopener" href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
-
+<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><pre><code class="bash">$ hexo new &quot;My New Post&quot;
+</code></pre>
 <p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-
+<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><pre><code class="bash">$ hexo server
+</code></pre>
 <p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-
+<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><pre><code class="bash">$ hexo generate
+</code></pre>
 <p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
+<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><pre><code class="bash">$ hexo deploy
+</code></pre>
 <p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
 
       
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2020/05/03/hello-world/" data-id="clmbeu7qv000ntf9mcdzsg08z" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2020/05/03/hello-world/" data-id="clmxk7z06000oc39mbqdo9bru" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -135,6 +204,37 @@
 </section>
         
           <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2023/09/23/react-basic-app-2/">react 基础工程 Ⅱ（@reduxjs/toolkit &amp; @craco/craco &amp; vite）</a>
+          </li>
+        
+          <li>
+            <a href="/2023/08/24/node-module/">NodeJS 的 commonjs、esm 模块使用以及一些字段释义</a>
+          </li>
+        
+          <li>
+            <a href="/2023/08/23/webpack5-background-url/">webpack5 下 background url 图片打包失败</a>
+          </li>
+        
+          <li>
+            <a href="/2023/07/26/node-stream/">NodeJS 里的 stream（流）</a>
+          </li>
+        
+          <li>
+            <a href="/2023/06/07/webpack-modulefederationplugin/">用 webpack ModuleFederationPlugin 搭建微前端</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
   
     
   <div class="widget-wrap">
@@ -169,41 +269,10 @@
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/08/">八月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">七月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/06/">六月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/05/">五月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/04/">四月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/03/">三月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/02/">二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">十一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">十月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">九月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/09/">九月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/08/">八月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">七月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/06/">六月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/05/">五月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/04/">四月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/03/">三月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/02/">二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">十一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">十月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">九月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a></li></ul>
     </div>
   </div>
 
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">最新文章</h3>
-    <div class="widget">
-      <ul>
-        
-          <li>
-            <a href="/2023/08/24/node-module/">NodeJS 的 commonjs、esm 模块使用以及一些字段释义</a>
-          </li>
-        
-          <li>
-            <a href="/2023/08/23/webpack5-background-url/">webpack5 下 background url 图片打包失败</a>
-          </li>
-        
-          <li>
-            <a href="/2023/07/26/node-stream/">NodeJS 里的 stream（流）</a>
-          </li>
-        
-          <li>
-            <a href="/2023/06/07/webpack-modulefederationplugin/">用 webpack ModuleFederationPlugin 搭建微前端</a>
-          </li>
-        
-          <li>
-            <a href="/2023/05/31/react-basic-app/">react 基础工程（react-redux &amp; react-router）</a>
-          </li>
-        
-      </ul>
-    </div>
-  </div>
 
   
 </aside>
@@ -221,15 +290,27 @@
     </div>
     <nav id="mobile-nav">
   
-    <a href="/" class="mobile-nav-link">Home</a>
+    <a href="/" class="mobile-nav-link">首页</a>
   
-    <a href="/archives" class="mobile-nav-link">Archives</a>
+    <a href="/archives" class="mobile-nav-link">归档</a>
   
 </nav>
     
 
 <script src="//cdn.staticfile.org/jquery/2.0.3/jquery.min.js"></script>
 <script type="text/javascript" src="https://www.jq22.com/demo/jqueryToast201708310012/js/toast.script.js"></script>
+<script src="/js/highlight.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlightjs-line-numbers.js/2.8.0/highlightjs-line-numbers.min.js"></script>
+<script>
+  $(function(){
+    $('pre code').each((i, el) => {
+    hljs.highlightElement(el);
+  });
+  $('code.hljs').each(function(i, el) {
+     hljs.lineNumbersBlock(el);
+  });
+  }());
+</script>
 
 
   

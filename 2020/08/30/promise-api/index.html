@@ -25,13 +25,12 @@
     <link rel="icon" href="/favicon.ico">
   
   
-    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
-  
   
 <link rel="stylesheet" href="/css/style.css">
 
   <link href="https://www.jq22.com/demo/jqueryToast201708310012/css/toast.style.css" rel="stylesheet" type="text/css">
-<meta name="generator" content="Hexo 7.0.0-rc1"></head>
+  <link rel="stylesheet" href="/css/highlight/styles/monokai-sublime.min.css">
+<meta name="generator" content="Hexo 6.3.0"></head>
 
 <body>
   <div id="container">
@@ -59,9 +58,9 @@
       <nav id="main-nav">
         <a id="main-nav-toggle" class="nav-icon"></a>
         
-          <a class="main-nav-link" href="/">Home</a>
+          <a class="main-nav-link" href="/">首页</a>
         
-          <a class="main-nav-link" href="/archives">Archives</a>
+          <a class="main-nav-link" href="/archives">归档</a>
         
       </nav>
       <nav id="sub-nav">
@@ -105,20 +104,132 @@
 <p><strong>Promise.all：</strong><br>参数是一个数组，数组元素是各个Promise。要数组里面所有的 Promise 都返回成功，那这个 Promise.all 的结果才会是成功。成功返回数组，就是元素成功的结果集合。失败的话返回单值，是元素里第一个失败的结果。</p>
 <p><strong>Promise.allSettled：</strong><br>跟 Promise.all 参数一样，是一个数组，数组元素是各个Promise。不同的是这个不会因为数组元素的成败来返回成功失败。返回的是个数组，记录着元素 Promise 的各个结果，包括成败。</p>
 <p>先准备四个小函数，然后再混起来用：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">PromiseSuccess0</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">Promise</span>(<span class="function">(<span class="params">resolve</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="built_in">setTimeout</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">      <span class="title function_">resolve</span>(<span class="string">&#x27;PromiseSuccess0&#x27;</span>)</span><br><span class="line">    &#125;, <span class="number">0</span>)</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">function</span> <span class="title function_">PromiseSuccess1000</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">Promise</span>(<span class="function">(<span class="params">resolve</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="built_in">setTimeout</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">      <span class="title function_">resolve</span>(<span class="string">&#x27;PromiseSuccess1000&#x27;</span>)</span><br><span class="line">    &#125;, <span class="number">1000</span>)</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">function</span> <span class="title function_">PromiseError2000</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">Promise</span>(<span class="function">(<span class="params">resolve, reject</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="built_in">setTimeout</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">      <span class="title function_">reject</span>(<span class="string">&#x27;PromiseError2000&#x27;</span>)</span><br><span class="line">    &#125;, <span class="number">2000</span>)</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">function</span> <span class="title function_">PromiseError3000</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">Promise</span>(<span class="function">(<span class="params">resolve, reject</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="built_in">setTimeout</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">      <span class="title function_">reject</span>(<span class="string">&#x27;PromiseError3000&#x27;</span>)</span><br><span class="line">    &#125;, <span class="number">3000</span>)</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="title class_">Promise</span>.<span class="title function_">all</span>([<span class="title class_">PromiseSuccess0</span>(), <span class="title class_">PromiseError3000</span>(), <span class="title class_">PromiseError2000</span>()])</span><br><span class="line"> .<span class="title function_">then</span>(<span class="function">(<span class="params">data</span>) =&gt;</span> &#123;</span><br><span class="line">   <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;success all-1: &#x27;</span>, data)</span><br><span class="line"> &#125;)</span><br><span class="line"> .<span class="title function_">catch</span>(<span class="function">(<span class="params">error</span>) =&gt;</span> &#123;</span><br><span class="line">   <span class="variable language_">console</span>.<span class="title function_">error</span>(<span class="string">&#x27;error all-1: &#x27;</span>, error)</span><br><span class="line">    <span class="comment">// error all-1:  PromiseError2000</span></span><br><span class="line"> &#125;)</span><br><span class="line"></span><br><span class="line"><span class="title class_">Promise</span>.<span class="title function_">all</span>([<span class="title class_">PromiseSuccess0</span>(), <span class="title class_">PromiseSuccess1000</span>()])</span><br><span class="line"> .<span class="title function_">then</span>(<span class="function">(<span class="params">data</span>) =&gt;</span> &#123;</span><br><span class="line">   <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;success all-2: &#x27;</span>, data)</span><br><span class="line">    <span class="comment">// success all-2:  (2) [&quot;PromiseSuccess0&quot;, &quot;PromiseSuccess1000&quot;]</span></span><br><span class="line"> &#125;)</span><br><span class="line"> .<span class="title function_">catch</span>(<span class="function">(<span class="params">error</span>) =&gt;</span> &#123;</span><br><span class="line">   <span class="variable language_">console</span>.<span class="title function_">error</span>(<span class="string">&#x27;error all-2: &#x27;</span>, error)</span><br><span class="line"> &#125;)</span><br><span class="line"></span><br><span class="line"><span class="title class_">Promise</span>.<span class="title function_">allSettled</span>([<span class="title class_">PromiseError2000</span>(), <span class="title class_">PromiseSuccess1000</span>()])</span><br><span class="line">  .<span class="title function_">then</span>(<span class="function">(<span class="params">data</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;success allSettled: &#x27;</span>, data)</span><br><span class="line">    <span class="comment">// success allSettled:  </span></span><br><span class="line">    <span class="comment">// (2) [&#123;…&#125;, &#123;…&#125;]</span></span><br><span class="line">    <span class="comment">// 0: &#123;status: &quot;rejected&quot;, reason: &quot;PromiseError2000&quot;&#125;</span></span><br><span class="line">    <span class="comment">// 1: &#123;status: &quot;fulfilled&quot;, value: &quot;PromiseSuccess1000&quot;&#125;</span></span><br><span class="line">  &#125;)</span><br><span class="line">  .<span class="title function_">catch</span>(<span class="function">(<span class="params">error</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">error</span>(<span class="string">&#x27;error allSettled: &#x27;</span>, error)</span><br><span class="line">  &#125;)</span><br></pre></td></tr></table></figure>
+<pre><code class="js">function PromiseSuccess0() &#123;
+  return new Promise((resolve) =&gt; &#123;
+    setTimeout(() =&gt; &#123;
+      resolve(&#39;PromiseSuccess0&#39;)
+    &#125;, 0)
+  &#125;)
+&#125;
+function PromiseSuccess1000() &#123;
+  return new Promise((resolve) =&gt; &#123;
+    setTimeout(() =&gt; &#123;
+      resolve(&#39;PromiseSuccess1000&#39;)
+    &#125;, 1000)
+  &#125;)
+&#125;
+function PromiseError2000() &#123;
+  return new Promise((resolve, reject) =&gt; &#123;
+    setTimeout(() =&gt; &#123;
+      reject(&#39;PromiseError2000&#39;)
+    &#125;, 2000)
+  &#125;)
+&#125;
+function PromiseError3000() &#123;
+  return new Promise((resolve, reject) =&gt; &#123;
+    setTimeout(() =&gt; &#123;
+      reject(&#39;PromiseError3000&#39;)
+    &#125;, 3000)
+  &#125;)
+&#125;
 
+Promise.all([PromiseSuccess0(), PromiseError3000(), PromiseError2000()])
+ .then((data) =&gt; &#123;
+   console.log(&#39;success all-1: &#39;, data)
+ &#125;)
+ .catch((error) =&gt; &#123;
+   console.error(&#39;error all-1: &#39;, error)
+    // error all-1:  PromiseError2000
+ &#125;)
+
+Promise.all([PromiseSuccess0(), PromiseSuccess1000()])
+ .then((data) =&gt; &#123;
+   console.log(&#39;success all-2: &#39;, data)
+    // success all-2:  (2) [&quot;PromiseSuccess0&quot;, &quot;PromiseSuccess1000&quot;]
+ &#125;)
+ .catch((error) =&gt; &#123;
+   console.error(&#39;error all-2: &#39;, error)
+ &#125;)
+
+Promise.allSettled([PromiseError2000(), PromiseSuccess1000()])
+  .then((data) =&gt; &#123;
+    console.log(&#39;success allSettled: &#39;, data)
+    // success allSettled:  
+    // (2) [&#123;…&#125;, &#123;…&#125;]
+    // 0: &#123;status: &quot;rejected&quot;, reason: &quot;PromiseError2000&quot;&#125;
+    // 1: &#123;status: &quot;fulfilled&quot;, value: &quot;PromiseSuccess1000&quot;&#125;
+  &#125;)
+  .catch((error) =&gt; &#123;
+    console.error(&#39;error allSettled: &#39;, error)
+  &#125;)
+</code></pre>
 <p><strong>Promise.race</strong><br>顾名思义，竞赛。参数依然是个元素为 Promise 的数组。会返回第一个跑完的元素结果。话不多说，上码：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">load1000</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">Promise</span>(<span class="function">(<span class="params">resolve</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="built_in">setTimeout</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">      <span class="title function_">resolve</span>(<span class="string">&#x27;load1000&#x27;</span>)</span><br><span class="line">    &#125;, <span class="number">1000</span>)</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">function</span> <span class="title function_">load3000</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">Promise</span>(<span class="function">(<span class="params">resolve</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="built_in">setTimeout</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">      <span class="title function_">resolve</span>(<span class="string">&#x27;load3000&#x27;</span>)</span><br><span class="line">    &#125;, <span class="number">3000</span>)</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">function</span> <span class="title function_">errorTimer</span>(<span class="params"></span>) &#123;</span><br><span class="line"> <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">Promise</span>(<span class="function">(<span class="params">resolve, reject</span>) =&gt;</span> &#123;</span><br><span class="line">   <span class="built_in">setTimeout</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">     <span class="title function_">reject</span>(<span class="keyword">new</span> <span class="title class_">Error</span>(<span class="string">&#x27;timeout&#x27;</span>))</span><br><span class="line">   &#125;, <span class="number">2000</span>)</span><br><span class="line"> &#125;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="title class_">Promise</span>.<span class="title function_">race</span>([<span class="title function_">load1000</span>(), <span class="title function_">errorTimer</span>()])</span><br><span class="line"> .<span class="title function_">then</span>(<span class="function">(<span class="params">data</span>) =&gt;</span> &#123;</span><br><span class="line">   <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;success race-1: &#x27;</span>, data)</span><br><span class="line">   <span class="comment">// success race-1:  load1000</span></span><br><span class="line"> &#125;)</span><br><span class="line"> .<span class="title function_">catch</span>(<span class="function">(<span class="params">error</span>) =&gt;</span> &#123;</span><br><span class="line">   <span class="variable language_">console</span>.<span class="title function_">error</span>(<span class="string">&#x27;error race-1: &#x27;</span>, error)</span><br><span class="line"> &#125;)</span><br><span class="line"></span><br><span class="line"><span class="title class_">Promise</span>.<span class="title function_">race</span>([<span class="title function_">load3000</span>(), <span class="title function_">errorTimer</span>()])</span><br><span class="line"> .<span class="title function_">then</span>(<span class="function">(<span class="params">data</span>) =&gt;</span> &#123;</span><br><span class="line">   <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;success race-2: &#x27;</span>, data)</span><br><span class="line"> &#125;)</span><br><span class="line"> .<span class="title function_">catch</span>(<span class="function">(<span class="params">error</span>) =&gt;</span> &#123;</span><br><span class="line">   <span class="variable language_">console</span>.<span class="title function_">error</span>(<span class="string">&#x27;error race-2: &#x27;</span>, error)</span><br><span class="line">   <span class="comment">// error race-2:  Error: timeout</span></span><br><span class="line"> &#125;)</span><br></pre></td></tr></table></figure>
+<pre><code class="js">function load1000() &#123;
+  return new Promise((resolve) =&gt; &#123;
+    setTimeout(() =&gt; &#123;
+      resolve(&#39;load1000&#39;)
+    &#125;, 1000)
+  &#125;)
+&#125;
+function load3000() &#123;
+  return new Promise((resolve) =&gt; &#123;
+    setTimeout(() =&gt; &#123;
+      resolve(&#39;load3000&#39;)
+    &#125;, 3000)
+  &#125;)
+&#125;
+function errorTimer() &#123;
+ return new Promise((resolve, reject) =&gt; &#123;
+   setTimeout(() =&gt; &#123;
+     reject(new Error(&#39;timeout&#39;))
+   &#125;, 2000)
+ &#125;)
+&#125;
+
+Promise.race([load1000(), errorTimer()])
+ .then((data) =&gt; &#123;
+   console.log(&#39;success race-1: &#39;, data)
+   // success race-1:  load1000
+ &#125;)
+ .catch((error) =&gt; &#123;
+   console.error(&#39;error race-1: &#39;, error)
+ &#125;)
+
+Promise.race([load3000(), errorTimer()])
+ .then((data) =&gt; &#123;
+   console.log(&#39;success race-2: &#39;, data)
+ &#125;)
+ .catch((error) =&gt; &#123;
+   console.error(&#39;error race-2: &#39;, error)
+   // error race-2:  Error: timeout
+ &#125;)
+</code></pre>
 <p>具体的使用场景可以是，比如下载个东西，给其设定个时间限定，超过这个时间就报错。稍微封装一下：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">addTimer</span>(<span class="params">fn, time</span>) &#123;</span><br><span class="line"> <span class="keyword">const</span> errorTimer = <span class="keyword">new</span> <span class="title class_">Promise</span>(<span class="function">(<span class="params">resolve, reject</span>) =&gt;</span> &#123;</span><br><span class="line">   <span class="built_in">setTimeout</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">     <span class="title function_">reject</span>(<span class="keyword">new</span> <span class="title class_">Error</span>(<span class="string">&#x27;timeout&#x27;</span>))</span><br><span class="line">   &#125;, time)</span><br><span class="line"> &#125;)</span><br><span class="line"> <span class="keyword">return</span> <span class="title class_">Promise</span>.<span class="title function_">race</span>([<span class="title function_">fn</span>(), errorTimer])</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="title function_">addTimer</span>(load1000, <span class="number">2000</span>)</span><br><span class="line"> .<span class="title function_">then</span>(<span class="function">(<span class="params">data</span>) =&gt;</span> &#123;</span><br><span class="line">   <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;success addTimer: &#x27;</span>, data)</span><br><span class="line"> &#125;)</span><br><span class="line"> .<span class="title function_">catch</span>(<span class="function">(<span class="params">error</span>) =&gt;</span> &#123;</span><br><span class="line">   <span class="variable language_">console</span>.<span class="title function_">error</span>(<span class="string">&#x27;error addTimer: &#x27;</span>, error)</span><br><span class="line"> &#125;)</span><br></pre></td></tr></table></figure>
+<pre><code class="js">function addTimer(fn, time) &#123;
+ const errorTimer = new Promise((resolve, reject) =&gt; &#123;
+   setTimeout(() =&gt; &#123;
+     reject(new Error(&#39;timeout&#39;))
+   &#125;, time)
+ &#125;)
+ return Promise.race([fn(), errorTimer])
+&#125;
+
+addTimer(load1000, 2000)
+ .then((data) =&gt; &#123;
+   console.log(&#39;success addTimer: &#39;, data)
+ &#125;)
+ .catch((error) =&gt; &#123;
+   console.error(&#39;error addTimer: &#39;, error)
+ &#125;)
+</code></pre>
 
       
     </div>
     <footer class="article-footer">
       
-        <a data-url="https://blog.cchealthier.com/2020/08/30/promise-api/" data-id="clmbeu7r20028tf9m2bth8qj0" class="article-thumbs-up">赞一个(<span class="article-thumbs-up-num">0</span>)</a>
+        <a data-url="https://blog.cchealthier.com/2020/08/30/promise-api/" data-id="clmxk7z0d0028c39mdltr658z" class="article-thumbs-up">赞一个(<span class="article-thumbs-up-num">0</span>)</a>
       
-      <!-- <a data-url="https://blog.cchealthier.com/2020/08/30/promise-api/" data-id="clmbeu7r20028tf9m2bth8qj0" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2020/08/30/promise-api/" data-id="clmxk7z0d0028c39mdltr658z" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -153,6 +264,37 @@
   
     
   <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2023/09/23/react-basic-app-2/">react 基础工程 Ⅱ（@reduxjs/toolkit &amp; @craco/craco &amp; vite）</a>
+          </li>
+        
+          <li>
+            <a href="/2023/08/24/node-module/">NodeJS 的 commonjs、esm 模块使用以及一些字段释义</a>
+          </li>
+        
+          <li>
+            <a href="/2023/08/23/webpack5-background-url/">webpack5 下 background url 图片打包失败</a>
+          </li>
+        
+          <li>
+            <a href="/2023/07/26/node-stream/">NodeJS 里的 stream（流）</a>
+          </li>
+        
+          <li>
+            <a href="/2023/06/07/webpack-modulefederationplugin/">用 webpack ModuleFederationPlugin 搭建微前端</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
     <h3 class="widget-title">分类</h3>
     <div class="widget">
       <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/http%E5%8D%8F%E8%AE%AE/">http协议</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/%E6%9C%8D%E5%8A%A1/">服务</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/%E7%AE%97%E6%B3%95/">算法</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%97%85%E8%A1%8C/">旅行</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%97%85%E8%A1%8C/%E8%AE%B0%E5%BD%95/">记录</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%83%B9%E9%A5%AA/">烹饪</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%83%B9%E9%A5%AA/%E4%BC%A0%E7%BB%9F/">传统</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%9A%8F%E6%83%B3/">随想</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%9A%8F%E6%83%B3/%E5%BF%83%E6%83%85/">心情</a></li></ul></li></ul>
@@ -184,41 +326,10 @@
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/08/">八月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">七月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/06/">六月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/05/">五月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/04/">四月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/03/">三月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/02/">二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">十一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">十月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">九月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/09/">九月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/08/">八月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">七月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/06/">六月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/05/">五月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/04/">四月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/03/">三月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/02/">二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">十一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">十月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">九月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a></li></ul>
     </div>
   </div>
 
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">最新文章</h3>
-    <div class="widget">
-      <ul>
-        
-          <li>
-            <a href="/2023/08/24/node-module/">NodeJS 的 commonjs、esm 模块使用以及一些字段释义</a>
-          </li>
-        
-          <li>
-            <a href="/2023/08/23/webpack5-background-url/">webpack5 下 background url 图片打包失败</a>
-          </li>
-        
-          <li>
-            <a href="/2023/07/26/node-stream/">NodeJS 里的 stream（流）</a>
-          </li>
-        
-          <li>
-            <a href="/2023/06/07/webpack-modulefederationplugin/">用 webpack ModuleFederationPlugin 搭建微前端</a>
-          </li>
-        
-          <li>
-            <a href="/2023/05/31/react-basic-app/">react 基础工程（react-redux &amp; react-router）</a>
-          </li>
-        
-      </ul>
-    </div>
-  </div>
 
   
 </aside>
@@ -236,15 +347,27 @@
     </div>
     <nav id="mobile-nav">
   
-    <a href="/" class="mobile-nav-link">Home</a>
+    <a href="/" class="mobile-nav-link">首页</a>
   
-    <a href="/archives" class="mobile-nav-link">Archives</a>
+    <a href="/archives" class="mobile-nav-link">归档</a>
   
 </nav>
     
 
 <script src="//cdn.staticfile.org/jquery/2.0.3/jquery.min.js"></script>
 <script type="text/javascript" src="https://www.jq22.com/demo/jqueryToast201708310012/js/toast.script.js"></script>
+<script src="/js/highlight.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlightjs-line-numbers.js/2.8.0/highlightjs-line-numbers.min.js"></script>
+<script>
+  $(function(){
+    $('pre code').each((i, el) => {
+    hljs.highlightElement(el);
+  });
+  $('code.hljs').each(function(i, el) {
+     hljs.lineNumbersBlock(el);
+  });
+  }());
+</script>
 
 
   

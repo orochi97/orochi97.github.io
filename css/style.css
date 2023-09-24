@@ -720,7 +720,12 @@ body {
   transition: color 0.2s;
 }
 a.article-title:hover {
-  color: #258fb8;
+  background-image: -webkit-linear-gradient(left, #f00, #ffa500, #ff0, #008000, #00f, #4b0082, #ee82ee);
+  background-image: -moz-linear-gradient(left, #f00, #ffa500, #ff0, #008000, #00f, #4b0082, #ee82ee);
+  background-image: -ms-linear-gradient(left, #f00, #ffa500, #ff0, #008000, #00f, #4b0082, #ee82ee);
+  background-image: linear-gradient(to right, #f00, #ffa500, #ff0, #008000, #00f, #4b0082, #ee82ee);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 .article-entry {
   color: #555;
@@ -1179,6 +1184,7 @@ a.article-title:hover {
 .archive-article-inner {
   padding: 10px;
   margin-bottom: 15px;
+  background-color: #eee;
 }
 .archive-article-title {
   text-decoration: none;
@@ -1190,8 +1196,13 @@ a.article-title:hover {
   transition: color 0.2s;
   line-height: 1.6em;
 }
-.archive-article-title:hover {
-  color: #258fb8;
+a.archive-article-title:hover {
+  background-image: -webkit-linear-gradient(left, #f00, #ffa500, #ff0, #008000, #00f, #4b0082, #ee82ee);
+  background-image: -moz-linear-gradient(left, #f00, #ffa500, #ff0, #008000, #00f, #4b0082, #ee82ee);
+  background-image: -ms-linear-gradient(left, #f00, #ffa500, #ff0, #008000, #00f, #4b0082, #ee82ee);
+  background-image: linear-gradient(to right, #f00, #ffa500, #ff0, #008000, #00f, #4b0082, #ee82ee);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 .archive-article-footer {
   margin-top: 1em;

@@ -9,12 +9,12 @@
   
   <title>判断变量类型的几个方法 | 凝雪密境</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="前置 12function Person() &amp;#123;&amp;#125;const p &#x3D; new Person()  一、 typeof12345678910111213141516console.log(typeof []) &#x2F;&#x2F; objectconsole.log(typeof &amp;#123;&amp;#125;) &#x2F;&#x2F; objectconsole.log(typeof function()&amp;#123;">
+  <meta name="description" content="前置 function Person() &amp;#123;&amp;#125; const p &#x3D; new Person()  一、 typeofconsole.log(typeof []) &#x2F;&#x2F; object console.log(typeof &amp;#123;&amp;#125;) &#x2F;&#x2F; object console.log(typeof function()&amp;#123;&amp;#125;) &#x2F;&#x2F; function co">
 <meta property="og:type" content="article">
 <meta property="og:title" content="判断变量类型的几个方法">
 <meta property="og:url" content="https://blog.cchealthier.com/2020/07/25/variable-type/index.html">
 <meta property="og:site_name" content="凝雪密境">
-<meta property="og:description" content="前置 12function Person() &amp;#123;&amp;#125;const p &#x3D; new Person()  一、 typeof12345678910111213141516console.log(typeof []) &#x2F;&#x2F; objectconsole.log(typeof &amp;#123;&amp;#125;) &#x2F;&#x2F; objectconsole.log(typeof function()&amp;#123;">
+<meta property="og:description" content="前置 function Person() &amp;#123;&amp;#125; const p &#x3D; new Person()  一、 typeofconsole.log(typeof []) &#x2F;&#x2F; object console.log(typeof &amp;#123;&amp;#125;) &#x2F;&#x2F; object console.log(typeof function()&amp;#123;&amp;#125;) &#x2F;&#x2F; function co">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://blog.cchealthier.com/2020/07/25/variable-type/typeof.PNG">
 <meta property="og:image" content="https://blog.cchealthier.com/2020/07/25/variable-type/typeof2.PNG">
@@ -29,13 +29,12 @@
     <link rel="icon" href="/favicon.ico">
   
   
-    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
-  
   
 <link rel="stylesheet" href="/css/style.css">
 
   <link href="https://www.jq22.com/demo/jqueryToast201708310012/css/toast.style.css" rel="stylesheet" type="text/css">
-<meta name="generator" content="Hexo 7.0.0-rc1"></head>
+  <link rel="stylesheet" href="/css/highlight/styles/monokai-sublime.min.css">
+<meta name="generator" content="Hexo 6.3.0"></head>
 
 <body>
   <div id="container">
@@ -63,9 +62,9 @@
       <nav id="main-nav">
         <a id="main-nav-toggle" class="nav-icon"></a>
         
-          <a class="main-nav-link" href="/">Home</a>
+          <a class="main-nav-link" href="/">首页</a>
         
-          <a class="main-nav-link" href="/archives">Archives</a>
+          <a class="main-nav-link" href="/archives">归档</a>
         
       </nav>
       <nav id="sub-nav">
@@ -106,10 +105,26 @@
     <div class="article-entry" itemprop="articleBody">
       
         <p>前置</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">Person</span>(<span class="params"></span>) &#123;&#125;</span><br><span class="line"><span class="keyword">const</span> p = <span class="keyword">new</span> <span class="title class_">Person</span>()</span><br></pre></td></tr></table></figure>
-
-<h2 id="一、-typeof"><a href="#一、-typeof" class="headerlink" title="一、 typeof"></a>一、 typeof</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="keyword">typeof</span> []) <span class="comment">// object</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="keyword">typeof</span> &#123;&#125;) <span class="comment">// object</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="keyword">typeof</span> <span class="keyword">function</span>(<span class="params"></span>)&#123;&#125;) <span class="comment">// function</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="keyword">typeof</span> <span class="string">&#x27;&#x27;</span>) <span class="comment">// string</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="keyword">typeof</span> <span class="number">1</span>) <span class="comment">// number</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="keyword">typeof</span> <span class="literal">true</span>) <span class="comment">// boolean</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="keyword">typeof</span> <span class="literal">undefined</span>) <span class="comment">// undefined</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="keyword">typeof</span> <span class="literal">null</span>) <span class="comment">// object</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="keyword">typeof</span> <span class="title class_">NaN</span>) <span class="comment">// number</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="keyword">typeof</span> /abc/) <span class="comment">// object</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="keyword">typeof</span> <span class="title class_">Symbol</span>()) <span class="comment">// symbol</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="keyword">typeof</span> <span class="keyword">new</span> <span class="title class_">Date</span>()) <span class="comment">// object</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="keyword">typeof</span> <span class="keyword">new</span> <span class="title class_">Map</span>()) <span class="comment">// object</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="keyword">typeof</span> <span class="keyword">new</span> <span class="title class_">Set</span>()) <span class="comment">// object</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="keyword">typeof</span> <span class="title class_">Person</span>) <span class="comment">// function</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="keyword">typeof</span> p) <span class="comment">// object</span></span><br></pre></td></tr></table></figure>
-
+<pre><code class="js">function Person() &#123;&#125;
+const p = new Person()
+</code></pre>
+<h2 id="一、-typeof"><a href="#一、-typeof" class="headerlink" title="一、 typeof"></a>一、 typeof</h2><pre><code class="js">console.log(typeof []) // object
+console.log(typeof &#123;&#125;) // object
+console.log(typeof function()&#123;&#125;) // function
+console.log(typeof &#39;&#39;) // string
+console.log(typeof 1) // number
+console.log(typeof true) // boolean
+console.log(typeof undefined) // undefined
+console.log(typeof null) // object
+console.log(typeof NaN) // number
+console.log(typeof /abc/) // object
+console.log(typeof Symbol()) // symbol
+console.log(typeof new Date()) // object
+console.log(typeof new Map()) // object
+console.log(typeof new Set()) // object
+console.log(typeof Person) // function
+console.log(typeof p) // object
+</code></pre>
 <p>区分不了更精细的对象，比如数组和后面三个也被判断为对象。虽说数组和函数也是对象的一种。但函数都有自己的姓名。<br>参考了 <a target="_blank" rel="noopener" href="http://www.w3help.org/zh-cn/causes/SD9028">w3help</a> 上的资料来看，标准如此：</p>
 <img src="/2020/07/25/variable-type/typeof.PNG" class="" title="typeof">
 
@@ -119,28 +134,107 @@
 <p><strong>PS：</strong><br>__native object：__原生对象，ECMAScript 实现中，并非由宿主环境，而是完全由本规范定义其语义的对象。这些引用类型在运行过程中需要通过new来创建所需的实例对象。如：Object、Array、Date、RegExp、Function、Boolean、Number、String。（听起来就是语言标准自带的）<br>__built-in object：__内置对象，由 ECMAScript 实现提供，独立于宿主环境的对象，ECMAScript 程序开始执行时就存在。内置对象是本地对象的子集。包含：Global和Math、JSON。<br>__host object：__宿主对象，由宿主环境提供的对象，用于完善 ECMAScript 执行环境，如 Window 和 Document。</p>
 <p>看起来数组属于 <strong>native object</strong>，同时没有 <strong>implement [[Call]]</strong> （没有这个内置属性？），所以返回会是个对象。</p>
 <p>不过如果不需要判断得那么精细，那也够用了。而且这个可以直接 typeof 一个没有定义过的变量，会返回undefined。或许有些地方也可以利用起来。<br>另，可以看下 <a target="_blank" rel="noopener" href="https://segmentfault.com/q/1010000011846328">segmentfault</a> 大佬对于 <code>typeof(null) === &#39;object&#39;</code> 的回答。</p>
-<h2 id="二、-constructor"><a href="#二、-constructor" class="headerlink" title="二、 constructor"></a>二、 constructor</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>([].<span class="property">constructor</span>.<span class="property">name</span>) <span class="comment">// Array</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(&#123;&#125;.<span class="property">constructor</span>.<span class="property">name</span>) <span class="comment">// Object</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="keyword">function</span>(<span class="params"></span>)&#123;&#125;.<span class="property">constructor</span>.<span class="property">name</span>) <span class="comment">// Function</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;&#x27;</span>.<span class="property">constructor</span>.<span class="property">name</span>) <span class="comment">// String</span></span><br><span class="line"><span class="keyword">const</span> number = <span class="number">1</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(number.<span class="property">constructor</span>.<span class="property">name</span>) <span class="comment">// Number</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="literal">true</span>.<span class="property">constructor</span>.<span class="property">name</span>) <span class="comment">// Boolean</span></span><br><span class="line"><span class="comment">// console.log(undefined.constructor.name) // 报错</span></span><br><span class="line"><span class="comment">// console.log(null.constructor.name) // 报错</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">NaN</span>.<span class="property">constructor</span>.<span class="property">name</span>) <span class="comment">// Number</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="regexp">/abc/</span>.<span class="property">constructor</span>.<span class="property">name</span>) <span class="comment">// RegExp</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">Symbol</span>().<span class="property">constructor</span>.<span class="property">name</span>) <span class="comment">// Symbol</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="keyword">new</span> <span class="title class_">Date</span>().<span class="property">constructor</span>.<span class="property">name</span>) <span class="comment">// Date</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="keyword">new</span> <span class="title class_">Map</span>().<span class="property">constructor</span>.<span class="property">name</span>) <span class="comment">// Map</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="keyword">new</span> <span class="title class_">Set</span>().<span class="property">constructor</span>.<span class="property">name</span>) <span class="comment">// Set</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">Person</span>.<span class="property">constructor</span>.<span class="property">name</span>) <span class="comment">// Function</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(p.<span class="property">constructor</span>.<span class="property">name</span>) <span class="comment">// Person</span></span><br></pre></td></tr></table></figure>
-
+<h2 id="二、-constructor"><a href="#二、-constructor" class="headerlink" title="二、 constructor"></a>二、 constructor</h2><pre><code class="js">console.log([].constructor.name) // Array
+console.log(&#123;&#125;.constructor.name) // Object
+console.log(function()&#123;&#125;.constructor.name) // Function
+console.log(&#39;&#39;.constructor.name) // String
+const number = 1
+console.log(number.constructor.name) // Number
+console.log(true.constructor.name) // Boolean
+// console.log(undefined.constructor.name) // 报错
+// console.log(null.constructor.name) // 报错
+console.log(NaN.constructor.name) // Number
+console.log(/abc/.constructor.name) // RegExp
+console.log(Symbol().constructor.name) // Symbol
+console.log(new Date().constructor.name) // Date
+console.log(new Map().constructor.name) // Map
+console.log(new Set().constructor.name) // Set
+console.log(Person.constructor.name) // Function
+console.log(p.constructor.name) // Person
+</code></pre>
 <p>只有 constructor 也行，返回就是这个这个变量的原型。</p>
 <p>需要注意的是实例 p 返回的是 Person 这个原型。</p>
 <h2 id="三、-instanceof"><a href="#三、-instanceof" class="headerlink" title="三、 instanceof"></a>三、 instanceof</h2><p>先看 <a target="_blank" rel="noopener" href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/instanceof">定义</a>。从名字上看，该变量是否为某原型的实例。</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>([] <span class="keyword">instanceof</span> <span class="title class_">Array</span>) <span class="comment">// true</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>([] <span class="keyword">instanceof</span> <span class="title class_">Object</span>) <span class="comment">// true</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(&#123;&#125; <span class="keyword">instanceof</span> <span class="title class_">Object</span>) <span class="comment">// true</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="keyword">function</span>(<span class="params"></span>)&#123;&#125; <span class="keyword">instanceof</span> <span class="title class_">Function</span>) <span class="comment">// true</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;&#x27;</span> <span class="keyword">instanceof</span> <span class="title class_">String</span>) <span class="comment">// false</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="number">1</span> <span class="keyword">instanceof</span> <span class="title class_">Number</span>) <span class="comment">// false</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="literal">true</span> <span class="keyword">instanceof</span> <span class="title class_">Boolean</span>) <span class="comment">// false</span></span><br><span class="line"><span class="comment">// console.log(undefined instanceof undefined)</span></span><br><span class="line"><span class="comment">// 报错：Right-hand side of &#x27;instanceof&#x27; is not an object</span></span><br><span class="line"><span class="comment">// console.log(null instanceof null)</span></span><br><span class="line"><span class="comment">// 报错：Right-hand side of &#x27;instanceof&#x27; is not an object</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">NaN</span> <span class="keyword">instanceof</span> <span class="title class_">Number</span>) <span class="comment">// false</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="regexp">/abc/</span> <span class="keyword">instanceof</span> <span class="title class_">RegExp</span>) <span class="comment">// true</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">Symbol</span>() <span class="keyword">instanceof</span> <span class="title class_">Symbol</span>) <span class="comment">// false</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="keyword">new</span> <span class="title class_">Date</span>() <span class="keyword">instanceof</span> <span class="title class_">Date</span>) <span class="comment">// true</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="keyword">new</span> <span class="title class_">Map</span>() <span class="keyword">instanceof</span> <span class="title class_">Map</span>) <span class="comment">// true</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="keyword">new</span> <span class="title class_">Set</span>() <span class="keyword">instanceof</span> <span class="title class_">Set</span>) <span class="comment">// true</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">Person</span> <span class="keyword">instanceof</span> <span class="title class_">Function</span>) <span class="comment">// true</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(p <span class="keyword">instanceof</span> <span class="title class_">Person</span>) <span class="comment">// true</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(p <span class="keyword">instanceof</span> <span class="title class_">Object</span>) <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
-
+<pre><code class="js">console.log([] instanceof Array) // true
+console.log([] instanceof Object) // true
+console.log(&#123;&#125; instanceof Object) // true
+console.log(function()&#123;&#125; instanceof Function) // true
+console.log(&#39;&#39; instanceof String) // false
+console.log(1 instanceof Number) // false
+console.log(true instanceof Boolean) // false
+// console.log(undefined instanceof undefined)
+// 报错：Right-hand side of &#39;instanceof&#39; is not an object
+// console.log(null instanceof null)
+// 报错：Right-hand side of &#39;instanceof&#39; is not an object
+console.log(NaN instanceof Number) // false
+console.log(/abc/ instanceof RegExp) // true
+console.log(Symbol() instanceof Symbol) // false
+console.log(new Date() instanceof Date) // true
+console.log(new Map() instanceof Map) // true
+console.log(new Set() instanceof Set) // true
+console.log(Person instanceof Function) // true
+console.log(p instanceof Person) // true
+console.log(p instanceof Object) // true
+</code></pre>
 <p><code>[]</code>既是数组的实例，又是对象的实例。</p>
 <p>可参阅此<a target="_blank" rel="noopener" href="https://developer.ibm.com/zh/articles/1306-jiangjj-jsinstanceof/">文章</a>介绍，这里直接摘取下里面的翻译与代码</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">instance_of</span>(<span class="params">L, R</span>) &#123;<span class="comment">//L 表示左表达式，R 表示右表达式</span></span><br><span class="line">  <span class="keyword">var</span> O = R.<span class="property"><span class="keyword">prototype</span></span>;<span class="comment">// 取 R 的显示原型</span></span><br><span class="line">  L = L.<span class="property">__proto__</span>;<span class="comment">// 取 L 的隐式原型</span></span><br><span class="line">  <span class="keyword">while</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">    <span class="keyword">if</span> (L === <span class="literal">null</span>)</span><br><span class="line">      <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    <span class="keyword">if</span> (O === L)<span class="comment">// 这里重点：当 O 严格等于 L 时，返回 true</span></span><br><span class="line">      <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    L = L.<span class="property">__proto__</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 上面的代码就很好地解释了，根据原型链的知识，我们知道以下两条等式成立，所以 [] 也是 Object 的实例</span></span><br><span class="line">[].<span class="property">__proto__</span> === <span class="title class_">Array</span>.<span class="property"><span class="keyword">prototype</span></span></span><br><span class="line"><span class="title class_">Array</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">__proto__</span> === <span class="title class_">Object</span>.<span class="property"><span class="keyword">prototype</span></span></span><br></pre></td></tr></table></figure>
+<pre><code class="js">function instance_of(L, R) &#123;//L 表示左表达式，R 表示右表达式
+  var O = R.prototype;// 取 R 的显示原型
+  L = L.__proto__;// 取 L 的隐式原型
+  while (true) &#123;
+    if (L === null)
+      return false;
+    if (O === L)// 这里重点：当 O 严格等于 L 时，返回 true
+      return true;
+    L = L.__proto__;
+  &#125;
+&#125;
+// 上面的代码就很好地解释了，根据原型链的知识，我们知道以下两条等式成立，所以 [] 也是 Object 的实例
+[].__proto__ === Array.prototype
+Array.prototype.__proto__ === Object.prototype
+</code></pre>
 <p>这时候又出现了个问题，<code>NaN instanceof Number === false</code>…真是没完没了。按照上面的方法来应该是true的。<br>其实这个可以跟上面的 <code>&#39;&#39; instanceof String === false</code> <code>1 instanceof Number === false</code> <code>true instanceof Boolean === false</code> 一起看。<br>NaN也是一个数字值，跟1、2、3这种一样。上面那样写就是返回 false，写出 new 出来的实例就为 true。比如：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> num = <span class="keyword">new</span> <span class="title class_">Number</span>(<span class="number">1</span>)</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(num <span class="keyword">instanceof</span> <span class="title class_">Number</span>) <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+<pre><code class="js">const num = new Number(1)
+console.log(num instanceof Number) // true
+</code></pre>
 <p><strong>个人理解：</strong>这里的 num 是 Number 的一个实例，但其实它是对象。实例首先肯定是个对象。比如 1 ‘’ true，都是基础类型。上面的方法是站在真正的实例对象来判断，是一个简单化步骤的方法。<br>但标准里面说的，还有调用内部方法与内部属性，当判断到不是对象，其实就返回 false 了。<strong>这里与 typeof 联系起来，typeof 不是 object 的，用 instanceof 都是 false 了</strong>。</p>
-<h2 id="四、-Object-prototype-toString-call"><a href="#四、-Object-prototype-toString-call" class="headerlink" title="四、 Object.prototype.toString.call"></a>四、 Object.prototype.toString.call</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">Object</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">toString</span>.<span class="title function_">call</span>([])) <span class="comment">// [object Array]</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">Object</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">toString</span>.<span class="title function_">call</span>(&#123;&#125;)) <span class="comment">// [object Object]</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">Object</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">toString</span>.<span class="title function_">call</span>(<span class="keyword">function</span>(<span class="params"></span>)&#123;&#125;)) <span class="comment">// [object Function]</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">Object</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">toString</span>.<span class="title function_">call</span>(<span class="string">&#x27;&#x27;</span>)) <span class="comment">// [object String]</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">Object</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">toString</span>.<span class="title function_">call</span>(<span class="number">1</span>)) <span class="comment">// [object Number]</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">Object</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">toString</span>.<span class="title function_">call</span>(<span class="literal">true</span>)) <span class="comment">// [object Boolean]</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">Object</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">toString</span>.<span class="title function_">call</span>(<span class="literal">undefined</span>)) <span class="comment">// [object Undefined]</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">Object</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">toString</span>.<span class="title function_">call</span>(<span class="literal">null</span>)) <span class="comment">// [object Null]</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">Object</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">toString</span>.<span class="title function_">call</span>(<span class="title class_">NaN</span>)) <span class="comment">// [object Number]</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">Object</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">toString</span>.<span class="title function_">call</span>(<span class="regexp">/abc/</span>)) <span class="comment">// [object RegExp]</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">Object</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">toString</span>.<span class="title function_">call</span>(<span class="title class_">Symbol</span>())) <span class="comment">// [object Symbol]</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">Object</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">toString</span>.<span class="title function_">call</span>(<span class="keyword">new</span> <span class="title class_">Date</span>())) <span class="comment">// [object Date]</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">Object</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">toString</span>.<span class="title function_">call</span>(<span class="keyword">new</span> <span class="title class_">Map</span>())) <span class="comment">// [object Map]</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">Object</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">toString</span>.<span class="title function_">call</span>(<span class="keyword">new</span> <span class="title class_">Set</span>())) <span class="comment">// [object Set]</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">Object</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">toString</span>.<span class="title function_">call</span>(<span class="title class_">Person</span>)) <span class="comment">// [object Function]</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">Object</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">toString</span>.<span class="title function_">call</span>(p)) <span class="comment">// [object Object]</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>([<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>].<span class="title function_">toString</span>()) <span class="comment">// 1,2,3,4</span></span><br></pre></td></tr></table></figure>
-
+<h2 id="四、-Object-prototype-toString-call"><a href="#四、-Object-prototype-toString-call" class="headerlink" title="四、 Object.prototype.toString.call"></a>四、 Object.prototype.toString.call</h2><pre><code class="js">console.log(Object.prototype.toString.call([])) // [object Array]
+console.log(Object.prototype.toString.call(&#123;&#125;)) // [object Object]
+console.log(Object.prototype.toString.call(function()&#123;&#125;)) // [object Function]
+console.log(Object.prototype.toString.call(&#39;&#39;)) // [object String]
+console.log(Object.prototype.toString.call(1)) // [object Number]
+console.log(Object.prototype.toString.call(true)) // [object Boolean]
+console.log(Object.prototype.toString.call(undefined)) // [object Undefined]
+console.log(Object.prototype.toString.call(null)) // [object Null]
+console.log(Object.prototype.toString.call(NaN)) // [object Number]
+console.log(Object.prototype.toString.call(/abc/)) // [object RegExp]
+console.log(Object.prototype.toString.call(Symbol())) // [object Symbol]
+console.log(Object.prototype.toString.call(new Date())) // [object Date]
+console.log(Object.prototype.toString.call(new Map())) // [object Map]
+console.log(Object.prototype.toString.call(new Set())) // [object Set]
+console.log(Object.prototype.toString.call(Person)) // [object Function]
+console.log(Object.prototype.toString.call(p)) // [object Object]
+console.log([1,2,3,4].toString()) // 1,2,3,4
+</code></pre>
 <p>这个就厉害了，居然精确到每一个都不一样。细看跟 typeof 还有点像，但是精细很多。所以一定也是有个什么内置属性在记录着这个东西。<br>要写成 <code>Object.prototype.toString.call</code> 这个样子，是因为别的原型重写了该方法，比如最后一个数组的 <code>toString</code> 方法返回就不一样了。<br>在控制台打印一个数组看看，就能清晰看到 Array 本身也有一个 <code>toString</code> 方法。</p>
 <p>简而言之，分两种，一种是对象内置了 <code>Symbol.toStringTag</code> 这个属性，来返回 <code>[object $&#123;tag&#125;]</code> tag 部分的值。<br>另外一种是没有这个内置属性，但是 <a target="_blank" rel="noopener" href="https://tc39.es/ecma262/#sec-object.prototype.tostring">语言标准tc39</a> 为其指定了返回 tag，比如：Array String 等这几个老面孔。<br>这也就意味着可以自定义自己的tag。</p>
 <img src="/2020/07/25/variable-type/Object.prototype.toString.PNG" class="" title="Object.prototype.toString">
 <br/>
 
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">Promise</span>.<span class="property"><span class="keyword">prototype</span></span>[<span class="title class_">Symbol</span>.<span class="property">toStringTag</span>]) <span class="comment">// Promise</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">Array</span>.<span class="property"><span class="keyword">prototype</span></span>[<span class="title class_">Symbol</span>.<span class="property">toStringTag</span>]) <span class="comment">// undefined</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">Tag</span>(<span class="params"></span>) &#123;&#125;</span><br><span class="line"><span class="title class_">Tag</span>.<span class="property"><span class="keyword">prototype</span></span>[<span class="title class_">Symbol</span>.<span class="property">toStringTag</span>] = <span class="string">&#x27;newTag&#x27;</span></span><br><span class="line"><span class="keyword">const</span> t = <span class="keyword">new</span> <span class="title class_">Tag</span>()</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">Object</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">toString</span>.<span class="title function_">call</span>(t)) <span class="comment">// [object newTag]</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">Tag1</span>(<span class="params"></span>) &#123;&#125;</span><br><span class="line"><span class="title class_">Tag1</span>.<span class="property"><span class="keyword">prototype</span></span>[<span class="title class_">Symbol</span>.<span class="property">toStringTag</span>] = &#123;&#125;</span><br><span class="line"><span class="keyword">const</span> t1 = <span class="keyword">new</span> <span class="title class_">Tag1</span>()</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">Object</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">toString</span>.<span class="title function_">call</span>(t1)) <span class="comment">// [object Object]</span></span><br><span class="line"><span class="comment">// 从上面 tc39 的介绍14，15，16来看，当 [Symbol.toStringTag] 不为 string，则将内置 tag 设置为 Object</span></span><br></pre></td></tr></table></figure>
+<pre><code class="js">console.log(Promise.prototype[Symbol.toStringTag]) // Promise
+console.log(Array.prototype[Symbol.toStringTag]) // undefined
 
+function Tag() &#123;&#125;
+Tag.prototype[Symbol.toStringTag] = &#39;newTag&#39;
+const t = new Tag()
+console.log(Object.prototype.toString.call(t)) // [object newTag]
+
+function Tag1() &#123;&#125;
+Tag1.prototype[Symbol.toStringTag] = &#123;&#125;
+const t1 = new Tag1()
+console.log(Object.prototype.toString.call(t1)) // [object Object]
+// 从上面 tc39 的介绍14，15，16来看，当 [Symbol.toStringTag] 不为 string，则将内置 tag 设置为 Object
+</code></pre>
 <p>里面还涉及其他知识，可以参阅 <a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/118793721">知乎</a> 和 <a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Symbol/toStringTag">MDN-Symbol.toStringTag</a>、<a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Object/toString">MDN-toString</a>。</p>
 <p>码后感：几个判断类型方法，居然有这么多细节点在里面。平时可能用了就用了，都不知道其中原理。真是路漫漫啊。。。</p>
 
@@ -148,9 +242,9 @@
     </div>
     <footer class="article-footer">
       
-        <a data-url="https://blog.cchealthier.com/2020/07/25/variable-type/" data-id="clmbeu7r4002vtf9m3fp15n9f" class="article-thumbs-up">赞一个(<span class="article-thumbs-up-num">0</span>)</a>
+        <a data-url="https://blog.cchealthier.com/2020/07/25/variable-type/" data-id="clmxk7z0g002yc39med9qe50k" class="article-thumbs-up">赞一个(<span class="article-thumbs-up-num">0</span>)</a>
       
-      <!-- <a data-url="https://blog.cchealthier.com/2020/07/25/variable-type/" data-id="clmbeu7r4002vtf9m3fp15n9f" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2020/07/25/variable-type/" data-id="clmxk7z0g002yc39med9qe50k" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -185,6 +279,37 @@
   
     
   <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2023/09/23/react-basic-app-2/">react 基础工程 Ⅱ（@reduxjs/toolkit &amp; @craco/craco &amp; vite）</a>
+          </li>
+        
+          <li>
+            <a href="/2023/08/24/node-module/">NodeJS 的 commonjs、esm 模块使用以及一些字段释义</a>
+          </li>
+        
+          <li>
+            <a href="/2023/08/23/webpack5-background-url/">webpack5 下 background url 图片打包失败</a>
+          </li>
+        
+          <li>
+            <a href="/2023/07/26/node-stream/">NodeJS 里的 stream（流）</a>
+          </li>
+        
+          <li>
+            <a href="/2023/06/07/webpack-modulefederationplugin/">用 webpack ModuleFederationPlugin 搭建微前端</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
     <h3 class="widget-title">分类</h3>
     <div class="widget">
       <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/http%E5%8D%8F%E8%AE%AE/">http协议</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/%E6%9C%8D%E5%8A%A1/">服务</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/%E7%AE%97%E6%B3%95/">算法</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%97%85%E8%A1%8C/">旅行</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%97%85%E8%A1%8C/%E8%AE%B0%E5%BD%95/">记录</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%83%B9%E9%A5%AA/">烹饪</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%83%B9%E9%A5%AA/%E4%BC%A0%E7%BB%9F/">传统</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%9A%8F%E6%83%B3/">随想</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%9A%8F%E6%83%B3/%E5%BF%83%E6%83%85/">心情</a></li></ul></li></ul>
@@ -216,41 +341,10 @@
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/08/">八月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">七月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/06/">六月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/05/">五月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/04/">四月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/03/">三月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/02/">二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">十一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">十月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">九月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/09/">九月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/08/">八月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">七月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/06/">六月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/05/">五月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/04/">四月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/03/">三月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/02/">二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">十一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">十月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">九月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a></li></ul>
     </div>
   </div>
 
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">最新文章</h3>
-    <div class="widget">
-      <ul>
-        
-          <li>
-            <a href="/2023/08/24/node-module/">NodeJS 的 commonjs、esm 模块使用以及一些字段释义</a>
-          </li>
-        
-          <li>
-            <a href="/2023/08/23/webpack5-background-url/">webpack5 下 background url 图片打包失败</a>
-          </li>
-        
-          <li>
-            <a href="/2023/07/26/node-stream/">NodeJS 里的 stream（流）</a>
-          </li>
-        
-          <li>
-            <a href="/2023/06/07/webpack-modulefederationplugin/">用 webpack ModuleFederationPlugin 搭建微前端</a>
-          </li>
-        
-          <li>
-            <a href="/2023/05/31/react-basic-app/">react 基础工程（react-redux &amp; react-router）</a>
-          </li>
-        
-      </ul>
-    </div>
-  </div>
 
   
 </aside>
@@ -268,15 +362,27 @@
     </div>
     <nav id="mobile-nav">
   
-    <a href="/" class="mobile-nav-link">Home</a>
+    <a href="/" class="mobile-nav-link">首页</a>
   
-    <a href="/archives" class="mobile-nav-link">Archives</a>
+    <a href="/archives" class="mobile-nav-link">归档</a>
   
 </nav>
     
 
 <script src="//cdn.staticfile.org/jquery/2.0.3/jquery.min.js"></script>
 <script type="text/javascript" src="https://www.jq22.com/demo/jqueryToast201708310012/js/toast.script.js"></script>
+<script src="/js/highlight.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlightjs-line-numbers.js/2.8.0/highlightjs-line-numbers.min.js"></script>
+<script>
+  $(function(){
+    $('pre code').each((i, el) => {
+    hljs.highlightElement(el);
+  });
+  $('code.hljs').each(function(i, el) {
+     hljs.lineNumbersBlock(el);
+  });
+  }());
+</script>
 
 
   

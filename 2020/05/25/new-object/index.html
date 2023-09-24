@@ -9,12 +9,12 @@
   
   <title>JS new 一个对象干了什么事 | 凝雪密境</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="12345678910111213141516171819202122232425262728function Person(name, age) &amp;#123;  this.name &#x3D; name  this.age &#x3D; age&amp;#125;Person.prototype.attr &#x3D; &amp;#x27;human&amp;#x27;const man1 &#x3D; new Person(&amp;#x27;123&amp;#x2">
+  <meta name="description" content="function Person(name, age) &amp;#123;   this.name &#x3D; name   this.age &#x3D; age &amp;#125; Person.prototype.attr &#x3D; &#39;human&#39; const man1 &#x3D; new Person(&#39;123&#39;, 18) console.log(man1.name) console.log(man">
 <meta property="og:type" content="article">
 <meta property="og:title" content="JS new 一个对象干了什么事">
 <meta property="og:url" content="https://blog.cchealthier.com/2020/05/25/new-object/index.html">
 <meta property="og:site_name" content="凝雪密境">
-<meta property="og:description" content="12345678910111213141516171819202122232425262728function Person(name, age) &amp;#123;  this.name &#x3D; name  this.age &#x3D; age&amp;#125;Person.prototype.attr &#x3D; &amp;#x27;human&amp;#x27;const man1 &#x3D; new Person(&amp;#x27;123&amp;#x2">
+<meta property="og:description" content="function Person(name, age) &amp;#123;   this.name &#x3D; name   this.age &#x3D; age &amp;#125; Person.prototype.attr &#x3D; &#39;human&#39; const man1 &#x3D; new Person(&#39;123&#39;, 18) console.log(man1.name) console.log(man">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2020-05-25T15:59:18.000Z">
 <meta property="article:modified_time" content="2023-04-21T03:44:31.073Z">
@@ -25,13 +25,12 @@
     <link rel="icon" href="/favicon.ico">
   
   
-    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
-  
   
 <link rel="stylesheet" href="/css/style.css">
 
   <link href="https://www.jq22.com/demo/jqueryToast201708310012/css/toast.style.css" rel="stylesheet" type="text/css">
-<meta name="generator" content="Hexo 7.0.0-rc1"></head>
+  <link rel="stylesheet" href="/css/highlight/styles/monokai-sublime.min.css">
+<meta name="generator" content="Hexo 6.3.0"></head>
 
 <body>
   <div id="container">
@@ -59,9 +58,9 @@
       <nav id="main-nav">
         <a id="main-nav-toggle" class="nav-icon"></a>
         
-          <a class="main-nav-link" href="/">Home</a>
+          <a class="main-nav-link" href="/">首页</a>
         
-          <a class="main-nav-link" href="/archives">Archives</a>
+          <a class="main-nav-link" href="/archives">归档</a>
         
       </nav>
       <nav id="sub-nav">
@@ -103,14 +102,43 @@
       
         <br>
 
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">Person</span>(<span class="params">name, age</span>) &#123;</span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">name</span> = name</span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">age</span> = age</span><br><span class="line">&#125;</span><br><span class="line"><span class="title class_">Person</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">attr</span> = <span class="string">&#x27;human&#x27;</span></span><br><span class="line"><span class="keyword">const</span> man1 = <span class="keyword">new</span> <span class="title class_">Person</span>(<span class="string">&#x27;123&#x27;</span>, <span class="number">18</span>)</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(man1.<span class="property">name</span>)</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(man1.<span class="property">age</span>)</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(man1.<span class="property">attr</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">_new</span>(<span class="params">Constructor, ...param</span>) &#123;</span><br><span class="line">  <span class="comment">// 新建一个对象</span></span><br><span class="line">  <span class="keyword">const</span> obj = &#123;&#125; <span class="comment">// Object.create(null)</span></span><br><span class="line">  <span class="comment">// 建立继承关系，__proto__指向构造函数原型，获得原型属性与方法</span></span><br><span class="line">  <span class="comment">// 这里获得 attr 属性</span></span><br><span class="line">  obj.<span class="property">__proto__</span> = <span class="title class_">Constructor</span>.<span class="property"><span class="keyword">prototype</span></span></span><br><span class="line">  <span class="comment">// 开始执行这个构造函数，就是这个构造函数的this方法属性挂到这个新对象上</span></span><br><span class="line">  <span class="comment">// 这里就是把 name 和 age 挂上去</span></span><br><span class="line">  <span class="keyword">const</span> ret = <span class="title class_">Constructor</span>.<span class="title function_">call</span>(obj, ...param)</span><br><span class="line">  <span class="comment">// const ret = Constructor.apply(obj, param)</span></span><br><span class="line">  <span class="comment">// 若构造函数中没有返回值或返回值是基本类型（Number、String、Boolean）的值，则返回新实例对象；</span></span><br><span class="line">  <span class="comment">// 若返回值是引用类型的值，则实际返回值为这个引用类型。</span></span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">typeof</span> ret === <span class="string">&#x27;object&#x27;</span> ? ret : obj</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">const</span> man2 = <span class="title function_">_new</span>(<span class="title class_">Person</span>, <span class="string">&#x27;456&#x27;</span>, <span class="number">20</span>)</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(man2.<span class="property">name</span>)</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(man2.<span class="property">age</span>)</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(man2.<span class="property">attr</span>)</span><br></pre></td></tr></table></figure>
+<pre><code class="js">function Person(name, age) &#123;
+  this.name = name
+  this.age = age
+&#125;
+Person.prototype.attr = &#39;human&#39;
+const man1 = new Person(&#39;123&#39;, 18)
+console.log(man1.name)
+console.log(man1.age)
+console.log(man1.attr)
+
+function _new(Constructor, ...param) &#123;
+  // 新建一个对象
+  const obj = &#123;&#125; // Object.create(null)
+  // 建立继承关系，__proto__指向构造函数原型，获得原型属性与方法
+  // 这里获得 attr 属性
+  obj.__proto__ = Constructor.prototype
+  // 开始执行这个构造函数，就是这个构造函数的this方法属性挂到这个新对象上
+  // 这里就是把 name 和 age 挂上去
+  const ret = Constructor.call(obj, ...param)
+  // const ret = Constructor.apply(obj, param)
+  // 若构造函数中没有返回值或返回值是基本类型（Number、String、Boolean）的值，则返回新实例对象；
+  // 若返回值是引用类型的值，则实际返回值为这个引用类型。
+  return typeof ret === &#39;object&#39; ? ret : obj
+&#125;
+const man2 = _new(Person, &#39;456&#39;, 20)
+console.log(man2.name)
+console.log(man2.age)
+console.log(man2.attr)
+</code></pre>
+
       
     </div>
     <footer class="article-footer">
       
-        <a data-url="https://blog.cchealthier.com/2020/05/25/new-object/" data-id="clmbeu7qz001itf9m8oo492ts" class="article-thumbs-up">赞一个(<span class="article-thumbs-up-num">0</span>)</a>
+        <a data-url="https://blog.cchealthier.com/2020/05/25/new-object/" data-id="clmxk7z09001ic39maknfdrw3" class="article-thumbs-up">赞一个(<span class="article-thumbs-up-num">0</span>)</a>
       
-      <!-- <a data-url="https://blog.cchealthier.com/2020/05/25/new-object/" data-id="clmbeu7qz001itf9m8oo492ts" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2020/05/25/new-object/" data-id="clmxk7z09001ic39maknfdrw3" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -145,6 +173,37 @@
   
     
   <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2023/09/23/react-basic-app-2/">react 基础工程 Ⅱ（@reduxjs/toolkit &amp; @craco/craco &amp; vite）</a>
+          </li>
+        
+          <li>
+            <a href="/2023/08/24/node-module/">NodeJS 的 commonjs、esm 模块使用以及一些字段释义</a>
+          </li>
+        
+          <li>
+            <a href="/2023/08/23/webpack5-background-url/">webpack5 下 background url 图片打包失败</a>
+          </li>
+        
+          <li>
+            <a href="/2023/07/26/node-stream/">NodeJS 里的 stream（流）</a>
+          </li>
+        
+          <li>
+            <a href="/2023/06/07/webpack-modulefederationplugin/">用 webpack ModuleFederationPlugin 搭建微前端</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
     <h3 class="widget-title">分类</h3>
     <div class="widget">
       <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/http%E5%8D%8F%E8%AE%AE/">http协议</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/%E6%9C%8D%E5%8A%A1/">服务</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/%E7%AE%97%E6%B3%95/">算法</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%97%85%E8%A1%8C/">旅行</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%97%85%E8%A1%8C/%E8%AE%B0%E5%BD%95/">记录</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%83%B9%E9%A5%AA/">烹饪</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%83%B9%E9%A5%AA/%E4%BC%A0%E7%BB%9F/">传统</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%9A%8F%E6%83%B3/">随想</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%9A%8F%E6%83%B3/%E5%BF%83%E6%83%85/">心情</a></li></ul></li></ul>
@@ -176,41 +235,10 @@
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/08/">八月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">七月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/06/">六月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/05/">五月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/04/">四月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/03/">三月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/02/">二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">十一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">十月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">九月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/09/">九月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/08/">八月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">七月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/06/">六月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/05/">五月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/04/">四月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/03/">三月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/02/">二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">十一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">十月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">九月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a></li></ul>
     </div>
   </div>
 
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">最新文章</h3>
-    <div class="widget">
-      <ul>
-        
-          <li>
-            <a href="/2023/08/24/node-module/">NodeJS 的 commonjs、esm 模块使用以及一些字段释义</a>
-          </li>
-        
-          <li>
-            <a href="/2023/08/23/webpack5-background-url/">webpack5 下 background url 图片打包失败</a>
-          </li>
-        
-          <li>
-            <a href="/2023/07/26/node-stream/">NodeJS 里的 stream（流）</a>
-          </li>
-        
-          <li>
-            <a href="/2023/06/07/webpack-modulefederationplugin/">用 webpack ModuleFederationPlugin 搭建微前端</a>
-          </li>
-        
-          <li>
-            <a href="/2023/05/31/react-basic-app/">react 基础工程（react-redux &amp; react-router）</a>
-          </li>
-        
-      </ul>
-    </div>
-  </div>
 
   
 </aside>
@@ -228,15 +256,27 @@
     </div>
     <nav id="mobile-nav">
   
-    <a href="/" class="mobile-nav-link">Home</a>
+    <a href="/" class="mobile-nav-link">首页</a>
   
-    <a href="/archives" class="mobile-nav-link">Archives</a>
+    <a href="/archives" class="mobile-nav-link">归档</a>
   
 </nav>
     
 
 <script src="//cdn.staticfile.org/jquery/2.0.3/jquery.min.js"></script>
 <script type="text/javascript" src="https://www.jq22.com/demo/jqueryToast201708310012/js/toast.script.js"></script>
+<script src="/js/highlight.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlightjs-line-numbers.js/2.8.0/highlightjs-line-numbers.min.js"></script>
+<script>
+  $(function(){
+    $('pre code').each((i, el) => {
+    hljs.highlightElement(el);
+  });
+  $('code.hljs').each(function(i, el) {
+     hljs.lineNumbersBlock(el);
+  });
+  }());
+</script>
 
 
   

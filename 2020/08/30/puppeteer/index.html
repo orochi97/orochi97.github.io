@@ -25,13 +25,12 @@
     <link rel="icon" href="/favicon.ico">
   
   
-    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
-  
   
 <link rel="stylesheet" href="/css/style.css">
 
   <link href="https://www.jq22.com/demo/jqueryToast201708310012/css/toast.style.css" rel="stylesheet" type="text/css">
-<meta name="generator" content="Hexo 7.0.0-rc1"></head>
+  <link rel="stylesheet" href="/css/highlight/styles/monokai-sublime.min.css">
+<meta name="generator" content="Hexo 6.3.0"></head>
 
 <body>
   <div id="container">
@@ -59,9 +58,9 @@
       <nav id="main-nav">
         <a id="main-nav-toggle" class="nav-icon"></a>
         
-          <a class="main-nav-link" href="/">Home</a>
+          <a class="main-nav-link" href="/">首页</a>
         
-          <a class="main-nav-link" href="/archives">Archives</a>
+          <a class="main-nav-link" href="/archives">归档</a>
         
       </nav>
       <nav id="sub-nav">
@@ -108,13 +107,65 @@
 <p>其实就是个浏览器，给了许多方法让我们可以控制这个浏览器，比如打开某某网页，输入什么字符，点击哪个按钮。看起来就像是用程序来模拟人工的行为。<br>这样就表示了它可以用来自动化测试。搭配 jest 或 mocha 之类的测试框架，进行e2e测试，模拟一个人去访问网站，进行一些操作。<br>当然不止这一个方案，还有 <a target="_blank" rel="noopener" href="http://www.selenium.org.cn/">selenium</a> 和在这之上的 <a target="_blank" rel="noopener" href="https://nightwatchjs.org/">night-watch</a>，也是干 web 自动化测试的活。</p>
 <p>我们项目上使用它来跑自动化测试的，我自己用它来做爬虫，奸笑~<br>可能也不叫爬虫，就是上新闻网站扫一下热搜，到图片库搜点图片之类的。</p>
 <h3 id="安装："><a href="#安装：" class="headerlink" title="安装："></a>安装：</h3><p>安装是个蛋疼的事，因为这个用到chromium，这玩意在谷歌仓库。所以如果不能科学上网，那就只能修改为淘宝源。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">env</span> puppeteer_download_host=https://npm.taobao.org/mirrors npm i puppeteer</span><br><span class="line"></span><br><span class="line">npm config <span class="built_in">set</span> puppeteer_download_host  https://npm.taobao.org/mirrors</span><br><span class="line">npm i puppeteer</span><br></pre></td></tr></table></figure>
+<pre><code class="bash">env puppeteer_download_host=https://npm.taobao.org/mirrors npm i puppeteer
+
+npm config set puppeteer_download_host  https://npm.taobao.org/mirrors
+npm i puppeteer
+</code></pre>
 <p>年代久远，记得都是可以的。不保证时效性…</p>
 <p>我们项目一开始使用它来截图</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> puppeteer = <span class="built_in">require</span>(<span class="string">&#x27;puppeteer&#x27;</span>)</span><br><span class="line">;(<span class="keyword">async</span> () =&gt; &#123;</span><br><span class="line">  <span class="keyword">const</span> browser = <span class="keyword">await</span> puppeteer.<span class="title function_">launch</span>(&#123;</span><br><span class="line">    <span class="attr">headless</span>: <span class="literal">true</span> <span class="comment">// 无头就是不要弹出浏览器</span></span><br><span class="line">  &#125;)</span><br><span class="line">  <span class="keyword">const</span> page = <span class="keyword">await</span> browser.<span class="title function_">newPage</span>()</span><br><span class="line">  <span class="keyword">await</span> page.<span class="title function_">goto</span>(<span class="string">&#x27;https://www.baidu.com&#x27;</span>)</span><br><span class="line">  <span class="keyword">await</span> page.<span class="title function_">setViewport</span>(&#123;</span><br><span class="line">    <span class="attr">width</span>: <span class="number">1200</span>,</span><br><span class="line">    <span class="attr">height</span>: <span class="number">800</span></span><br><span class="line">  &#125;)</span><br><span class="line">  <span class="keyword">await</span> page.<span class="title function_">screenshot</span>(&#123;</span><br><span class="line">    <span class="attr">path</span>: <span class="string">&#x27;puppeteer.png&#x27;</span>,</span><br><span class="line">    <span class="attr">fullPage</span>: <span class="literal">true</span></span><br><span class="line">  &#125;)</span><br><span class="line">  <span class="keyword">await</span> browser.<span class="title function_">close</span>()</span><br><span class="line">&#125;)()</span><br></pre></td></tr></table></figure>
+<pre><code class="js">const puppeteer = require(&#39;puppeteer&#39;)
+;(async () =&gt; &#123;
+  const browser = await puppeteer.launch(&#123;
+    headless: true // 无头就是不要弹出浏览器
+  &#125;)
+  const page = await browser.newPage()
+  await page.goto(&#39;https://www.baidu.com&#39;)
+  await page.setViewport(&#123;
+    width: 1200,
+    height: 800
+  &#125;)
+  await page.screenshot(&#123;
+    path: &#39;puppeteer.png&#39;,
+    fullPage: true
+  &#125;)
+  await browser.close()
+&#125;)()
+</code></pre>
 <p>来看下用它来搜百度热搜，之所以对 puppeteer 感兴趣，就是同事写了一篇这个教程，里面就是演示了爬热搜。</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> puppeteer = <span class="built_in">require</span>(<span class="string">&#x27;puppeteer&#x27;</span>)</span><br><span class="line">;(<span class="keyword">async</span> () =&gt; &#123;</span><br><span class="line">  <span class="keyword">const</span> browser = <span class="keyword">await</span> puppeteer.<span class="title function_">launch</span>(&#123;</span><br><span class="line">    <span class="attr">headless</span>: <span class="literal">true</span> <span class="comment">// 无头就是不要弹出浏览器</span></span><br><span class="line">  &#125;)</span><br><span class="line">  <span class="keyword">const</span> page = <span class="keyword">await</span> browser.<span class="title function_">newPage</span>()</span><br><span class="line">  <span class="keyword">await</span> page.<span class="title function_">goto</span>(<span class="string">&#x27;http://top.baidu.com/buzz?b=1&amp;fr=topindex&#x27;</span>, &#123;</span><br><span class="line">    <span class="attr">timeout</span>: <span class="number">0</span>, <span class="comment">// 设置超时时间为0</span></span><br><span class="line">    <span class="attr">waitUntil</span>: <span class="string">&#x27;domcontentloaded&#x27;</span> <span class="comment">// 有多个状态可设置，这里设置为 dom 渲染完成</span></span><br><span class="line">  &#125;)</span><br><span class="line">  <span class="comment">// 有时候网速卡，加载慢，容易超时报错，所以上面把超时时间去掉</span></span><br><span class="line">  <span class="comment">// 同时网页渲染也需要时间，可以等一下，</span></span><br><span class="line">  <span class="comment">// 比如 await page.waitFor(1000) 等待1000ms</span></span><br><span class="line">  <span class="comment">// 比如我之前爬图片的时候，都知道图片是相当耗时的</span></span><br><span class="line">  <span class="comment">// 所以我写成等图片的 dom 可见即可，可见包括了它已经被赋予 src，不需要等到图片下载并渲染完成</span></span><br><span class="line">  <span class="comment">// 然后获取其 src，再通过别的方法下载</span></span><br><span class="line">  <span class="comment">// await page.waitForSelector(dom, &#123; visible: true, timeout: 0 &#125;)</span></span><br><span class="line">  <span class="keyword">const</span> list = <span class="keyword">await</span> page.evaluate(<span class="function">(<span class="params">dom</span>) =&gt;</span> &#123;  <span class="comment">// 爬取内容</span></span><br><span class="line">    <span class="comment">// 这个 dom 需要去网站上看实际结构，很好找，跟 jQuery 一样</span></span><br><span class="line">    <span class="keyword">const</span> $doms = <span class="variable language_">document</span>.<span class="title function_">querySelectorAll</span>(<span class="string">&#x27;.mainBody .keyword a&#x27;</span>)</span><br><span class="line">    <span class="keyword">const</span> list = <span class="title class_">Array</span>.<span class="title function_">from</span>($doms).<span class="title function_">map</span>(<span class="function">(<span class="params">$dom</span>) =&gt;</span> &#123;</span><br><span class="line">      <span class="keyword">return</span> &#123;</span><br><span class="line">        <span class="attr">href</span>: $dom.<span class="property">href</span>,</span><br><span class="line">        <span class="attr">text</span>: $dom.<span class="property">innerText</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;)</span><br><span class="line">    <span class="keyword">return</span> list</span><br><span class="line">  &#125;)</span><br><span class="line">  <span class="comment">// 这个 list 就记录了热搜的标题和网址</span></span><br><span class="line">  <span class="keyword">await</span> page.<span class="title function_">close</span>()</span><br><span class="line">  <span class="keyword">await</span> browser.<span class="title function_">close</span>()</span><br><span class="line">&#125;)()</span><br></pre></td></tr></table></figure>
-
+<pre><code class="js">const puppeteer = require(&#39;puppeteer&#39;)
+;(async () =&gt; &#123;
+  const browser = await puppeteer.launch(&#123;
+    headless: true // 无头就是不要弹出浏览器
+  &#125;)
+  const page = await browser.newPage()
+  await page.goto(&#39;http://top.baidu.com/buzz?b=1&amp;fr=topindex&#39;, &#123;
+    timeout: 0, // 设置超时时间为0
+    waitUntil: &#39;domcontentloaded&#39; // 有多个状态可设置，这里设置为 dom 渲染完成
+  &#125;)
+  // 有时候网速卡，加载慢，容易超时报错，所以上面把超时时间去掉
+  // 同时网页渲染也需要时间，可以等一下，
+  // 比如 await page.waitFor(1000) 等待1000ms
+  // 比如我之前爬图片的时候，都知道图片是相当耗时的
+  // 所以我写成等图片的 dom 可见即可，可见包括了它已经被赋予 src，不需要等到图片下载并渲染完成
+  // 然后获取其 src，再通过别的方法下载
+  // await page.waitForSelector(dom, &#123; visible: true, timeout: 0 &#125;)
+  const list = await page.evaluate((dom) =&gt; &#123;  // 爬取内容
+    // 这个 dom 需要去网站上看实际结构，很好找，跟 jQuery 一样
+    const $doms = document.querySelectorAll(&#39;.mainBody .keyword a&#39;)
+    const list = Array.from($doms).map(($dom) =&gt; &#123;
+      return &#123;
+        href: $dom.href,
+        text: $dom.innerText
+      &#125;
+    &#125;)
+    return list
+  &#125;)
+  // 这个 list 就记录了热搜的标题和网址
+  await page.close()
+  await browser.close()
+&#125;)()
+</code></pre>
 <p>对网页的抓取还有这个<a target="_blank" rel="noopener" href="https://github.com/cheeriojs/cheerio/wiki/Chinese-README">cheerio</a>，在 node 里面像 jQuery 一样获取dom。<br>不过好像对单页面的网站比较麻烦。因为是抓了整个网页内容下来，再来分析页面。那对于 SPA 抓下来也是一个容器一个js，没有实体dom。所以具体看用途啦。</p>
 <p>puppeteer还有很多牛的功能，这里只是用到了冰山一角，还能做更多有趣的事。</p>
 
@@ -122,9 +173,9 @@
     </div>
     <footer class="article-footer">
       
-        <a data-url="https://blog.cchealthier.com/2020/08/30/puppeteer/" data-id="clmbeu7r2002btf9mfnn08zm1" class="article-thumbs-up">赞一个(<span class="article-thumbs-up-num">0</span>)</a>
+        <a data-url="https://blog.cchealthier.com/2020/08/30/puppeteer/" data-id="clmxk7z0e002fc39m3rou56ow" class="article-thumbs-up">赞一个(<span class="article-thumbs-up-num">0</span>)</a>
       
-      <!-- <a data-url="https://blog.cchealthier.com/2020/08/30/puppeteer/" data-id="clmbeu7r2002btf9mfnn08zm1" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2020/08/30/puppeteer/" data-id="clmxk7z0e002fc39m3rou56ow" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -159,6 +210,37 @@
   
     
   <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2023/09/23/react-basic-app-2/">react 基础工程 Ⅱ（@reduxjs/toolkit &amp; @craco/craco &amp; vite）</a>
+          </li>
+        
+          <li>
+            <a href="/2023/08/24/node-module/">NodeJS 的 commonjs、esm 模块使用以及一些字段释义</a>
+          </li>
+        
+          <li>
+            <a href="/2023/08/23/webpack5-background-url/">webpack5 下 background url 图片打包失败</a>
+          </li>
+        
+          <li>
+            <a href="/2023/07/26/node-stream/">NodeJS 里的 stream（流）</a>
+          </li>
+        
+          <li>
+            <a href="/2023/06/07/webpack-modulefederationplugin/">用 webpack ModuleFederationPlugin 搭建微前端</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
     <h3 class="widget-title">分类</h3>
     <div class="widget">
       <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/http%E5%8D%8F%E8%AE%AE/">http协议</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/%E6%9C%8D%E5%8A%A1/">服务</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/%E7%AE%97%E6%B3%95/">算法</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%97%85%E8%A1%8C/">旅行</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%97%85%E8%A1%8C/%E8%AE%B0%E5%BD%95/">记录</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%83%B9%E9%A5%AA/">烹饪</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%83%B9%E9%A5%AA/%E4%BC%A0%E7%BB%9F/">传统</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%9A%8F%E6%83%B3/">随想</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%9A%8F%E6%83%B3/%E5%BF%83%E6%83%85/">心情</a></li></ul></li></ul>
@@ -190,41 +272,10 @@
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/08/">八月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">七月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/06/">六月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/05/">五月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/04/">四月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/03/">三月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/02/">二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">十一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">十月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">九月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/09/">九月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/08/">八月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">七月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/06/">六月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/05/">五月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/04/">四月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/03/">三月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/02/">二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">十一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">十月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">九月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a></li></ul>
     </div>
   </div>
 
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">最新文章</h3>
-    <div class="widget">
-      <ul>
-        
-          <li>
-            <a href="/2023/08/24/node-module/">NodeJS 的 commonjs、esm 模块使用以及一些字段释义</a>
-          </li>
-        
-          <li>
-            <a href="/2023/08/23/webpack5-background-url/">webpack5 下 background url 图片打包失败</a>
-          </li>
-        
-          <li>
-            <a href="/2023/07/26/node-stream/">NodeJS 里的 stream（流）</a>
-          </li>
-        
-          <li>
-            <a href="/2023/06/07/webpack-modulefederationplugin/">用 webpack ModuleFederationPlugin 搭建微前端</a>
-          </li>
-        
-          <li>
-            <a href="/2023/05/31/react-basic-app/">react 基础工程（react-redux &amp; react-router）</a>
-          </li>
-        
-      </ul>
-    </div>
-  </div>
 
   
 </aside>
@@ -242,15 +293,27 @@
     </div>
     <nav id="mobile-nav">
   
-    <a href="/" class="mobile-nav-link">Home</a>
+    <a href="/" class="mobile-nav-link">首页</a>
   
-    <a href="/archives" class="mobile-nav-link">Archives</a>
+    <a href="/archives" class="mobile-nav-link">归档</a>
   
 </nav>
     
 
 <script src="//cdn.staticfile.org/jquery/2.0.3/jquery.min.js"></script>
 <script type="text/javascript" src="https://www.jq22.com/demo/jqueryToast201708310012/js/toast.script.js"></script>
+<script src="/js/highlight.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlightjs-line-numbers.js/2.8.0/highlightjs-line-numbers.min.js"></script>
+<script>
+  $(function(){
+    $('pre code').each((i, el) => {
+    hljs.highlightElement(el);
+  });
+  $('code.hljs').each(function(i, el) {
+     hljs.lineNumbersBlock(el);
+  });
+  }());
+</script>
 
 
   

@@ -9,12 +9,12 @@
   
   <title>记录一些基础算法 | 凝雪密境</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="开始补充一些算法和数据结构的知识 冒泡排序1234567891011121314151617181920212223242526272829303132333435363738const arr &#x3D; [162, 6, 3, 8, 90, 234, 5, 7, 31, 45, 12, 1, 98, 23, 87, 40]function sort(arr) &amp;#123;  const len &#x3D; a">
+  <meta name="description" content="开始补充一些算法和数据结构的知识 冒泡排序const arr &#x3D; [162, 6, 3, 8, 90, 234, 5, 7, 31, 45, 12, 1, 98, 23, 87, 40] function sort(arr) &amp;#123;   const len &#x3D; arr.length - 1   for (let x &#x3D; 0, y &#x3D; len; x &lt; y; x++) &amp;#123;">
 <meta property="og:type" content="article">
 <meta property="og:title" content="记录一些基础算法">
 <meta property="og:url" content="https://blog.cchealthier.com/2020/10/21/algorithm/index.html">
 <meta property="og:site_name" content="凝雪密境">
-<meta property="og:description" content="开始补充一些算法和数据结构的知识 冒泡排序1234567891011121314151617181920212223242526272829303132333435363738const arr &#x3D; [162, 6, 3, 8, 90, 234, 5, 7, 31, 45, 12, 1, 98, 23, 87, 40]function sort(arr) &amp;#123;  const len &#x3D; a">
+<meta property="og:description" content="开始补充一些算法和数据结构的知识 冒泡排序const arr &#x3D; [162, 6, 3, 8, 90, 234, 5, 7, 31, 45, 12, 1, 98, 23, 87, 40] function sort(arr) &amp;#123;   const len &#x3D; arr.length - 1   for (let x &#x3D; 0, y &#x3D; len; x &lt; y; x++) &amp;#123;">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2020-10-21T15:51:13.000Z">
 <meta property="article:modified_time" content="2020-10-25T03:51:18.000Z">
@@ -25,13 +25,12 @@
     <link rel="icon" href="/favicon.ico">
   
   
-    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
-  
   
 <link rel="stylesheet" href="/css/style.css">
 
   <link href="https://www.jq22.com/demo/jqueryToast201708310012/css/toast.style.css" rel="stylesheet" type="text/css">
-<meta name="generator" content="Hexo 7.0.0-rc1"></head>
+  <link rel="stylesheet" href="/css/highlight/styles/monokai-sublime.min.css">
+<meta name="generator" content="Hexo 6.3.0"></head>
 
 <body>
   <div id="container">
@@ -59,9 +58,9 @@
       <nav id="main-nav">
         <a id="main-nav-toggle" class="nav-icon"></a>
         
-          <a class="main-nav-link" href="/">Home</a>
+          <a class="main-nav-link" href="/">首页</a>
         
-          <a class="main-nav-link" href="/archives">Archives</a>
+          <a class="main-nav-link" href="/archives">归档</a>
         
       </nav>
       <nav id="sub-nav">
@@ -102,21 +101,134 @@
     <div class="article-entry" itemprop="articleBody">
       
         <p>开始补充一些算法和数据结构的知识</p>
-<h3 id="冒泡排序"><a href="#冒泡排序" class="headerlink" title="冒泡排序"></a>冒泡排序</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> arr = [<span class="number">162</span>, <span class="number">6</span>, <span class="number">3</span>, <span class="number">8</span>, <span class="number">90</span>, <span class="number">234</span>, <span class="number">5</span>, <span class="number">7</span>, <span class="number">31</span>, <span class="number">45</span>, <span class="number">12</span>, <span class="number">1</span>, <span class="number">98</span>, <span class="number">23</span>, <span class="number">87</span>, <span class="number">40</span>]</span><br><span class="line"><span class="keyword">function</span> <span class="title function_">sort</span>(<span class="params">arr</span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> len = arr.<span class="property">length</span> - <span class="number">1</span></span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> x = <span class="number">0</span>, y = len; x &lt; y; x++) &#123;</span><br><span class="line">    <span class="comment">// 把第一个跟后面那个对比，如果比后面的数大，就交换位置，到最后就可以确定最大的数在最后</span></span><br><span class="line">    <span class="comment">// 也就是在 length 的位置</span></span><br><span class="line">    <span class="comment">// 在第一轮的时候，x=1，也就是遍历到倒数第二个就好，因为取到 i+1 的数</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>, l = len - x; i &lt; l; i++) &#123;</span><br><span class="line">      <span class="keyword">const</span> first = arr[i], second = arr[i+<span class="number">1</span>]</span><br><span class="line">      <span class="keyword">if</span> (first &gt; second) &#123;</span><br><span class="line">        [arr[i], arr[i+<span class="number">1</span>]] = [second, first]</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 假设没有第一层，最大的数已经在最后，那么第二轮就是要在剩下的数找到最大，并放到倒数第二位置</span></span><br><span class="line">    <span class="comment">// 也就是在 length-1 的位置</span></span><br><span class="line">    <span class="comment">// 此时 x=2，因为依然是当轮最后数（第二轮为length-1）的前一个</span></span><br><span class="line">    <span class="comment">// for (var i = 0, l = arr.length - 2; i &lt; l; i++) &#123;</span></span><br><span class="line">    <span class="comment">//  if (arr[i] &gt; arr[i+1]) &#123;</span></span><br><span class="line">    <span class="comment">//    [arr[i], arr[i+1]] = [arr[i+1], arr[i]]</span></span><br><span class="line">    <span class="comment">//  &#125;</span></span><br><span class="line">    <span class="comment">// &#125;</span></span><br><span class="line">    <span class="comment">// 第三轮 x=3</span></span><br><span class="line">    <span class="comment">// for (var i = 0, l = arr.length - 3; i &lt; l; i++) &#123;</span></span><br><span class="line">    <span class="comment">//  if (arr[i] &gt; arr[i+1]) &#123;</span></span><br><span class="line">    <span class="comment">//    [arr[i], arr[i+1]] = [arr[i+1], arr[i]]</span></span><br><span class="line">    <span class="comment">//  &#125;</span></span><br><span class="line">    <span class="comment">// &#125;</span></span><br><span class="line">    <span class="comment">// 第四轮 x=4</span></span><br><span class="line">    <span class="comment">// for (var i = 0, l = arr.length - 4; i &lt; l; i++) &#123;</span></span><br><span class="line">    <span class="comment">//  if (arr[i] &gt; arr[i+1]) &#123;</span></span><br><span class="line">    <span class="comment">//    [arr[i], arr[i+1]] = [arr[i+1], arr[i]]</span></span><br><span class="line">    <span class="comment">//  &#125;</span></span><br><span class="line">    <span class="comment">// &#125;</span></span><br><span class="line">    <span class="comment">// 所以循环个遍，就成了外面一层的循环</span></span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> arr</span><br><span class="line">&#125;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">sort</span>(arr))</span><br></pre></td></tr></table></figure>
-
+<h3 id="冒泡排序"><a href="#冒泡排序" class="headerlink" title="冒泡排序"></a>冒泡排序</h3><pre><code class="js">const arr = [162, 6, 3, 8, 90, 234, 5, 7, 31, 45, 12, 1, 98, 23, 87, 40]
+function sort(arr) &#123;
+  const len = arr.length - 1
+  for (let x = 0, y = len; x &lt; y; x++) &#123;
+    // 把第一个跟后面那个对比，如果比后面的数大，就交换位置，到最后就可以确定最大的数在最后
+    // 也就是在 length 的位置
+    // 在第一轮的时候，x=1，也就是遍历到倒数第二个就好，因为取到 i+1 的数
+    for (let i = 0, l = len - x; i &lt; l; i++) &#123;
+      const first = arr[i], second = arr[i+1]
+      if (first &gt; second) &#123;
+        [arr[i], arr[i+1]] = [second, first]
+      &#125;
+    &#125;
+    // 假设没有第一层，最大的数已经在最后，那么第二轮就是要在剩下的数找到最大，并放到倒数第二位置
+    // 也就是在 length-1 的位置
+    // 此时 x=2，因为依然是当轮最后数（第二轮为length-1）的前一个
+    // for (var i = 0, l = arr.length - 2; i &lt; l; i++) &#123;
+    //  if (arr[i] &gt; arr[i+1]) &#123;
+    //    [arr[i], arr[i+1]] = [arr[i+1], arr[i]]
+    //  &#125;
+    // &#125;
+    // 第三轮 x=3
+    // for (var i = 0, l = arr.length - 3; i &lt; l; i++) &#123;
+    //  if (arr[i] &gt; arr[i+1]) &#123;
+    //    [arr[i], arr[i+1]] = [arr[i+1], arr[i]]
+    //  &#125;
+    // &#125;
+    // 第四轮 x=4
+    // for (var i = 0, l = arr.length - 4; i &lt; l; i++) &#123;
+    //  if (arr[i] &gt; arr[i+1]) &#123;
+    //    [arr[i], arr[i+1]] = [arr[i+1], arr[i]]
+    //  &#125;
+    // &#125;
+    // 所以循环个遍，就成了外面一层的循环
+  &#125;
+  return arr
+&#125;
+console.log(sort(arr))
+</code></pre>
 <h3 id="二分法"><a href="#二分法" class="headerlink" title="二分法"></a>二分法</h3><p>就是在一个有序的序列中迅速找到要找的那个数的索引。一个一个遍历当然也可以找到，但是不确定性导致复杂度。<br>二分法就是中间砍一刀，这样数列就成了两半。看看中间值是不是，是那就刚好了。不是的话，判断目标数是在前一半还是后一半，如此这般的循环即可。</p>
 <p>这种思想应该在现实生活中还是经常用到的，比如<code>git bisect</code>（<a target="_blank" rel="noopener" href="http://www.ruanyifeng.com/blog/2018/12/git-bisect.html">看看大佬的介绍</a>）。<br>以及，让我想起以前 TVB 的《超级无敌掌门人》里面有个游戏叫“超级无敌开口中”，轮流在在100里面瞎说一个数，中了就受罚。特别是轮到说最后一个必中的数字时那种视死如归的神情，超搞笑。</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">getRandomNum</span>(<span class="params">numMin, numMax</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="title class_">Math</span>.<span class="title function_">round</span>( <span class="title class_">Math</span>.<span class="title function_">random</span>()*(numMax-numMin) + numMin )</span><br><span class="line">&#125;  </span><br><span class="line"><span class="keyword">function</span> <span class="title function_">getArr</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> arr = []</span><br><span class="line">  <span class="keyword">for</span>(<span class="keyword">let</span> i = <span class="number">1</span>, l = <span class="number">100</span>; i &lt;= l; i++) &#123;</span><br><span class="line">    arr.<span class="title function_">push</span>(i)</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> arr</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 随机生成 1 ~ 100 中的某数</span></span><br><span class="line"><span class="keyword">const</span> num = <span class="title function_">getRandomNum</span>(<span class="number">1</span>, <span class="number">100</span>)</span><br><span class="line"><span class="comment">// 生成 1 - 100 的数组</span></span><br><span class="line"><span class="keyword">const</span> arr = <span class="title function_">getArr</span>()</span><br><span class="line"><span class="keyword">function</span> <span class="title function_">binarySearch</span>(<span class="params">num, arr</span>) &#123;</span><br><span class="line">  <span class="keyword">let</span> start = arr.<span class="property">length</span></span><br><span class="line">  <span class="keyword">let</span> end = <span class="number">0</span></span><br><span class="line">  <span class="keyword">const</span> <span class="title function_">getHalf</span> = (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">    <span class="keyword">let</span> length = start + end</span><br><span class="line">    <span class="keyword">return</span> (length % <span class="number">2</span> === <span class="number">0</span>) ? (length / <span class="number">2</span>) : (length + <span class="number">1</span>) / <span class="number">2</span></span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 取中值</span></span><br><span class="line">  <span class="keyword">let</span> half = <span class="title function_">getHalf</span>()</span><br><span class="line">  <span class="keyword">let</span> current = arr[half]</span><br><span class="line">  <span class="keyword">while</span> (current !== num) &#123;</span><br><span class="line">    <span class="keyword">if</span> (current &gt; num) &#123;</span><br><span class="line">      start = half</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (current &lt; num) &#123;</span><br><span class="line">      end = half</span><br><span class="line">    &#125;</span><br><span class="line">    half = <span class="title function_">getHalf</span>()</span><br><span class="line">    current = arr[half]</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> half</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">const</span> idx = <span class="title function_">binarySearch</span>(num, arr)</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(idx, arr[idx], num)</span><br></pre></td></tr></table></figure>
-
+<pre><code class="js">function getRandomNum(numMin, numMax) &#123;
+  return Math.round( Math.random()*(numMax-numMin) + numMin )
+&#125;  
+function getArr() &#123;
+  const arr = []
+  for(let i = 1, l = 100; i &lt;= l; i++) &#123;
+    arr.push(i)
+  &#125;
+  return arr
+&#125;
+// 随机生成 1 ~ 100 中的某数
+const num = getRandomNum(1, 100)
+// 生成 1 - 100 的数组
+const arr = getArr()
+function binarySearch(num, arr) &#123;
+  let start = arr.length
+  let end = 0
+  const getHalf = () =&gt; &#123;
+    let length = start + end
+    return (length % 2 === 0) ? (length / 2) : (length + 1) / 2
+  &#125;
+  // 取中值
+  let half = getHalf()
+  let current = arr[half]
+  while (current !== num) &#123;
+    if (current &gt; num) &#123;
+      start = half
+    &#125; else if (current &lt; num) &#123;
+      end = half
+    &#125;
+    half = getHalf()
+    current = arr[half]
+  &#125;
+  return half
+&#125;
+const idx = binarySearch(num, arr)
+console.log(idx, arr[idx], num)
+</code></pre>
 <h3 id="斐波那契数列"><a href="#斐波那契数列" class="headerlink" title="斐波那契数列"></a>斐波那契数列</h3><p>具体的数学意义就不说了，我也不懂，总而言之是满足这样的一个数列：F(0)&#x3D;0，F(1)&#x3D;1，F(n)&#x3D;F(n - 1)+F(n - 2)（n ≥ 3，n ∈ N*）</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 第一反应就是递归，最简单最明晰。但效率最低，其实就是每次算出来的值没存起来，导致每个 n 位的值传进去都要重新递归的算</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">fibonacci</span>(<span class="params">n</span>) &#123;</span><br><span class="line">  <span class="keyword">if</span>(n === <span class="number">0</span> || n === <span class="number">1</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> n</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> <span class="title function_">fibonacci</span>(n-<span class="number">1</span>) + <span class="title function_">fibonacci</span>(n-<span class="number">2</span>)</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 改进一些，是个数列自然就可以用个数组来存</span></span><br><span class="line"><span class="comment">// 把之前获得 n 位的值存起来，下次要拿就直接取就好</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">fibonacci2</span>(<span class="params">n</span>) &#123;</span><br><span class="line">  <span class="keyword">if</span>(n === <span class="number">0</span> || n === <span class="number">1</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> n</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">const</span> arr = [<span class="number">0</span>, <span class="number">1</span>]</span><br><span class="line">  <span class="keyword">for</span>(<span class="keyword">let</span> i = <span class="number">2</span>; i &lt;= n; i++) &#123;</span><br><span class="line">    arr[i] = arr[i-<span class="number">1</span>] + arr[i-<span class="number">2</span>]</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> arr[n]</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 改进一些，其实每次都是需要上两位就可以了，不需要用整个数组来存全部</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">fibonacci3</span>(<span class="params">n</span>) &#123;</span><br><span class="line">  <span class="keyword">if</span>(n === <span class="number">0</span> || n === <span class="number">1</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> n</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">let</span> lastOne = <span class="number">1</span> <span class="comment">// n-1</span></span><br><span class="line">  <span class="keyword">let</span> lastTwo = <span class="number">0</span> <span class="comment">// n-2</span></span><br><span class="line">  <span class="keyword">for</span>(<span class="keyword">let</span> i = <span class="number">2</span>; i &lt;= n; i++) &#123;</span><br><span class="line">    <span class="keyword">var</span> current = lastOne + lastTwo</span><br><span class="line">    <span class="comment">// n-2 和 n-1 分别获取后一位的值</span></span><br><span class="line">    lastTwo = lastOne</span><br><span class="line">    lastOne = current</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> current</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 第一种递归的方法，在浏览器 40 以后基本快跑不出来了</span></span><br><span class="line"><span class="comment">// 第三种还是比第二种快那么些许</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">time</span>(<span class="string">&#x27;fibonacci&#x27;</span>)</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">fibonacci</span>(<span class="number">40</span>))</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">timeEnd</span>(<span class="string">&#x27;fibonacci&#x27;</span>)</span><br></pre></td></tr></table></figure>
+<pre><code class="js">// 第一反应就是递归，最简单最明晰。但效率最低，其实就是每次算出来的值没存起来，导致每个 n 位的值传进去都要重新递归的算
+function fibonacci(n) &#123;
+  if(n === 0 || n === 1) &#123;
+    return n
+  &#125;
+  return fibonacci(n-1) + fibonacci(n-2)
+&#125;
+// 改进一些，是个数列自然就可以用个数组来存
+// 把之前获得 n 位的值存起来，下次要拿就直接取就好
+function fibonacci2(n) &#123;
+  if(n === 0 || n === 1) &#123;
+    return n
+  &#125;
+  const arr = [0, 1]
+  for(let i = 2; i &lt;= n; i++) &#123;
+    arr[i] = arr[i-1] + arr[i-2]
+  &#125;
+  return arr[n]
+&#125;
+// 改进一些，其实每次都是需要上两位就可以了，不需要用整个数组来存全部
+function fibonacci3(n) &#123;
+  if(n === 0 || n === 1) &#123;
+    return n
+  &#125;
+  let lastOne = 1 // n-1
+  let lastTwo = 0 // n-2
+  for(let i = 2; i &lt;= n; i++) &#123;
+    var current = lastOne + lastTwo
+    // n-2 和 n-1 分别获取后一位的值
+    lastTwo = lastOne
+    lastOne = current
+  &#125;
+  return current
+&#125;
+// 第一种递归的方法，在浏览器 40 以后基本快跑不出来了
+// 第三种还是比第二种快那么些许
+console.time(&#39;fibonacci&#39;)
+console.log(fibonacci(40))
+console.timeEnd(&#39;fibonacci&#39;)
+</code></pre>
+
       
     </div>
     <footer class="article-footer">
       
-        <a data-url="https://blog.cchealthier.com/2020/10/21/algorithm/" data-id="clmbeu7qo0001tf9m1hy183a2" class="article-thumbs-up">赞一个(<span class="article-thumbs-up-num">0</span>)</a>
+        <a data-url="https://blog.cchealthier.com/2020/10/21/algorithm/" data-id="clmxk7z010004c39mhqzi3ax1" class="article-thumbs-up">赞一个(<span class="article-thumbs-up-num">0</span>)</a>
       
-      <!-- <a data-url="https://blog.cchealthier.com/2020/10/21/algorithm/" data-id="clmbeu7qo0001tf9m1hy183a2" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2020/10/21/algorithm/" data-id="clmxk7z010004c39mhqzi3ax1" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -151,6 +263,37 @@
   
     
   <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2023/09/23/react-basic-app-2/">react 基础工程 Ⅱ（@reduxjs/toolkit &amp; @craco/craco &amp; vite）</a>
+          </li>
+        
+          <li>
+            <a href="/2023/08/24/node-module/">NodeJS 的 commonjs、esm 模块使用以及一些字段释义</a>
+          </li>
+        
+          <li>
+            <a href="/2023/08/23/webpack5-background-url/">webpack5 下 background url 图片打包失败</a>
+          </li>
+        
+          <li>
+            <a href="/2023/07/26/node-stream/">NodeJS 里的 stream（流）</a>
+          </li>
+        
+          <li>
+            <a href="/2023/06/07/webpack-modulefederationplugin/">用 webpack ModuleFederationPlugin 搭建微前端</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
     <h3 class="widget-title">分类</h3>
     <div class="widget">
       <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/http%E5%8D%8F%E8%AE%AE/">http协议</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/%E6%9C%8D%E5%8A%A1/">服务</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/%E7%AE%97%E6%B3%95/">算法</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%97%85%E8%A1%8C/">旅行</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%97%85%E8%A1%8C/%E8%AE%B0%E5%BD%95/">记录</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%83%B9%E9%A5%AA/">烹饪</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%83%B9%E9%A5%AA/%E4%BC%A0%E7%BB%9F/">传统</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%9A%8F%E6%83%B3/">随想</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%9A%8F%E6%83%B3/%E5%BF%83%E6%83%85/">心情</a></li></ul></li></ul>
@@ -182,41 +325,10 @@
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/08/">八月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">七月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/06/">六月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/05/">五月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/04/">四月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/03/">三月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/02/">二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">十一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">十月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">九月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/09/">九月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/08/">八月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">七月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/06/">六月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/05/">五月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/04/">四月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/03/">三月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/02/">二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">十一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">十月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">九月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a></li></ul>
     </div>
   </div>
 
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">最新文章</h3>
-    <div class="widget">
-      <ul>
-        
-          <li>
-            <a href="/2023/08/24/node-module/">NodeJS 的 commonjs、esm 模块使用以及一些字段释义</a>
-          </li>
-        
-          <li>
-            <a href="/2023/08/23/webpack5-background-url/">webpack5 下 background url 图片打包失败</a>
-          </li>
-        
-          <li>
-            <a href="/2023/07/26/node-stream/">NodeJS 里的 stream（流）</a>
-          </li>
-        
-          <li>
-            <a href="/2023/06/07/webpack-modulefederationplugin/">用 webpack ModuleFederationPlugin 搭建微前端</a>
-          </li>
-        
-          <li>
-            <a href="/2023/05/31/react-basic-app/">react 基础工程（react-redux &amp; react-router）</a>
-          </li>
-        
-      </ul>
-    </div>
-  </div>
 
   
 </aside>
@@ -234,15 +346,27 @@
     </div>
     <nav id="mobile-nav">
   
-    <a href="/" class="mobile-nav-link">Home</a>
+    <a href="/" class="mobile-nav-link">首页</a>
   
-    <a href="/archives" class="mobile-nav-link">Archives</a>
+    <a href="/archives" class="mobile-nav-link">归档</a>
   
 </nav>
     
 
 <script src="//cdn.staticfile.org/jquery/2.0.3/jquery.min.js"></script>
 <script type="text/javascript" src="https://www.jq22.com/demo/jqueryToast201708310012/js/toast.script.js"></script>
+<script src="/js/highlight.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlightjs-line-numbers.js/2.8.0/highlightjs-line-numbers.min.js"></script>
+<script>
+  $(function(){
+    $('pre code').each((i, el) => {
+    hljs.highlightElement(el);
+  });
+  $('code.hljs').each(function(i, el) {
+     hljs.lineNumbersBlock(el);
+  });
+  }());
+</script>
 
 
   

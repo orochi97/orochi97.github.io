@@ -26,13 +26,12 @@
     <link rel="icon" href="/favicon.ico">
   
   
-    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
-  
   
 <link rel="stylesheet" href="/css/style.css">
 
   <link href="https://www.jq22.com/demo/jqueryToast201708310012/css/toast.style.css" rel="stylesheet" type="text/css">
-<meta name="generator" content="Hexo 7.0.0-rc1"></head>
+  <link rel="stylesheet" href="/css/highlight/styles/monokai-sublime.min.css">
+<meta name="generator" content="Hexo 6.3.0"></head>
 
 <body>
   <div id="container">
@@ -60,9 +59,9 @@
       <nav id="main-nav">
         <a id="main-nav-toggle" class="nav-icon"></a>
         
-          <a class="main-nav-link" href="/">Home</a>
+          <a class="main-nav-link" href="/">首页</a>
         
-          <a class="main-nav-link" href="/archives">Archives</a>
+          <a class="main-nav-link" href="/archives">归档</a>
         
       </nav>
       <nav id="sub-nav">
@@ -106,47 +105,172 @@
 <p><strong>代码仓库：<a target="_blank" rel="noopener" href="https://github.com/orochi97/react-app">github</a>。</strong></p>
 <h2 id="一、Router"><a href="#一、Router" class="headerlink" title="一、Router"></a>一、Router</h2><p>当前最新版本为 v6，据说有些大改动，旧版本请参考《<a target="_blank" rel="noopener" href="https://reactrouter.com/en/main/upgrading/v5">升级指南</a>》。</p>
 <p>路由文件声明：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; createBrowserRouter, <span class="title class_">Navigate</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;react-router-dom&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="title class_">Home</span> <span class="keyword">from</span> <span class="string">&#x27;@/views/Home&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="title class_">NotFound</span> <span class="keyword">from</span> <span class="string">&#x27;@/views/NotFound&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> router = <span class="title function_">createBrowserRouter</span>([</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="attr">path</span>: <span class="string">&#x27;/home&#x27;</span>,</span><br><span class="line">    <span class="attr">element</span>: <span class="language-xml"><span class="tag">&lt;<span class="name">Home</span> /&gt;</span></span>,</span><br><span class="line">  &#125;,</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="attr">path</span>: <span class="string">&#x27;/game&#x27;</span>,</span><br><span class="line">    <span class="comment">// element: &lt;CardGame /&gt;,</span></span><br><span class="line">    <span class="keyword">async</span> <span class="title function_">lazy</span>(<span class="params"></span>) &#123; <span class="comment">// 路由页面懒加载，也就是真的访问到再下载，打包也是独立的 js</span></span><br><span class="line">      <span class="keyword">const</span> comp = <span class="keyword">await</span> <span class="keyword">import</span>(<span class="string">&#x27;@/views/CardGame&#x27;</span>);</span><br><span class="line">      <span class="comment">// 这里的 default 是 webpack 的处理，会把 export default 挂在 default 属性上</span></span><br><span class="line">      <span class="keyword">return</span> &#123; <span class="title class_">Component</span>: comp.<span class="property">default</span> &#125;;</span><br><span class="line">    &#125;,</span><br><span class="line">  &#125;,</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="attr">path</span>: <span class="string">&#x27;/demo/:id&#x27;</span>,</span><br><span class="line">    <span class="comment">// element: &lt;Demo /&gt;,</span></span><br><span class="line">    <span class="keyword">async</span> <span class="title function_">lazy</span>(<span class="params"></span>) &#123;</span><br><span class="line">      <span class="comment">// 注意：这里要 loader 结果返回，才会渲染组件。也就是会阻塞页面。</span></span><br><span class="line">      <span class="keyword">const</span> comp = <span class="keyword">await</span> <span class="keyword">import</span>(<span class="string">&#x27;@/views/Demo&#x27;</span>);</span><br><span class="line">      <span class="keyword">return</span> &#123; <span class="title class_">Component</span>: comp.<span class="property">default</span>, <span class="attr">loader</span>: comp.<span class="property">loader</span> &#125;;</span><br><span class="line">    &#125;,</span><br><span class="line">  &#125;,</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="attr">path</span>: <span class="string">&#x27;/&#x27;</span>, <span class="comment">// v6 的重定向改为 Navigate 组件</span></span><br><span class="line">    <span class="attr">element</span>: <span class="language-xml"><span class="tag">&lt;<span class="name">Navigate</span> <span class="attr">to</span>=<span class="string">&#123;</span>&#x27;/<span class="attr">home</span>&#x27;&#125;/&gt;</span></span>,</span><br><span class="line">  &#125;,</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="attr">path</span>: <span class="string">&#x27;*&#x27;</span>, <span class="comment">// 404页面兜底，我觉得改成和上面的一样的重定向处理应该也可以</span></span><br><span class="line">    <span class="attr">element</span>: <span class="language-xml"><span class="tag">&lt;<span class="name">NotFound</span> /&gt;</span></span>,</span><br><span class="line">  &#125;,</span><br><span class="line">]);</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> router;</span><br></pre></td></tr></table></figure>
+<pre><code class="js">import &#123; createBrowserRouter, Navigate &#125; from &#39;react-router-dom&#39;;
+import Home from &#39;@/views/Home&#39;;
+import NotFound from &#39;@/views/NotFound&#39;;
 
+const router = createBrowserRouter([
+  &#123;
+    path: &#39;/home&#39;,
+    element: &lt;Home /&gt;,
+  &#125;,
+  &#123;
+    path: &#39;/game&#39;,
+    // element: &lt;CardGame /&gt;,
+    async lazy() &#123; // 路由页面懒加载，也就是真的访问到再下载，打包也是独立的 js
+      const comp = await import(&#39;@/views/CardGame&#39;);
+      // 这里的 default 是 webpack 的处理，会把 export default 挂在 default 属性上
+      return &#123; Component: comp.default &#125;;
+    &#125;,
+  &#125;,
+  &#123;
+    path: &#39;/demo/:id&#39;,
+    // element: &lt;Demo /&gt;,
+    async lazy() &#123;
+      // 注意：这里要 loader 结果返回，才会渲染组件。也就是会阻塞页面。
+      const comp = await import(&#39;@/views/Demo&#39;);
+      return &#123; Component: comp.default, loader: comp.loader &#125;;
+    &#125;,
+  &#125;,
+  &#123;
+    path: &#39;/&#39;, // v6 的重定向改为 Navigate 组件
+    element: &lt;Navigate to=&#123;&#39;/home&#39;&#125;/&gt;,
+  &#125;,
+  &#123;
+    path: &#39;*&#39;, // 404页面兜底，我觉得改成和上面的一样的重定向处理应该也可以
+    element: &lt;NotFound /&gt;,
+  &#125;,
+]);
+
+export default router;
+</code></pre>
 <p>然后路由声明对象的使用：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">RouterProvider</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;react-router-dom&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> router <span class="keyword">from</span> <span class="string">&#x27;@/router&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">App</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">RouterProvider</span> <span class="attr">router</span>=<span class="string">&#123;router&#125;</span> /&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="title class_">App</span>;</span><br></pre></td></tr></table></figure>
+<pre><code class="js">import &#123; RouterProvider &#125; from &#39;react-router-dom&#39;;
+import router from &#39;@/router&#39;;
 
+function App() &#123;
+  return (
+    &lt;RouterProvider router=&#123;router&#125; /&gt;
+  );
+&#125;
+export default App;
+</code></pre>
 <span id="more"></span>
 
 <h2 id="二、Redux"><a href="#二、Redux" class="headerlink" title="二、Redux"></a>二、Redux</h2><p>redux 使用就比较繁琐一点。先安装相关依赖：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm i react-redux redux @reduxjs/toolkit</span><br></pre></td></tr></table></figure>
-
+<pre><code class="bash">npm i react-redux redux @reduxjs/toolkit
+</code></pre>
 <p>需要知道的是， redux 是一个公共的第三方库，和框架并没有关系。react-redux 才是为了 react 能更好地使用 redux 而推出的工具库，至于 <a target="_blank" rel="noopener" href="https://redux-toolkit.js.org/introduction/getting-started">@reduxjs&#x2F;toolkit</a>，也是为了可以更更好地使用 redux 和 react-redux。<br>一开始看都是 re***，我还以为 redux 就是 react 官方推的，囧。</p>
 <p>代码都在 <code>src/store</code> 里：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; configureStore &#125; <span class="keyword">from</span> <span class="string">&#x27;@reduxjs/toolkit&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> rootReducer <span class="keyword">from</span> <span class="string">&#x27;./reducer&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> * <span class="keyword">from</span> <span class="string">&#x27;./reducer&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 创建一个 store，把所有声明好的 reducer 传进去</span></span><br><span class="line"><span class="keyword">const</span> store = <span class="title function_">configureStore</span>(&#123;</span><br><span class="line">  <span class="attr">reducer</span>: rootReducer,</span><br><span class="line">&#125;);</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> store;</span><br></pre></td></tr></table></figure>
+<pre><code class="js">import &#123; configureStore &#125; from &#39;@reduxjs/toolkit&#39;;
+import rootReducer from &#39;./reducer&#39;;
 
+export * from &#39;./reducer&#39;;
+
+// 创建一个 store，把所有声明好的 reducer 传进去
+const store = configureStore(&#123;
+  reducer: rootReducer,
+&#125;);
+export default store;
+</code></pre>
 <p>reducer 代码以 <code>src/store/reducer/number.js</code> 为例：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; cloneDeep &#125; <span class="keyword">from</span> <span class="string">&#x27;lodash&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; createAsyncThunk &#125; <span class="keyword">from</span> <span class="string">&#x27;@reduxjs/toolkit&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; <span class="variable constant_">ADD_NUMBER</span>, <span class="variable constant_">MINUS_NUMBER</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;../type&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 把每个 action 声明然后导出去</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> <span class="title function_">addNumberAction</span> = payload =&gt; (&#123;</span><br><span class="line">  <span class="attr">type</span>: <span class="variable constant_">ADD_NUMBER</span>,</span><br><span class="line">  <span class="attr">payload</span>: payload,</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> <span class="title function_">minusNumberAction</span> = payload =&gt; (&#123;</span><br><span class="line">  <span class="attr">type</span>: <span class="variable constant_">MINUS_NUMBER</span>,</span><br><span class="line">  <span class="attr">payload</span>: payload,</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 声明一个异步操作，这里把它叫做 thunk</span></span><br><span class="line"><span class="comment">// 第一个参数是 type，第二个参数是处理方法</span></span><br><span class="line"><span class="comment">// 处理完成后会 dispatch 一个 type 为 `$&#123;type&#125;/fulfilled`</span></span><br><span class="line"><span class="comment">// 这也是为什么下面会有一个 addNumberThunk.fulfilled.toString() 的 case</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> addNumberThunk = <span class="title function_">createAsyncThunk</span>(</span><br><span class="line">  <span class="variable constant_">ADD_NUMBER</span>,</span><br><span class="line">  <span class="keyword">async</span> (number) =&gt; &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">Promise</span>(<span class="function">(<span class="params">resolve</span>) =&gt;</span> <span class="built_in">setTimeout</span>(<span class="function">() =&gt;</span> <span class="title function_">resolve</span>(number), <span class="number">2000</span>));</span><br><span class="line">  &#125;,</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 初始的 store 值，当然它的对象归属取决于在最上层做聚合时候它的 key 值叫啥</span></span><br><span class="line"><span class="keyword">const</span> defaultState = &#123;</span><br><span class="line">  <span class="attr">a</span>: <span class="number">10000</span>,</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="keyword">function</span> <span class="title function_">numberReducer</span>(<span class="params">state = defaultState, action</span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> &#123; type, payload &#125; = action;</span><br><span class="line">  <span class="comment">// 这里必须深拷贝，因为原数据是不允许改动的，只能传递新的数据出去</span></span><br><span class="line">  state = <span class="title function_">cloneDeep</span>(state);</span><br><span class="line">  <span class="keyword">switch</span> (type) &#123;</span><br><span class="line">    <span class="keyword">case</span> <span class="attr">ADD_NUMBER</span>:</span><br><span class="line">      state.<span class="property">a</span> += payload;</span><br><span class="line">      <span class="keyword">return</span> state;</span><br><span class="line">    <span class="keyword">case</span> <span class="attr">MINUS_NUMBER</span>:</span><br><span class="line">      state.<span class="property">a</span> -= payload;</span><br><span class="line">      <span class="keyword">return</span> state;</span><br><span class="line">    <span class="comment">// addNumberThunk.fulfilled.toString() =&gt; &#x27;ADD_NUMBER/fulfilled&#x27;</span></span><br><span class="line">    <span class="keyword">case</span> addNumberThunk.<span class="property">fulfilled</span>.<span class="title function_">toString</span>():</span><br><span class="line">      state.<span class="property">a</span> += payload;</span><br><span class="line">      <span class="keyword">return</span> state;</span><br><span class="line">    <span class="attr">default</span>:</span><br><span class="line">      <span class="keyword">return</span> state;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<pre><code class="js">import &#123; cloneDeep &#125; from &#39;lodash&#39;;
+import &#123; createAsyncThunk &#125; from &#39;@reduxjs/toolkit&#39;;
+import &#123; ADD_NUMBER, MINUS_NUMBER &#125; from &#39;../type&#39;;
 
+// 把每个 action 声明然后导出去
+export const addNumberAction = payload =&gt; (&#123;
+  type: ADD_NUMBER,
+  payload: payload,
+&#125;);
+
+export const minusNumberAction = payload =&gt; (&#123;
+  type: MINUS_NUMBER,
+  payload: payload,
+&#125;);
+
+// 声明一个异步操作，这里把它叫做 thunk
+// 第一个参数是 type，第二个参数是处理方法
+// 处理完成后会 dispatch 一个 type 为 `$&#123;type&#125;/fulfilled`
+// 这也是为什么下面会有一个 addNumberThunk.fulfilled.toString() 的 case
+export const addNumberThunk = createAsyncThunk(
+  ADD_NUMBER,
+  async (number) =&gt; &#123;
+    return new Promise((resolve) =&gt; setTimeout(() =&gt; resolve(number), 2000));
+  &#125;,
+);
+
+// 初始的 store 值，当然它的对象归属取决于在最上层做聚合时候它的 key 值叫啥
+const defaultState = &#123;
+  a: 10000,
+&#125;;
+
+export default function numberReducer(state = defaultState, action) &#123;
+  const &#123; type, payload &#125; = action;
+  // 这里必须深拷贝，因为原数据是不允许改动的，只能传递新的数据出去
+  state = cloneDeep(state);
+  switch (type) &#123;
+    case ADD_NUMBER:
+      state.a += payload;
+      return state;
+    case MINUS_NUMBER:
+      state.a -= payload;
+      return state;
+    // addNumberThunk.fulfilled.toString() =&gt; &#39;ADD_NUMBER/fulfilled&#39;
+    case addNumberThunk.fulfilled.toString():
+      state.a += payload;
+      return state;
+    default:
+      return state;
+  &#125;
+&#125;;
+</code></pre>
 <h3 id="1、副作用与-createAsyncThunk"><a href="#1、副作用与-createAsyncThunk" class="headerlink" title="1、副作用与 createAsyncThunk"></a>1、副作用与 createAsyncThunk</h3><p>redux 讲究的是纯函数，输入输出恒定，所以每个 action 做的事情是稳定的。然后把一些需要依赖外部的环境叫做副作用，用一些中间件来处理。比如 <a target="_blank" rel="noopener" href="https://github.com/troch/react-thunk">react-thunk</a> 和 <a target="_blank" rel="noopener" href="https://github.com/barbuza/react-saga">react-saga</a>，用法这里就不赘述。</p>
 <p>其实就是在正式 store.dispatch 之前，把所有数据处理完，无论同步异步，然后再 dispatch。如果用过 vuex 的话，其实也是这样，异步的用 store.dispatch（vuex 的语法），然后再请求完数据或者别的什么都行，到真正要改变 state 数据了才用 store.commit。</p>
 <p>也就是说，不用中间件也行。触发了事件自己怎么异步处理好数据，然后提交 dispatch。</p>
 <p><code>@reduxjs/toolkit</code> 也提供一个方法 <code>createAsyncThunk</code>，大同小异吧，思路都是一样的。我们只需要声明好相应的 <code>asyncThunk.fulfilled.toString()</code> case 处理事件就好。当然同时也有 <code>asyncThunk.pending.toString()</code> 和 <code>asyncThunk.rejected.toString()</code>，酌情声明。</p>
 <h3 id="2、createSlice"><a href="#2、createSlice" class="headerlink" title="2、createSlice"></a>2、createSlice</h3><p>这个库还提供了一个切片方法用来快速声明 reducer（个人理解）：<code>createSlice</code>。代码在 <code>src/store/reducer/counter.js</code> 里。这个方法里的 reducer 是可以直接改 state 的值，据说是用了 <a target="_blank" rel="noopener" href="https://github.com/immutable-js/immutable-js">immutable.js</a> 来确保 state 不变。具体用法可看<a target="_blank" rel="noopener" href="https://redux-toolkit.js.org/api/createSlice">官网介绍</a>。</p>
 <h3 id="3、reducer-组合-combineReducers"><a href="#3、reducer-组合-combineReducers" class="headerlink" title="3、reducer 组合 combineReducers"></a>3、reducer 组合 combineReducers</h3><p><code>@reduxjs/toolkit</code> 提供一个方法 <code>combineReducers</code>，用来组合 reducer。</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; combineReducers &#125; <span class="keyword">from</span> <span class="string">&#x27;@reduxjs/toolkit&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> number <span class="keyword">from</span> <span class="string">&#x27;./number&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> string <span class="keyword">from</span> <span class="string">&#x27;./string&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> reducer = <span class="title function_">combineReducers</span>(&#123;</span><br><span class="line">  number,</span><br><span class="line">  string,</span><br><span class="line">&#125;);</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> reducer;</span><br></pre></td></tr></table></figure>
+<pre><code class="js">import &#123; combineReducers &#125; from &#39;@reduxjs/toolkit&#39;;
+import number from &#39;./number&#39;;
+import string from &#39;./string&#39;;
+
+const reducer = combineReducers(&#123;
+  number,
+  string,
+&#125;);
+export default reducer;
+</code></pre>
 <p>这个 reducer 挂载在顶层 state 的 <code>data</code> 字段下，那么它的获取方式就是 <code>store.getState().data.number/string</code>。<br>具体可看 <code>src/store/reducer/data/index.js</code> 代码。</p>
 <p>各类参数使用和事件的触发在 <code>src/views/demo/index.js</code> 里。</p>
 <p>react 使用 store 注入：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="title class_">ReactDOM</span> <span class="keyword">from</span> <span class="string">&#x27;react-dom/client&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">Provider</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;react-redux&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> store <span class="keyword">from</span> <span class="string">&#x27;@/store&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="title class_">App</span> <span class="keyword">from</span> <span class="string">&#x27;./App&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> root = <span class="title class_">ReactDOM</span>.<span class="title function_">createRoot</span>(<span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;root&#x27;</span>));</span><br><span class="line">root.<span class="title function_">render</span>(</span><br><span class="line">  <span class="language-xml"><span class="tag">&lt;<span class="name">Provider</span> <span class="attr">store</span>=<span class="string">&#123;store&#125;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;<span class="name">App</span> /&gt;</span></span></span><br><span class="line"><span class="language-xml">  <span class="tag">&lt;/<span class="name">Provider</span>&gt;</span></span></span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+<pre><code class="js">import ReactDOM from &#39;react-dom/client&#39;;
+import &#123; Provider &#125; from &#39;react-redux&#39;;
+import store from &#39;@/store&#39;;
+import App from &#39;./App&#39;;
 
+const root = ReactDOM.createRoot(document.getElementById(&#39;root&#39;));
+root.render(
+  &lt;Provider store=&#123;store&#125;&gt;
+    &lt;App /&gt;
+  &lt;/Provider&gt;
+);
+</code></pre>
 <h2 id="三、其他工程化"><a href="#三、其他工程化" class="headerlink" title="三、其他工程化"></a>三、其他工程化</h2><p>和 vue 后来的版本一样，把 webpack 的配置藏起来，但是 react 没有暴露扩展方法，需要执行 <code>npm run eject</code> 把配置文件弹出来，但这一步是不可逆的，弹出来就收不回去了。也没关系，自己配置一下 webpack.config.js 就可以了。主要是不支持 alias 声明比较不方便。也不支持 less sass 好像。<br>需要注意的是 <code>devServer</code> 的配置要加上 <code>historyApiFallback</code> 字段的配置，不然 router 路径没法生效。简单理解就是匹配不到路径会有个默认返回，也就是无论访问什么路径，都返回默认的 index.html 内容。</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">devServer</span>: &#123;</span><br><span class="line">  <span class="attr">historyApiFallback</span>: &#123; <span class="attr">disableDotRule</span>: <span class="literal">true</span>, <span class="attr">index</span>: <span class="string">&#x27;/&#x27;</span> &#125;,</span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
-
-<h2 id="更新"><a href="#更新" class="headerlink" title="更新"></a>更新</h2><h4 id="2023-08-24-更新"><a href="#2023-08-24-更新" class="headerlink" title="2023-08-24 更新"></a>2023-08-24 更新</h4><p>webpack5 对于资源文件的处理有更新，详情参阅《<a href="/2023/08/23/webpack5-background-url/">webpack5 下 background url 图片打包失败</a>》。</p>
+<pre><code class="js">devServer: &#123;
+  historyApiFallback: &#123; disableDotRule: true, index: &#39;/&#39; &#125;,
+&#125;,
+</code></pre>
+<h2 id="更新！！！"><a href="#更新！！！" class="headerlink" title="更新！！！"></a>更新！！！</h2><h4 id="2023-08-24-更新"><a href="#2023-08-24-更新" class="headerlink" title="2023-08-24 更新"></a>2023-08-24 更新</h4><p>webpack5 对于资源文件的处理有更新，详情参阅《<a href="/2023/08/23/webpack5-background-url/">webpack5 下 background url 图片打包失败</a>》。</p>
+<h4 id="2023-09-24-更新"><a href="#2023-09-24-更新" class="headerlink" title="2023-09-24 更新"></a>2023-09-24 更新</h4><p>更新 @reduxjs&#x2F;toolkit 工具的使用以及用 @craco&#x2F;craco、vite 进行打包 ，详情参阅《<a href="/2023/09/23/react-basic-app-2/">react 基础工程 Ⅱ（@reduxjs&#x2F;toolkit &amp; @craco&#x2F;craco &amp; vite）</a>》。</p>
 
       
     </div>
     <footer class="article-footer">
       
-        <a data-url="https://blog.cchealthier.com/2023/05/31/react-basic-app/" data-id="clmbeu7r3002htf9m8xovbld1" class="article-thumbs-up">赞一个(<span class="article-thumbs-up-num">0</span>)</a>
+        <a data-url="https://blog.cchealthier.com/2023/05/31/react-basic-app/" data-id="clmxk7z0e002kc39m7cl069mw" class="article-thumbs-up">赞一个(<span class="article-thumbs-up-num">0</span>)</a>
       
-      <!-- <a data-url="https://blog.cchealthier.com/2023/05/31/react-basic-app/" data-id="clmbeu7r3002htf9m8xovbld1" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2023/05/31/react-basic-app/" data-id="clmxk7z0e002kc39m7cl069mw" class="article-share-link">分享</a> -->
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" rel="tag">工程化</a></li></ul>
@@ -183,6 +307,37 @@
   
     
   <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2023/09/23/react-basic-app-2/">react 基础工程 Ⅱ（@reduxjs/toolkit &amp; @craco/craco &amp; vite）</a>
+          </li>
+        
+          <li>
+            <a href="/2023/08/24/node-module/">NodeJS 的 commonjs、esm 模块使用以及一些字段释义</a>
+          </li>
+        
+          <li>
+            <a href="/2023/08/23/webpack5-background-url/">webpack5 下 background url 图片打包失败</a>
+          </li>
+        
+          <li>
+            <a href="/2023/07/26/node-stream/">NodeJS 里的 stream（流）</a>
+          </li>
+        
+          <li>
+            <a href="/2023/06/07/webpack-modulefederationplugin/">用 webpack ModuleFederationPlugin 搭建微前端</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
     <h3 class="widget-title">分类</h3>
     <div class="widget">
       <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/http%E5%8D%8F%E8%AE%AE/">http协议</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/%E6%9C%8D%E5%8A%A1/">服务</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/%E7%AE%97%E6%B3%95/">算法</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%97%85%E8%A1%8C/">旅行</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%97%85%E8%A1%8C/%E8%AE%B0%E5%BD%95/">记录</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%83%B9%E9%A5%AA/">烹饪</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%83%B9%E9%A5%AA/%E4%BC%A0%E7%BB%9F/">传统</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%9A%8F%E6%83%B3/">随想</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%9A%8F%E6%83%B3/%E5%BF%83%E6%83%85/">心情</a></li></ul></li></ul>
@@ -214,41 +369,10 @@
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/08/">八月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">七月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/06/">六月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/05/">五月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/04/">四月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/03/">三月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/02/">二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">十一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">十月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">九月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/09/">九月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/08/">八月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">七月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/06/">六月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/05/">五月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/04/">四月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/03/">三月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/02/">二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">十一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">十月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">九月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a></li></ul>
     </div>
   </div>
 
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">最新文章</h3>
-    <div class="widget">
-      <ul>
-        
-          <li>
-            <a href="/2023/08/24/node-module/">NodeJS 的 commonjs、esm 模块使用以及一些字段释义</a>
-          </li>
-        
-          <li>
-            <a href="/2023/08/23/webpack5-background-url/">webpack5 下 background url 图片打包失败</a>
-          </li>
-        
-          <li>
-            <a href="/2023/07/26/node-stream/">NodeJS 里的 stream（流）</a>
-          </li>
-        
-          <li>
-            <a href="/2023/06/07/webpack-modulefederationplugin/">用 webpack ModuleFederationPlugin 搭建微前端</a>
-          </li>
-        
-          <li>
-            <a href="/2023/05/31/react-basic-app/">react 基础工程（react-redux &amp; react-router）</a>
-          </li>
-        
-      </ul>
-    </div>
-  </div>
 
   
 </aside>
@@ -266,15 +390,27 @@
     </div>
     <nav id="mobile-nav">
   
-    <a href="/" class="mobile-nav-link">Home</a>
+    <a href="/" class="mobile-nav-link">首页</a>
   
-    <a href="/archives" class="mobile-nav-link">Archives</a>
+    <a href="/archives" class="mobile-nav-link">归档</a>
   
 </nav>
     
 
 <script src="//cdn.staticfile.org/jquery/2.0.3/jquery.min.js"></script>
 <script type="text/javascript" src="https://www.jq22.com/demo/jqueryToast201708310012/js/toast.script.js"></script>
+<script src="/js/highlight.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlightjs-line-numbers.js/2.8.0/highlightjs-line-numbers.min.js"></script>
+<script>
+  $(function(){
+    $('pre code').each((i, el) => {
+    hljs.highlightElement(el);
+  });
+  $('code.hljs').each(function(i, el) {
+     hljs.lineNumbersBlock(el);
+  });
+  }());
+</script>
 
 
   

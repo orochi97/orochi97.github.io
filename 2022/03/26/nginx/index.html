@@ -26,13 +26,12 @@
     <link rel="icon" href="/favicon.ico">
   
   
-    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
-  
   
 <link rel="stylesheet" href="/css/style.css">
 
   <link href="https://www.jq22.com/demo/jqueryToast201708310012/css/toast.style.css" rel="stylesheet" type="text/css">
-<meta name="generator" content="Hexo 7.0.0-rc1"></head>
+  <link rel="stylesheet" href="/css/highlight/styles/monokai-sublime.min.css">
+<meta name="generator" content="Hexo 6.3.0"></head>
 
 <body>
   <div id="container">
@@ -60,9 +59,9 @@
       <nav id="main-nav">
         <a id="main-nav-toggle" class="nav-icon"></a>
         
-          <a class="main-nav-link" href="/">Home</a>
+          <a class="main-nav-link" href="/">首页</a>
         
-          <a class="main-nav-link" href="/archives">Archives</a>
+          <a class="main-nav-link" href="/archives">归档</a>
         
       </nav>
       <nav id="sub-nav">
@@ -111,8 +110,71 @@
 <h3 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h3><p>接着就是 nginx 怎么配了，一开始我还是不知道可不可以，直接看配置</p>
 <span id="more"></span>
 
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">user</span>  <span class="string">root;</span> <span class="comment"># 一开始这里好像是 nobody，静态资源访问不行，要配置成 root</span></span><br><span class="line"><span class="string">worker_processes</span>  <span class="number">1</span><span class="string">;</span></span><br><span class="line"></span><br><span class="line"><span class="string">events</span> &#123;</span><br><span class="line">  <span class="string">worker_connections</span>  <span class="number">1024</span><span class="string">;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="string">http</span> &#123;</span><br><span class="line">  <span class="string">include</span>       <span class="string">mime.types;</span></span><br><span class="line">  <span class="string">default_type</span>  <span class="string">application/octet-stream;</span></span><br><span class="line"></span><br><span class="line">  <span class="string">sendfile</span>        <span class="string">on;</span></span><br><span class="line"></span><br><span class="line">  <span class="string">keepalive_timeout</span>  <span class="number">65</span><span class="string">;</span></span><br><span class="line"></span><br><span class="line">  <span class="string">server</span> &#123;</span><br><span class="line">   	<span class="string">listen</span>       <span class="number">443</span> <span class="string">ssl;</span> <span class="comment"># nginx 监听443端口</span></span><br><span class="line">   	<span class="string">server_name</span>  <span class="string">www.cchealthier.com;</span> <span class="comment"># 该端口的服务名</span></span><br><span class="line"></span><br><span class="line">   	<span class="string">ssl_certificate</span>       <span class="string">$</span>&#123;<span class="string">cert.pem</span>&#125;<span class="string">;</span> <span class="comment"># 这里是 https 证书的绝对地址</span></span><br><span class="line">   	<span class="string">ssl_certificate_key</span>   <span class="string">$</span>&#123;<span class="string">server.key</span>&#125;<span class="string">;</span></span><br><span class="line"></span><br><span class="line">   	<span class="string">ssl_session_cache</span>    <span class="string">shared:SSL:1m;</span></span><br><span class="line">   	<span class="string">ssl_session_timeout</span>  <span class="string">5m;</span></span><br><span class="line"></span><br><span class="line">   	<span class="string">ssl_ciphers</span>  <span class="string">HIGH:!aNULL:!MD5;</span></span><br><span class="line">   	<span class="string">ssl_prefer_server_ciphers</span>  <span class="string">on;</span></span><br><span class="line"></span><br><span class="line">    <span class="string">location</span> <span class="string">/</span> &#123; <span class="comment"># 匹配访问的路径</span></span><br><span class="line">      <span class="string">proxy_pass</span> <span class="string">http://www.cchealthier.com:3333;</span> <span class="comment"># 导向真正想要访问的服务</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="string">server</span> &#123;</span><br><span class="line">   	<span class="string">listen</span>       <span class="number">443</span> <span class="string">ssl;</span></span><br><span class="line">   	<span class="string">server_name</span>  <span class="string">file.cchealthier.com;</span></span><br><span class="line"></span><br><span class="line">   	<span class="string">ssl_certificate</span>       <span class="string">$</span>&#123;<span class="string">cert.pem</span>&#125;<span class="string">;</span> <span class="comment"># 这里是 https 证书的绝对地址</span></span><br><span class="line">   	<span class="string">ssl_certificate_key</span>   <span class="string">$</span>&#123;<span class="string">server.key</span>&#125;<span class="string">;</span></span><br><span class="line"></span><br><span class="line">   	<span class="string">ssl_session_cache</span>    <span class="string">shared:SSL:1m;</span></span><br><span class="line">   	<span class="string">ssl_session_timeout</span>  <span class="string">5m;</span></span><br><span class="line"></span><br><span class="line">   	<span class="string">ssl_ciphers</span>  <span class="string">HIGH:!aNULL:!MD5;</span></span><br><span class="line">   	<span class="string">ssl_prefer_server_ciphers</span>  <span class="string">on;</span></span><br><span class="line"></span><br><span class="line">   	<span class="string">location</span> <span class="string">/file</span> &#123;</span><br><span class="line">      <span class="string">alias</span> <span class="string">$</span>&#123;<span class="string">cert.pem</span>&#125;<span class="string">;</span> <span class="comment"># 文件存放的绝对地址，这里就是纯粹当成服务静态资源访问</span></span><br><span class="line">      <span class="string">autoindex</span> <span class="string">on;</span></span><br><span class="line">   	&#125;</span><br><span class="line"></span><br><span class="line">    <span class="string">location</span> <span class="string">/another</span> &#123;</span><br><span class="line">      <span class="string">proxy_pass</span> <span class="string">http://file.cchealthier.com:4000;</span></span><br><span class="line">      <span class="string">proxy_redirect</span> <span class="string">off;</span></span><br><span class="line">      <span class="string">proxy_set_header</span>  <span class="string">Host</span>    <span class="string">$host;</span></span><br><span class="line">      <span class="string">proxy_set_header</span>  <span class="string">X-Real-IP</span> <span class="string">$remote_addr;</span></span><br><span class="line">      <span class="string">proxy_set_header</span>  <span class="string">X-Forwarded-For</span> <span class="string">$proxy_add_x_forwarded_for;</span></span><br><span class="line">      <span class="string">proxy_set_header</span>  <span class="string">X-Forwarded-Proto</span> <span class="string">$scheme;</span></span><br><span class="line"></span><br><span class="line">      <span class="string">client_max_body_size</span> <span class="number">0</span><span class="string">;</span> <span class="comment"># disable upload limit</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="yaml">user  root; # 一开始这里好像是 nobody，静态资源访问不行，要配置成 root
+worker_processes  1;
 
+events &#123;
+  worker_connections  1024;
+&#125;
+
+
+http &#123;
+  include       mime.types;
+  default_type  application/octet-stream;
+
+  sendfile        on;
+
+  keepalive_timeout  65;
+
+  server &#123;
+       listen       443 ssl; # nginx 监听443端口
+       server_name  www.cchealthier.com; # 该端口的服务名
+
+       ssl_certificate       $&#123;cert.pem&#125;; # 这里是 https 证书的绝对地址
+       ssl_certificate_key   $&#123;server.key&#125;;
+
+       ssl_session_cache    shared:SSL:1m;
+       ssl_session_timeout  5m;
+
+       ssl_ciphers  HIGH:!aNULL:!MD5;
+       ssl_prefer_server_ciphers  on;
+
+    location / &#123; # 匹配访问的路径
+      proxy_pass http://www.cchealthier.com:3333; # 导向真正想要访问的服务
+    &#125;
+  &#125;
+  server &#123;
+       listen       443 ssl;
+       server_name  file.cchealthier.com;
+
+       ssl_certificate       $&#123;cert.pem&#125;; # 这里是 https 证书的绝对地址
+       ssl_certificate_key   $&#123;server.key&#125;;
+
+       ssl_session_cache    shared:SSL:1m;
+       ssl_session_timeout  5m;
+
+       ssl_ciphers  HIGH:!aNULL:!MD5;
+       ssl_prefer_server_ciphers  on;
+
+       location /file &#123;
+      alias $&#123;cert.pem&#125;; # 文件存放的绝对地址，这里就是纯粹当成服务静态资源访问
+      autoindex on;
+       &#125;
+
+    location /another &#123;
+      proxy_pass http://file.cchealthier.com:4000;
+      proxy_redirect off;
+      proxy_set_header  Host    $host;
+      proxy_set_header  X-Real-IP $remote_addr;
+      proxy_set_header  X-Forwarded-For $proxy_add_x_forwarded_for;
+      proxy_set_header  X-Forwarded-Proto $scheme;
+
+      client_max_body_size 0; # disable upload limit
+    &#125;
+  &#125;
+
+&#125;
+</code></pre>
 <h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>https只有443一个入口，所以这个肯定是留给 nginx 本身的。然后写两份 <code>server</code> 配置监听 <code>443</code> 端口。这个是我没想到可以这样做的，我以为监听同个端口会冲撞。<br>而且可以配置 <code>server_name</code> 判断是来自哪个域名的。这样就<strong>达到同个端口不同域名导向不同服务</strong>。</p>
 <p>同时 “file.cchealthier.com” 还使用了不同路径导向，“&#x2F;file” 访问的是图片等资源。“&#x2F;another” 是搭的简易文件服务管理系统，因为需要操作上传等需要鉴权。所以这里用路径区分了不同系统。单纯的资源映射也算服务系统。</p>
 <p>其中静态资源映射要能访问需要把最上面的 <code>user  root;</code> 配置成 <code>root</code>。</p>
@@ -122,9 +184,9 @@
     </div>
     <footer class="article-footer">
       
-        <a data-url="https://blog.cchealthier.com/2022/03/26/nginx/" data-id="clmbeu7r0001vtf9m9g11605k" class="article-thumbs-up">赞一个(<span class="article-thumbs-up-num">0</span>)</a>
+        <a data-url="https://blog.cchealthier.com/2022/03/26/nginx/" data-id="clmxk7z0a001rc39mhy3nbp6d" class="article-thumbs-up">赞一个(<span class="article-thumbs-up-num">0</span>)</a>
       
-      <!-- <a data-url="https://blog.cchealthier.com/2022/03/26/nginx/" data-id="clmbeu7r0001vtf9m9g11605k" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2022/03/26/nginx/" data-id="clmxk7z0a001rc39mhy3nbp6d" class="article-share-link">分享</a> -->
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/nginx/" rel="tag">nginx</a></li></ul>
@@ -161,6 +223,37 @@
   
     
   <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2023/09/23/react-basic-app-2/">react 基础工程 Ⅱ（@reduxjs/toolkit &amp; @craco/craco &amp; vite）</a>
+          </li>
+        
+          <li>
+            <a href="/2023/08/24/node-module/">NodeJS 的 commonjs、esm 模块使用以及一些字段释义</a>
+          </li>
+        
+          <li>
+            <a href="/2023/08/23/webpack5-background-url/">webpack5 下 background url 图片打包失败</a>
+          </li>
+        
+          <li>
+            <a href="/2023/07/26/node-stream/">NodeJS 里的 stream（流）</a>
+          </li>
+        
+          <li>
+            <a href="/2023/06/07/webpack-modulefederationplugin/">用 webpack ModuleFederationPlugin 搭建微前端</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
     <h3 class="widget-title">分类</h3>
     <div class="widget">
       <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/http%E5%8D%8F%E8%AE%AE/">http协议</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/%E6%9C%8D%E5%8A%A1/">服务</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/%E7%AE%97%E6%B3%95/">算法</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%97%85%E8%A1%8C/">旅行</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%97%85%E8%A1%8C/%E8%AE%B0%E5%BD%95/">记录</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%83%B9%E9%A5%AA/">烹饪</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%83%B9%E9%A5%AA/%E4%BC%A0%E7%BB%9F/">传统</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%9A%8F%E6%83%B3/">随想</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%9A%8F%E6%83%B3/%E5%BF%83%E6%83%85/">心情</a></li></ul></li></ul>
@@ -192,41 +285,10 @@
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/08/">八月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">七月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/06/">六月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/05/">五月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/04/">四月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/03/">三月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/02/">二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">十一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">十月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">九月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/09/">九月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/08/">八月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">七月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/06/">六月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/05/">五月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/04/">四月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/03/">三月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/02/">二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">十一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">十月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">九月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a></li></ul>
     </div>
   </div>
 
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">最新文章</h3>
-    <div class="widget">
-      <ul>
-        
-          <li>
-            <a href="/2023/08/24/node-module/">NodeJS 的 commonjs、esm 模块使用以及一些字段释义</a>
-          </li>
-        
-          <li>
-            <a href="/2023/08/23/webpack5-background-url/">webpack5 下 background url 图片打包失败</a>
-          </li>
-        
-          <li>
-            <a href="/2023/07/26/node-stream/">NodeJS 里的 stream（流）</a>
-          </li>
-        
-          <li>
-            <a href="/2023/06/07/webpack-modulefederationplugin/">用 webpack ModuleFederationPlugin 搭建微前端</a>
-          </li>
-        
-          <li>
-            <a href="/2023/05/31/react-basic-app/">react 基础工程（react-redux &amp; react-router）</a>
-          </li>
-        
-      </ul>
-    </div>
-  </div>
 
   
 </aside>
@@ -244,15 +306,27 @@
     </div>
     <nav id="mobile-nav">
   
-    <a href="/" class="mobile-nav-link">Home</a>
+    <a href="/" class="mobile-nav-link">首页</a>
   
-    <a href="/archives" class="mobile-nav-link">Archives</a>
+    <a href="/archives" class="mobile-nav-link">归档</a>
   
 </nav>
     
 
 <script src="//cdn.staticfile.org/jquery/2.0.3/jquery.min.js"></script>
 <script type="text/javascript" src="https://www.jq22.com/demo/jqueryToast201708310012/js/toast.script.js"></script>
+<script src="/js/highlight.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlightjs-line-numbers.js/2.8.0/highlightjs-line-numbers.min.js"></script>
+<script>
+  $(function(){
+    $('pre code').each((i, el) => {
+    hljs.highlightElement(el);
+  });
+  $('code.hljs').each(function(i, el) {
+     hljs.lineNumbersBlock(el);
+  });
+  }());
+</script>
 
 
   

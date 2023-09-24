@@ -26,13 +26,12 @@
     <link rel="icon" href="/favicon.ico">
   
   
-    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
-  
   
 <link rel="stylesheet" href="/css/style.css">
 
   <link href="https://www.jq22.com/demo/jqueryToast201708310012/css/toast.style.css" rel="stylesheet" type="text/css">
-<meta name="generator" content="Hexo 7.0.0-rc1"></head>
+  <link rel="stylesheet" href="/css/highlight/styles/monokai-sublime.min.css">
+<meta name="generator" content="Hexo 6.3.0"></head>
 
 <body>
   <div id="container">
@@ -60,9 +59,9 @@
       <nav id="main-nav">
         <a id="main-nav-toggle" class="nav-icon"></a>
         
-          <a class="main-nav-link" href="/">Home</a>
+          <a class="main-nav-link" href="/">首页</a>
         
-          <a class="main-nav-link" href="/archives">Archives</a>
+          <a class="main-nav-link" href="/archives">归档</a>
         
       </nav>
       <nav id="sub-nav">
@@ -107,29 +106,577 @@
 <p><strong>为了文章内容不要太长，例子里的共同样式放在了最后。</strong></p>
 <h3 id="一、懒加载"><a href="#一、懒加载" class="headerlink" title="一、懒加载"></a>一、懒加载</h3><p>懒加载这个词各位应该也很熟悉。在一个古老的例子，瀑布流显示图片就有这个词语了。就是第一屏只显示几条，用户有兴趣往下拉，再继续加载（或请求）新的数据。<br>以前的话应该是监听 <code>scroll</code> 事件，判断是否要见底了，来补充新数据。后面出了一个厉害的 <a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/API/IntersectionObserver">IntersectionObserver</a> 方法。具体怎么用就不赘述了，总之就是能监听一个 dom 的显隐，来触发回调。</p>
 <p>例子可看代码，支持前端自己分批数据或者每次下拉由后端处理分批</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">template</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">ref</span>=<span class="string">&quot;lazy-load-select&quot;</span> <span class="attr">class</span>=<span class="string">&quot;lazy-load-select&quot;</span> <span class="attr">:class</span>=<span class="string">&quot;&#123; active: active &#125;&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">a</span> <span class="attr">class</span>=<span class="string">&quot;display-label&quot;</span> <span class="attr">href</span>=<span class="string">&quot;javascript:;&quot;</span> @<span class="attr">click</span>=<span class="string">&quot;active = !active&quot;</span>&gt;</span>&#123;&#123;</span><br><span class="line">      displayLabel</span><br><span class="line">    &#125;&#125;<span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;list&quot;</span> <span class="attr">v-show</span>=<span class="string">&quot;active&quot;</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">input</span></span></span><br><span class="line"><span class="tag">        <span class="attr">type</span>=<span class="string">&quot;text&quot;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">class</span>=<span class="string">&quot;select-input&quot;</span></span></span><br><span class="line"><span class="tag">        @<span class="attr">input</span>=<span class="string">&quot;search&quot;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">v-model</span>=<span class="string">&quot;searchText&quot;</span></span></span><br><span class="line"><span class="tag">      /&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">ul</span> <span class="attr">class</span>=<span class="string">&quot;select-ul&quot;</span> <span class="attr">ref</span>=<span class="string">&quot;select-ul&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">li</span></span></span><br><span class="line"><span class="tag">          <span class="attr">v-for</span>=<span class="string">&quot;item in displayData&quot;</span></span></span><br><span class="line"><span class="tag">          <span class="attr">ref</span>=<span class="string">&quot;select-li&quot;</span></span></span><br><span class="line"><span class="tag">          <span class="attr">:class</span>=<span class="string">&quot;&#123; &#x27;select-li&#x27;: true, selected: item.value === currentValue &#125;&quot;</span></span></span><br><span class="line"><span class="tag">          <span class="attr">:key</span>=<span class="string">&quot;item.value&quot;</span></span></span><br><span class="line"><span class="tag">          @<span class="attr">click</span>=<span class="string">&quot;select(item.value)&quot;</span></span></span><br><span class="line"><span class="tag">        &gt;</span></span><br><span class="line">          &#123;&#123; item.label &#125;&#125;</span><br><span class="line">        <span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="name">ul</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">template</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript"><span class="keyword">function</span> <span class="title function_">genData</span>(<span class="params">&#123; pageno, count, keyword &#125;</span>) &#123;</span></span><br><span class="line"><span class="language-javascript">  <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">Array</span>(count).<span class="title function_">fill</span>(<span class="string">&#x27;1&#x27;</span>).<span class="title function_">map</span>(<span class="function">(<span class="params">_, index</span>) =&gt;</span> &#123;</span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">const</span> value = (pageno - <span class="number">1</span>) * count + index + <span class="number">1</span> + <span class="string">&#x27;&#x27;</span>;</span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">return</span> &#123;</span></span><br><span class="line"><span class="language-javascript">      value,</span></span><br><span class="line"><span class="language-javascript">      <span class="attr">label</span>: <span class="string">&#x27;LazyLoad-&#x27;</span> + value + (keyword || <span class="string">&#x27;&#x27;</span>),</span></span><br><span class="line"><span class="language-javascript">    &#125;;</span></span><br><span class="line"><span class="language-javascript">  &#125;);</span></span><br><span class="line"><span class="language-javascript">&#125;</span></span><br><span class="line"><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript"><span class="keyword">const</span> originData = <span class="title function_">genData</span>(&#123; <span class="attr">pageno</span>: <span class="number">1</span>, <span class="attr">count</span>: <span class="number">100</span> &#125;);</span></span><br><span class="line"><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript"><span class="comment">// 调试用的声明，true：使用全部数据返回，由前端分批，false：分批从后端获取数据</span></span></span><br><span class="line"><span class="language-javascript"><span class="keyword">const</span> defaultProps = <span class="literal">false</span> ? &#123;</span></span><br><span class="line"><span class="language-javascript">  <span class="attr">originData</span>: <span class="function">() =&gt;</span> originData,</span></span><br><span class="line"><span class="language-javascript">  <span class="attr">getData</span>: <span class="literal">undefined</span>,</span></span><br><span class="line"><span class="language-javascript">&#125; : &#123;</span></span><br><span class="line"><span class="language-javascript">  <span class="attr">originData</span>: <span class="function">() =&gt;</span> [],</span></span><br><span class="line"><span class="language-javascript">  <span class="attr">getData</span>: <span class="function">(<span class="params">&#123; pageno, count, keyword &#125;</span>) =&gt;</span> &#123;</span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">return</span> <span class="title class_">Promise</span>.<span class="title function_">resolve</span>(<span class="title function_">genData</span>(&#123; pageno, count, keyword &#125;));</span></span><br><span class="line"><span class="language-javascript">  &#125;,</span></span><br><span class="line"><span class="language-javascript">&#125;;</span></span><br><span class="line"><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript"><span class="comment">// 上面是调试示例用的代码</span></span></span><br><span class="line"><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript"><span class="keyword">const</span> <span class="variable constant_">ONE_LOAD</span> = <span class="number">10</span>; <span class="comment">// 每次加载10条</span></span></span><br><span class="line"><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript"><span class="keyword">const</span> <span class="variable constant_">LAZY_LOAD_COMP</span> = <span class="number">2</span>; <span class="comment">// 倒数第几个开始新的加载</span></span></span><br><span class="line"><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</span></span><br><span class="line"><span class="language-javascript">  <span class="attr">name</span>: <span class="string">&#x27;LazyLoadSelect&#x27;</span>, <span class="comment">// 懒加载下拉菜单，支持前端分批处理或后端分批处理</span></span></span><br><span class="line"><span class="language-javascript">  <span class="attr">props</span>: &#123;</span></span><br><span class="line"><span class="language-javascript">    <span class="attr">originData</span>: &#123;</span></span><br><span class="line"><span class="language-javascript">      <span class="attr">type</span>: <span class="title class_">Array</span>,</span></span><br><span class="line"><span class="language-javascript">      <span class="attr">default</span>: defaultProps.<span class="property">originData</span>,</span></span><br><span class="line"><span class="language-javascript">    &#125;,</span></span><br><span class="line"><span class="language-javascript">    <span class="attr">getData</span>: &#123;</span></span><br><span class="line"><span class="language-javascript">      <span class="attr">type</span>: <span class="title class_">Function</span>,</span></span><br><span class="line"><span class="language-javascript">      <span class="attr">default</span>: defaultProps.<span class="property">getData</span>,</span></span><br><span class="line"><span class="language-javascript">    &#125;,</span></span><br><span class="line"><span class="language-javascript">  &#125;,</span></span><br><span class="line"><span class="language-javascript">  <span class="title function_">data</span>(<span class="params"></span>) &#123;</span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">return</span> &#123;</span></span><br><span class="line"><span class="language-javascript">      <span class="attr">currentValue</span>: <span class="number">0</span>,</span></span><br><span class="line"><span class="language-javascript">      <span class="attr">active</span>: <span class="literal">false</span>,</span></span><br><span class="line"><span class="language-javascript">      <span class="attr">searchText</span>: <span class="string">&#x27;&#x27;</span>,</span></span><br><span class="line"><span class="language-javascript">      <span class="attr">displayData</span>: [],</span></span><br><span class="line"><span class="language-javascript">      <span class="attr">filterData</span>: [],</span></span><br><span class="line"><span class="language-javascript">      <span class="attr">intersectionObserver</span>: <span class="literal">null</span>,</span></span><br><span class="line"><span class="language-javascript">    &#125;;</span></span><br><span class="line"><span class="language-javascript">  &#125;,</span></span><br><span class="line"><span class="language-javascript">  <span class="attr">computed</span>: &#123;</span></span><br><span class="line"><span class="language-javascript">    <span class="title function_">displayLabel</span>(<span class="params"></span>) &#123;</span></span><br><span class="line"><span class="language-javascript">      <span class="keyword">const</span> selectd = <span class="variable language_">this</span>.<span class="property">originData</span>.<span class="title function_">find</span>(</span></span><br><span class="line"><span class="language-javascript">        <span class="function"><span class="params">item</span> =&gt;</span> item.<span class="property">value</span> === <span class="variable language_">this</span>.<span class="property">currentValue</span></span></span><br><span class="line"><span class="language-javascript">      );</span></span><br><span class="line"><span class="language-javascript">      <span class="keyword">return</span> selectd ? selectd.<span class="property">label</span> : <span class="string">&#x27;请选择&#x27;</span>;</span></span><br><span class="line"><span class="language-javascript">    &#125;,</span></span><br><span class="line"><span class="language-javascript">    <span class="title function_">useRemoteData</span>(<span class="params"></span>) &#123;</span></span><br><span class="line"><span class="language-javascript">      <span class="keyword">return</span> <span class="keyword">typeof</span> <span class="variable language_">this</span>.<span class="property">getData</span> === <span class="string">&#x27;function&#x27;</span>;</span></span><br><span class="line"><span class="language-javascript">    &#125;,</span></span><br><span class="line"><span class="language-javascript">    <span class="title function_">count</span>(<span class="params"></span>) &#123;</span></span><br><span class="line"><span class="language-javascript">      <span class="keyword">return</span> <span class="variable constant_">ONE_LOAD</span>;</span></span><br><span class="line"><span class="language-javascript">    &#125;,</span></span><br><span class="line"><span class="language-javascript">    <span class="title function_">pageno</span>(<span class="params"></span>) &#123;</span></span><br><span class="line"><span class="language-javascript">      <span class="keyword">return</span> <span class="variable language_">this</span>.<span class="property">displayData</span>.<span class="property">length</span> / <span class="variable language_">this</span>.<span class="property">count</span> || <span class="number">1</span>;</span></span><br><span class="line"><span class="language-javascript">    &#125;,</span></span><br><span class="line"><span class="language-javascript">  &#125;,</span></span><br><span class="line"><span class="language-javascript">  <span class="attr">methods</span>: &#123;</span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">async</span> <span class="title function_">initFilterData</span>(<span class="params">keyword</span>) &#123;</span></span><br><span class="line"><span class="language-javascript">      <span class="variable language_">this</span>.<span class="property">displayData</span> = [];</span></span><br><span class="line"><span class="language-javascript">      <span class="keyword">if</span> (<span class="variable language_">this</span>.<span class="property">useRemoteData</span>) &#123;</span></span><br><span class="line"><span class="language-javascript">        <span class="comment">// 如果有外部方法，初始化则不需要过滤，直接更新接口来的数据即可</span></span></span><br><span class="line"><span class="language-javascript">        <span class="keyword">const</span> data = <span class="keyword">await</span> <span class="variable language_">this</span>.<span class="title function_">loadRemoteData</span>();</span></span><br><span class="line"><span class="language-javascript">        <span class="variable language_">this</span>.<span class="property">displayData</span> = data;</span></span><br><span class="line"><span class="language-javascript">      &#125; <span class="keyword">else</span> &#123;</span></span><br><span class="line"><span class="language-javascript">        <span class="comment">// 如果没有外部方法，初始化则先根据搜索词过滤得出过滤数据，然后再对过滤数据分批</span></span></span><br><span class="line"><span class="language-javascript">        <span class="variable language_">this</span>.<span class="property">filterData</span> = <span class="variable language_">this</span>.<span class="property">originData</span>.<span class="title function_">filter</span>(<span class="function"><span class="params">item</span> =&gt;</span> &#123;</span></span><br><span class="line"><span class="language-javascript">          <span class="keyword">return</span> keyword ? item.<span class="property">label</span>.<span class="title function_">indexOf</span>(keyword) !== -<span class="number">1</span> : <span class="literal">true</span>;</span></span><br><span class="line"><span class="language-javascript">        &#125;);</span></span><br><span class="line"><span class="language-javascript">        <span class="variable language_">this</span>.<span class="property">displayData</span> = <span class="variable language_">this</span>.<span class="property">filterData</span>.<span class="title function_">slice</span>(<span class="number">0</span>, <span class="number">0</span> + <span class="variable constant_">ONE_LOAD</span>);</span></span><br><span class="line"><span class="language-javascript">      &#125;</span></span><br><span class="line"><span class="language-javascript">      <span class="variable language_">this</span>.<span class="property">$selectUl</span> &amp;&amp; (<span class="variable language_">this</span>.<span class="property">$selectUl</span>.<span class="property">scrollTop</span> = <span class="number">0</span>);</span></span><br><span class="line"><span class="language-javascript">      <span class="variable language_">this</span>.<span class="title function_">updateObserveLayzload</span>();</span></span><br><span class="line"><span class="language-javascript">    &#125;,</span></span><br><span class="line"><span class="language-javascript">    <span class="title function_">search</span>(<span class="params">event</span>) &#123;</span></span><br><span class="line"><span class="language-javascript">      <span class="comment">// 应防抖</span></span></span><br><span class="line"><span class="language-javascript">      <span class="variable language_">this</span>.<span class="title function_">initFilterData</span>(<span class="variable language_">this</span>.<span class="property">searchText</span>);</span></span><br><span class="line"><span class="language-javascript">    &#125;,</span></span><br><span class="line"><span class="language-javascript">    <span class="title function_">select</span>(<span class="params">value</span>) &#123;</span></span><br><span class="line"><span class="language-javascript">      <span class="variable language_">this</span>.<span class="property">currentValue</span> = value;</span></span><br><span class="line"><span class="language-javascript">      <span class="variable language_">this</span>.<span class="property">active</span> = <span class="literal">false</span>;</span></span><br><span class="line"><span class="language-javascript">      <span class="variable language_">this</span>.$emit(<span class="string">&#x27;change&#x27;</span>, value);</span></span><br><span class="line"><span class="language-javascript">    &#125;,</span></span><br><span class="line"><span class="language-javascript">    <span class="title function_">updateObserveLayzload</span>(<span class="params"></span>) &#123;</span></span><br><span class="line"><span class="language-javascript">      <span class="variable language_">this</span>.$nextTick(<span class="function">() =&gt;</span> &#123;</span></span><br><span class="line"><span class="language-javascript">        <span class="keyword">if</span> (<span class="variable language_">this</span>.<span class="property">displayData</span>.<span class="property">length</span> &gt;= <span class="variable language_">this</span>.<span class="property">filterData</span>.<span class="property">length</span> &amp;&amp; !<span class="variable language_">this</span>.<span class="property">useRemoteData</span>) &#123;</span></span><br><span class="line"><span class="language-javascript">          <span class="variable language_">this</span>.<span class="property">$lazyLoadLi</span> &amp;&amp;</span></span><br><span class="line"><span class="language-javascript">            <span class="variable language_">this</span>.<span class="property">intersectionObserver</span>.<span class="title function_">unobserve</span>(<span class="variable language_">this</span>.<span class="property">$lazyLoadLi</span>);</span></span><br><span class="line"><span class="language-javascript">          <span class="keyword">return</span>;</span></span><br><span class="line"><span class="language-javascript">        &#125;</span></span><br><span class="line"><span class="language-javascript">        <span class="keyword">const</span> $liArr = <span class="variable language_">this</span>.<span class="property">$refs</span>[<span class="string">&#x27;select-li&#x27;</span>];</span></span><br><span class="line"><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">        <span class="variable language_">this</span>.<span class="property">$lazyLoadLi</span> &amp;&amp;</span></span><br><span class="line"><span class="language-javascript">          <span class="variable language_">this</span>.<span class="property">intersectionObserver</span>.<span class="title function_">unobserve</span>(<span class="variable language_">this</span>.<span class="property">$lazyLoadLi</span>);</span></span><br><span class="line"><span class="language-javascript">        <span class="variable language_">this</span>.<span class="property">$lazyLoadLi</span> = $liArr[$liArr.<span class="property">length</span> - <span class="number">1</span> - <span class="variable constant_">LAZY_LOAD_COMP</span>];</span></span><br><span class="line"><span class="language-javascript">        <span class="variable language_">this</span>.<span class="property">intersectionObserver</span>.<span class="title function_">observe</span>(<span class="variable language_">this</span>.<span class="property">$lazyLoadLi</span>);</span></span><br><span class="line"><span class="language-javascript">      &#125;);</span></span><br><span class="line"><span class="language-javascript">    &#125;,</span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">async</span> <span class="title function_">loadRemoteData</span>(<span class="params"></span>) &#123; <span class="comment">// 从外部方法获取数据</span></span></span><br><span class="line"><span class="language-javascript">      <span class="keyword">try</span> &#123;</span></span><br><span class="line"><span class="language-javascript">        <span class="keyword">const</span> data = <span class="keyword">await</span> <span class="variable language_">this</span>.<span class="title function_">getData</span>(</span></span><br><span class="line"><span class="language-javascript">        	&#123; <span class="attr">pageno</span>: <span class="variable language_">this</span>.<span class="property">pageno</span>, <span class="attr">count</span>: <span class="variable language_">this</span>.<span class="property">count</span>, <span class="attr">keyword</span>: <span class="variable language_">this</span>.<span class="property">searchText</span> &#125;</span></span><br><span class="line"><span class="language-javascript">        );</span></span><br><span class="line"><span class="language-javascript">        <span class="keyword">return</span> data;</span></span><br><span class="line"><span class="language-javascript">      &#125; <span class="keyword">catch</span>(error) &#123;</span></span><br><span class="line"><span class="language-javascript">        <span class="variable language_">console</span>.<span class="title function_">error</span>(<span class="string">&#x27;get data error:&#x27;</span>, error);</span></span><br><span class="line"><span class="language-javascript">      &#125;</span></span><br><span class="line"><span class="language-javascript">      <span class="keyword">return</span> [];</span></span><br><span class="line"><span class="language-javascript">    &#125;,</span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">async</span> <span class="title function_">getNewBatchData</span>(<span class="params"></span>) &#123;</span></span><br><span class="line"><span class="language-javascript">      <span class="keyword">if</span> (<span class="variable language_">this</span>.<span class="property">useRemoteData</span>) &#123;</span></span><br><span class="line"><span class="language-javascript">        <span class="comment">// 数据（包括筛选）完全由后端处理</span></span></span><br><span class="line"><span class="language-javascript">        <span class="keyword">const</span> addData = <span class="keyword">await</span> <span class="variable language_">this</span>.<span class="title function_">loadRemoteData</span>();</span></span><br><span class="line"><span class="language-javascript">        <span class="keyword">return</span> addData;</span></span><br><span class="line"><span class="language-javascript">      &#125;</span></span><br><span class="line"><span class="language-javascript">      <span class="comment">// 由前端对数据分批</span></span></span><br><span class="line"><span class="language-javascript">      <span class="keyword">const</span> addData = <span class="variable language_">this</span>.<span class="property">filterData</span>.<span class="title function_">slice</span>(</span></span><br><span class="line"><span class="language-javascript">        <span class="variable language_">this</span>.<span class="property">displayData</span>.<span class="property">length</span>,</span></span><br><span class="line"><span class="language-javascript">        <span class="variable language_">this</span>.<span class="property">displayData</span>.<span class="property">length</span> + <span class="variable constant_">ONE_LOAD</span>,</span></span><br><span class="line"><span class="language-javascript">      );</span></span><br><span class="line"><span class="language-javascript">      <span class="keyword">return</span> addData;</span></span><br><span class="line"><span class="language-javascript">    &#125;,</span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">async</span> <span class="title function_">updateData</span>(<span class="params"></span>) &#123;</span></span><br><span class="line"><span class="language-javascript">      <span class="keyword">const</span> addData = <span class="keyword">await</span> <span class="variable language_">this</span>.<span class="title function_">getNewBatchData</span>();</span></span><br><span class="line"><span class="language-javascript">      <span class="variable language_">this</span>.<span class="property">displayData</span>.<span class="title function_">push</span>(...addData);</span></span><br><span class="line"><span class="language-javascript">      <span class="variable language_">this</span>.<span class="title function_">updateObserveLayzload</span>();</span></span><br><span class="line"><span class="language-javascript">    &#125;,</span></span><br><span class="line"><span class="language-javascript">  &#125;,</span></span><br><span class="line"><span class="language-javascript">  <span class="title function_">created</span>(<span class="params"></span>) &#123;</span></span><br><span class="line"><span class="language-javascript">    <span class="variable language_">this</span>.<span class="title function_">initFilterData</span>(<span class="string">&#x27;&#x27;</span>);</span></span><br><span class="line"><span class="language-javascript">  &#125;,</span></span><br><span class="line"><span class="language-javascript">  <span class="title function_">mounted</span>(<span class="params"></span>) &#123;</span></span><br><span class="line"><span class="language-javascript">    <span class="variable language_">this</span>.<span class="property">$selectUl</span> = <span class="variable language_">this</span>.<span class="property">$refs</span>[<span class="string">&#x27;select-ul&#x27;</span>];</span></span><br><span class="line"><span class="language-javascript">    <span class="variable language_">this</span>.<span class="property">intersectionObserver</span> = <span class="keyword">new</span> <span class="title class_">IntersectionObserver</span>(<span class="function"><span class="params">entries</span> =&gt;</span> &#123;</span></span><br><span class="line"><span class="language-javascript">      <span class="keyword">if</span> (entries[<span class="number">0</span>].<span class="property">intersectionRatio</span>) &#123;</span></span><br><span class="line"><span class="language-javascript">        <span class="variable language_">this</span>.<span class="title function_">updateData</span>();</span></span><br><span class="line"><span class="language-javascript">      &#125;</span></span><br><span class="line"><span class="language-javascript">    &#125;);</span></span><br><span class="line"><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">const</span> $main = <span class="variable language_">this</span>.<span class="property">$refs</span>[<span class="string">&#x27;lazy-load-select&#x27;</span>];</span></span><br><span class="line"><span class="language-javascript">    <span class="variable language_">window</span>.<span class="title function_">addEventListener</span>(</span></span><br><span class="line"><span class="language-javascript">      <span class="string">&#x27;click&#x27;</span>,</span></span><br><span class="line"><span class="language-javascript">      <span class="function">(<span class="params">ev</span>) =&gt;</span> &#123;</span></span><br><span class="line"><span class="language-javascript">        <span class="comment">// 判断是否点击在 select 组件上</span></span></span><br><span class="line"><span class="language-javascript">        <span class="keyword">const</span> isSelectComp = ev.<span class="title function_">composedPath</span>().<span class="title function_">find</span>(<span class="function"><span class="params">dom</span> =&gt;</span> $main === dom);</span></span><br><span class="line"><span class="language-javascript">        <span class="keyword">if</span> (!isSelectComp) &#123;</span></span><br><span class="line"><span class="language-javascript">          <span class="variable language_">this</span>.<span class="property">active</span> = <span class="literal">false</span>;</span></span><br><span class="line"><span class="language-javascript">        &#125;</span></span><br><span class="line"><span class="language-javascript">      &#125;</span></span><br><span class="line"><span class="language-javascript">    );</span></span><br><span class="line"><span class="language-javascript">  &#125;</span></span><br><span class="line"><span class="language-javascript">&#125;;</span></span><br><span class="line"><span class="language-javascript"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<pre><code class="html">&lt;template&gt;
+  &lt;div ref=&quot;lazy-load-select&quot; class=&quot;lazy-load-select&quot; :class=&quot;&#123; active: active &#125;&quot;&gt;
+    &lt;a class=&quot;display-label&quot; href=&quot;javascript:;&quot; @click=&quot;active = !active&quot;&gt;&#123;&#123;
+      displayLabel
+    &#125;&#125;&lt;/a&gt;
+    &lt;div class=&quot;list&quot; v-show=&quot;active&quot;&gt;
+      &lt;input
+        type=&quot;text&quot;
+        class=&quot;select-input&quot;
+        @input=&quot;search&quot;
+        v-model=&quot;searchText&quot;
+      /&gt;
+      &lt;ul class=&quot;select-ul&quot; ref=&quot;select-ul&quot;&gt;
+        &lt;li
+          v-for=&quot;item in displayData&quot;
+          ref=&quot;select-li&quot;
+          :class=&quot;&#123; &#39;select-li&#39;: true, selected: item.value === currentValue &#125;&quot;
+          :key=&quot;item.value&quot;
+          @click=&quot;select(item.value)&quot;
+        &gt;
+          &#123;&#123; item.label &#125;&#125;
+        &lt;/li&gt;
+      &lt;/ul&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/template&gt;
 
+&lt;script&gt;
+function genData(&#123; pageno, count, keyword &#125;) &#123;
+  return new Array(count).fill(&#39;1&#39;).map((_, index) =&gt; &#123;
+    const value = (pageno - 1) * count + index + 1 + &#39;&#39;;
+    return &#123;
+      value,
+      label: &#39;LazyLoad-&#39; + value + (keyword || &#39;&#39;),
+    &#125;;
+  &#125;);
+&#125;
+
+const originData = genData(&#123; pageno: 1, count: 100 &#125;);
+
+// 调试用的声明，true：使用全部数据返回，由前端分批，false：分批从后端获取数据
+const defaultProps = false ? &#123;
+  originData: () =&gt; originData,
+  getData: undefined,
+&#125; : &#123;
+  originData: () =&gt; [],
+  getData: (&#123; pageno, count, keyword &#125;) =&gt; &#123;
+    return Promise.resolve(genData(&#123; pageno, count, keyword &#125;));
+  &#125;,
+&#125;;
+
+// 上面是调试示例用的代码
+
+const ONE_LOAD = 10; // 每次加载10条
+
+const LAZY_LOAD_COMP = 2; // 倒数第几个开始新的加载
+
+export default &#123;
+  name: &#39;LazyLoadSelect&#39;, // 懒加载下拉菜单，支持前端分批处理或后端分批处理
+  props: &#123;
+    originData: &#123;
+      type: Array,
+      default: defaultProps.originData,
+    &#125;,
+    getData: &#123;
+      type: Function,
+      default: defaultProps.getData,
+    &#125;,
+  &#125;,
+  data() &#123;
+    return &#123;
+      currentValue: 0,
+      active: false,
+      searchText: &#39;&#39;,
+      displayData: [],
+      filterData: [],
+      intersectionObserver: null,
+    &#125;;
+  &#125;,
+  computed: &#123;
+    displayLabel() &#123;
+      const selectd = this.originData.find(
+        item =&gt; item.value === this.currentValue
+      );
+      return selectd ? selectd.label : &#39;请选择&#39;;
+    &#125;,
+    useRemoteData() &#123;
+      return typeof this.getData === &#39;function&#39;;
+    &#125;,
+    count() &#123;
+      return ONE_LOAD;
+    &#125;,
+    pageno() &#123;
+      return this.displayData.length / this.count || 1;
+    &#125;,
+  &#125;,
+  methods: &#123;
+    async initFilterData(keyword) &#123;
+      this.displayData = [];
+      if (this.useRemoteData) &#123;
+        // 如果有外部方法，初始化则不需要过滤，直接更新接口来的数据即可
+        const data = await this.loadRemoteData();
+        this.displayData = data;
+      &#125; else &#123;
+        // 如果没有外部方法，初始化则先根据搜索词过滤得出过滤数据，然后再对过滤数据分批
+        this.filterData = this.originData.filter(item =&gt; &#123;
+          return keyword ? item.label.indexOf(keyword) !== -1 : true;
+        &#125;);
+        this.displayData = this.filterData.slice(0, 0 + ONE_LOAD);
+      &#125;
+      this.$selectUl &amp;&amp; (this.$selectUl.scrollTop = 0);
+      this.updateObserveLayzload();
+    &#125;,
+    search(event) &#123;
+      // 应防抖
+      this.initFilterData(this.searchText);
+    &#125;,
+    select(value) &#123;
+      this.currentValue = value;
+      this.active = false;
+      this.$emit(&#39;change&#39;, value);
+    &#125;,
+    updateObserveLayzload() &#123;
+      this.$nextTick(() =&gt; &#123;
+        if (this.displayData.length &gt;= this.filterData.length &amp;&amp; !this.useRemoteData) &#123;
+          this.$lazyLoadLi &amp;&amp;
+            this.intersectionObserver.unobserve(this.$lazyLoadLi);
+          return;
+        &#125;
+        const $liArr = this.$refs[&#39;select-li&#39;];
+
+        this.$lazyLoadLi &amp;&amp;
+          this.intersectionObserver.unobserve(this.$lazyLoadLi);
+        this.$lazyLoadLi = $liArr[$liArr.length - 1 - LAZY_LOAD_COMP];
+        this.intersectionObserver.observe(this.$lazyLoadLi);
+      &#125;);
+    &#125;,
+    async loadRemoteData() &#123; // 从外部方法获取数据
+      try &#123;
+        const data = await this.getData(
+            &#123; pageno: this.pageno, count: this.count, keyword: this.searchText &#125;
+        );
+        return data;
+      &#125; catch(error) &#123;
+        console.error(&#39;get data error:&#39;, error);
+      &#125;
+      return [];
+    &#125;,
+    async getNewBatchData() &#123;
+      if (this.useRemoteData) &#123;
+        // 数据（包括筛选）完全由后端处理
+        const addData = await this.loadRemoteData();
+        return addData;
+      &#125;
+      // 由前端对数据分批
+      const addData = this.filterData.slice(
+        this.displayData.length,
+        this.displayData.length + ONE_LOAD,
+      );
+      return addData;
+    &#125;,
+    async updateData() &#123;
+      const addData = await this.getNewBatchData();
+      this.displayData.push(...addData);
+      this.updateObserveLayzload();
+    &#125;,
+  &#125;,
+  created() &#123;
+    this.initFilterData(&#39;&#39;);
+  &#125;,
+  mounted() &#123;
+    this.$selectUl = this.$refs[&#39;select-ul&#39;];
+    this.intersectionObserver = new IntersectionObserver(entries =&gt; &#123;
+      if (entries[0].intersectionRatio) &#123;
+        this.updateData();
+      &#125;
+    &#125;);
+
+    const $main = this.$refs[&#39;lazy-load-select&#39;];
+    window.addEventListener(
+      &#39;click&#39;,
+      (ev) =&gt; &#123;
+        // 判断是否点击在 select 组件上
+        const isSelectComp = ev.composedPath().find(dom =&gt; $main === dom);
+        if (!isSelectComp) &#123;
+          this.active = false;
+        &#125;
+      &#125;
+    );
+  &#125;
+&#125;;
+&lt;/script&gt;
+</code></pre>
 <span id="more"></span>
 
 <h3 id="二、虚拟滚动条"><a href="#二、虚拟滚动条" class="headerlink" title="二、虚拟滚动条"></a>二、虚拟滚动条</h3><p>懒加载是为了性能优化出现，确实也有一定作用。但是没有解决根本问题，那就是选项过多导致的下拉菜单的 dom 过多。如果持之以恒地往下拉，还是会有很多 dom。</p>
 <p>这时候虚拟滚动条方案就出现了：每次都是固定展示 n 条。然后借由不断的替换这一批下拉选项数据，达到各个选项可选择的功能。</p>
 <p>首先算出实际的下拉菜单的高度，用一个一样高的容器包裹着真实渲染的下拉菜单选项，然后监听 <code>scroll</code> 事件，每次得出滚动距离 <code>scrollTop</code>，用容器 padding 或者 绝对定位什么都行。就是让下拉菜单选项距离顶部有 scrollTop 的距离。这一步是达到滚动体验和真的有那么多个的效果一样。<br>然后根据 scrollTop 来算出滚动了多少条的选项，用以更新这一批真实渲染的下拉菜单选项。比如滚动的距离有 10 条的高度，那么新的一批就从第 11 条开始。</p>
 <p>例子可看代码，理论上还是可以用 IntersectionObserver，但简单实现还是用了监听 scroll 事件。</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">template</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">ref</span>=<span class="string">&quot;virtual-scroll-relect&quot;</span> <span class="attr">class</span>=<span class="string">&quot;virtual-scroll-relect&quot;</span> <span class="attr">:class</span>=<span class="string">&quot;&#123; active: active &#125;&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">a</span> <span class="attr">class</span>=<span class="string">&quot;display-label&quot;</span> <span class="attr">href</span>=<span class="string">&quot;javascript:;&quot;</span> @<span class="attr">click</span>=<span class="string">&quot;active = !active&quot;</span>&gt;</span>&#123;&#123;</span><br><span class="line">      displayLabel</span><br><span class="line">    &#125;&#125;<span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;list&quot;</span> <span class="attr">v-show</span>=<span class="string">&quot;active&quot;</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">input</span></span></span><br><span class="line"><span class="tag">        <span class="attr">type</span>=<span class="string">&quot;text&quot;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">class</span>=<span class="string">&quot;select-input&quot;</span></span></span><br><span class="line"><span class="tag">        @<span class="attr">input</span>=<span class="string">&quot;search&quot;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">v-model</span>=<span class="string">&quot;searchText&quot;</span></span></span><br><span class="line"><span class="tag">      /&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;view-container&quot;</span> <span class="attr">ref</span>=<span class="string">&quot;view-container&quot;</span> @<span class="attr">scroll</span>=<span class="string">&quot;handleScroll&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;item-container&quot;</span> <span class="attr">ref</span>=<span class="string">&quot;item-container&quot;</span></span></span><br><span class="line"><span class="tag">        	<span class="attr">:style</span>=<span class="string">&quot;&#123; height: containerHeight+&#x27;px&#x27;, paddingTop: containerPaddingTop+&#x27;px&#x27; &#125;&quot;</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">div</span></span></span><br><span class="line"><span class="tag">            <span class="attr">v-for</span>=<span class="string">&quot;item in displayData&quot;</span></span></span><br><span class="line"><span class="tag">            <span class="attr">class</span>=<span class="string">&quot;item&quot;</span></span></span><br><span class="line"><span class="tag">            <span class="attr">:class</span>=<span class="string">&quot;&#123; selected: item.value === currentValue &#125;&quot;</span></span></span><br><span class="line"><span class="tag">            <span class="attr">:key</span>=<span class="string">&quot;item.value&quot;</span></span></span><br><span class="line"><span class="tag">            @<span class="attr">click</span>=<span class="string">&quot;select(item.value)&quot;</span></span></span><br><span class="line"><span class="tag">          &gt;</span></span><br><span class="line">            &#123;&#123; item.label &#125;&#125;</span><br><span class="line">          <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">template</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript"><span class="keyword">function</span> <span class="title function_">genData</span>(<span class="params">length</span>) &#123;</span></span><br><span class="line"><span class="language-javascript">  <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">Array</span>(length).<span class="title function_">fill</span>(<span class="string">&#x27;1&#x27;</span>).<span class="title function_">map</span>(<span class="function">(<span class="params">_, index</span>) =&gt;</span> &#123;</span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">const</span> idx = index + <span class="number">1</span>;</span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">return</span> &#123;</span></span><br><span class="line"><span class="language-javascript">      <span class="attr">value</span>: idx,</span></span><br><span class="line"><span class="language-javascript">      <span class="attr">label</span>: <span class="string">&#x27;VirtualScroll-&#x27;</span> + idx</span></span><br><span class="line"><span class="language-javascript">    &#125;;</span></span><br><span class="line"><span class="language-javascript">  &#125;);</span></span><br><span class="line"><span class="language-javascript">&#125;</span></span><br><span class="line"><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript"><span class="keyword">const</span> originData = <span class="title function_">genData</span>(<span class="number">1000</span>);</span></span><br><span class="line"><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript"><span class="comment">// 上面是调试示例用的代码</span></span></span><br><span class="line"><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript"><span class="keyword">const</span> <span class="variable constant_">BATCH_NUM</span> = <span class="number">10</span>; <span class="comment">// 每一批替换的条数</span></span></span><br><span class="line"><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript"><span class="keyword">const</span> <span class="variable constant_">ITEM_HEIGHT</span> = <span class="number">24</span>; <span class="comment">// 单个选项的高度</span></span></span><br><span class="line"><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</span></span><br><span class="line"><span class="language-javascript">  <span class="attr">name</span>: <span class="string">&#x27;VirtualScrollSelect&#x27;</span>, <span class="comment">// 虚拟滚动列表下拉菜单</span></span></span><br><span class="line"><span class="language-javascript">  <span class="attr">props</span>: &#123;</span></span><br><span class="line"><span class="language-javascript">    <span class="attr">originData</span>: &#123;</span></span><br><span class="line"><span class="language-javascript">      <span class="attr">type</span>: <span class="title class_">Array</span>,</span></span><br><span class="line"><span class="language-javascript">      <span class="attr">default</span>: <span class="function">() =&gt;</span> originData, <span class="comment">// 原始的所有数据</span></span></span><br><span class="line"><span class="language-javascript">    &#125;,</span></span><br><span class="line"><span class="language-javascript">  &#125;,</span></span><br><span class="line"><span class="language-javascript">  <span class="title function_">data</span>(<span class="params"></span>) &#123;</span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">return</span> &#123;</span></span><br><span class="line"><span class="language-javascript">      <span class="attr">filterData</span>: [], <span class="comment">// 原始数据经过过滤后的数据</span></span></span><br><span class="line"><span class="language-javascript">      <span class="attr">displayData</span>: [], <span class="comment">// 真正用于渲染的数据</span></span></span><br><span class="line"><span class="language-javascript">      <span class="attr">currentValue</span>: <span class="number">0</span>,</span></span><br><span class="line"><span class="language-javascript">      <span class="attr">active</span>: <span class="literal">false</span>,</span></span><br><span class="line"><span class="language-javascript">      <span class="attr">searchText</span>: <span class="string">&#x27;&#x27;</span>,</span></span><br><span class="line"><span class="language-javascript">      <span class="attr">containerHeight</span>: <span class="number">0</span>,</span></span><br><span class="line"><span class="language-javascript">      <span class="attr">containerPaddingTop</span>: <span class="number">0</span>,</span></span><br><span class="line"><span class="language-javascript">      <span class="attr">itemHeight</span>: <span class="variable constant_">ITEM_HEIGHT</span>,</span></span><br><span class="line"><span class="language-javascript">    &#125;;</span></span><br><span class="line"><span class="language-javascript">  &#125;,</span></span><br><span class="line"><span class="language-javascript">  <span class="attr">computed</span>: &#123;</span></span><br><span class="line"><span class="language-javascript">    <span class="title function_">displayLabel</span>(<span class="params"></span>) &#123;</span></span><br><span class="line"><span class="language-javascript">      <span class="keyword">const</span> selectd = <span class="variable language_">this</span>.<span class="property">originData</span>.<span class="title function_">find</span>(</span></span><br><span class="line"><span class="language-javascript">        <span class="function"><span class="params">item</span> =&gt;</span> item.<span class="property">value</span> === <span class="variable language_">this</span>.<span class="property">currentValue</span></span></span><br><span class="line"><span class="language-javascript">      );</span></span><br><span class="line"><span class="language-javascript">      <span class="keyword">return</span> selectd ? selectd.<span class="property">label</span> : <span class="string">&#x27;请选择&#x27;</span>;</span></span><br><span class="line"><span class="language-javascript">    &#125;</span></span><br><span class="line"><span class="language-javascript">  &#125;,</span></span><br><span class="line"><span class="language-javascript">  <span class="attr">watch</span>: &#123;</span></span><br><span class="line"><span class="language-javascript">    <span class="title function_">active</span>(<span class="params">val</span>) &#123;</span></span><br><span class="line"><span class="language-javascript">      <span class="keyword">if</span> (val) &#123;</span></span><br><span class="line"><span class="language-javascript">        <span class="variable language_">this</span>.<span class="title function_">init</span>();</span></span><br><span class="line"><span class="language-javascript">      &#125;</span></span><br><span class="line"><span class="language-javascript">    &#125;,</span></span><br><span class="line"><span class="language-javascript">  &#125;,</span></span><br><span class="line"><span class="language-javascript">  <span class="attr">methods</span>: &#123;</span></span><br><span class="line"><span class="language-javascript">    <span class="title function_">init</span>(<span class="params"></span>) &#123;</span></span><br><span class="line"><span class="language-javascript">      <span class="keyword">if</span> (<span class="variable language_">this</span>.<span class="property">containerHeight</span>) <span class="keyword">return</span>;</span></span><br><span class="line"><span class="language-javascript">      <span class="variable language_">this</span>.<span class="title function_">updateFilterData</span>();</span></span><br><span class="line"><span class="language-javascript">    &#125;,</span></span><br><span class="line"><span class="language-javascript">    <span class="title function_">updateFilterData</span>(<span class="params">keyword</span>) &#123;</span></span><br><span class="line"><span class="language-javascript">      <span class="variable language_">this</span>.<span class="property">filterData</span> = <span class="variable language_">this</span>.<span class="property">originData</span>.<span class="title function_">filter</span>(<span class="function"><span class="params">item</span> =&gt;</span> &#123;</span></span><br><span class="line"><span class="language-javascript">        <span class="keyword">return</span> keyword ? item.<span class="property">label</span>.<span class="title function_">indexOf</span>(keyword) !== -<span class="number">1</span> : <span class="literal">true</span>;</span></span><br><span class="line"><span class="language-javascript">      &#125;);</span></span><br><span class="line"><span class="language-javascript">      <span class="variable language_">this</span>.<span class="property">displayData</span> = <span class="variable language_">this</span>.<span class="property">filterData</span>.<span class="title function_">slice</span>(<span class="number">0</span>, <span class="variable constant_">BATCH_NUM</span>);</span></span><br><span class="line"><span class="language-javascript">      <span class="variable language_">this</span>.$nextTick(<span class="function">() =&gt;</span> &#123;</span></span><br><span class="line"><span class="language-javascript">        <span class="variable language_">this</span>.<span class="property">containerHeight</span> = <span class="variable language_">this</span>.<span class="property">itemHeight</span> * <span class="variable language_">this</span>.<span class="property">filterData</span>.<span class="property">length</span>;</span></span><br><span class="line"><span class="language-javascript">      &#125;);</span></span><br><span class="line"><span class="language-javascript">    &#125;,</span></span><br><span class="line"><span class="language-javascript">    <span class="title function_">search</span>(<span class="params">event</span>) &#123;</span></span><br><span class="line"><span class="language-javascript">      <span class="comment">// 应防抖</span></span></span><br><span class="line"><span class="language-javascript">      <span class="variable language_">this</span>.<span class="property">containerPaddingTop</span> = <span class="number">0</span>;</span></span><br><span class="line"><span class="language-javascript">      <span class="variable language_">this</span>.<span class="property">$viewContainer</span>.<span class="property">scrollTop</span> = <span class="number">0</span>;</span></span><br><span class="line"><span class="language-javascript">      <span class="variable language_">this</span>.<span class="title function_">updateFilterData</span>(<span class="variable language_">this</span>.<span class="property">searchText</span>);</span></span><br><span class="line"><span class="language-javascript">    &#125;,</span></span><br><span class="line"><span class="language-javascript">    <span class="title function_">select</span>(<span class="params">value</span>) &#123;</span></span><br><span class="line"><span class="language-javascript">      <span class="variable language_">this</span>.<span class="property">currentValue</span> = value;</span></span><br><span class="line"><span class="language-javascript">      <span class="variable language_">this</span>.<span class="property">active</span> = <span class="literal">false</span>;</span></span><br><span class="line"><span class="language-javascript">      <span class="variable language_">this</span>.$emit(<span class="string">&#x27;change&#x27;</span>, value);</span></span><br><span class="line"><span class="language-javascript">    &#125;,</span></span><br><span class="line"><span class="language-javascript">    <span class="title function_">handleScroll</span>(<span class="params"></span>) &#123;</span></span><br><span class="line"><span class="language-javascript">      <span class="variable language_">this</span>.<span class="property">containerPaddingTop</span> = <span class="variable language_">this</span>.<span class="property">$viewContainer</span>.<span class="property">scrollTop</span>;</span></span><br><span class="line"><span class="language-javascript">      <span class="keyword">const</span> position = <span class="title class_">Math</span>.<span class="title function_">ceil</span>(<span class="variable language_">this</span>.<span class="property">containerPaddingTop</span> / <span class="variable language_">this</span>.<span class="property">itemHeight</span>);</span></span><br><span class="line"><span class="language-javascript">      <span class="variable language_">this</span>.<span class="property">displayData</span> = <span class="variable language_">this</span>.<span class="property">filterData</span>.<span class="title function_">slice</span>(position, position + <span class="variable constant_">BATCH_NUM</span>);</span></span><br><span class="line"><span class="language-javascript">    &#125;,</span></span><br><span class="line"><span class="language-javascript">  &#125;,</span></span><br><span class="line"><span class="language-javascript">  <span class="title function_">created</span>(<span class="params"></span>) &#123;</span></span><br><span class="line"><span class="language-javascript">  &#125;,</span></span><br><span class="line"><span class="language-javascript">  <span class="title function_">mounted</span>(<span class="params"></span>) &#123;</span></span><br><span class="line"><span class="language-javascript">    <span class="variable language_">this</span>.<span class="property">$viewContainer</span> = <span class="variable language_">this</span>.<span class="property">$refs</span>[<span class="string">&#x27;view-container&#x27;</span>];</span></span><br><span class="line"><span class="language-javascript">  &#125;</span></span><br><span class="line"><span class="language-javascript">&#125;;</span></span><br><span class="line"><span class="language-javascript"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<pre><code class="html">&lt;template&gt;
+  &lt;div ref=&quot;virtual-scroll-relect&quot; class=&quot;virtual-scroll-relect&quot; :class=&quot;&#123; active: active &#125;&quot;&gt;
+    &lt;a class=&quot;display-label&quot; href=&quot;javascript:;&quot; @click=&quot;active = !active&quot;&gt;&#123;&#123;
+      displayLabel
+    &#125;&#125;&lt;/a&gt;
+    &lt;div class=&quot;list&quot; v-show=&quot;active&quot;&gt;
+      &lt;input
+        type=&quot;text&quot;
+        class=&quot;select-input&quot;
+        @input=&quot;search&quot;
+        v-model=&quot;searchText&quot;
+      /&gt;
+      &lt;div class=&quot;view-container&quot; ref=&quot;view-container&quot; @scroll=&quot;handleScroll&quot;&gt;
+        &lt;div class=&quot;item-container&quot; ref=&quot;item-container&quot;
+            :style=&quot;&#123; height: containerHeight+&#39;px&#39;, paddingTop: containerPaddingTop+&#39;px&#39; &#125;&quot;&gt;
+          &lt;div
+            v-for=&quot;item in displayData&quot;
+            class=&quot;item&quot;
+            :class=&quot;&#123; selected: item.value === currentValue &#125;&quot;
+            :key=&quot;item.value&quot;
+            @click=&quot;select(item.value)&quot;
+          &gt;
+            &#123;&#123; item.label &#125;&#125;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/template&gt;
 
+&lt;script&gt;
+function genData(length) &#123;
+  return new Array(length).fill(&#39;1&#39;).map((_, index) =&gt; &#123;
+    const idx = index + 1;
+    return &#123;
+      value: idx,
+      label: &#39;VirtualScroll-&#39; + idx
+    &#125;;
+  &#125;);
+&#125;
+
+const originData = genData(1000);
+
+// 上面是调试示例用的代码
+
+const BATCH_NUM = 10; // 每一批替换的条数
+
+const ITEM_HEIGHT = 24; // 单个选项的高度
+
+export default &#123;
+  name: &#39;VirtualScrollSelect&#39;, // 虚拟滚动列表下拉菜单
+  props: &#123;
+    originData: &#123;
+      type: Array,
+      default: () =&gt; originData, // 原始的所有数据
+    &#125;,
+  &#125;,
+  data() &#123;
+    return &#123;
+      filterData: [], // 原始数据经过过滤后的数据
+      displayData: [], // 真正用于渲染的数据
+      currentValue: 0,
+      active: false,
+      searchText: &#39;&#39;,
+      containerHeight: 0,
+      containerPaddingTop: 0,
+      itemHeight: ITEM_HEIGHT,
+    &#125;;
+  &#125;,
+  computed: &#123;
+    displayLabel() &#123;
+      const selectd = this.originData.find(
+        item =&gt; item.value === this.currentValue
+      );
+      return selectd ? selectd.label : &#39;请选择&#39;;
+    &#125;
+  &#125;,
+  watch: &#123;
+    active(val) &#123;
+      if (val) &#123;
+        this.init();
+      &#125;
+    &#125;,
+  &#125;,
+  methods: &#123;
+    init() &#123;
+      if (this.containerHeight) return;
+      this.updateFilterData();
+    &#125;,
+    updateFilterData(keyword) &#123;
+      this.filterData = this.originData.filter(item =&gt; &#123;
+        return keyword ? item.label.indexOf(keyword) !== -1 : true;
+      &#125;);
+      this.displayData = this.filterData.slice(0, BATCH_NUM);
+      this.$nextTick(() =&gt; &#123;
+        this.containerHeight = this.itemHeight * this.filterData.length;
+      &#125;);
+    &#125;,
+    search(event) &#123;
+      // 应防抖
+      this.containerPaddingTop = 0;
+      this.$viewContainer.scrollTop = 0;
+      this.updateFilterData(this.searchText);
+    &#125;,
+    select(value) &#123;
+      this.currentValue = value;
+      this.active = false;
+      this.$emit(&#39;change&#39;, value);
+    &#125;,
+    handleScroll() &#123;
+      this.containerPaddingTop = this.$viewContainer.scrollTop;
+      const position = Math.ceil(this.containerPaddingTop / this.itemHeight);
+      this.displayData = this.filterData.slice(position, position + BATCH_NUM);
+    &#125;,
+  &#125;,
+  created() &#123;
+  &#125;,
+  mounted() &#123;
+    this.$viewContainer = this.$refs[&#39;view-container&#39;];
+  &#125;
+&#125;;
+&lt;/script&gt;
+</code></pre>
 <h3 id="三、两者混合"><a href="#三、两者混合" class="headerlink" title="三、两者混合"></a>三、两者混合</h3><p>现实情况还是有很多是 懒加载 + 虚拟滚动列表 的组合。拿上面的虚拟列表例子加上了懒加载功能。偷懒实现就把所有数据都改成接口（外部方法）返回。由调用方（或是前端自己分批或是后端分页处理）自己对数据分批处理然后返回回来。</p>
 <p>这个要注意的就是，<strong>每次加上新的一批的数据，要更新虚拟列表的高度，已达到视觉上真的好像多了很多选项的感觉</strong>。</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">template</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">ref</span>=<span class="string">&quot;multi-relect&quot;</span> <span class="attr">class</span>=<span class="string">&quot;multi-relect&quot;</span> <span class="attr">:class</span>=<span class="string">&quot;&#123; active: active &#125;&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">a</span> <span class="attr">class</span>=<span class="string">&quot;display-label&quot;</span> <span class="attr">href</span>=<span class="string">&quot;javascript:;&quot;</span> @<span class="attr">click</span>=<span class="string">&quot;active = !active&quot;</span>&gt;</span>&#123;&#123;</span><br><span class="line">      displayLabel</span><br><span class="line">    &#125;&#125;<span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;list&quot;</span> <span class="attr">v-show</span>=<span class="string">&quot;active&quot;</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">input</span></span></span><br><span class="line"><span class="tag">        <span class="attr">type</span>=<span class="string">&quot;text&quot;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">class</span>=<span class="string">&quot;select-input&quot;</span></span></span><br><span class="line"><span class="tag">        @<span class="attr">input</span>=<span class="string">&quot;search&quot;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">v-model</span>=<span class="string">&quot;searchText&quot;</span></span></span><br><span class="line"><span class="tag">      /&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;view-container&quot;</span> <span class="attr">ref</span>=<span class="string">&quot;view-container&quot;</span> @<span class="attr">scroll</span>=<span class="string">&quot;handleScroll&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;item-container&quot;</span> <span class="attr">ref</span>=<span class="string">&quot;item-container&quot;</span></span></span><br><span class="line"><span class="tag">        	<span class="attr">:style</span>=<span class="string">&quot;&#123; height: containerHeight+&#x27;px&#x27;, paddingTop: containerPaddingTop+&#x27;px&#x27; &#125;&quot;</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">div</span></span></span><br><span class="line"><span class="tag">            <span class="attr">v-for</span>=<span class="string">&quot;item in displayData&quot;</span></span></span><br><span class="line"><span class="tag">            <span class="attr">ref</span>=<span class="string">&quot;item&quot;</span></span></span><br><span class="line"><span class="tag">            <span class="attr">class</span>=<span class="string">&quot;item&quot;</span></span></span><br><span class="line"><span class="tag">            <span class="attr">:class</span>=<span class="string">&quot;&#123; selected: item.value === currentValue &#125;&quot;</span></span></span><br><span class="line"><span class="tag">            <span class="attr">:key</span>=<span class="string">&quot;item.value&quot;</span></span></span><br><span class="line"><span class="tag">            @<span class="attr">click</span>=<span class="string">&quot;select(item.value)&quot;</span></span></span><br><span class="line"><span class="tag">          &gt;</span></span><br><span class="line">            &#123;&#123; item.label &#125;&#125;</span><br><span class="line">          <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">template</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript"><span class="keyword">function</span> <span class="title function_">genData</span>(<span class="params">&#123; pageno, count, keyword &#125;</span>) &#123;</span></span><br><span class="line"><span class="language-javascript">  <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">Array</span>(count).<span class="title function_">fill</span>(<span class="string">&#x27;1&#x27;</span>).<span class="title function_">map</span>(<span class="function">(<span class="params">_, index</span>) =&gt;</span> &#123;</span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">const</span> value = (pageno - <span class="number">1</span>) * count + index + <span class="number">1</span> + <span class="string">&#x27;&#x27;</span>;</span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">return</span> &#123;</span></span><br><span class="line"><span class="language-javascript">      value,</span></span><br><span class="line"><span class="language-javascript">      <span class="attr">label</span>: <span class="string">&#x27;MultiSelect-&#x27;</span> + value + (keyword || <span class="string">&#x27;&#x27;</span>),</span></span><br><span class="line"><span class="language-javascript">    &#125;;</span></span><br><span class="line"><span class="language-javascript">  &#125;);</span></span><br><span class="line"><span class="language-javascript">&#125;</span></span><br><span class="line"><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript"><span class="keyword">const</span> <span class="variable constant_">ONE_LOAD</span> = <span class="number">10</span>; <span class="comment">// 每次加载10条，作用于懒加载</span></span></span><br><span class="line"><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript"><span class="keyword">const</span> <span class="variable constant_">BATCH_NUM</span> = <span class="number">10</span>; <span class="comment">// 每一批替换的条数</span></span></span><br><span class="line"><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript"><span class="keyword">const</span> <span class="variable constant_">ITEM_HEIGHT</span> = <span class="number">24</span>;</span></span><br><span class="line"><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</span></span><br><span class="line"><span class="language-javascript">  <span class="attr">name</span>: <span class="string">&#x27;AllSelect&#x27;</span>, <span class="comment">// 虚拟滚动列表 + 懒加载下拉菜单</span></span></span><br><span class="line"><span class="language-javascript">  <span class="attr">props</span>: &#123;</span></span><br><span class="line"><span class="language-javascript">    <span class="attr">getData</span>: &#123;</span></span><br><span class="line"><span class="language-javascript">      <span class="attr">type</span>: <span class="title class_">Function</span>,</span></span><br><span class="line"><span class="language-javascript">      <span class="attr">default</span>: <span class="function">(<span class="params">&#123; pageno, count, keyword &#125;</span>) =&gt;</span> &#123;</span></span><br><span class="line"><span class="language-javascript">        <span class="keyword">return</span> <span class="title class_">Promise</span>.<span class="title function_">resolve</span>(<span class="title function_">genData</span>(&#123; pageno, count, keyword &#125;));</span></span><br><span class="line"><span class="language-javascript">      &#125;,</span></span><br><span class="line"><span class="language-javascript">      <span class="attr">require</span>: <span class="literal">true</span>,</span></span><br><span class="line"><span class="language-javascript">    &#125;,</span></span><br><span class="line"><span class="language-javascript">  &#125;,</span></span><br><span class="line"><span class="language-javascript">  <span class="title function_">data</span>(<span class="params"></span>) &#123;</span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">return</span> &#123;</span></span><br><span class="line"><span class="language-javascript">      <span class="attr">originData</span>: [],</span></span><br><span class="line"><span class="language-javascript">      <span class="attr">displayData</span>: [], <span class="comment">// 真正用于渲染的数据</span></span></span><br><span class="line"><span class="language-javascript">      <span class="attr">currentValue</span>: <span class="number">0</span>,</span></span><br><span class="line"><span class="language-javascript">      <span class="attr">active</span>: <span class="literal">false</span>,</span></span><br><span class="line"><span class="language-javascript">      <span class="attr">searchText</span>: <span class="string">&#x27;&#x27;</span>,</span></span><br><span class="line"><span class="language-javascript">      <span class="attr">viewContainerHeight</span>: <span class="number">200</span>,</span></span><br><span class="line"><span class="language-javascript">      <span class="attr">containerHeight</span>: <span class="number">0</span>,</span></span><br><span class="line"><span class="language-javascript">      <span class="attr">containerPaddingTop</span>: <span class="number">0</span>,</span></span><br><span class="line"><span class="language-javascript">      <span class="attr">itemHeight</span>: <span class="variable constant_">ITEM_HEIGHT</span>,</span></span><br><span class="line"><span class="language-javascript">    &#125;;</span></span><br><span class="line"><span class="language-javascript">  &#125;,</span></span><br><span class="line"><span class="language-javascript">  <span class="attr">computed</span>: &#123;</span></span><br><span class="line"><span class="language-javascript">    <span class="title function_">displayLabel</span>(<span class="params"></span>) &#123;</span></span><br><span class="line"><span class="language-javascript">      <span class="keyword">const</span> selectd = <span class="variable language_">this</span>.<span class="property">originData</span>.<span class="title function_">find</span>(</span></span><br><span class="line"><span class="language-javascript">        <span class="function"><span class="params">item</span> =&gt;</span> item.<span class="property">value</span> === <span class="variable language_">this</span>.<span class="property">currentValue</span></span></span><br><span class="line"><span class="language-javascript">      );</span></span><br><span class="line"><span class="language-javascript">      <span class="keyword">return</span> selectd ? selectd.<span class="property">label</span> : <span class="string">&#x27;请选择&#x27;</span>;</span></span><br><span class="line"><span class="language-javascript">    &#125;,</span></span><br><span class="line"><span class="language-javascript">    <span class="title function_">count</span>(<span class="params"></span>) &#123;</span></span><br><span class="line"><span class="language-javascript">      <span class="keyword">return</span> <span class="variable constant_">ONE_LOAD</span>;</span></span><br><span class="line"><span class="language-javascript">    &#125;,</span></span><br><span class="line"><span class="language-javascript">    <span class="title function_">pageno</span>(<span class="params"></span>) &#123;</span></span><br><span class="line"><span class="language-javascript">      <span class="keyword">return</span> (<span class="variable language_">this</span>.<span class="property">originData</span>.<span class="property">length</span> / <span class="variable language_">this</span>.<span class="property">count</span>) + <span class="number">1</span>;</span></span><br><span class="line"><span class="language-javascript">    &#125;,</span></span><br><span class="line"><span class="language-javascript">  &#125;,</span></span><br><span class="line"><span class="language-javascript">  <span class="attr">watch</span>: &#123;</span></span><br><span class="line"><span class="language-javascript">    <span class="title function_">active</span>(<span class="params">val</span>) &#123;</span></span><br><span class="line"><span class="language-javascript">      <span class="keyword">if</span> (val) &#123;</span></span><br><span class="line"><span class="language-javascript">        <span class="variable language_">this</span>.<span class="title function_">init</span>();</span></span><br><span class="line"><span class="language-javascript">      &#125;</span></span><br><span class="line"><span class="language-javascript">    &#125;,</span></span><br><span class="line"><span class="language-javascript">  &#125;,</span></span><br><span class="line"><span class="language-javascript">  <span class="attr">methods</span>: &#123;</span></span><br><span class="line"><span class="language-javascript">    <span class="title function_">init</span>(<span class="params"></span>) &#123;</span></span><br><span class="line"><span class="language-javascript">      <span class="keyword">if</span> (<span class="variable language_">this</span>.<span class="property">containerHeight</span>) <span class="keyword">return</span>;</span></span><br><span class="line"><span class="language-javascript">      <span class="variable language_">this</span>.<span class="title function_">initData</span>();</span></span><br><span class="line"><span class="language-javascript">    &#125;,</span></span><br><span class="line"><span class="language-javascript">    <span class="title function_">search</span>(<span class="params">event</span>) &#123;</span></span><br><span class="line"><span class="language-javascript">      <span class="comment">// 应防抖</span></span></span><br><span class="line"><span class="language-javascript">      <span class="variable language_">this</span>.<span class="property">containerPaddingTop</span> = <span class="number">0</span>;</span></span><br><span class="line"><span class="language-javascript">      <span class="variable language_">this</span>.<span class="property">$viewContainer</span>.<span class="property">scrollTop</span> = <span class="number">0</span>;</span></span><br><span class="line"><span class="language-javascript">      <span class="variable language_">this</span>.<span class="title function_">initData</span>();</span></span><br><span class="line"><span class="language-javascript">    &#125;,</span></span><br><span class="line"><span class="language-javascript">    <span class="title function_">select</span>(<span class="params">value</span>) &#123;</span></span><br><span class="line"><span class="language-javascript">      <span class="variable language_">this</span>.<span class="property">currentValue</span> = value;</span></span><br><span class="line"><span class="language-javascript">      <span class="variable language_">this</span>.<span class="property">active</span> = <span class="literal">false</span>;</span></span><br><span class="line"><span class="language-javascript">      <span class="variable language_">this</span>.$emit(<span class="string">&#x27;change&#x27;</span>, value);</span></span><br><span class="line"><span class="language-javascript">    &#125;,</span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">async</span> <span class="title function_">initData</span>(<span class="params"></span>) &#123;</span></span><br><span class="line"><span class="language-javascript">      <span class="variable language_">this</span>.<span class="property">originData</span> = [];</span></span><br><span class="line"><span class="language-javascript">      <span class="variable language_">this</span>.<span class="property">originData</span> = <span class="keyword">await</span> <span class="variable language_">this</span>.<span class="title function_">loadRemoteData</span>();;</span></span><br><span class="line"><span class="language-javascript">      <span class="variable language_">this</span>.<span class="property">displayData</span> = <span class="variable language_">this</span>.<span class="property">originData</span>.<span class="title function_">slice</span>(<span class="number">0</span>, <span class="variable constant_">BATCH_NUM</span>);</span></span><br><span class="line"><span class="language-javascript">      <span class="variable language_">this</span>.<span class="property">containerHeight</span> = <span class="variable language_">this</span>.<span class="property">itemHeight</span> * <span class="variable language_">this</span>.<span class="property">originData</span>.<span class="property">length</span>;</span></span><br><span class="line"><span class="language-javascript">    &#125;,</span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">async</span> <span class="title function_">loadRemoteData</span>(<span class="params"></span>) &#123; <span class="comment">// 从外部方法获取数据</span></span></span><br><span class="line"><span class="language-javascript">      <span class="keyword">if</span> (<span class="keyword">typeof</span> <span class="variable language_">this</span>.<span class="property">getData</span> !== <span class="string">&#x27;function&#x27;</span>) <span class="keyword">return</span> [];</span></span><br><span class="line"><span class="language-javascript">      <span class="keyword">try</span> &#123;</span></span><br><span class="line"><span class="language-javascript">        <span class="keyword">const</span> data = <span class="keyword">await</span> <span class="variable language_">this</span>.<span class="title function_">getData</span>(</span></span><br><span class="line"><span class="language-javascript">        	&#123; <span class="attr">pageno</span>: <span class="variable language_">this</span>.<span class="property">pageno</span>, <span class="attr">count</span>: <span class="variable language_">this</span>.<span class="property">count</span>, <span class="attr">keyword</span>: <span class="variable language_">this</span>.<span class="property">searchText</span> &#125;</span></span><br><span class="line"><span class="language-javascript">        );</span></span><br><span class="line"><span class="language-javascript">        <span class="keyword">return</span> data;</span></span><br><span class="line"><span class="language-javascript">      &#125; <span class="keyword">catch</span>(error) &#123;</span></span><br><span class="line"><span class="language-javascript">        <span class="variable language_">console</span>.<span class="title function_">error</span>(<span class="string">&#x27;get data error:&#x27;</span>, error);</span></span><br><span class="line"><span class="language-javascript">      &#125;</span></span><br><span class="line"><span class="language-javascript">      <span class="keyword">return</span> [];</span></span><br><span class="line"><span class="language-javascript">    &#125;,</span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">async</span> <span class="title function_">updateData</span>(<span class="params"></span>) &#123;</span></span><br><span class="line"><span class="language-javascript">      <span class="keyword">const</span> addData = <span class="keyword">await</span> <span class="variable language_">this</span>.<span class="title function_">loadRemoteData</span>();</span></span><br><span class="line"><span class="language-javascript">      <span class="variable language_">this</span>.<span class="property">displayData</span>.<span class="title function_">push</span>(...addData);</span></span><br><span class="line"><span class="language-javascript">      <span class="variable language_">this</span>.<span class="title function_">handleScroll</span>();</span></span><br><span class="line"><span class="language-javascript">    &#125;,</span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">async</span> <span class="title function_">handleScroll</span>(<span class="params"></span>) &#123;</span></span><br><span class="line"><span class="language-javascript">      <span class="variable language_">this</span>.<span class="property">containerPaddingTop</span> = <span class="variable language_">this</span>.<span class="property">$viewContainer</span>.<span class="property">scrollTop</span>;</span></span><br><span class="line"><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">      <span class="comment">// 要见底，则加载新数据</span></span></span><br><span class="line"><span class="language-javascript">      <span class="keyword">if</span> ((<span class="variable language_">this</span>.<span class="property">containerHeight</span> - <span class="variable language_">this</span>.<span class="property">containerPaddingTop</span>) &lt;= <span class="variable language_">this</span>.<span class="property">viewContainerHeight</span>) &#123;</span></span><br><span class="line"><span class="language-javascript">        <span class="keyword">const</span> data = <span class="keyword">await</span> <span class="variable language_">this</span>.<span class="title function_">loadRemoteData</span>();</span></span><br><span class="line"><span class="language-javascript">        <span class="variable language_">this</span>.<span class="property">originData</span>.<span class="title function_">push</span>(...data);</span></span><br><span class="line"><span class="language-javascript">      &#125;</span></span><br><span class="line"><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">      <span class="keyword">const</span> position = <span class="title class_">Math</span>.<span class="title function_">ceil</span>(<span class="variable language_">this</span>.<span class="property">containerPaddingTop</span> / <span class="variable language_">this</span>.<span class="property">itemHeight</span>);</span></span><br><span class="line"><span class="language-javascript">      <span class="variable language_">this</span>.<span class="property">displayData</span> = <span class="variable language_">this</span>.<span class="property">originData</span>.<span class="title function_">slice</span>(position, position + <span class="variable constant_">BATCH_NUM</span>);</span></span><br><span class="line"><span class="language-javascript">      <span class="variable language_">this</span>.<span class="property">containerHeight</span> = <span class="variable language_">this</span>.<span class="property">itemHeight</span> * <span class="variable language_">this</span>.<span class="property">originData</span>.<span class="property">length</span>;</span></span><br><span class="line"><span class="language-javascript">    &#125;,</span></span><br><span class="line"><span class="language-javascript">  &#125;,</span></span><br><span class="line"><span class="language-javascript">  <span class="title function_">mounted</span>(<span class="params"></span>) &#123;</span></span><br><span class="line"><span class="language-javascript">    <span class="variable language_">this</span>.<span class="property">$viewContainer</span> = <span class="variable language_">this</span>.<span class="property">$refs</span>[<span class="string">&#x27;view-container&#x27;</span>];</span></span><br><span class="line"><span class="language-javascript">  &#125;</span></span><br><span class="line"><span class="language-javascript">&#125;;</span></span><br><span class="line"><span class="language-javascript"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<pre><code class="html">&lt;template&gt;
+  &lt;div ref=&quot;multi-relect&quot; class=&quot;multi-relect&quot; :class=&quot;&#123; active: active &#125;&quot;&gt;
+    &lt;a class=&quot;display-label&quot; href=&quot;javascript:;&quot; @click=&quot;active = !active&quot;&gt;&#123;&#123;
+      displayLabel
+    &#125;&#125;&lt;/a&gt;
+    &lt;div class=&quot;list&quot; v-show=&quot;active&quot;&gt;
+      &lt;input
+        type=&quot;text&quot;
+        class=&quot;select-input&quot;
+        @input=&quot;search&quot;
+        v-model=&quot;searchText&quot;
+      /&gt;
+      &lt;div class=&quot;view-container&quot; ref=&quot;view-container&quot; @scroll=&quot;handleScroll&quot;&gt;
+        &lt;div class=&quot;item-container&quot; ref=&quot;item-container&quot;
+            :style=&quot;&#123; height: containerHeight+&#39;px&#39;, paddingTop: containerPaddingTop+&#39;px&#39; &#125;&quot;&gt;
+          &lt;div
+            v-for=&quot;item in displayData&quot;
+            ref=&quot;item&quot;
+            class=&quot;item&quot;
+            :class=&quot;&#123; selected: item.value === currentValue &#125;&quot;
+            :key=&quot;item.value&quot;
+            @click=&quot;select(item.value)&quot;
+          &gt;
+            &#123;&#123; item.label &#125;&#125;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/template&gt;
 
+&lt;script&gt;
+function genData(&#123; pageno, count, keyword &#125;) &#123;
+  return new Array(count).fill(&#39;1&#39;).map((_, index) =&gt; &#123;
+    const value = (pageno - 1) * count + index + 1 + &#39;&#39;;
+    return &#123;
+      value,
+      label: &#39;MultiSelect-&#39; + value + (keyword || &#39;&#39;),
+    &#125;;
+  &#125;);
+&#125;
+
+const ONE_LOAD = 10; // 每次加载10条，作用于懒加载
+
+const BATCH_NUM = 10; // 每一批替换的条数
+
+const ITEM_HEIGHT = 24;
+
+export default &#123;
+  name: &#39;AllSelect&#39;, // 虚拟滚动列表 + 懒加载下拉菜单
+  props: &#123;
+    getData: &#123;
+      type: Function,
+      default: (&#123; pageno, count, keyword &#125;) =&gt; &#123;
+        return Promise.resolve(genData(&#123; pageno, count, keyword &#125;));
+      &#125;,
+      require: true,
+    &#125;,
+  &#125;,
+  data() &#123;
+    return &#123;
+      originData: [],
+      displayData: [], // 真正用于渲染的数据
+      currentValue: 0,
+      active: false,
+      searchText: &#39;&#39;,
+      viewContainerHeight: 200,
+      containerHeight: 0,
+      containerPaddingTop: 0,
+      itemHeight: ITEM_HEIGHT,
+    &#125;;
+  &#125;,
+  computed: &#123;
+    displayLabel() &#123;
+      const selectd = this.originData.find(
+        item =&gt; item.value === this.currentValue
+      );
+      return selectd ? selectd.label : &#39;请选择&#39;;
+    &#125;,
+    count() &#123;
+      return ONE_LOAD;
+    &#125;,
+    pageno() &#123;
+      return (this.originData.length / this.count) + 1;
+    &#125;,
+  &#125;,
+  watch: &#123;
+    active(val) &#123;
+      if (val) &#123;
+        this.init();
+      &#125;
+    &#125;,
+  &#125;,
+  methods: &#123;
+    init() &#123;
+      if (this.containerHeight) return;
+      this.initData();
+    &#125;,
+    search(event) &#123;
+      // 应防抖
+      this.containerPaddingTop = 0;
+      this.$viewContainer.scrollTop = 0;
+      this.initData();
+    &#125;,
+    select(value) &#123;
+      this.currentValue = value;
+      this.active = false;
+      this.$emit(&#39;change&#39;, value);
+    &#125;,
+    async initData() &#123;
+      this.originData = [];
+      this.originData = await this.loadRemoteData();;
+      this.displayData = this.originData.slice(0, BATCH_NUM);
+      this.containerHeight = this.itemHeight * this.originData.length;
+    &#125;,
+    async loadRemoteData() &#123; // 从外部方法获取数据
+      if (typeof this.getData !== &#39;function&#39;) return [];
+      try &#123;
+        const data = await this.getData(
+            &#123; pageno: this.pageno, count: this.count, keyword: this.searchText &#125;
+        );
+        return data;
+      &#125; catch(error) &#123;
+        console.error(&#39;get data error:&#39;, error);
+      &#125;
+      return [];
+    &#125;,
+    async updateData() &#123;
+      const addData = await this.loadRemoteData();
+      this.displayData.push(...addData);
+      this.handleScroll();
+    &#125;,
+    async handleScroll() &#123;
+      this.containerPaddingTop = this.$viewContainer.scrollTop;
+
+      // 要见底，则加载新数据
+      if ((this.containerHeight - this.containerPaddingTop) &lt;= this.viewContainerHeight) &#123;
+        const data = await this.loadRemoteData();
+        this.originData.push(...data);
+      &#125;
+
+      const position = Math.ceil(this.containerPaddingTop / this.itemHeight);
+      this.displayData = this.originData.slice(position, position + BATCH_NUM);
+      this.containerHeight = this.itemHeight * this.originData.length;
+    &#125;,
+  &#125;,
+  mounted() &#123;
+    this.$viewContainer = this.$refs[&#39;view-container&#39;];
+  &#125;
+&#125;;
+&lt;/script&gt;
+</code></pre>
 <p>样式部分：</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">style</span>&gt;</span><span class="language-css"></span></span><br><span class="line"><span class="language-css">* &#123;</span></span><br><span class="line"><span class="language-css">  <span class="attribute">box-sizing</span>: border-box;</span></span><br><span class="line"><span class="language-css">&#125;</span></span><br><span class="line"><span class="language-css"><span class="selector-tag">ul</span>,</span></span><br><span class="line"><span class="language-css"><span class="selector-tag">li</span> &#123;</span></span><br><span class="line"><span class="language-css">  <span class="attribute">padding</span>: <span class="number">0</span>;</span></span><br><span class="line"><span class="language-css">  <span class="attribute">margin</span>: <span class="number">0</span>;</span></span><br><span class="line"><span class="language-css">  <span class="attribute">list-style</span>: none;</span></span><br><span class="line"><span class="language-css">&#125;</span></span><br><span class="line"><span class="language-css"></span></span><br><span class="line"><span class="language-css"><span class="selector-class">.lazy-load-select</span> &#123;</span></span><br><span class="line"><span class="language-css">  <span class="attribute">width</span>: <span class="number">200px</span>;</span></span><br><span class="line"><span class="language-css">  <span class="attribute">height</span>: <span class="number">30px</span>;</span></span><br><span class="line"><span class="language-css">  <span class="attribute">border</span>: <span class="number">1px</span> solid <span class="number">#d7dde4</span>;</span></span><br><span class="line"><span class="language-css">  <span class="attribute">border-radius</span>: <span class="number">5px</span>;</span></span><br><span class="line"><span class="language-css">  <span class="attribute">position</span>: relative;</span></span><br><span class="line"><span class="language-css">&#125;</span></span><br><span class="line"><span class="language-css"><span class="selector-class">.active</span> &#123;</span></span><br><span class="line"><span class="language-css">  <span class="attribute">border</span>: <span class="number">1px</span> solid <span class="number">#3399ff</span>;</span></span><br><span class="line"><span class="language-css">  <span class="attribute">box-shadow</span>: <span class="number">0px</span> <span class="number">0px</span> <span class="number">2px</span> <span class="number">#abcdef</span>, <span class="number">0px</span> <span class="number">0px</span> <span class="number">2px</span> <span class="number">#abcdef</span>, <span class="number">0px</span> <span class="number">0px</span> <span class="number">2px</span> <span class="number">#abcdef</span>,</span></span><br><span class="line"><span class="language-css">    <span class="number">0px</span> <span class="number">0px</span> <span class="number">2px</span> <span class="number">#abcdef</span>;</span></span><br><span class="line"><span class="language-css">&#125;</span></span><br><span class="line"><span class="language-css"></span></span><br><span class="line"><span class="language-css"><span class="selector-class">.display-label</span> &#123;</span></span><br><span class="line"><span class="language-css">  <span class="attribute">display</span>: inline-block;</span></span><br><span class="line"><span class="language-css">  <span class="attribute">width</span>: <span class="number">200px</span>;</span></span><br><span class="line"><span class="language-css">  <span class="attribute">height</span>: <span class="number">100%</span>;</span></span><br><span class="line"><span class="language-css">  <span class="attribute">text-decoration</span>: none;</span></span><br><span class="line"><span class="language-css">  <span class="attribute">line-height</span>: <span class="number">30px</span>;</span></span><br><span class="line"><span class="language-css">  <span class="attribute">color</span>: <span class="number">#657180</span>;</span></span><br><span class="line"><span class="language-css">  <span class="attribute">position</span>: relative;</span></span><br><span class="line"><span class="language-css">  <span class="attribute">padding-right</span>: <span class="number">20px</span>;</span></span><br><span class="line"><span class="language-css">&#125;</span></span><br><span class="line"><span class="language-css"><span class="selector-class">.display-label</span><span class="selector-pseudo">::after</span> &#123;</span></span><br><span class="line"><span class="language-css">  <span class="attribute">content</span>: <span class="string">&quot;&quot;</span>;</span></span><br><span class="line"><span class="language-css">  <span class="attribute">height</span>: <span class="number">0</span>;</span></span><br><span class="line"><span class="language-css">  <span class="attribute">width</span>: <span class="number">0</span>;</span></span><br><span class="line"><span class="language-css">  <span class="attribute">position</span>: absolute;</span></span><br><span class="line"><span class="language-css">  <span class="attribute">right</span>: <span class="number">8px</span>;</span></span><br><span class="line"><span class="language-css">  <span class="attribute">top</span>: <span class="number">50%</span>;</span></span><br><span class="line"><span class="language-css">  <span class="attribute">transform</span>: <span class="built_in">translateY</span>(-<span class="number">20%</span>);</span></span><br><span class="line"><span class="language-css">  <span class="attribute">border</span>: <span class="number">6px</span> solid;</span></span><br><span class="line"><span class="language-css">  <span class="attribute">border-color</span>: <span class="number">#657180</span> transparent transparent;</span></span><br><span class="line"><span class="language-css">&#125;</span></span><br><span class="line"><span class="language-css"><span class="selector-class">.active</span> <span class="selector-class">.display-label</span><span class="selector-pseudo">::after</span> &#123;</span></span><br><span class="line"><span class="language-css">  <span class="attribute">transform</span>: <span class="built_in">translateY</span>(-<span class="number">80%</span>);</span></span><br><span class="line"><span class="language-css">  <span class="attribute">border-color</span>: transparent transparent <span class="number">#657180</span>;</span></span><br><span class="line"><span class="language-css">&#125;</span></span><br><span class="line"><span class="language-css"></span></span><br><span class="line"><span class="language-css"><span class="selector-class">.list</span> &#123;</span></span><br><span class="line"><span class="language-css">  <span class="attribute">position</span>: absolute;</span></span><br><span class="line"><span class="language-css">  <span class="attribute">width</span>: <span class="number">200px</span>;</span></span><br><span class="line"><span class="language-css">  <span class="attribute">top</span>: <span class="number">35px</span>;</span></span><br><span class="line"><span class="language-css">  <span class="attribute">left</span>: <span class="number">0</span>;</span></span><br><span class="line"><span class="language-css">  <span class="attribute">padding</span>: <span class="number">5px</span>;</span></span><br><span class="line"><span class="language-css">  <span class="attribute">box-shadow</span>: <span class="number">2px</span> <span class="number">2px</span> <span class="number">4px</span> <span class="number">#ccc</span>, -<span class="number">2px</span> <span class="number">2px</span> <span class="number">4px</span> <span class="number">#ccc</span>, <span class="number">2px</span> -<span class="number">2px</span> <span class="number">4px</span> <span class="number">#ccc</span>,</span></span><br><span class="line"><span class="language-css">    -<span class="number">2px</span> -<span class="number">2px</span> <span class="number">4px</span> <span class="number">#ccc</span>;</span></span><br><span class="line"><span class="language-css">&#125;</span></span><br><span class="line"><span class="language-css"><span class="selector-class">.select-input</span> &#123;</span></span><br><span class="line"><span class="language-css">  <span class="attribute">border</span>: <span class="number">1px</span> solid <span class="number">#d7dde4</span>;</span></span><br><span class="line"><span class="language-css">  <span class="attribute">width</span>: <span class="number">100%</span>;</span></span><br><span class="line"><span class="language-css">  <span class="attribute">color</span>: <span class="number">#657180</span>;</span></span><br><span class="line"><span class="language-css">&#125;</span></span><br><span class="line"><span class="language-css"><span class="selector-class">.select-input</span><span class="selector-pseudo">:focus</span> &#123;</span></span><br><span class="line"><span class="language-css">  <span class="attribute">outline</span>: <span class="number">1px</span> solid <span class="number">#abcdef</span>;</span></span><br><span class="line"><span class="language-css">&#125;</span></span><br><span class="line"><span class="language-css"></span></span><br><span class="line"><span class="language-css"><span class="selector-class">.select-ul</span> &#123;</span></span><br><span class="line"><span class="language-css">  <span class="attribute">height</span>: <span class="number">200px</span>;</span></span><br><span class="line"><span class="language-css">  <span class="attribute">overflow</span>: auto;</span></span><br><span class="line"><span class="language-css">  <span class="attribute">margin-top</span>: <span class="number">5px</span>;</span></span><br><span class="line"><span class="language-css">&#125;</span></span><br><span class="line"><span class="language-css"><span class="selector-class">.select-li</span> &#123;</span></span><br><span class="line"><span class="language-css">  <span class="attribute">cursor</span>: pointer;</span></span><br><span class="line"><span class="language-css">  <span class="attribute">padding</span>: <span class="number">3px</span>;</span></span><br><span class="line"><span class="language-css">  <span class="attribute">color</span>: <span class="number">#657180</span>;</span></span><br><span class="line"><span class="language-css">&#125;</span></span><br><span class="line"><span class="language-css"><span class="selector-class">.select-li</span><span class="selector-pseudo">:hover</span> &#123;</span></span><br><span class="line"><span class="language-css">  <span class="attribute">background-color</span>: <span class="number">#ccc</span>;</span></span><br><span class="line"><span class="language-css">&#125;</span></span><br><span class="line"><span class="language-css"><span class="selector-class">.selected</span> &#123;</span></span><br><span class="line"><span class="language-css">  <span class="attribute">background-color</span>: <span class="number">#abcdef</span>;</span></span><br><span class="line"><span class="language-css">&#125;</span></span><br><span class="line"><span class="language-css"></span><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<pre><code class="html">&lt;style&gt;
+* &#123;
+  box-sizing: border-box;
+&#125;
+ul,
+li &#123;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+&#125;
+
+.lazy-load-select &#123;
+  width: 200px;
+  height: 30px;
+  border: 1px solid #d7dde4;
+  border-radius: 5px;
+  position: relative;
+&#125;
+.active &#123;
+  border: 1px solid #3399ff;
+  box-shadow: 0px 0px 2px #abcdef, 0px 0px 2px #abcdef, 0px 0px 2px #abcdef,
+    0px 0px 2px #abcdef;
+&#125;
+
+.display-label &#123;
+  display: inline-block;
+  width: 200px;
+  height: 100%;
+  text-decoration: none;
+  line-height: 30px;
+  color: #657180;
+  position: relative;
+  padding-right: 20px;
+&#125;
+.display-label::after &#123;
+  content: &quot;&quot;;
+  height: 0;
+  width: 0;
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-20%);
+  border: 6px solid;
+  border-color: #657180 transparent transparent;
+&#125;
+.active .display-label::after &#123;
+  transform: translateY(-80%);
+  border-color: transparent transparent #657180;
+&#125;
+
+.list &#123;
+  position: absolute;
+  width: 200px;
+  top: 35px;
+  left: 0;
+  padding: 5px;
+  box-shadow: 2px 2px 4px #ccc, -2px 2px 4px #ccc, 2px -2px 4px #ccc,
+    -2px -2px 4px #ccc;
+&#125;
+.select-input &#123;
+  border: 1px solid #d7dde4;
+  width: 100%;
+  color: #657180;
+&#125;
+.select-input:focus &#123;
+  outline: 1px solid #abcdef;
+&#125;
+
+.select-ul &#123;
+  height: 200px;
+  overflow: auto;
+  margin-top: 5px;
+&#125;
+.select-li &#123;
+  cursor: pointer;
+  padding: 3px;
+  color: #657180;
+&#125;
+.select-li:hover &#123;
+  background-color: #ccc;
+&#125;
+.selected &#123;
+  background-color: #abcdef;
+&#125;
+&lt;/style&gt;
+</code></pre>
+
       
     </div>
     <footer class="article-footer">
       
-        <a data-url="https://blog.cchealthier.com/2023/02/07/multi-function-select/" data-id="clmbeu7qy001ftf9m59jq0goc" class="article-thumbs-up">赞一个(<span class="article-thumbs-up-num">0</span>)</a>
+        <a data-url="https://blog.cchealthier.com/2023/02/07/multi-function-select/" data-id="clmxk7z09001ec39m0u0xe411" class="article-thumbs-up">赞一个(<span class="article-thumbs-up-num">0</span>)</a>
       
-      <!-- <a data-url="https://blog.cchealthier.com/2023/02/07/multi-function-select/" data-id="clmbeu7qy001ftf9m59jq0goc" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2023/02/07/multi-function-select/" data-id="clmxk7z09001ec39m0u0xe411" class="article-share-link">分享</a> -->
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%80%A7%E8%83%BD/" rel="tag">性能</a></li></ul>
@@ -166,6 +713,37 @@
   
     
   <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2023/09/23/react-basic-app-2/">react 基础工程 Ⅱ（@reduxjs/toolkit &amp; @craco/craco &amp; vite）</a>
+          </li>
+        
+          <li>
+            <a href="/2023/08/24/node-module/">NodeJS 的 commonjs、esm 模块使用以及一些字段释义</a>
+          </li>
+        
+          <li>
+            <a href="/2023/08/23/webpack5-background-url/">webpack5 下 background url 图片打包失败</a>
+          </li>
+        
+          <li>
+            <a href="/2023/07/26/node-stream/">NodeJS 里的 stream（流）</a>
+          </li>
+        
+          <li>
+            <a href="/2023/06/07/webpack-modulefederationplugin/">用 webpack ModuleFederationPlugin 搭建微前端</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
     <h3 class="widget-title">分类</h3>
     <div class="widget">
       <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/http%E5%8D%8F%E8%AE%AE/">http协议</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/%E6%9C%8D%E5%8A%A1/">服务</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/%E7%AE%97%E6%B3%95/">算法</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%97%85%E8%A1%8C/">旅行</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%97%85%E8%A1%8C/%E8%AE%B0%E5%BD%95/">记录</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%83%B9%E9%A5%AA/">烹饪</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%83%B9%E9%A5%AA/%E4%BC%A0%E7%BB%9F/">传统</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%9A%8F%E6%83%B3/">随想</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%9A%8F%E6%83%B3/%E5%BF%83%E6%83%85/">心情</a></li></ul></li></ul>
@@ -197,41 +775,10 @@
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/08/">八月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">七月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/06/">六月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/05/">五月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/04/">四月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/03/">三月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/02/">二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">十一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">十月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">九月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/09/">九月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/08/">八月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">七月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/06/">六月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/05/">五月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/04/">四月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/03/">三月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/02/">二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">十一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">十月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">九月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a></li></ul>
     </div>
   </div>
 
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">最新文章</h3>
-    <div class="widget">
-      <ul>
-        
-          <li>
-            <a href="/2023/08/24/node-module/">NodeJS 的 commonjs、esm 模块使用以及一些字段释义</a>
-          </li>
-        
-          <li>
-            <a href="/2023/08/23/webpack5-background-url/">webpack5 下 background url 图片打包失败</a>
-          </li>
-        
-          <li>
-            <a href="/2023/07/26/node-stream/">NodeJS 里的 stream（流）</a>
-          </li>
-        
-          <li>
-            <a href="/2023/06/07/webpack-modulefederationplugin/">用 webpack ModuleFederationPlugin 搭建微前端</a>
-          </li>
-        
-          <li>
-            <a href="/2023/05/31/react-basic-app/">react 基础工程（react-redux &amp; react-router）</a>
-          </li>
-        
-      </ul>
-    </div>
-  </div>
 
   
 </aside>
@@ -249,15 +796,27 @@
     </div>
     <nav id="mobile-nav">
   
-    <a href="/" class="mobile-nav-link">Home</a>
+    <a href="/" class="mobile-nav-link">首页</a>
   
-    <a href="/archives" class="mobile-nav-link">Archives</a>
+    <a href="/archives" class="mobile-nav-link">归档</a>
   
 </nav>
     
 
 <script src="//cdn.staticfile.org/jquery/2.0.3/jquery.min.js"></script>
 <script type="text/javascript" src="https://www.jq22.com/demo/jqueryToast201708310012/js/toast.script.js"></script>
+<script src="/js/highlight.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlightjs-line-numbers.js/2.8.0/highlightjs-line-numbers.min.js"></script>
+<script>
+  $(function(){
+    $('pre code').each((i, el) => {
+    hljs.highlightElement(el);
+  });
+  $('code.hljs').each(function(i, el) {
+     hljs.lineNumbersBlock(el);
+  });
+  }());
+</script>
 
 
   

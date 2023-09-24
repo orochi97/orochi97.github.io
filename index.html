@@ -23,13 +23,12 @@
     <link rel="icon" href="/favicon.ico">
   
   
-    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
-  
   
 <link rel="stylesheet" href="/css/style.css">
 
   <link href="https://www.jq22.com/demo/jqueryToast201708310012/css/toast.style.css" rel="stylesheet" type="text/css">
-<meta name="generator" content="Hexo 7.0.0-rc1"></head>
+  <link rel="stylesheet" href="/css/highlight/styles/monokai-sublime.min.css">
+<meta name="generator" content="Hexo 6.3.0"></head>
 
 <body>
   <div id="container">
@@ -57,9 +56,9 @@
       <nav id="main-nav">
         <a id="main-nav-toggle" class="nav-icon"></a>
         
-          <a class="main-nav-link" href="/">Home</a>
+          <a class="main-nav-link" href="/">首页</a>
         
-          <a class="main-nav-link" href="/archives">Archives</a>
+          <a class="main-nav-link" href="/archives">归档</a>
         
       </nav>
       <nav id="sub-nav">
@@ -74,6 +73,117 @@
 </header>
       <div class="outer">
         <section id="main">
+  
+    <article id="post-react-basic-app-2" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2023/09/23/react-basic-app-2/" class="article-date">
+  <time datetime="2023-09-23T02:53:58.000Z" itemprop="datePublished">2023-09-23</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2023/09/23/react-basic-app-2/">react 基础工程 Ⅱ（@reduxjs/toolkit &amp; @craco/craco &amp; vite）</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>书接上回《<a href="/2023/05/31/react-basic-app/">react 基础工程（react-redux &amp; react-router）</a>》，由于最近项目上的新实践新体验，所以记录一下。</p>
+<p><strong>依然，代码仓库：<a target="_blank" rel="noopener" href="https://github.com/orochi97/react-app">github</a>。</strong></p>
+<h2 id="一、用-reduxjs-x2F-toolkit-创建-reducer-和-api"><a href="#一、用-reduxjs-x2F-toolkit-创建-reducer-和-api" class="headerlink" title="一、用 @reduxjs&#x2F;toolkit 创建 reducer 和 api"></a>一、用 @reduxjs&#x2F;toolkit 创建 reducer 和 api</h2><p>其实工程里已经用到这个工具，但是当时还没完全发现它的优势，还以为不过是官方推荐的比较好用的三方库而已。才知道确实简化了处理以及还有别的封装功能。</p>
+<h3 id="1、简化写法"><a href="#1、简化写法" class="headerlink" title="1、简化写法"></a>1、简化写法</h3><p>以前老式的 redux 写法：</p>
+<pre><code class="js">import &#123; cloneDeep &#125; from &#39;lodash&#39;;
+export const addStringAction = payload =&gt; (&#123;
+  type: &#39;ADD_STRING&#39;,
+  payload: payload,
+&#125;);
+export const minusStringAction = payload =&gt; (&#123;
+  type: &#39;MINUS_STRING&#39;,
+  payload: payload,
+&#125;);
+const defaultState = &#123;
+  b: &#39;abc&#39;,
+&#125;;
+export default function stringReducer(state = defaultState, action) &#123;
+  const &#123; type, payload &#125; = action;
+  state = cloneDeep(state);
+  switch (type) &#123;
+    case &#39;ADD_STRING&#39;:
+      state.b += payload;
+      return state;
+    case &#39;MINUS_STRING&#39;:
+      state.b = &#39;&#39;;
+      return state;
+    default:
+      return state;
+  &#125;
+&#125;;
+</code></pre>
+<p>用 @reduxjs&#x2F;toolkit 的写法：</p>
+<pre><code class="js">import &#123; createSlice &#125; from &#39;@reduxjs/toolkit&#39;;
+export const counterSlice = createSlice(&#123;
+  name: &#39;counter&#39;,
+  initialState: &#123;
+    value: 0,
+  &#125;,
+  reducers: &#123;
+    increment: (state) =&gt; &#123;
+      state.value += 1;
+    &#125;,
+    decrement: (state) =&gt; &#123;
+      state.value -= 1;
+    &#125;,
+    incrementByAmount: (state, action) =&gt; &#123;
+      state.value += action.payload;
+    &#125;,
+  &#125;,
+&#125;);
+export const &#123; increment, decrement, incrementByAmount &#125; = counterSlice.actions;
+export default counterSlice.reducer;
+</code></pre>
+<ul>
+<li><p>a. 不需要再额外声明 action 了，不需要定义那些 type 了。reducers 字段下的每个方法就是个 action。用的时候直接 <code>dispatch(increment(123))</code> 即可。</p>
+</li>
+<li><p>b. 而且好像可以直接改 state 上的字段，不需要返回一个完全新的 state 了？其实也是里面做了处理。看<a target="_blank" rel="noopener" href="https://redux-toolkit.js.org/tutorials/quick-start#create-a-redux-state-slice">官方介绍</a>，在注释里：</p>
+</li>
+</ul>
+<blockquote>
+<blockquote>
+<p>Redux Toolkit allows us to write “mutating” logic in reducers. It doesn’t actually mutate the state because it uses the Immer library, which detects changes to a “draft state” and produces a brand new immutable state based off those changes</p>
+</blockquote>
+</blockquote>
+        
+          <p class="article-more-link">
+            <a href="/2023/09/23/react-basic-app-2/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      
+      <!-- <a data-url="https://blog.cchealthier.com/2023/09/23/react-basic-app-2/" data-id="clmxk7z0e002hc39mhb8vc1ho" class="article-share-link">分享</a> -->
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" rel="tag">工程化</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
   
     <article id="post-node-module" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
@@ -125,14 +235,23 @@
 </li>
 </ol>
 <p>按照指示，改成动态引入 <code>import()</code> 就可以了。</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span>(<span class="string">&#x27;./utils.mjs&#x27;</span>).<span class="title function_">then</span>(<span class="variable language_">console</span>.<span class="property">log</span>);</span><br><span class="line"><span class="comment">// [Module: null prototype] &#123;</span></span><br><span class="line"><span class="comment">//   default: [Function: runEsm],</span></span><br><span class="line"><span class="comment">//   runSub: [Function: runSub]</span></span><br><span class="line"><span class="comment">// &#125;</span></span><br></pre></td></tr></table></figure>
+<pre><code class="js">import(&#39;./utils.mjs&#39;).then(console.log);
+// [Module: null prototype] &#123;
+//   default: [Function: runEsm],
+//   runSub: [Function: runSub]
+// &#125;
+</code></pre>
 <p>可以看出，<code>export default</code> 导出的东西被挂载 <code>default</code> 字段上。上面说了在标准还没落地时，webpack 就是这么做的。不知道是不是 NodeJS 参考了这个实现。</p>
 <ol start="2">
 <li>在 .mjs 文件 文件引用了 commonjs 模块的话就<strong>没问题</strong>。&#x3D; &#x3D;！</li>
 </ol>
 <p>只不过 commonjs 里并没有 <code>default</code> 这个概念，所以如 <code>import runCommonDefault, &#123; runExport &#125; from &#39;./utils.cjs&#39;;</code> 里，<code>runCommonDefault</code> 就是整个 <code>module.exports</code> 导出的对象。而 <code>runExport</code> 就是纯粹对 <code>module.exports</code> 导出对象的解构，属于其中一个字段内容。</p>
 <h3 id="三、esm-模块不支持-filename，-dirname"><a href="#三、esm-模块不支持-filename，-dirname" class="headerlink" title="三、esm 模块不支持 __filename，__dirname"></a>三、esm 模块不支持 __filename，__dirname</h3><p>esm 模块里是没有 <code>__filename</code>，<code>__dirname</code> 这两个全局变量的（其实不是全局变量，和 require 一样是外部传进来，姑且当其是个全局变量）。可以这样实现：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> path <span class="keyword">from</span> <span class="string">&#x27;path&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> url <span class="keyword">from</span> <span class="string">&#x27;url&#x27;</span>;</span><br><span class="line"><span class="keyword">const</span> __filename = url.<span class="title function_">fileURLToPath</span>(<span class="keyword">import</span>.<span class="property">meta</span>.<span class="property">url</span>);</span><br><span class="line"><span class="keyword">const</span> __dirname = path.<span class="title function_">dirname</span>(__filename);</span><br></pre></td></tr></table></figure>
+<pre><code class="js">import path from &#39;path&#39;;
+import url from &#39;url&#39;;
+const __filename = url.fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+</code></pre>
         
           <p class="article-more-link">
             <a href="/2023/08/24/node-module/#more">Read More</a>
@@ -142,7 +261,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2023/08/24/node-module/" data-id="clmbeu7qz001rtf9mhmsma3cv" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2023/08/24/node-module/" data-id="clmxk7z0b001vc39m09rec52d" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -182,8 +301,27 @@
 <p><strong>打包出来的 url 使用的是 <code>css-loader</code> 自己产出的图片。但是这张图片生成有问题，导致图片无法显示。</strong></p>
 <p>解决方法看最后面。</p>
 <h3 id="二、溯源"><a href="#二、溯源" class="headerlink" title="二、溯源"></a>二、溯源</h3><p>根据《<a href="/2023/05/31/react-basic-app/">react 基础工程（react-redux &amp; react-router）</a>》里的配置，里面配置了 <code>file/url-loader</code> 去处理资源文件。</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">test</span>: <span class="regexp">/\.css$/</span>,</span><br><span class="line">  <span class="attr">use</span>: [</span><br><span class="line">    isDev ? <span class="string">&#x27;vue-style-loader&#x27;</span> : <span class="title class_">MiniCssExtractPlugin</span>.<span class="property">loader</span>,</span><br><span class="line">    <span class="string">&#x27;css-loader&#x27;</span>,</span><br><span class="line">  ],</span><br><span class="line">&#125;,</span><br><span class="line">&#123;</span><br><span class="line">  <span class="attr">test</span>: <span class="regexp">/\.(png|jpg|gif)$/i</span>,</span><br><span class="line">  <span class="attr">use</span>: [</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="attr">loader</span>: <span class="string">&#x27;file-loader&#x27;</span>,</span><br><span class="line">      <span class="attr">options</span>: &#123;</span><br><span class="line">        <span class="attr">esModule</span>: <span class="literal">false</span>,</span><br><span class="line">        <span class="attr">limit</span>: <span class="number">8192</span>,</span><br><span class="line">        <span class="attr">name</span>: <span class="string">&#x27;media/[name].[hash].[ext]&#x27;</span>,</span><br><span class="line">      &#125;,</span><br><span class="line">    &#125;,</span><br><span class="line">  ],</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
+<pre><code class="js">&#123;
+  test: /\.css$/,
+  use: [
+    isDev ? &#39;vue-style-loader&#39; : MiniCssExtractPlugin.loader,
+    &#39;css-loader&#39;,
+  ],
+&#125;,
+&#123;
+  test: /\.(png|jpg|gif)$/i,
+  use: [
+    &#123;
+      loader: &#39;file-loader&#39;,
+      options: &#123;
+        esModule: false,
+        limit: 8192,
+        name: &#39;media/[name].[hash].[ext]&#39;,
+      &#125;,
+    &#125;,
+  ],
+&#125;
+</code></pre>
 <p>对于普通使用并没有问题。但是后面使用了 <code>background-image: url()</code> 发现图片显示不出来。去产物文件夹（我这里是 dist 文件夹）一看，发现在根路径多了几张图片，但是打不开，显示图片格式损坏。而配置 <code>name: &#39;media/[name].[hash].[ext]&#39;</code> 里指定的 media 文件夹也有正常的图片。但是一看处理后的 css 使用的却是那一堆在根路径的损坏的图片。</p>
 <p>也就是：<strong>background-image: url() 没有使用 file&#x2F;url-loader 打包出来的图片，而是使用了别的 loader 产出的图片，而且这堆图片还生成失败了。</strong></p>
 <p>把 <code>file/url-loader</code> 去掉后，生成的图片正常了。也就是和这两个冲突了。接着看看问题在哪。插一句：<strong>我是在一个旧项目做了升级的，之前用的低版本也就是 webpack4 以及其他一系列低版本的配套是可以的，升级了后才出现问题。</strong></p>
@@ -199,7 +337,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2023/08/23/webpack5-background-url/" data-id="clmbeu7r7003ktf9m2aj42q3d" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2023/08/23/webpack5-background-url/" data-id="clmxk7z0i003nc39m7joz3sc6" class="article-share-link">分享</a> -->
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" rel="tag">工程化</a></li></ul>
@@ -246,18 +384,73 @@
 </ul>
 <p>文章里也介绍了 stream 的一些用法，这里再记录巩固一下。这里也有我个人对于流操作的实操：《<a href="/2023/05/13/file-slice-upload/">文件切片上传（断点续传）</a>》。</p>
 <p>另外，官方文档镇楼：《<a target="_blank" rel="noopener" href="https://origin.nodejs.org/dist/latest-v20.x/docs/api/stream.html">Node.js v20.5.0 documentation</a>》。</p>
-<h4 id="1、简单的文件流读取写入，记得是-读取流-pipe-写入流-。"><a href="#1、简单的文件流读取写入，记得是-读取流-pipe-写入流-。" class="headerlink" title="1、简单的文件流读取写入，记得是 读取流.pipe(写入流)。"></a>1、简单的文件流读取写入，记得是 <code>读取流.pipe(写入流)</code>。</h4><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> fs = <span class="built_in">require</span>(<span class="string">&#x27;fs&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> readStream = fs.<span class="title function_">createReadStream</span>(读取文件地址);</span><br><span class="line"><span class="keyword">const</span> writeStream = fs.<span class="title function_">createWriteStream</span>(写入文件地址);</span><br><span class="line"><span class="comment">// 通过 pipe 执行拷贝，数据流转</span></span><br><span class="line">readStream.<span class="title function_">pipe</span>(writeStream);</span><br><span class="line"><span class="comment">// 数据读取完成监听，即拷贝完成</span></span><br><span class="line">readStream.<span class="title function_">on</span>(<span class="string">&#x27;end&#x27;</span>, <span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;拷贝完成&#x27;</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-
-<h4 id="2、网络响应也可以用-stream-方式返回。也就是-response-对象是一个写入流，写回到请求的浏览器前。"><a href="#2、网络响应也可以用-stream-方式返回。也就是-response-对象是一个写入流，写回到请求的浏览器前。" class="headerlink" title="2、网络响应也可以用 stream 方式返回。也就是 response 对象是一个写入流，写回到请求的浏览器前。"></a>2、网络响应也可以用 stream 方式返回。也就是 response 对象是一个写入流，写回到请求的浏览器前。</h4><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> fs = <span class="built_in">require</span>(<span class="string">&#x27;fs&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> http = <span class="built_in">require</span>(<span class="string">&#x27;http&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> server = http.<span class="title function_">createServer</span>(<span class="keyword">function</span> (<span class="params">req, res</span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> readStream = fs.<span class="title function_">createReadStream</span>(读取文件地址);</span><br><span class="line">  readStream.<span class="title function_">pipe</span>(res); <span class="comment">// 将 res 作为 stream 的 dest</span></span><br><span class="line">&#125;);</span><br><span class="line">server.<span class="title function_">listen</span>(<span class="number">8000</span>);</span><br></pre></td></tr></table></figure>
-
-<h4 id="3、根据上面文章对于-buffer-的介绍，测试确实不占内存"><a href="#3、根据上面文章对于-buffer-的介绍，测试确实不占内存" class="headerlink" title="3、根据上面文章对于 buffer 的介绍，测试确实不占内存"></a>3、根据上面文章对于 buffer 的介绍，测试确实不占内存</h4><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> fs = <span class="built_in">require</span>(<span class="string">&#x27;fs&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> json = &#123;&#125;;</span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; <span class="number">100</span>; i++) &#123;</span><br><span class="line">  json[i] = fs.<span class="title function_">createReadStream</span>(<span class="string">&#x27;package-lock.json&#x27;</span>);</span><br><span class="line">  <span class="comment">// json[i] = fs.readFileSync(&#x27;package-lock.json&#x27;);</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">const</span> [key,value] <span class="keyword">of</span> <span class="title class_">Object</span>.<span class="title function_">entries</span>(process.<span class="title function_">memoryUsage</span>()))&#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">`Memory usage by <span class="subst">$&#123;key&#125;</span>, <span class="subst">$&#123;value/<span class="number">1000000</span>&#125;</span>MB `</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="1、简单的文件流读取写入，记得是-读取流-pipe-写入流-。"><a href="#1、简单的文件流读取写入，记得是-读取流-pipe-写入流-。" class="headerlink" title="1、简单的文件流读取写入，记得是 读取流.pipe(写入流)。"></a>1、简单的文件流读取写入，记得是 <code>读取流.pipe(写入流)</code>。</h4><pre><code class="js">const fs = require(&#39;fs&#39;);
+const readStream = fs.createReadStream(读取文件地址);
+const writeStream = fs.createWriteStream(写入文件地址);
+// 通过 pipe 执行拷贝，数据流转
+readStream.pipe(writeStream);
+// 数据读取完成监听，即拷贝完成
+readStream.on(&#39;end&#39;, function () &#123;
+  console.log(&#39;拷贝完成&#39;);
+&#125;);
+</code></pre>
+<h4 id="2、网络响应也可以用-stream-方式返回。也就是-response-对象是一个写入流，写回到请求的浏览器前。"><a href="#2、网络响应也可以用-stream-方式返回。也就是-response-对象是一个写入流，写回到请求的浏览器前。" class="headerlink" title="2、网络响应也可以用 stream 方式返回。也就是 response 对象是一个写入流，写回到请求的浏览器前。"></a>2、网络响应也可以用 stream 方式返回。也就是 response 对象是一个写入流，写回到请求的浏览器前。</h4><pre><code class="js">const fs = require(&#39;fs&#39;);
+const http = require(&#39;http&#39;);
+const server = http.createServer(function (req, res) &#123;
+  const readStream = fs.createReadStream(读取文件地址);
+  readStream.pipe(res); // 将 res 作为 stream 的 dest
+&#125;);
+server.listen(8000);
+</code></pre>
+<h4 id="3、根据上面文章对于-buffer-的介绍，测试确实不占内存"><a href="#3、根据上面文章对于-buffer-的介绍，测试确实不占内存" class="headerlink" title="3、根据上面文章对于 buffer 的介绍，测试确实不占内存"></a>3、根据上面文章对于 buffer 的介绍，测试确实不占内存</h4><pre><code class="js">const fs = require(&#39;fs&#39;);
+const json = &#123;&#125;;
+for(let i = 0; i &lt; 100; i++) &#123;
+  json[i] = fs.createReadStream(&#39;package-lock.json&#39;);
+  // json[i] = fs.readFileSync(&#39;package-lock.json&#39;);
+&#125;
+for (const [key,value] of Object.entries(process.memoryUsage()))&#123;
+  console.log(`Memory usage by $&#123;key&#125;, $&#123;value/1000000&#125;MB `);
+&#125;
+</code></pre>
 <p><strong>所以 node 做 server 的时候对于文件操作可以用流形式，减少内存泄露的可能性。</strong><br>依然大佬文章分享《<a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?__biz=MzUxNzk1MjQ0Ng==&mid=2247484183&idx=1&sn=5f29dc6c42c749397cee702145f0cab0&chksm=f99105c6cee68cd04f89181455ba37e18ab604a3102e1ded3e31a5c3cea28178c1023b917e89&cur_album_id=1529105963545313281&scene=190#rd">Node.js内存溢出时如何处理？</a>》。</p>
 <h4 id="4、可以在运输过程中修改内容"><a href="#4、可以在运输过程中修改内容" class="headerlink" title="4、可以在运输过程中修改内容"></a>4、可以在运输过程中修改内容</h4><p>如果有用过 <a target="_blank" rel="noopener" href="https://www.gulpjs.com.cn/">gulp</a> 打包过前端代码的话，可能会有印象它的用法就有流用法如 <code>src.pipe(transform).pipe(dest)</code> 这样子。<br>也就是数据可以在流管道中进行修改。靠的就是 <code>stream.Transform</code> 流。用法也很简单：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> stream = <span class="built_in">require</span>(<span class="string">&#x27;stream&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> myTransform = <span class="keyword">new</span> stream.<span class="title class_">Transform</span>(&#123;</span><br><span class="line">  <span class="title function_">transform</span>(<span class="params">chunk, encoding, callback</span>) &#123;</span><br><span class="line">    <span class="keyword">const</span> content = </span><br><span class="line"><span class="string">`/* prefix */</span></span><br><span class="line"><span class="string"><span class="subst">$&#123;chunk.toString()&#125;</span></span></span><br><span class="line"><span class="string">/* suffix */`</span></span><br><span class="line">    <span class="title function_">callback</span>(<span class="literal">null</span>, content);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-
+<pre><code class="js">const stream = require(&#39;stream&#39;);
+const myTransform = new stream.Transform(&#123;
+  transform(chunk, encoding, callback) &#123;
+    const content = 
+`/* prefix */
+$&#123;chunk.toString()&#125;
+/* suffix */`
+    callback(null, content);
+  &#125;
+&#125;);
+</code></pre>
 <p><code>src.pipe(dest)</code> 这样返回的是后者的写入流，也就是能写在中间的 <code>src.pipe(transform/duplex).pipe(dest)</code> 必须是个双工流，既可以是读取流也可以是写入流。</p>
-<h4 id="5、一些事件示例"><a href="#5、一些事件示例" class="headerlink" title="5、一些事件示例"></a>5、一些事件示例</h4><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">readStream.<span class="title function_">on</span>(<span class="string">&#x27;data&#x27;</span>, <span class="function">(<span class="params">chunk</span>) =&gt;</span> &#123; <span class="comment">// chunk 传输的流二进制</span></span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;读取流 data 事件在传输时触发&#x27;</span>);</span><br><span class="line">&#125;);</span><br><span class="line">readStream.<span class="title function_">on</span>(<span class="string">&#x27;end&#x27;</span>, <span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;读取流 end 事件在消费完毕时触发&#x27;</span>);</span><br><span class="line">&#125;);</span><br><span class="line">readStream.<span class="title function_">on</span>(<span class="string">&#x27;close&#x27;</span>, <span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;读取流 close 事件在 end 事件后触发&#x27;</span>);</span><br><span class="line">&#125;);</span><br><span class="line">writeStream.<span class="title function_">on</span>(<span class="string">&#x27;drain&#x27;</span>, <span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;写入流 drain 事件在可以接收更多的数据时触发&#x27;</span>);</span><br><span class="line">&#125;);</span><br><span class="line">writeStream.<span class="title function_">on</span>(<span class="string">&#x27;pipe&#x27;</span>, <span class="function">(<span class="params">src</span>) =&gt;</span> &#123; <span class="comment">// src =&gt; 读取流对象</span></span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;写入流 pipe 事件在读取流导入写入流的 pipe 操作时触发&#x27;</span>);</span><br><span class="line">&#125;);</span><br><span class="line">writeStream.<span class="title function_">on</span>(<span class="string">&#x27;error&#x27;</span>, <span class="function">(<span class="params">error</span>) =&gt;</span> &#123; <span class="comment">// src =&gt; 读取流对象</span></span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;写入流在流通道关闭后再写入就会报错&#x27;</span>,  error);</span><br><span class="line">&#125;);</span><br><span class="line">writeStream.<span class="title function_">on</span>(<span class="string">&#x27;finish&#x27;</span>, <span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;写入流 finish 事件调用 end 方法触发&#x27;</span>); </span><br><span class="line">&#125;);</span><br><span class="line">writeStream.<span class="title function_">on</span>(<span class="string">&#x27;close&#x27;</span>, <span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;写入流 close 事件在 finish 事件后触发&#x27;</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-
+<h4 id="5、一些事件示例"><a href="#5、一些事件示例" class="headerlink" title="5、一些事件示例"></a>5、一些事件示例</h4><pre><code class="js">readStream.on(&#39;data&#39;, (chunk) =&gt; &#123; // chunk 传输的流二进制
+  console.log(&#39;读取流 data 事件在传输时触发&#39;);
+&#125;);
+readStream.on(&#39;end&#39;, () =&gt; &#123;
+  console.log(&#39;读取流 end 事件在消费完毕时触发&#39;);
+&#125;);
+readStream.on(&#39;close&#39;, () =&gt; &#123;
+  console.log(&#39;读取流 close 事件在 end 事件后触发&#39;);
+&#125;);
+writeStream.on(&#39;drain&#39;, () =&gt; &#123;
+  console.log(&#39;写入流 drain 事件在可以接收更多的数据时触发&#39;);
+&#125;);
+writeStream.on(&#39;pipe&#39;, (src) =&gt; &#123; // src =&gt; 读取流对象
+  console.log(&#39;写入流 pipe 事件在读取流导入写入流的 pipe 操作时触发&#39;);
+&#125;);
+writeStream.on(&#39;error&#39;, (error) =&gt; &#123; // src =&gt; 读取流对象
+  console.log(&#39;写入流在流通道关闭后再写入就会报错&#39;,  error);
+&#125;);
+writeStream.on(&#39;finish&#39;, () =&gt; &#123;
+  console.log(&#39;写入流 finish 事件调用 end 方法触发&#39;); 
+&#125;);
+writeStream.on(&#39;close&#39;, () =&gt; &#123;
+  console.log(&#39;写入流 close 事件在 finish 事件后触发&#39;);
+&#125;);
+</code></pre>
 <p>最后再放两篇国外大佬写的介绍文章，不必要全看，看看代码示例也可以了。</p>
 <ul>
 <li>《<a target="_blank" rel="noopener" href="https://www.freecodecamp.org/news/node-js-streams-everything-you-need-to-know-c9141306be93/">Node.js Streams: Everything you need to know</a>》</li>
@@ -268,7 +461,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2023/07/26/node-stream/" data-id="clmbeu7r10020tf9m0ag96k5i" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2023/07/26/node-stream/" data-id="clmxk7z0b001xc39md2mw3drj" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -312,8 +505,19 @@
 <p>用法其实也很简单，就一个插件而已，但是要实现到微前端落地还是有很多要改造的。基于此用 <strong>vue</strong> 工程做了个尝试案例，并对其中一些注意点做一些说明。</p>
 <p>代码压缩包：<a target="_blank" rel="noopener" href="https://file.cchealthier.com/file/blog/attachment/micro-fontends.tar.gz">micro-fontends.tar.gz</a></p>
 <p><strong>注意：代码里的 heal.com 网站，是我自己修改了 host，Mac 可以在 <code>/etc/hosts</code>，Windows 可以在 <code>C:\Windows\System32\drivers\etc\hosts</code> 文件里添加这一行或者改成自己喜欢的域名：<code>0.0.0.0 heal.com</code>。</strong></p>
-<h2 id="一、基础用法"><a href="#一、基础用法" class="headerlink" title="一、基础用法"></a>一、基础用法</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">new</span> <span class="title class_">ModuleFederationPlugin</span>(&#123;</span><br><span class="line">  <span class="attr">name</span>: <span class="string">&#x27;admin&#x27;</span>,</span><br><span class="line">  <span class="attr">filename</span>: <span class="string">&#x27;remoteEntry.js&#x27;</span>,</span><br><span class="line">  <span class="attr">remotes</span>: &#123;</span><br><span class="line">    <span class="attr">workforce</span>: <span class="string">&#x27;workforce@http://heal.com/workforce/remoteEntry.js&#x27;</span>,</span><br><span class="line">    <span class="attr">network</span>: <span class="string">&#x27;network@http://heal.com/network/remoteEntry.js&#x27;</span>,</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">exposes</span>: &#123;</span><br><span class="line">    <span class="string">&#x27;./init&#x27;</span>: <span class="string">&#x27;./src/main.js&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;./layout&#x27;</span>: <span class="string">&#x27;./src/components/Layout.vue&#x27;</span>,</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;),</span><br></pre></td></tr></table></figure>
-
+<h2 id="一、基础用法"><a href="#一、基础用法" class="headerlink" title="一、基础用法"></a>一、基础用法</h2><pre><code class="js">new ModuleFederationPlugin(&#123;
+  name: &#39;admin&#39;,
+  filename: &#39;remoteEntry.js&#39;,
+  remotes: &#123;
+    workforce: &#39;workforce@http://heal.com/workforce/remoteEntry.js&#39;,
+    network: &#39;network@http://heal.com/network/remoteEntry.js&#39;,
+  &#125;,
+  exposes: &#123;
+    &#39;./init&#39;: &#39;./src/main.js&#39;,
+    &#39;./layout&#39;: &#39;./src/components/Layout.vue&#39;,
+  &#125;,
+&#125;),
+</code></pre>
 <ul>
 <li><strong>name:</strong> 这个工程的模块名，比如这里是主应用，把它叫做 <code>admin</code>。 </li>
 <li><strong>filename:</strong> 这个工程分享的文件入口，也就是别的工程只需要应用这份入口文件就可以了，其他的文件会在这份文件里发出请求。</li>
@@ -338,62 +542,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2023/06/07/webpack-modulefederationplugin/" data-id="clmbeu7r7003dtf9mfcw1bih7" class="article-share-link">分享</a> -->
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" rel="tag">工程化</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-react-basic-app" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2023/05/31/react-basic-app/" class="article-date">
-  <time datetime="2023-05-31T09:06:08.000Z" itemprop="datePublished">2023-05-31</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2023/05/31/react-basic-app/">react 基础工程（react-redux &amp; react-router）</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>vue 已经很熟悉。react 虽然也用过，但是对于整体的搭建还不是很熟。这次就使用 <a target="_blank" rel="noopener" href="https://react-redux.js.org/introduction/getting-started">react-redux(^8.0.5)</a> 和 <a target="_blank" rel="noopener" href="https://reactrouter.com/en/main/start/tutorial#tutorial">react-router(^6.11.2)</a>，<br>结合上次的《<a href="/2023/03/06/fontend-engineering/">从零搭建前端工程</a>》，搭建一个基础的 react 项目。加上一点注释，后面有用到也可以代码直接拷。</p>
-<p><strong>代码仓库：<a target="_blank" rel="noopener" href="https://github.com/orochi97/react-app">github</a>。</strong></p>
-<h2 id="一、Router"><a href="#一、Router" class="headerlink" title="一、Router"></a>一、Router</h2><p>当前最新版本为 v6，据说有些大改动，旧版本请参考《<a target="_blank" rel="noopener" href="https://reactrouter.com/en/main/upgrading/v5">升级指南</a>》。</p>
-<p>路由文件声明：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; createBrowserRouter, <span class="title class_">Navigate</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;react-router-dom&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="title class_">Home</span> <span class="keyword">from</span> <span class="string">&#x27;@/views/Home&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="title class_">NotFound</span> <span class="keyword">from</span> <span class="string">&#x27;@/views/NotFound&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> router = <span class="title function_">createBrowserRouter</span>([</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="attr">path</span>: <span class="string">&#x27;/home&#x27;</span>,</span><br><span class="line">    <span class="attr">element</span>: <span class="language-xml"><span class="tag">&lt;<span class="name">Home</span> /&gt;</span></span>,</span><br><span class="line">  &#125;,</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="attr">path</span>: <span class="string">&#x27;/game&#x27;</span>,</span><br><span class="line">    <span class="comment">// element: &lt;CardGame /&gt;,</span></span><br><span class="line">    <span class="keyword">async</span> <span class="title function_">lazy</span>(<span class="params"></span>) &#123; <span class="comment">// 路由页面懒加载，也就是真的访问到再下载，打包也是独立的 js</span></span><br><span class="line">      <span class="keyword">const</span> comp = <span class="keyword">await</span> <span class="keyword">import</span>(<span class="string">&#x27;@/views/CardGame&#x27;</span>);</span><br><span class="line">      <span class="comment">// 这里的 default 是 webpack 的处理，会把 export default 挂在 default 属性上</span></span><br><span class="line">      <span class="keyword">return</span> &#123; <span class="title class_">Component</span>: comp.<span class="property">default</span> &#125;;</span><br><span class="line">    &#125;,</span><br><span class="line">  &#125;,</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="attr">path</span>: <span class="string">&#x27;/demo/:id&#x27;</span>,</span><br><span class="line">    <span class="comment">// element: &lt;Demo /&gt;,</span></span><br><span class="line">    <span class="keyword">async</span> <span class="title function_">lazy</span>(<span class="params"></span>) &#123;</span><br><span class="line">      <span class="comment">// 注意：这里要 loader 结果返回，才会渲染组件。也就是会阻塞页面。</span></span><br><span class="line">      <span class="keyword">const</span> comp = <span class="keyword">await</span> <span class="keyword">import</span>(<span class="string">&#x27;@/views/Demo&#x27;</span>);</span><br><span class="line">      <span class="keyword">return</span> &#123; <span class="title class_">Component</span>: comp.<span class="property">default</span>, <span class="attr">loader</span>: comp.<span class="property">loader</span> &#125;;</span><br><span class="line">    &#125;,</span><br><span class="line">  &#125;,</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="attr">path</span>: <span class="string">&#x27;/&#x27;</span>, <span class="comment">// v6 的重定向改为 Navigate 组件</span></span><br><span class="line">    <span class="attr">element</span>: <span class="language-xml"><span class="tag">&lt;<span class="name">Navigate</span> <span class="attr">to</span>=<span class="string">&#123;</span>&#x27;/<span class="attr">home</span>&#x27;&#125;/&gt;</span></span>,</span><br><span class="line">  &#125;,</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="attr">path</span>: <span class="string">&#x27;*&#x27;</span>, <span class="comment">// 404页面兜底，我觉得改成和上面的一样的重定向处理应该也可以</span></span><br><span class="line">    <span class="attr">element</span>: <span class="language-xml"><span class="tag">&lt;<span class="name">NotFound</span> /&gt;</span></span>,</span><br><span class="line">  &#125;,</span><br><span class="line">]);</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> router;</span><br></pre></td></tr></table></figure>
-
-<p>然后路由声明对象的使用：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">RouterProvider</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;react-router-dom&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> router <span class="keyword">from</span> <span class="string">&#x27;@/router&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">App</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">RouterProvider</span> <span class="attr">router</span>=<span class="string">&#123;router&#125;</span> /&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="title class_">App</span>;</span><br></pre></td></tr></table></figure>
-        
-          <p class="article-more-link">
-            <a href="/2023/05/31/react-basic-app/#more">Read More</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      
-      <!-- <a data-url="https://blog.cchealthier.com/2023/05/31/react-basic-app/" data-id="clmbeu7r3002htf9m8xovbld1" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2023/06/07/webpack-modulefederationplugin/" data-id="clmxk7z0i003gc39md4k3f5pg" class="article-share-link">分享</a> -->
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" rel="tag">工程化</a></li></ul>
@@ -415,6 +564,37 @@
 </section>
         
           <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2023/09/23/react-basic-app-2/">react 基础工程 Ⅱ（@reduxjs/toolkit &amp; @craco/craco &amp; vite）</a>
+          </li>
+        
+          <li>
+            <a href="/2023/08/24/node-module/">NodeJS 的 commonjs、esm 模块使用以及一些字段释义</a>
+          </li>
+        
+          <li>
+            <a href="/2023/08/23/webpack5-background-url/">webpack5 下 background url 图片打包失败</a>
+          </li>
+        
+          <li>
+            <a href="/2023/07/26/node-stream/">NodeJS 里的 stream（流）</a>
+          </li>
+        
+          <li>
+            <a href="/2023/06/07/webpack-modulefederationplugin/">用 webpack ModuleFederationPlugin 搭建微前端</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
   
     
   <div class="widget-wrap">
@@ -449,41 +629,10 @@
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/08/">八月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">七月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/06/">六月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/05/">五月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/04/">四月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/03/">三月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/02/">二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">十一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">十月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">九月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/09/">九月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/08/">八月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">七月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/06/">六月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/05/">五月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/04/">四月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/03/">三月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/02/">二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">十一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">十月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">九月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a></li></ul>
     </div>
   </div>
 
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">最新文章</h3>
-    <div class="widget">
-      <ul>
-        
-          <li>
-            <a href="/2023/08/24/node-module/">NodeJS 的 commonjs、esm 模块使用以及一些字段释义</a>
-          </li>
-        
-          <li>
-            <a href="/2023/08/23/webpack5-background-url/">webpack5 下 background url 图片打包失败</a>
-          </li>
-        
-          <li>
-            <a href="/2023/07/26/node-stream/">NodeJS 里的 stream（流）</a>
-          </li>
-        
-          <li>
-            <a href="/2023/06/07/webpack-modulefederationplugin/">用 webpack ModuleFederationPlugin 搭建微前端</a>
-          </li>
-        
-          <li>
-            <a href="/2023/05/31/react-basic-app/">react 基础工程（react-redux &amp; react-router）</a>
-          </li>
-        
-      </ul>
-    </div>
-  </div>
 
   
 </aside>
@@ -501,15 +650,27 @@
     </div>
     <nav id="mobile-nav">
   
-    <a href="/" class="mobile-nav-link">Home</a>
+    <a href="/" class="mobile-nav-link">首页</a>
   
-    <a href="/archives" class="mobile-nav-link">Archives</a>
+    <a href="/archives" class="mobile-nav-link">归档</a>
   
 </nav>
     
 
 <script src="//cdn.staticfile.org/jquery/2.0.3/jquery.min.js"></script>
 <script type="text/javascript" src="https://www.jq22.com/demo/jqueryToast201708310012/js/toast.script.js"></script>
+<script src="/js/highlight.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlightjs-line-numbers.js/2.8.0/highlightjs-line-numbers.min.js"></script>
+<script>
+  $(function(){
+    $('pre code').each((i, el) => {
+    hljs.highlightElement(el);
+  });
+  $('code.hljs').each(function(i, el) {
+     hljs.lineNumbersBlock(el);
+  });
+  }());
+</script>
 
 
   

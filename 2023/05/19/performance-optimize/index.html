@@ -45,13 +45,12 @@
     <link rel="icon" href="/favicon.ico">
   
   
-    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
-  
   
 <link rel="stylesheet" href="/css/style.css">
 
   <link href="https://www.jq22.com/demo/jqueryToast201708310012/css/toast.style.css" rel="stylesheet" type="text/css">
-<meta name="generator" content="Hexo 7.0.0-rc1"></head>
+  <link rel="stylesheet" href="/css/highlight/styles/monokai-sublime.min.css">
+<meta name="generator" content="Hexo 6.3.0"></head>
 
 <body>
   <div id="container">
@@ -79,9 +78,9 @@
       <nav id="main-nav">
         <a id="main-nav-toggle" class="nav-icon"></a>
         
-          <a class="main-nav-link" href="/">Home</a>
+          <a class="main-nav-link" href="/">首页</a>
         
-          <a class="main-nav-link" href="/archives">Archives</a>
+          <a class="main-nav-link" href="/archives">归档</a>
         
       </nav>
       <nav id="sub-nav">
@@ -144,7 +143,12 @@
 
 <p>其实分析结果给了四个方面：<code>性能</code>，<code>无障碍</code>，<code>性能</code>，<code>SEO</code>。由于这里是为了解决性能问题，所以就只截了性能方面的图。里面给了两个很实在的建议：</p>
 <h4 id="1-启用文本压缩"><a href="#1-启用文本压缩" class="headerlink" title="1. 启用文本压缩"></a>1. 启用文本压缩</h4><p>对于这个就不啰嗦介绍了。我只是在想怎么一开始没想到！我是用的 nginx 做的服务代理，结果 nginx 是默认没有开启 gzip 压缩。赶紧给加上。</p>
-<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">http</span> &#123;</span><br><span class="line">  <span class="string">gzip</span> <span class="string">on;</span></span><br><span class="line">  <span class="string">gzip_comp_level</span> <span class="number">6</span><span class="string">;</span>    <span class="comment"># 压缩比例，比例越大，压缩时间越长。默认是1</span></span><br><span class="line">  <span class="string">gzip_types</span> <span class="string">text/xml</span> <span class="string">text/plain</span> <span class="string">text/css</span> <span class="string">application/javascript</span> <span class="string">application/x-javascript</span> <span class="string">application/rss+xml;</span>     <span class="comment"># 哪些文件可以被压缩</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="yml">http &#123;
+  gzip on;
+  gzip_comp_level 6;    # 压缩比例，比例越大，压缩时间越长。默认是1
+  gzip_types text/xml text/plain text/css application/javascript application/x-javascript application/rss+xml;     # 哪些文件可以被压缩
+&#125;
+</code></pre>
 <p>默认 <code>nginx.conf</code> 的 <code>gzip on</code> 是注释掉的，给打开，然后要注意的是 <code>gzip_types</code> 要声明好 css js 都要压缩。要不然还是默认只有 html 压缩。<br>然后重启服务，看看效果，嘿，体感上果然是快了。300+kb 直接给压缩到 <strong>100+kb</strong>，加载速度从原来的 5s 快到 <strong>1.5s</strong>！当然这个是有波动的，试了好几次也有 2s 多的。但总之是快多了。可以看到 <code>FCP</code> 提前了很多。</p>
 <img src="/2023/05/19/performance-optimize/%E4%BC%98%E5%8C%96%E5%90%8Enetwork.png" class="" title="优化后network">
 
@@ -165,8 +169,20 @@
 </ol>
 <h3 id="七-继续优化，来波狠的处理第三方插件"><a href="#七-继续优化，来波狠的处理第三方插件" class="headerlink" title="七. 继续优化，来波狠的处理第三方插件"></a>七. 继续优化，来波狠的处理第三方插件</h3><h4 id="1-启用-CDN？不要了"><a href="#1-启用-CDN？不要了" class="headerlink" title="1. 启用 CDN？不要了"></a>1. 启用 CDN？不要了</h4><p>顺着上面的想法，继续尝试下能否优化到极致。首先是 CDN 方案，结果发现如果 Element-UI 使用 CDN，同时 vue 也要用 CDN 引入，具体可看<a target="_blank" rel="noopener" href="https://element.eleme.cn/#/zh-CN/component/installation">安装文档</a>。也不是说不行，但，还是算了。</p>
 <h4 id="2-动态引入"><a href="#2-动态引入" class="headerlink" title="2. 动态引入"></a>2. 动态引入</h4><p>既然首页不需要用到 Element-UI 的东西，那么就摘出来，改成动态引入。放在哪里好呢，除了首页其他都用到了。思来想去，就放在全局路由钩子吧，代码如下：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> hasInstall = <span class="literal">false</span>;</span><br><span class="line">router.<span class="title function_">beforeEach</span>(<span class="function">(<span class="params">to, <span class="keyword">from</span>, next</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">if</span> (hasInstall || [<span class="string">&#x27;home&#x27;</span>].<span class="title function_">includes</span>(to.<span class="property">name</span>)) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="title function_">next</span>();</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">import</span>(<span class="string">&#x27;element-ui/lib/theme-chalk/index.css&#x27;</span>);</span><br><span class="line">  <span class="keyword">import</span>(<span class="comment">/* webpackChunkName: &quot;elementui&quot; */</span><span class="string">&#x27;element-ui&#x27;</span>).<span class="title function_">then</span>(<span class="function">(<span class="params">elementui</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="title class_">Vue</span>.<span class="title function_">use</span>(elementui);</span><br><span class="line">    hasInstall = <span class="literal">true</span>;</span><br><span class="line">  &#125;).<span class="title function_">finally</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="title function_">next</span>();</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-
+<pre><code class="js">let hasInstall = false;
+router.beforeEach((to, from, next) =&gt; &#123;
+  if (hasInstall || [&#39;home&#39;].includes(to.name)) &#123;
+    return next();
+  &#125;
+  import(&#39;element-ui/lib/theme-chalk/index.css&#39;);
+  import(/* webpackChunkName: &quot;elementui&quot; */&#39;element-ui&#39;).then((elementui) =&gt; &#123;
+    Vue.use(elementui);
+    hasInstall = true;
+  &#125;).finally(() =&gt; &#123;
+    next();
+  &#125;);
+&#125;);
+</code></pre>
 <p>用一个变量和页面名字做判断，如果是非首页，那么就加载后再进入页面。然后我发现就算这样写，在进入首页时候也会在空闲的时候去加载 <code>elementui.js</code>，这挺好的，不阻塞。不过还是会有两个小问题：</p>
 <ol>
 <li>如果不经过首页且首次直接进入其他页面，那么就要等待加载 <code>elementui.js</code> 后再进入，必然会有点慢。相当于让其他页面给首页负重前行了。不过也不对，首页本来也用不上，不该它背。</li>
@@ -197,7 +213,10 @@
 
 <p>可以看到，分流后的加载速度也是大小不一的加快了：其中最猛的是 elementui.js，直接快了几秒。<strong>那这一招也是有效了</strong>。<br>不过这里我有个疑问：<strong>是分流减轻了 express 本身的服务压力所以响应快呢？还是说 nginx 作为专业的服务容器就是比 express.static 快？</strong></p>
 <h4 id="4-上缓存"><a href="#4-上缓存" class="headerlink" title="4. 上缓存"></a>4. 上缓存</h4><p>要不是“建议”里提到，我还没注意到我都没加缓存，赶紧给 nginx 加上。</p>
-<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">location</span> <span class="string">/</span> &#123;</span><br><span class="line">  <span class="string">expires</span> <span class="string">365d;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="yml">location / &#123;
+  expires 365d;
+&#125;
+</code></pre>
 <p>其实一开始我是写 <code>14d</code> 的，也就是两周。因为之前想起的公司老大说缓存时间跟着发版间隔就好，我觉得有道理，没必要那么长。但是设置 <code>14d</code>，“建议”里具体还是有 warning，然后在 chrome 文档《<a target="_blank" rel="noopener" href="https://developer.chrome.com/docs/lighthouse/performance/uses-long-cache-ttl/?utm_source=lighthouse&utm_medium=lr">Serve static assets with an efficient cache policy</a>》（可能需要科学上网）里示例也是一年的样子，当然里面也提到按照实际来。实际就是我改成一年后，“建议”没有 warning 了。其实在之前的缓存策略文章《<a href="/2020/07/02/cache/">关于缓存的几个关键词</a>》里提到：</p>
 <blockquote>
 <p>设定一个期限很大的强缓存，如 max-age&#x3D;31536000 (一年)。文件通过打包工具生成出来都带上哈希。只要文件内容不改哈希就不改，请求的地址就不改，命中强缓存。改了内容自然连请求地址都改了，就会返回新文件。</p>
@@ -209,7 +228,24 @@
 
 <p><strong>这里只放一张图，因为是在已经分流的基础上改的，和上面的 <em>图片分流优化后</em> 图片作对比就行</strong><br>可以看出，体积变小了，又快了不少，小的几十毫秒，大的几百毫秒。</p>
 <h4 id="2-预加载图片"><a href="#2-预加载图片" class="headerlink" title="2. 预加载图片"></a>2. 预加载图片</h4><p>这个就是障眼法了，全体加载完肯定还是要那么多时间，但是有些图片先渲染出来效果会好一点，比如我期望熊猫头先渲染出来。那就可以先做预加载：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> sunImage = isMobile ? <span class="string">&#x27;https://file.cchealthier.com/file/home/mobile/m-sun.webp&#x27;</span> : <span class="string">&#x27;https://file.cchealthier.com/file/home/pc/sun.webp&#x27;</span>;</span><br><span class="line">  <span class="keyword">const</span> moonImage = isMobile ? <span class="string">&#x27;https://file.cchealthier.com/file/home/mobile/m-moon.webp&#x27;</span> : <span class="string">&#x27;https://file.cchealthier.com/file/home/pc/moon.webp&#x27;</span>;</span><br><span class="line">  <span class="keyword">const</span> runImage = theme === <span class="string">&#x27;day&#x27;</span> ? sunImage : moonImage</span><br><span class="line">  <span class="keyword">const</span> preloadImages = isMobile ? [</span><br><span class="line">    <span class="string">&#x27;https://file.cchealthier.com/file/home/mobile/m-alert.webp&#x27;</span>,</span><br><span class="line">    runImage,</span><br><span class="line">    <span class="string">&#x27;https://file.cchealthier.com/file/home/mobile/m-yun.webp&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;https://file.cchealthier.com/file/home/mobile/m-xing.webp&#x27;</span>,</span><br><span class="line">  ] : [</span><br><span class="line">    <span class="string">&#x27;https://file.cchealthier.com/file/home/pc/alert.webp&#x27;</span>,</span><br><span class="line">    runImage,</span><br><span class="line">    <span class="string">&#x27;https://file.cchealthier.com/file/home/pc/yun.webp&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;https://file.cchealthier.com/file/home/pc/xing.webp&#x27;</span>,</span><br><span class="line">  ];</span><br><span class="line">  preloadImages.<span class="title function_">forEach</span>(<span class="function"><span class="params">src</span> =&gt;</span> <span class="keyword">new</span> <span class="title class_">Image</span>().<span class="property">src</span> = src);</span><br><span class="line">&#125;)();</span><br></pre></td></tr></table></figure>
+<pre><code class="js">(() =&gt; &#123;
+  const sunImage = isMobile ? &#39;https://file.cchealthier.com/file/home/mobile/m-sun.webp&#39; : &#39;https://file.cchealthier.com/file/home/pc/sun.webp&#39;;
+  const moonImage = isMobile ? &#39;https://file.cchealthier.com/file/home/mobile/m-moon.webp&#39; : &#39;https://file.cchealthier.com/file/home/pc/moon.webp&#39;;
+  const runImage = theme === &#39;day&#39; ? sunImage : moonImage
+  const preloadImages = isMobile ? [
+    &#39;https://file.cchealthier.com/file/home/mobile/m-alert.webp&#39;,
+    runImage,
+    &#39;https://file.cchealthier.com/file/home/mobile/m-yun.webp&#39;,
+    &#39;https://file.cchealthier.com/file/home/mobile/m-xing.webp&#39;,
+  ] : [
+    &#39;https://file.cchealthier.com/file/home/pc/alert.webp&#39;,
+    runImage,
+    &#39;https://file.cchealthier.com/file/home/pc/yun.webp&#39;,
+    &#39;https://file.cchealthier.com/file/home/pc/xing.webp&#39;,
+  ];
+  preloadImages.forEach(src =&gt; new Image().src = src);
+&#125;)();
+</code></pre>
 <p>我在首页 vue 文件的 script 里一开始就调用，其实还有更早的地方可以放，但我觉得还是这个页面用的，就放在这个页面吧。</p>
 <p><strong>没有预加载时的图片请求</strong></p>
 <img src="/2023/05/19/performance-optimize/%E6%B2%A1%E6%9C%89%E9%A2%84%E5%8A%A0%E8%BD%BD%E6%97%B6%E7%9A%84%E5%9B%BE%E7%89%87%E8%AF%B7%E6%B1%82.png" class="" title="没有预加载时的图片请求">
@@ -235,9 +271,9 @@
     </div>
     <footer class="article-footer">
       
-        <a data-url="https://blog.cchealthier.com/2023/05/19/performance-optimize/" data-id="clmbeu7r10024tf9m6qs76kij" class="article-thumbs-up">赞一个(<span class="article-thumbs-up-num">0</span>)</a>
+        <a data-url="https://blog.cchealthier.com/2023/05/19/performance-optimize/" data-id="clmxk7z0c0024c39mhkzd4k7y" class="article-thumbs-up">赞一个(<span class="article-thumbs-up-num">0</span>)</a>
       
-      <!-- <a data-url="https://blog.cchealthier.com/2023/05/19/performance-optimize/" data-id="clmbeu7r10024tf9m6qs76kij" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2023/05/19/performance-optimize/" data-id="clmxk7z0c0024c39mhkzd4k7y" class="article-share-link">分享</a> -->
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%80%A7%E8%83%BD/" rel="tag">性能</a></li></ul>
@@ -274,6 +310,37 @@
   
     
   <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2023/09/23/react-basic-app-2/">react 基础工程 Ⅱ（@reduxjs/toolkit &amp; @craco/craco &amp; vite）</a>
+          </li>
+        
+          <li>
+            <a href="/2023/08/24/node-module/">NodeJS 的 commonjs、esm 模块使用以及一些字段释义</a>
+          </li>
+        
+          <li>
+            <a href="/2023/08/23/webpack5-background-url/">webpack5 下 background url 图片打包失败</a>
+          </li>
+        
+          <li>
+            <a href="/2023/07/26/node-stream/">NodeJS 里的 stream（流）</a>
+          </li>
+        
+          <li>
+            <a href="/2023/06/07/webpack-modulefederationplugin/">用 webpack ModuleFederationPlugin 搭建微前端</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
     <h3 class="widget-title">分类</h3>
     <div class="widget">
       <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/http%E5%8D%8F%E8%AE%AE/">http协议</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/%E6%9C%8D%E5%8A%A1/">服务</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/%E7%AE%97%E6%B3%95/">算法</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%97%85%E8%A1%8C/">旅行</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%97%85%E8%A1%8C/%E8%AE%B0%E5%BD%95/">记录</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%83%B9%E9%A5%AA/">烹饪</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%83%B9%E9%A5%AA/%E4%BC%A0%E7%BB%9F/">传统</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%9A%8F%E6%83%B3/">随想</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%9A%8F%E6%83%B3/%E5%BF%83%E6%83%85/">心情</a></li></ul></li></ul>
@@ -305,41 +372,10 @@
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/08/">八月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">七月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/06/">六月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/05/">五月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/04/">四月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/03/">三月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/02/">二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">十一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">十月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">九月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/09/">九月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/08/">八月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">七月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/06/">六月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/05/">五月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/04/">四月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/03/">三月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/02/">二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">十一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">十月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">九月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a></li></ul>
     </div>
   </div>
 
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">最新文章</h3>
-    <div class="widget">
-      <ul>
-        
-          <li>
-            <a href="/2023/08/24/node-module/">NodeJS 的 commonjs、esm 模块使用以及一些字段释义</a>
-          </li>
-        
-          <li>
-            <a href="/2023/08/23/webpack5-background-url/">webpack5 下 background url 图片打包失败</a>
-          </li>
-        
-          <li>
-            <a href="/2023/07/26/node-stream/">NodeJS 里的 stream（流）</a>
-          </li>
-        
-          <li>
-            <a href="/2023/06/07/webpack-modulefederationplugin/">用 webpack ModuleFederationPlugin 搭建微前端</a>
-          </li>
-        
-          <li>
-            <a href="/2023/05/31/react-basic-app/">react 基础工程（react-redux &amp; react-router）</a>
-          </li>
-        
-      </ul>
-    </div>
-  </div>
 
   
 </aside>
@@ -357,15 +393,27 @@
     </div>
     <nav id="mobile-nav">
   
-    <a href="/" class="mobile-nav-link">Home</a>
+    <a href="/" class="mobile-nav-link">首页</a>
   
-    <a href="/archives" class="mobile-nav-link">Archives</a>
+    <a href="/archives" class="mobile-nav-link">归档</a>
   
 </nav>
     
 
 <script src="//cdn.staticfile.org/jquery/2.0.3/jquery.min.js"></script>
 <script type="text/javascript" src="https://www.jq22.com/demo/jqueryToast201708310012/js/toast.script.js"></script>
+<script src="/js/highlight.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlightjs-line-numbers.js/2.8.0/highlightjs-line-numbers.min.js"></script>
+<script>
+  $(function(){
+    $('pre code').each((i, el) => {
+    hljs.highlightElement(el);
+  });
+  $('code.hljs').each(function(i, el) {
+     hljs.lineNumbersBlock(el);
+  });
+  }());
+</script>
 
 
   

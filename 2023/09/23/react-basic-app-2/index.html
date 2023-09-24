@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="baidu-site-verification" content="codeva-nIjDp6ZZc0" />
+  <meta name="referrer" content="no-referrer"/>
+  <meta charset="utf-8">
+  
+
+  
+  <title>react 基础工程 Ⅱ（@reduxjs/toolkit &amp; @craco/craco &amp; vite） | 凝雪密境</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="书接上回《react 基础工程（react-redux &amp; react-router）》，由于最近项目上的新实践新体验，所以记录一下。 依然，代码仓库：github。 一、用 @reduxjs&#x2F;toolkit 创建 reducer 和 api其实工程里已经用到这个工具，但是当时还没完全发现它的优势，还以为不过是官方推荐的比较好用的三方库而已。才知道确实简化了处理以及还有别的封装功">
+<meta property="og:type" content="article">
+<meta property="og:title" content="react 基础工程 Ⅱ（@reduxjs&#x2F;toolkit &amp; @craco&#x2F;craco &amp; vite）">
+<meta property="og:url" content="https://blog.cchealthier.com/2023/09/23/react-basic-app-2/index.html">
+<meta property="og:site_name" content="凝雪密境">
+<meta property="og:description" content="书接上回《react 基础工程（react-redux &amp; react-router）》，由于最近项目上的新实践新体验，所以记录一下。 依然，代码仓库：github。 一、用 @reduxjs&#x2F;toolkit 创建 reducer 和 api其实工程里已经用到这个工具，但是当时还没完全发现它的优势，还以为不过是官方推荐的比较好用的三方库而已。才知道确实简化了处理以及还有别的封装功">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-09-23T02:53:58.000Z">
+<meta property="article:modified_time" content="2023-09-24T14:32:57.660Z">
+<meta property="article:author" content="ChrisIori">
+<meta property="article:tag" content="工程化">
+<meta name="twitter:card" content="summary">
+  
+  
+    <link rel="icon" href="/favicon.ico">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  <link href="https://www.jq22.com/demo/jqueryToast201708310012/css/toast.style.css" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="/css/highlight/styles/monokai-sublime.min.css">
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">凝雪密境</a>
+      </h1>
+      
+        <div id="avatar" style="background-image: url( /avatar.jpg )">
+          <div class="container">
+            <div class="ball wind"></div>
+            <div class="ball fire"></div>
+            <div class="ball water"></div>
+            <div class="ball soil"></div>
+          </div>
+        </div>
+      
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">首页</a>
+        
+          <a class="main-nav-link" href="/archives">归档</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://blog.cchealthier.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-react-basic-app-2" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2023/09/23/react-basic-app-2/" class="article-date">
+  <time datetime="2023-09-23T02:53:58.000Z" itemprop="datePublished">2023-09-23</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      react 基础工程 Ⅱ（@reduxjs/toolkit &amp; @craco/craco &amp; vite）
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>书接上回《<a href="/2023/05/31/react-basic-app/">react 基础工程（react-redux &amp; react-router）</a>》，由于最近项目上的新实践新体验，所以记录一下。</p>
+<p><strong>依然，代码仓库：<a target="_blank" rel="noopener" href="https://github.com/orochi97/react-app">github</a>。</strong></p>
+<h2 id="一、用-reduxjs-x2F-toolkit-创建-reducer-和-api"><a href="#一、用-reduxjs-x2F-toolkit-创建-reducer-和-api" class="headerlink" title="一、用 @reduxjs&#x2F;toolkit 创建 reducer 和 api"></a>一、用 @reduxjs&#x2F;toolkit 创建 reducer 和 api</h2><p>其实工程里已经用到这个工具，但是当时还没完全发现它的优势，还以为不过是官方推荐的比较好用的三方库而已。才知道确实简化了处理以及还有别的封装功能。</p>
+<h3 id="1、简化写法"><a href="#1、简化写法" class="headerlink" title="1、简化写法"></a>1、简化写法</h3><p>以前老式的 redux 写法：</p>
+<pre><code class="js">import &#123; cloneDeep &#125; from &#39;lodash&#39;;
+export const addStringAction = payload =&gt; (&#123;
+  type: &#39;ADD_STRING&#39;,
+  payload: payload,
+&#125;);
+export const minusStringAction = payload =&gt; (&#123;
+  type: &#39;MINUS_STRING&#39;,
+  payload: payload,
+&#125;);
+const defaultState = &#123;
+  b: &#39;abc&#39;,
+&#125;;
+export default function stringReducer(state = defaultState, action) &#123;
+  const &#123; type, payload &#125; = action;
+  state = cloneDeep(state);
+  switch (type) &#123;
+    case &#39;ADD_STRING&#39;:
+      state.b += payload;
+      return state;
+    case &#39;MINUS_STRING&#39;:
+      state.b = &#39;&#39;;
+      return state;
+    default:
+      return state;
+  &#125;
+&#125;;
+</code></pre>
+<p>用 @reduxjs&#x2F;toolkit 的写法：</p>
+<pre><code class="js">import &#123; createSlice &#125; from &#39;@reduxjs/toolkit&#39;;
+export const counterSlice = createSlice(&#123;
+  name: &#39;counter&#39;,
+  initialState: &#123;
+    value: 0,
+  &#125;,
+  reducers: &#123;
+    increment: (state) =&gt; &#123;
+      state.value += 1;
+    &#125;,
+    decrement: (state) =&gt; &#123;
+      state.value -= 1;
+    &#125;,
+    incrementByAmount: (state, action) =&gt; &#123;
+      state.value += action.payload;
+    &#125;,
+  &#125;,
+&#125;);
+export const &#123; increment, decrement, incrementByAmount &#125; = counterSlice.actions;
+export default counterSlice.reducer;
+</code></pre>
+<ul>
+<li><p>a. 不需要再额外声明 action 了，不需要定义那些 type 了。reducers 字段下的每个方法就是个 action。用的时候直接 <code>dispatch(increment(123))</code> 即可。</p>
+</li>
+<li><p>b. 而且好像可以直接改 state 上的字段，不需要返回一个完全新的 state 了？其实也是里面做了处理。看<a target="_blank" rel="noopener" href="https://redux-toolkit.js.org/tutorials/quick-start#create-a-redux-state-slice">官方介绍</a>，在注释里：</p>
+</li>
+</ul>
+<blockquote>
+<blockquote>
+<p>Redux Toolkit allows us to write “mutating” logic in reducers. It doesn’t actually mutate the state because it uses the Immer library, which detects changes to a “draft state” and produces a brand new immutable state based off those changes</p>
+</blockquote>
+</blockquote>
+<span id="more"></span>
+
+<h3 id="2、用-createApi-创建接口请求"><a href="#2、用-createApi-创建接口请求" class="headerlink" title="2、用 createApi 创建接口请求"></a>2、用 createApi 创建接口请求</h3><p>相似于 <a target="_blank" rel="noopener" href="https://tanstack.com/query/latest/docs/react/overview">react-query</a>，对一些请求做了封装，有一些状态参数什么的。这里有<a target="_blank" rel="noopener" href="https://redux-toolkit.js.org/rtk-query/comparison#comparing-feature-sets">官方对比</a>。</p>
+<p>给一段代码示例：</p>
+<pre><code class="js">import &#123; createApi, fetchBaseQuery &#125; from &#39;@reduxjs/toolkit/query/react&#39;;
+const axiosBaseQuery = (&#123; baseUrl &#125;) =&gt;
+  async (&#123; url, method, data, params &#125;) =&gt; &#123;
+    try &#123;
+      const result = await Promise.resolve(&#123; a: 1, b: 2, baseUrl, url, method, data, params &#125;);
+      return &#123; data: result &#125;;
+    &#125; catch (error) &#123;
+      return &#123;
+        error: &#123;
+          status: error?.status,
+          data: error?.data || error.message,
+        &#125;,
+      &#125;;
+    &#125;
+  &#125;;
+// Define a service using a base URL and expected endpoints
+export const digimonApi = createApi(&#123;
+  reducerPath: &#39;digimonApi&#39;,
+   // 可以用默认的 fetchBaseQuery(&#123; baseUrl: &#39;&#39; &#125;)，也可以使用自己封装的请求方法
+  baseQuery: axiosBaseQuery(&#123; baseUrl: &#39;&#39; &#125;),
+  endpoints: (builder) =&gt; (&#123;
+    getDigimonByName: builder.query(&#123;
+      query: (name) =&gt; `digimon/$&#123;name&#125;`,
+      async onQueryStarted(args, &#123; dispatch, queryFulfilled &#125;) &#123;
+        try &#123;
+          const &#123; data &#125; = await queryFulfilled;
+          // `onSuccess` side-effect
+          console.info(&#39;onQueryStarted&#39;, args, data);
+        &#125; catch (error) &#123;
+          // `onError` side-effect
+          console.error(&#39;onQueryStarted&#39;, error);
+        &#125;
+      &#125;,
+    &#125;),
+    saveDigimon: builder.mutation(&#123;
+      query: (body) =&gt; (&#123;
+        url: `digimon/save`,
+        method: &#39;POST&#39;,
+        body,
+      &#125;),
+      async onQueryStarted(args, &#123; dispatch, queryFulfilled &#125;) &#123;
+        try &#123;
+          const &#123; data &#125; = await queryFulfilled;
+          // `onSuccess` side-effect
+          console.info(&#39;onQueryStarted&#39;, args, data);
+        &#125; catch (error) &#123;
+          // `onError` side-effect
+          console.error(&#39;onQueryStarted&#39;, error);
+        &#125;
+      &#125;,
+    &#125;),
+  &#125;),
+&#125;);
+export default digimonApi;
+</code></pre>
+<p>用就是这么个用法，主要几个点介绍下：</p>
+<ul>
+<li>a. 记得要在全局 <code>store</code> 注册一下</li>
+</ul>
+<pre><code class="js">import &#123; configureStore &#125; from &#39;@reduxjs/toolkit&#39;
+import &#123; pokemonApi &#125; from &#39;./services/pokemon&#39;
+export const store = configureStore(&#123;
+  reducer: &#123;
+    // Add the generated reducer as a specific top-level slice
+    [pokemonApi.reducerPath]: pokemonApi.reducer,
+  &#125;,
+  // Adding the api middleware enables caching, invalidation, polling,
+  // and other useful features of `rtk-query`.
+  middleware: (getDefaultMiddleware) =&gt;
+    getDefaultMiddleware().concat(pokemonApi.middleware),
+&#125;)
+</code></pre>
+<ul>
+<li>b. 可以用 <code>query/mutation</code> 方式，用法差别就是那个 builder 后面跟的参数。至于目的差别就是如语义所示，一个是获取值一个是修改值吧。然后以上面代码为例，会生成两个 hook，<code>useGetDigimonByNameQuery</code> 和 <code>useSaveDigimonMutation</code>。用法也不太一样。</li>
+</ul>
+<pre><code class="js">const getDigimonByName = digimonApi.useGetDigimonByNameQuery(&#39;agumon&#39;, &#123; skip: false &#125;);
+const [saveDigimonFunc, saveDigimonStatus] = digimonApi.useSaveDigimonMutation();
+</code></pre>
+<p><code>query</code> 的请求是直接请求，返回对象包含了返回值 data 和 各类的状态，isLoading，isSuccess 这些。当然有时不想它马上就请求，但 hook 又不能写在条件里。所以官方提供了个 skip 参数，可以用来控制是否触发请求。谓之：<a target="_blank" rel="noopener" href="https://redux-toolkit.js.org/rtk-query/usage/conditional-fetching#conditional-fetching-example">条件获取</a>。<br><code>mutation</code> 返回对象是个数组，元素一是请求的触发方法，用 useEffect 什么的去触发一下。元素二就是各类的状态，isLoading，isSuccess 这些。</p>
+<ul>
+<li>c. 请求完成钩子 <a target="_blank" rel="noopener" href="https://redux-toolkit.js.org/rtk-query/api/createApi#onquerystarted">onQueryStarted</a>，无论失败与否都会触发。第一个参数是我们写的请求入参。第二是个复合对象，有两个字段（当然不只这两个）：<br><code>dispatch</code>，就是 store.dispatch，也就是请求完毕就可以顺手触发一些修改 store 的操作。<br><code>queryFulfilled</code>，一个 promise 函数，执行成功会返回请求结果 data。失败了也就是请求失败，则触发 promise error 失败事件。</li>
+</ul>
+<h2 id="二、用-craco-x2F-craco-修改-react-原生打包配置"><a href="#二、用-craco-x2F-craco-修改-react-原生打包配置" class="headerlink" title="二、用 @craco&#x2F;craco 修改 react 原生打包配置"></a>二、用 @craco&#x2F;craco 修改 react 原生打包配置</h2><p>上篇文章提到，react 把打包配置藏了起来，所以自己另起了 webpack.config.js 对其进行处理。现在知道还可以用 <a target="_blank" rel="noopener" href="https://craco.js.org/docs/">@craco&#x2F;craco</a> 挟持修改其默认配置的方法。用法也很简单。</p>
+<ol>
+<li>把命令改成：</li>
+</ol>
+<pre><code class="json">&#123;
+  &quot;scripts&quot;: &#123;
+    &quot;dev&quot;: &quot;craco start&quot;,
+    &quot;build&quot;: &quot;craco build&quot;,
+  &#125;
+&#125;
+</code></pre>
+<ol start="2">
+<li>项目根路径配置一份 <code>craco.config.js</code>：</li>
+</ol>
+<pre><code class="js">const &#123; resolve &#125; = require(&#39;path&#39;);
+const &#123; DefinePlugin &#125; = require(&#39;webpack&#39;);
+const &#123; getPlugin, pluginByName &#125; = require(&#39;@craco/craco&#39;);
+module.exports = &#123;
+  webpack: &#123;
+    configure: (webpackConfig) =&gt; &#123;
+      // 默认配置没有处理 PUBLIC_URL，会导致处理 index.html 模板里的变量出错
+      const &#123; isFound, match: htmlWebpackPlugin &#125; = getPlugin(
+        webpackConfig,
+        pluginByName(&#39;HtmlWebpackPlugin&#39;),
+      );
+      isFound &amp;&amp;
+        (htmlWebpackPlugin?.userOptions?.templateParameters = &#123; &#39;PUBLIC_URL&#39;: &#39;&#39; &#125;);
+      return webpackConfig;
+    &#125;,
+    alias: &#123;
+      &#39;@&#39;: resolve(process.cwd(), &#39;src&#39;),
+    &#125;,
+    plugins: [
+      new DefinePlugin(&#123;
+        &#39;NODE_ENV&#39;: JSON.stringify(process.env.NODE_ENV),
+      &#125;),
+    ],
+  &#125;,
+&#125;;
+</code></pre>
+<p>多半改的都是 webpack 配置吧，更多更具体可看《<a target="_blank" rel="noopener" href="https://craco.js.org/docs/category/configuration/">官网文档</a>》。</p>
+<h2 id="三、用-vite-打包"><a href="#三、用-vite-打包" class="headerlink" title="三、用 vite 打包"></a>三、用 vite 打包</h2><p><a target="_blank" rel="noopener" href="https://cn.vitejs.dev/guide/">vite</a> 已经很成熟了，用于 vue 工程当仁不让，react 工程也很可以了。话不多说直接上操作。</p>
+<ol>
+<li>项目根目录新建 <code>vite.config.js</code>：</li>
+</ol>
+<pre><code class="js">import fs from &#39;fs&#39;;
+import path from &#39;path&#39;;
+import &#123; defineConfig &#125; from &#39;vite&#39;;
+import react from &#39;@vitejs/plugin-react&#39;;
+
+export default defineConfig(&#123;
+  resolve: &#123;
+    alias: [
+      &#123;
+        find: &#39;@&#39;,
+        replacement: path.resolve(process.cwd(), &#39;/src&#39;),
+      &#125;,
+    ],
+  &#125;,
+  define: &#123;
+    &#39;NODE_ENV&#39;: JSON.stringify(process.env.NODE_ENV),
+  &#125;,
+  plugins: [
+    react(),
+  ],
+  server: &#123;
+    port: 3000,
+    open: &#39;http://localhost:3000&#39;, // 或 true
+    // proxy: &#123;
+    //   &#39;/api&#39;: &#123;
+    //     target: &#39;http://jsonplaceholder.typicode.com&#39;,
+    //     changeOrigin: true,
+    //     rewrite: (path) =&gt; path.replace(/^\/api/, &#39;&#39;),
+    //   &#125;,
+    // &#125;,
+  &#125;,
+  // 解决在 js 文件里写 jsx
+  // How to use .js instead of .jsx https://github.com/vitejs/vite/discussions/3448
+  esbuild: &#123;
+    loader: &#39;jsx&#39;,
+    include: /src\/.*\.jsx?$/,
+    // loader: &#39;tsx&#39;,
+    // include: /src\/.*\.[tj]sx?$/,
+    exclude: [],
+  &#125;,
+  optimizeDeps: &#123;
+    esbuildOptions: &#123;
+      plugins: [
+        &#123;
+          name: &#39;load-js-files-as-jsx&#39;,
+          setup(build) &#123;
+            build.onLoad(&#123; filter: /src\/.*\.js$/ &#125;, async (args) =&gt; (&#123;
+              loader: &#39;jsx&#39;,
+              contents: fs.readFileSync(args.path, &#39;utf8&#39;),
+            &#125;));
+          &#125;,
+        &#125;,
+      ],
+    &#125;,
+  &#125;,
+&#125;);
+</code></pre>
+<ol start="2">
+<li>项目根目录新建 <code>index.html</code>：</li>
+</ol>
+<pre><code class="html">&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+  &lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot;&gt;
+    &lt;link rel=&quot;icon&quot; href=&quot;/favicon.ico&quot;&gt;
+    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+    &lt;title&gt;ReactZz App&lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;div id=&quot;root&quot;&gt;&lt;/div&gt;
+    &lt;script type=&quot;module&quot; src=&quot;/src/index.js&quot;&gt;&lt;/script&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+<p>项目根目录的 index.html 是 vite 的默认入口，当然也可以改，不过要自行配置了，可参考《<a target="_blank" rel="noopener" href="https://cn.vitejs.dev/guide/build.html#multi-page-app">多页面应用模式</a>》。</p>
+<p>这个和 @craco&#x2F;craco 只是修改部分参数不同，是完全新搭建了打包配置。实际上还会有其他相关的要配置，比如，css 文件处理，自定义压缩处理，ts 配置等等。这里只是记录个基础使用。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      
+        <a data-url="https://blog.cchealthier.com/2023/09/23/react-basic-app-2/" data-id="clmxk7z0e002hc39mhb8vc1ho" class="article-thumbs-up">赞一个(<span class="article-thumbs-up-num">0</span>)</a>
+      
+      <!-- <a data-url="https://blog.cchealthier.com/2023/09/23/react-basic-app-2/" data-id="clmxk7z0e002hc39mhb8vc1ho" class="article-share-link">分享</a> -->
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" rel="tag">工程化</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2023/08/24/node-module/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">NodeJS 的 commonjs、esm 模块使用以及一些字段释义</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2023/09/23/react-basic-app-2/">react 基础工程 Ⅱ（@reduxjs/toolkit &amp; @craco/craco &amp; vite）</a>
+          </li>
+        
+          <li>
+            <a href="/2023/08/24/node-module/">NodeJS 的 commonjs、esm 模块使用以及一些字段释义</a>
+          </li>
+        
+          <li>
+            <a href="/2023/08/23/webpack5-background-url/">webpack5 下 background url 图片打包失败</a>
+          </li>
+        
+          <li>
+            <a href="/2023/07/26/node-stream/">NodeJS 里的 stream（流）</a>
+          </li>
+        
+          <li>
+            <a href="/2023/06/07/webpack-modulefederationplugin/">用 webpack ModuleFederationPlugin 搭建微前端</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/http%E5%8D%8F%E8%AE%AE/">http协议</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/%E6%9C%8D%E5%8A%A1/">服务</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/%E7%AE%97%E6%B3%95/">算法</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%97%85%E8%A1%8C/">旅行</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%97%85%E8%A1%8C/%E8%AE%B0%E5%BD%95/">记录</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%83%B9%E9%A5%AA/">烹饪</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%83%B9%E9%A5%AA/%E4%BC%A0%E7%BB%9F/">传统</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%9A%8F%E6%83%B3/">随想</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%9A%8F%E6%83%B3/%E5%BF%83%E6%83%85/">心情</a></li></ul></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nginx/" rel="tag">nginx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" rel="tag">工程化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%80%A7%E8%83%BD/" rel="tag">性能</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/nginx/" style="font-size: 13.33px;">nginx</a> <a href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" style="font-size: 20px;">工程化</a> <a href="/tags/%E6%80%A7%E8%83%BD/" style="font-size: 16.67px;">性能</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/09/">九月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/08/">八月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">七月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/06/">六月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/05/">五月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/04/">四月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/03/">三月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/02/">二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">十一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">十月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">九月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a></li></ul>
+    </div>
+  </div>
+
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2023 ChrisIori<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">首页</a>
+  
+    <a href="/archives" class="mobile-nav-link">归档</a>
+  
+</nav>
+    
+
+<script src="//cdn.staticfile.org/jquery/2.0.3/jquery.min.js"></script>
+<script type="text/javascript" src="https://www.jq22.com/demo/jqueryToast201708310012/js/toast.script.js"></script>
+<script src="/js/highlight.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlightjs-line-numbers.js/2.8.0/highlightjs-line-numbers.min.js"></script>
+<script>
+  $(function(){
+    $('pre code').each((i, el) => {
+    hljs.highlightElement(el);
+  });
+  $('code.hljs').each(function(i, el) {
+     hljs.lineNumbersBlock(el);
+  });
+  }());
+</script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>

@@ -9,12 +9,12 @@
   
   <title>链表 | 凝雪密境</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="链表的概念这里就不赘述了，直接上代码吧。其他都没什么问题，主要是反转的做法。 12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758596061626364656667686970717273747576777879808182838485">
+  <meta name="description" content="链表的概念这里就不赘述了，直接上代码吧。其他都没什么问题，主要是反转的做法。 class Node &amp;#123;   constructor(element) &amp;#123;     this.element &#x3D; element;     this.next &#x3D; null;   &amp;#125; &amp;#125;  class LinkedList &amp;#123;   constructor() &amp;#123;">
 <meta property="og:type" content="article">
 <meta property="og:title" content="链表">
 <meta property="og:url" content="https://blog.cchealthier.com/2022/09/25/linked-list/index.html">
 <meta property="og:site_name" content="凝雪密境">
-<meta property="og:description" content="链表的概念这里就不赘述了，直接上代码吧。其他都没什么问题，主要是反转的做法。 12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758596061626364656667686970717273747576777879808182838485">
+<meta property="og:description" content="链表的概念这里就不赘述了，直接上代码吧。其他都没什么问题，主要是反转的做法。 class Node &amp;#123;   constructor(element) &amp;#123;     this.element &#x3D; element;     this.next &#x3D; null;   &amp;#125; &amp;#125;  class LinkedList &amp;#123;   constructor() &amp;#123;">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2022-09-25T15:22:55.000Z">
 <meta property="article:modified_time" content="2023-04-21T03:44:31.071Z">
@@ -25,13 +25,12 @@
     <link rel="icon" href="/favicon.ico">
   
   
-    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
-  
   
 <link rel="stylesheet" href="/css/style.css">
 
   <link href="https://www.jq22.com/demo/jqueryToast201708310012/css/toast.style.css" rel="stylesheet" type="text/css">
-<meta name="generator" content="Hexo 7.0.0-rc1"></head>
+  <link rel="stylesheet" href="/css/highlight/styles/monokai-sublime.min.css">
+<meta name="generator" content="Hexo 6.3.0"></head>
 
 <body>
   <div id="container">
@@ -59,9 +58,9 @@
       <nav id="main-nav">
         <a id="main-nav-toggle" class="nav-icon"></a>
         
-          <a class="main-nav-link" href="/">Home</a>
+          <a class="main-nav-link" href="/">首页</a>
         
-          <a class="main-nav-link" href="/archives">Archives</a>
+          <a class="main-nav-link" href="/archives">归档</a>
         
       </nav>
       <nav id="sub-nav">
@@ -102,20 +101,156 @@
     <div class="article-entry" itemprop="articleBody">
       
         <p><a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E9%93%BE%E8%A1%A8/9794473?fr=aladdin">链表</a>的概念这里就不赘述了，直接上代码吧。<br>其他都没什么问题，主要是反转的做法。</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Node</span> &#123;</span><br><span class="line">  <span class="title function_">constructor</span>(<span class="params">element</span>) &#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">element</span> = element;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">next</span> = <span class="literal">null</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">LinkedList</span> &#123;</span><br><span class="line">  <span class="title function_">constructor</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">head</span> = <span class="keyword">new</span> <span class="title class_">Node</span>(<span class="string">&#x27;head&#x27;</span>);</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">length</span> = <span class="number">0</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="title function_">insert</span>(<span class="params">newElement, element = <span class="literal">null</span></span>) &#123; <span class="comment">// 加在某个元素后面，如果该元素不在，则加在 head 后面</span></span><br><span class="line">    <span class="keyword">let</span> currNode = <span class="variable language_">this</span>.<span class="title function_">find</span>(element);</span><br><span class="line">    <span class="keyword">if</span> (!currNode) &#123;</span><br><span class="line">      currNode = <span class="variable language_">this</span>.<span class="property">head</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">const</span> newNode = <span class="keyword">new</span> <span class="title class_">Node</span>(newElement);</span><br><span class="line">    newNode.<span class="property">next</span> = currNode.<span class="property">next</span>;</span><br><span class="line">    currNode.<span class="property">next</span> = newNode;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">length</span>++;</span><br><span class="line">    <span class="keyword">return</span> <span class="variable language_">this</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="title function_">remove</span>(<span class="params">element</span>) &#123;</span><br><span class="line">    <span class="keyword">const</span> prevNode = <span class="variable language_">this</span>.<span class="title function_">prev</span>(element);</span><br><span class="line">    <span class="keyword">if</span> (prevNode &amp;&amp; prevNode.<span class="property">next</span>) &#123;</span><br><span class="line">      <span class="keyword">const</span> currNode = prevNode.<span class="property">next</span>;</span><br><span class="line">      prevNode.<span class="property">next</span> = currNode.<span class="property">next</span>;</span><br><span class="line">      <span class="variable language_">this</span>.<span class="property">length</span>--;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="variable language_">this</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="title function_">find</span>(<span class="params">element</span>) &#123;</span><br><span class="line">    <span class="keyword">let</span> node = <span class="variable language_">this</span>.<span class="property">head</span>;</span><br><span class="line">    <span class="keyword">while</span>(node) &#123;</span><br><span class="line">      <span class="keyword">if</span> (node.<span class="property">element</span> === element) &#123;</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">      &#125;</span><br><span class="line">      node = node.<span class="property">next</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> node;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="title function_">getAll</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">const</span> result = [];</span><br><span class="line">    <span class="keyword">let</span> node = <span class="variable language_">this</span>.<span class="property">head</span>;</span><br><span class="line">    <span class="keyword">while</span>(node &amp;&amp; node.<span class="property">next</span>) &#123;</span><br><span class="line">      node = node.<span class="property">next</span>;</span><br><span class="line">      result.<span class="title function_">push</span>(node.<span class="property">element</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="title function_">prev</span>(<span class="params">element</span>) &#123;</span><br><span class="line">    <span class="keyword">let</span> node = <span class="variable language_">this</span>.<span class="property">head</span>;</span><br><span class="line">    <span class="keyword">while</span>(node) &#123;</span><br><span class="line">      <span class="keyword">if</span> (node.<span class="property">next</span> &amp;&amp; node.<span class="property">next</span>.<span class="property">element</span> === element) &#123;</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">      &#125;</span><br><span class="line">      node = node.<span class="property">next</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> node;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="title function_">next</span>(<span class="params">element</span>) &#123;</span><br><span class="line">    <span class="keyword">const</span> currNode = <span class="variable language_">this</span>.<span class="title function_">find</span>(element);</span><br><span class="line">    <span class="keyword">if</span> (currNode) &#123;</span><br><span class="line">      <span class="keyword">return</span> currNode.<span class="property">next</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="title function_">reverse</span>(<span class="params">element</span>) &#123;</span><br><span class="line">    <span class="comment">// 直接倒序重新生成的不正规解法</span></span><br><span class="line">    <span class="comment">// let node = this.head;</span></span><br><span class="line">    <span class="comment">// this.getAll().reverse().forEach((element) =&gt; &#123;</span></span><br><span class="line">    <span class="comment">// 	node.next = new Node(element);</span></span><br><span class="line">    <span class="comment">// 	node = node.next;</span></span><br><span class="line">    <span class="comment">// &#125;);</span></span><br><span class="line">    <span class="comment">// node.next = null;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 只需要循环一次的正规解法</span></span><br><span class="line">    <span class="keyword">let</span> head = <span class="variable language_">this</span>.<span class="title function_">prev</span>(element); <span class="comment">// 这个后面的元素要反转，所以也有可能是链表的 head</span></span><br><span class="line">    <span class="keyword">let</span> first = <span class="variable language_">this</span>.<span class="title function_">find</span>(element); <span class="comment">// 一直指向要反转的链表第一个</span></span><br><span class="line">    <span class="keyword">if</span> (!first) &#123;</span><br><span class="line">      head = <span class="variable language_">this</span>.<span class="property">head</span>;</span><br><span class="line">      first = <span class="variable language_">this</span>.<span class="property">head</span>.<span class="property">next</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (!first) <span class="keyword">return</span> <span class="variable language_">this</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">const</span> node = first; <span class="comment">// node 是不需要变的，一直都是一开始的第一个，因为每次循环 node 都会变位置，它的 next 指向也会一直变</span></span><br><span class="line">    <span class="keyword">while</span>(node &amp;&amp; node.<span class="property">next</span>) &#123;</span><br><span class="line">      <span class="keyword">const</span> nextNode = node.<span class="property">next</span>;</span><br><span class="line">      node.<span class="property">next</span> = nextNode.<span class="property">next</span>;</span><br><span class="line">      nextNode.<span class="property">next</span> = first;</span><br><span class="line">      first = nextNode;</span><br><span class="line">    &#125;</span><br><span class="line">    head.<span class="property">next</span> = first;</span><br><span class="line">    <span class="comment">// 每次都把 1 的 next 挪到 first 的前面，同时 1 也会相应的变位置</span></span><br><span class="line">    <span class="comment">// 12345：first = 1，node = 1，把 1 的 next 指向 3，2 的 next 指向 1，即把 2 放到 1（frist） 前面</span></span><br><span class="line">    <span class="comment">// 21345：first = 2，node = 1，把 1 的 next 指向 4，3 的 next 指向 2，即把 3 放到 2（frist） 前面</span></span><br><span class="line">    <span class="comment">// 32145：first = 3，node = 1，把 1 的 next 指向 5，4 的 next 指向 3，即把 4 放到 3（frist） 前面</span></span><br><span class="line">    <span class="comment">// 43215</span></span><br><span class="line">    <span class="comment">// 54321</span></span><br><span class="line">    <span class="keyword">return</span> <span class="variable language_">this</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="js">class Node &#123;
+  constructor(element) &#123;
+    this.element = element;
+    this.next = null;
+  &#125;
+&#125;
 
+class LinkedList &#123;
+  constructor() &#123;
+    this.head = new Node(&#39;head&#39;);
+    this.length = 0;
+  &#125;
+  insert(newElement, element = null) &#123; // 加在某个元素后面，如果该元素不在，则加在 head 后面
+    let currNode = this.find(element);
+    if (!currNode) &#123;
+      currNode = this.head;
+    &#125;
+    const newNode = new Node(newElement);
+    newNode.next = currNode.next;
+    currNode.next = newNode;
+    this.length++;
+    return this;
+  &#125;
+  remove(element) &#123;
+    const prevNode = this.prev(element);
+    if (prevNode &amp;&amp; prevNode.next) &#123;
+      const currNode = prevNode.next;
+      prevNode.next = currNode.next;
+      this.length--;
+    &#125;
+    return this;
+  &#125;
+  find(element) &#123;
+    let node = this.head;
+    while(node) &#123;
+      if (node.element === element) &#123;
+        break;
+      &#125;
+      node = node.next;
+    &#125;
+    return node;
+  &#125;
+  getAll() &#123;
+    const result = [];
+    let node = this.head;
+    while(node &amp;&amp; node.next) &#123;
+      node = node.next;
+      result.push(node.element);
+    &#125;
+    return result;
+  &#125;
+  prev(element) &#123;
+    let node = this.head;
+    while(node) &#123;
+      if (node.next &amp;&amp; node.next.element === element) &#123;
+        break;
+      &#125;
+      node = node.next;
+    &#125;
+    return node;
+  &#125;
+  next(element) &#123;
+    const currNode = this.find(element);
+    if (currNode) &#123;
+      return currNode.next;
+    &#125;
+    return null;
+  &#125;
+  reverse(element) &#123;
+    // 直接倒序重新生成的不正规解法
+    // let node = this.head;
+    // this.getAll().reverse().forEach((element) =&gt; &#123;
+    // 	node.next = new Node(element);
+    // 	node = node.next;
+    // &#125;);
+    // node.next = null;
+
+    // 只需要循环一次的正规解法
+    let head = this.prev(element); // 这个后面的元素要反转，所以也有可能是链表的 head
+    let first = this.find(element); // 一直指向要反转的链表第一个
+    if (!first) &#123;
+      head = this.head;
+      first = this.head.next;
+    &#125;
+    if (!first) return this;
+
+    const node = first; // node 是不需要变的，一直都是一开始的第一个，因为每次循环 node 都会变位置，它的 next 指向也会一直变
+    while(node &amp;&amp; node.next) &#123;
+      const nextNode = node.next;
+      node.next = nextNode.next;
+      nextNode.next = first;
+      first = nextNode;
+    &#125;
+    head.next = first;
+    // 每次都把 1 的 next 挪到 first 的前面，同时 1 也会相应的变位置
+    // 12345：first = 1，node = 1，把 1 的 next 指向 3，2 的 next 指向 1，即把 2 放到 1（frist） 前面
+    // 21345：first = 2，node = 1，把 1 的 next 指向 4，3 的 next 指向 2，即把 3 放到 2（frist） 前面
+    // 32145：first = 3，node = 1，把 1 的 next 指向 5，4 的 next 指向 3，即把 4 放到 3（frist） 前面
+    // 43215
+    // 54321
+    return this;
+  &#125;
+&#125;
+</code></pre>
 <p>下面是运行结果</p>
 <span id="more"></span>
 
 
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> link = <span class="keyword">new</span> <span class="title class_">LinkedList</span>();</span><br><span class="line"></span><br><span class="line">link.<span class="title function_">insert</span>(<span class="string">&#x27;2&#x27;</span>).<span class="title function_">insert</span>(<span class="string">&#x27;3&#x27;</span>, <span class="string">&#x27;2&#x27;</span>).<span class="title function_">insert</span>(<span class="string">&#x27;4&#x27;</span>, <span class="string">&#x27;3&#x27;</span>).<span class="title function_">insert</span>(<span class="string">&#x27;5&#x27;</span>, <span class="string">&#x27;4&#x27;</span>).<span class="title function_">insert</span>(<span class="string">&#x27;1&#x27;</span>, <span class="string">&#x27;10086&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// console.log(link.getAll(), link.length);</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// console.log(link.find(&#x27;3&#x27;));</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// console.log(link.next(&#x27;3&#x27;));</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// console.log(link.prev(&#x27;3&#x27;));</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// console.log(&#x27;-------------&#x27;);</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// link.remove(&#x27;3&#x27;);</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// console.log(link.getAll(), link.length);</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// console.log(link.find(&#x27;3&#x27;));</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// console.log(link.next(&#x27;3&#x27;));</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// console.log(link.prev(&#x27;3&#x27;));</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// console.log(&#x27;-------------&#x27;);</span></span><br><span class="line"></span><br><span class="line">link.<span class="title function_">reverse</span>(<span class="string">&#x27;3&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(link.<span class="title function_">getAll</span>(), link.<span class="property">length</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// link.reverse();</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// console.log(link.getAll(), link.length);</span></span><br></pre></td></tr></table></figure>
+<pre><code class="js">const link = new LinkedList();
+
+link.insert(&#39;2&#39;).insert(&#39;3&#39;, &#39;2&#39;).insert(&#39;4&#39;, &#39;3&#39;).insert(&#39;5&#39;, &#39;4&#39;).insert(&#39;1&#39;, &#39;10086&#39;);
+
+// console.log(link.getAll(), link.length);
+
+// console.log(link.find(&#39;3&#39;));
+
+// console.log(link.next(&#39;3&#39;));
+
+// console.log(link.prev(&#39;3&#39;));
+
+// console.log(&#39;-------------&#39;);
+
+// link.remove(&#39;3&#39;);
+
+// console.log(link.getAll(), link.length);
+
+// console.log(link.find(&#39;3&#39;));
+
+// console.log(link.next(&#39;3&#39;));
+
+// console.log(link.prev(&#39;3&#39;));
+
+// console.log(&#39;-------------&#39;);
+
+link.reverse(&#39;3&#39;);
+
+console.log(link.getAll(), link.length);
+
+// link.reverse();
+
+// console.log(link.getAll(), link.length);
+</code></pre>
+
       
     </div>
     <footer class="article-footer">
       
-        <a data-url="https://blog.cchealthier.com/2022/09/25/linked-list/" data-id="clmbeu7qy0019tf9m1yes67jn" class="article-thumbs-up">赞一个(<span class="article-thumbs-up-num">0</span>)</a>
+        <a data-url="https://blog.cchealthier.com/2022/09/25/linked-list/" data-id="clmxk7z080017c39m5ica95j9" class="article-thumbs-up">赞一个(<span class="article-thumbs-up-num">0</span>)</a>
       
-      <!-- <a data-url="https://blog.cchealthier.com/2022/09/25/linked-list/" data-id="clmbeu7qy0019tf9m1yes67jn" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2022/09/25/linked-list/" data-id="clmxk7z080017c39m5ica95j9" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -150,6 +285,37 @@
   
     
   <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2023/09/23/react-basic-app-2/">react 基础工程 Ⅱ（@reduxjs/toolkit &amp; @craco/craco &amp; vite）</a>
+          </li>
+        
+          <li>
+            <a href="/2023/08/24/node-module/">NodeJS 的 commonjs、esm 模块使用以及一些字段释义</a>
+          </li>
+        
+          <li>
+            <a href="/2023/08/23/webpack5-background-url/">webpack5 下 background url 图片打包失败</a>
+          </li>
+        
+          <li>
+            <a href="/2023/07/26/node-stream/">NodeJS 里的 stream（流）</a>
+          </li>
+        
+          <li>
+            <a href="/2023/06/07/webpack-modulefederationplugin/">用 webpack ModuleFederationPlugin 搭建微前端</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
     <h3 class="widget-title">分类</h3>
     <div class="widget">
       <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/http%E5%8D%8F%E8%AE%AE/">http协议</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/%E6%9C%8D%E5%8A%A1/">服务</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/%E7%AE%97%E6%B3%95/">算法</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%97%85%E8%A1%8C/">旅行</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%97%85%E8%A1%8C/%E8%AE%B0%E5%BD%95/">记录</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%83%B9%E9%A5%AA/">烹饪</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%83%B9%E9%A5%AA/%E4%BC%A0%E7%BB%9F/">传统</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%9A%8F%E6%83%B3/">随想</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%9A%8F%E6%83%B3/%E5%BF%83%E6%83%85/">心情</a></li></ul></li></ul>
@@ -181,41 +347,10 @@
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/08/">八月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">七月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/06/">六月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/05/">五月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/04/">四月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/03/">三月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/02/">二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">十一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">十月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">九月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/09/">九月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/08/">八月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">七月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/06/">六月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/05/">五月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/04/">四月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/03/">三月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/02/">二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">十一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">十月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">九月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a></li></ul>
     </div>
   </div>
 
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">最新文章</h3>
-    <div class="widget">
-      <ul>
-        
-          <li>
-            <a href="/2023/08/24/node-module/">NodeJS 的 commonjs、esm 模块使用以及一些字段释义</a>
-          </li>
-        
-          <li>
-            <a href="/2023/08/23/webpack5-background-url/">webpack5 下 background url 图片打包失败</a>
-          </li>
-        
-          <li>
-            <a href="/2023/07/26/node-stream/">NodeJS 里的 stream（流）</a>
-          </li>
-        
-          <li>
-            <a href="/2023/06/07/webpack-modulefederationplugin/">用 webpack ModuleFederationPlugin 搭建微前端</a>
-          </li>
-        
-          <li>
-            <a href="/2023/05/31/react-basic-app/">react 基础工程（react-redux &amp; react-router）</a>
-          </li>
-        
-      </ul>
-    </div>
-  </div>
 
   
 </aside>
@@ -233,15 +368,27 @@
     </div>
     <nav id="mobile-nav">
   
-    <a href="/" class="mobile-nav-link">Home</a>
+    <a href="/" class="mobile-nav-link">首页</a>
   
-    <a href="/archives" class="mobile-nav-link">Archives</a>
+    <a href="/archives" class="mobile-nav-link">归档</a>
   
 </nav>
     
 
 <script src="//cdn.staticfile.org/jquery/2.0.3/jquery.min.js"></script>
 <script type="text/javascript" src="https://www.jq22.com/demo/jqueryToast201708310012/js/toast.script.js"></script>
+<script src="/js/highlight.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlightjs-line-numbers.js/2.8.0/highlightjs-line-numbers.min.js"></script>
+<script>
+  $(function(){
+    $('pre code').each((i, el) => {
+    hljs.highlightElement(el);
+  });
+  $('code.hljs').each(function(i, el) {
+     hljs.lineNumbersBlock(el);
+  });
+  }());
+</script>
 
 
   
