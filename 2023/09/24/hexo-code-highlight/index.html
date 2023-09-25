@@ -7,19 +7,21 @@
   
 
   
-  <title>记录一些基础算法 | 凝雪密境</title>
+  <title>记录 hexo 使用 highlight.js 实现代码高亮 | 凝雪密境</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="开始补充一些算法和数据结构的知识 冒泡排序const arr &#x3D; [162, 6, 3, 8, 90, 234, 5, 7, 31, 45, 12, 1, 98, 23, 87, 40] function sort(arr) &amp;#123;   const len &#x3D; arr.length - 1   for (let x &#x3D; 0, y &#x3D; len; x &lt; y; x++) &amp;#123;">
+  <meta name="description" content="一直觉得文章代码不够醒目，虽然也确实是高亮了。想着应该是这主题原因，就打算换个高亮主题，就我最喜欢的 sublime 的 monokai 主题。即使现在用 vscode 也还是用这个主题。 网上查了一下，hexo 本身就是用了 highlightjs 实现代码高亮的，但是它配置的颜色实在是不太行，要换的话，得完全自己手动。 一、关掉 hexo 本身的 highlightjs 使用项目根目录下的 _">
 <meta property="og:type" content="article">
-<meta property="og:title" content="记录一些基础算法">
-<meta property="og:url" content="https://blog.cchealthier.com/2020/10/21/algorithm/index.html">
+<meta property="og:title" content="记录 hexo 使用 highlight.js 实现代码高亮">
+<meta property="og:url" content="https://blog.cchealthier.com/2023/09/24/hexo-code-highlight/index.html">
 <meta property="og:site_name" content="凝雪密境">
-<meta property="og:description" content="开始补充一些算法和数据结构的知识 冒泡排序const arr &#x3D; [162, 6, 3, 8, 90, 234, 5, 7, 31, 45, 12, 1, 98, 23, 87, 40] function sort(arr) &amp;#123;   const len &#x3D; arr.length - 1   for (let x &#x3D; 0, y &#x3D; len; x &lt; y; x++) &amp;#123;">
+<meta property="og:description" content="一直觉得文章代码不够醒目，虽然也确实是高亮了。想着应该是这主题原因，就打算换个高亮主题，就我最喜欢的 sublime 的 monokai 主题。即使现在用 vscode 也还是用这个主题。 网上查了一下，hexo 本身就是用了 highlightjs 实现代码高亮的，但是它配置的颜色实在是不太行，要换的话，得完全自己手动。 一、关掉 hexo 本身的 highlightjs 使用项目根目录下的 _">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2020-10-21T15:51:13.000Z">
-<meta property="article:modified_time" content="2020-10-25T03:51:18.000Z">
+<meta property="og:image" content="https://blog.cchealthier.com/2023/09/24/hexo-code-highlight/hexo-code-highlight.png">
+<meta property="article:published_time" content="2023-09-24T15:43:39.000Z">
+<meta property="article:modified_time" content="2023-09-25T14:28:31.546Z">
 <meta property="article:author" content="ChrisIori">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://blog.cchealthier.com/2023/09/24/hexo-code-highlight/hexo-code-highlight.png">
   
   
     <link rel="icon" href="/favicon.ico">
@@ -74,16 +76,12 @@
   </div>
 </header>
       <div class="outer">
-        <section id="main"><article id="post-algorithm" class="article article-type-post" itemscope itemprop="blogPost">
+        <section id="main"><article id="post-hexo-code-highlight" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2020/10/21/algorithm/" class="article-date">
-  <time datetime="2020-10-21T15:51:13.000Z" itemprop="datePublished">2020-10-21</time>
+    <a href="/2023/09/24/hexo-code-highlight/" class="article-date">
+  <time datetime="2023-09-24T15:43:39.000Z" itemprop="datePublished">2023-09-24</time>
 </a>
     
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E7%AE%97%E6%B3%95/">算法</a>
-  </div>
-
   </div>
   <div class="article-inner">
     
@@ -92,7 +90,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      记录一些基础算法
+      记录 hexo 使用 highlight.js 实现代码高亮
     </h1>
   
 
@@ -100,135 +98,66 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>开始补充一些算法和数据结构的知识</p>
-<h3 id="冒泡排序"><a href="#冒泡排序" class="headerlink" title="冒泡排序"></a>冒泡排序</h3><pre><code class="js">const arr = [162, 6, 3, 8, 90, 234, 5, 7, 31, 45, 12, 1, 98, 23, 87, 40]
-function sort(arr) &#123;
-  const len = arr.length - 1
-  for (let x = 0, y = len; x &lt; y; x++) &#123;
-    // 把第一个跟后面那个对比，如果比后面的数大，就交换位置，到最后就可以确定最大的数在最后
-    // 也就是在 length 的位置
-    // 在第一轮的时候，x=1，也就是遍历到倒数第二个就好，因为取到 i+1 的数
-    for (let i = 0, l = len - x; i &lt; l; i++) &#123;
-      const first = arr[i], second = arr[i+1]
-      if (first &gt; second) &#123;
-        [arr[i], arr[i+1]] = [second, first]
-      &#125;
-    &#125;
-    // 假设没有第一层，最大的数已经在最后，那么第二轮就是要在剩下的数找到最大，并放到倒数第二位置
-    // 也就是在 length-1 的位置
-    // 此时 x=2，因为依然是当轮最后数（第二轮为length-1）的前一个
-    // for (var i = 0, l = arr.length - 2; i &lt; l; i++) &#123;
-    //  if (arr[i] &gt; arr[i+1]) &#123;
-    //    [arr[i], arr[i+1]] = [arr[i+1], arr[i]]
-    //  &#125;
-    // &#125;
-    // 第三轮 x=3
-    // for (var i = 0, l = arr.length - 3; i &lt; l; i++) &#123;
-    //  if (arr[i] &gt; arr[i+1]) &#123;
-    //    [arr[i], arr[i+1]] = [arr[i+1], arr[i]]
-    //  &#125;
-    // &#125;
-    // 第四轮 x=4
-    // for (var i = 0, l = arr.length - 4; i &lt; l; i++) &#123;
-    //  if (arr[i] &gt; arr[i+1]) &#123;
-    //    [arr[i], arr[i+1]] = [arr[i+1], arr[i]]
-    //  &#125;
-    // &#125;
-    // 所以循环个遍，就成了外面一层的循环
-  &#125;
-  return arr
-&#125;
-console.log(sort(arr))
+        <p>一直觉得文章代码不够醒目，虽然也确实是高亮了。想着应该是这主题原因，就打算换个高亮主题，就我最喜欢的 sublime 的 monokai 主题。即使现在用 vscode 也还是用这个主题。</p>
+<p>网上查了一下，hexo 本身就是用了 <a target="_blank" rel="noopener" href="https://highlightjs.org/">highlightjs</a> 实现代码高亮的，但是它配置的颜色实在是不太行，要换的话，得完全自己手动。</p>
+<h3 id="一、关掉-hexo-本身的-highlightjs-使用"><a href="#一、关掉-hexo-本身的-highlightjs-使用" class="headerlink" title="一、关掉 hexo 本身的 highlightjs 使用"></a>一、关掉 hexo 本身的 highlightjs 使用</h3><p>项目根目录下的 <code>_config.yml</code> 文件，<code>highlight</code> 字段 enable 改为 <strong>false</strong>。关掉原本的配置，不然会和自己手动配置冲突。</p>
+<p>可能会遇到没生效，也就是关闭后还有高亮的效果。这时候看看 hexo 版本是不是 7 以上。我就是用了 7 版本不行，后面换了 <code>npm i hexo@^6.3.0</code> 就可以了。我看了下载量最多的还是 6.3.0。换了版本后可以执行下 <code>npx hexo clean</code> 清一下缓存。</p>
+<h3 id="二、下载-js-和-css"><a href="#二、下载-js-和-css" class="headerlink" title="二、下载 js 和 css"></a>二、下载 js 和 css</h3><p>上 <a target="_blank" rel="noopener" href="https://highlightjs.org/download">官网Download</a> 挑选功能，然后下载。也可以现在 <a target="_blank" rel="noopener" href="https://highlightjs.org/demo">官网Demo</a> 看看主题效果预览。</p>
+<p>下载后的压缩包，把 <code>highlight.min.js</code> 文件放到 <u><strong>项目&#x2F;themes&#x2F;正在生效的主题&#x2F;source&#x2F;js</strong></u> 文件夹下。<br>把要用的主题 css 拿出来，当然也可以所有 css 文件放进去，我就放了 monokai 主题的 css 而已，其他的用不上。把 <code>monokai-sublime.min.css</code> 文件放到 <u><strong>项目&#x2F;themes&#x2F;正在生效的主题&#x2F;source&#x2F;css&#x2F;highlight&#x2F;styles</strong></u> 下。</p>
+<h3 id="三、引用并使用-js-和-css"><a href="#三、引用并使用-js-和-css" class="headerlink" title="三、引用并使用 js 和 css"></a>三、引用并使用 js 和 css</h3><p>在 <u><strong>项目&#x2F;themes&#x2F;正在生效的主题&#x2F;layout&#x2F;_partial&#x2F;head.ejs</strong></u> 文件里，引入刚刚放好的 css 文件，插入代码：</p>
+<pre><code class="html">&lt;link rel=&quot;stylesheet&quot; href=&quot;/css/highlight/styles/monokai-sublime.min.css&quot;&gt;
 </code></pre>
-<h3 id="二分法"><a href="#二分法" class="headerlink" title="二分法"></a>二分法</h3><p>就是在一个有序的序列中迅速找到要找的那个数的索引。一个一个遍历当然也可以找到，但是不确定性导致复杂度。<br>二分法就是中间砍一刀，这样数列就成了两半。看看中间值是不是，是那就刚好了。不是的话，判断目标数是在前一半还是后一半，如此这般的循环即可。</p>
-<p>这种思想应该在现实生活中还是经常用到的，比如<code>git bisect</code>（<a target="_blank" rel="noopener" href="http://www.ruanyifeng.com/blog/2018/12/git-bisect.html">看看大佬的介绍</a>）。<br>以及，让我想起以前 TVB 的《超级无敌掌门人》里面有个游戏叫“超级无敌开口中”，轮流在在100里面瞎说一个数，中了就受罚。特别是轮到说最后一个必中的数字时那种视死如归的神情，超搞笑。</p>
-<pre><code class="js">function getRandomNum(numMin, numMax) &#123;
-  return Math.round( Math.random()*(numMax-numMin) + numMin )
-&#125;  
-function getArr() &#123;
-  const arr = []
-  for(let i = 1, l = 100; i &lt;= l; i++) &#123;
-    arr.push(i)
-  &#125;
-  return arr
-&#125;
-// 随机生成 1 ~ 100 中的某数
-const num = getRandomNum(1, 100)
-// 生成 1 - 100 的数组
-const arr = getArr()
-function binarySearch(num, arr) &#123;
-  let start = arr.length
-  let end = 0
-  const getHalf = () =&gt; &#123;
-    let length = start + end
-    return (length % 2 === 0) ? (length / 2) : (length + 1) / 2
-  &#125;
-  // 取中值
-  let half = getHalf()
-  let current = arr[half]
-  while (current !== num) &#123;
-    if (current &gt; num) &#123;
-      start = half
-    &#125; else if (current &lt; num) &#123;
-      end = half
-    &#125;
-    half = getHalf()
-    current = arr[half]
-  &#125;
-  return half
-&#125;
-const idx = binarySearch(num, arr)
-console.log(idx, arr[idx], num)
+<p>在 <u><strong>项目&#x2F;themes&#x2F;正在生效的主题&#x2F;layout&#x2F;_partial&#x2F;after-footer.ejs</strong></u> 文件里，引入刚刚放好的 js 文件，然后初始化，插入代码：</p>
+<pre><code class="html">&lt;script src=&quot;/js/highlight.min.js&quot;&gt;&lt;/script&gt;
+&lt;script src=&quot;//cdnjs.cloudflare.com/ajax/libs/highlightjs-line-numbers.js/2.8.0/highlightjs-line-numbers.min.js&quot;&gt;&lt;/script&gt;
+&lt;script&gt;
+  $(function()&#123;
+    $(&#39;pre code&#39;).each((i, el) =&gt; &#123;
+    hljs.highlightElement(el);
+  &#125;);
+  $(&#39;code.hljs&#39;).each(function(i, el) &#123;
+     hljs.lineNumbersBlock(el);
+  &#125;);
+  &#125;());
+&lt;/script&gt;
 </code></pre>
-<h3 id="斐波那契数列"><a href="#斐波那契数列" class="headerlink" title="斐波那契数列"></a>斐波那契数列</h3><p>具体的数学意义就不说了，我也不懂，总而言之是满足这样的一个数列：F(0)&#x3D;0，F(1)&#x3D;1，F(n)&#x3D;F(n - 1)+F(n - 2)（n ≥ 3，n ∈ N*）</p>
-<pre><code class="js">// 第一反应就是递归，最简单最明晰。但效率最低，其实就是每次算出来的值没存起来，导致每个 n 位的值传进去都要重新递归的算
-function fibonacci(n) &#123;
-  if(n === 0 || n === 1) &#123;
-    return n
-  &#125;
-  return fibonacci(n-1) + fibonacci(n-2)
+<span id="more"></span>
+
+<h3 id="四、加上序号"><a href="#四、加上序号" class="headerlink" title="四、加上序号"></a>四、加上序号</h3><p>上面代码示例里的 <code>lineNumbersBlock</code> 方法其实就是加上序号的处理。因为 highlightjs 是没有序号的，需要自己添加。这里用了插件 <a target="_blank" rel="noopener" href="https://github.com/wcoder/highlightjs-line-numbers.js/">highlightjs-line-numbers.js</a>。代码就在上一步的示例里。</p>
+<img src="/2023/09/24/hexo-code-highlight/hexo-code-highlight.png" class="" title="样式错乱问题">
+
+<p>然后可能会出现以上样式问题，就是和 hexo 默认的表格样式冲突而已。下点重药，自己加样式修正一下。我就在新加的 <code>monokai-sublime.min.css</code> 里加上样式修正：</p>
+<pre><code class="css">pre code.hljs &#123;
+  padding: 0;
 &#125;
-// 改进一些，是个数列自然就可以用个数组来存
-// 把之前获得 n 位的值存起来，下次要拿就直接取就好
-function fibonacci2(n) &#123;
-  if(n === 0 || n === 1) &#123;
-    return n
-  &#125;
-  const arr = [0, 1]
-  for(let i = 2; i &lt;= n; i++) &#123;
-    arr[i] = arr[i-1] + arr[i-2]
-  &#125;
-  return arr[n]
+pre code .hljs-ln &#123;
+  margin: 0;
 &#125;
-// 改进一些，其实每次都是需要上两位就可以了，不需要用整个数组来存全部
-function fibonacci3(n) &#123;
-  if(n === 0 || n === 1) &#123;
-    return n
-  &#125;
-  let lastOne = 1 // n-1
-  let lastTwo = 0 // n-2
-  for(let i = 2; i &lt;= n; i++) &#123;
-    var current = lastOne + lastTwo
-    // n-2 和 n-1 分别获取后一位的值
-    lastTwo = lastOne
-    lastOne = current
-  &#125;
-  return current
+pre code td.hljs-ln-numbers &#123;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  text-align: center;
+  color: #9c9c9c;
+  border: none;
 &#125;
-// 第一种递归的方法，在浏览器 40 以后基本快跑不出来了
-// 第三种还是比第二种快那么些许
-console.time(&#39;fibonacci&#39;)
-console.log(fibonacci(40))
-console.timeEnd(&#39;fibonacci&#39;)
+pre code td.hljs-ln-code &#123;
+  padding-left: 1rem;
+  border: none;
+&#125;
 </code></pre>
+<p>至此，hexo 自主设置代码不同主题高亮完成。</p>
 
       
     </div>
     <footer class="article-footer">
       
-        <a data-url="https://blog.cchealthier.com/2020/10/21/algorithm/" data-id="clmyzjaws0003va9m2tsw08er" class="article-thumbs-up">赞一个(<span class="article-thumbs-up-num">0</span>)</a>
+        <a data-url="https://blog.cchealthier.com/2023/09/24/hexo-code-highlight/" data-id="clmyzjawy000sva9m3g5h82ku" class="article-thumbs-up">赞一个(<span class="article-thumbs-up-num">0</span>)</a>
       
-      <!-- <a data-url="https://blog.cchealthier.com/2020/10/21/algorithm/" data-id="clmyzjaws0003va9m2tsw08er" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2023/09/24/hexo-code-highlight/" data-id="clmyzjawy000sva9m3g5h82ku" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -237,19 +166,10 @@ console.timeEnd(&#39;fibonacci&#39;)
     
 <nav id="article-nav">
   
-    <a href="/2020/11/15/search/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Newer</strong>
-      <div class="article-nav-title">
-        
-          深度优先遍历(DFS)-栈和广度优先遍历(BFS)-队列的理解
-        
-      </div>
-    </a>
   
-  
-    <a href="/2020/08/30/puppeteer/" id="article-nav-older" class="article-nav-link-wrap">
+    <a href="/2023/09/23/react-basic-app-2/" id="article-nav-older" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Older</strong>
-      <div class="article-nav-title">玩一玩puppeteer</div>
+      <div class="article-nav-title">react 基础工程 Ⅱ（@reduxjs/toolkit &amp; @craco/craco &amp; vite）</div>
     </a>
   
 </nav>

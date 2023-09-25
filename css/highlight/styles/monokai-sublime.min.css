@@ -17,6 +17,7 @@ pre code td.hljs-ln-numbers {
   text-align: center;
   color: #9c9c9c;
   border: none;
+  width: 0; /* 没有这行，在 css 代码高亮序号那一栏会比别的类型代码宽 */
 }
 pre code td.hljs-ln-code {
   padding-left: 1rem;

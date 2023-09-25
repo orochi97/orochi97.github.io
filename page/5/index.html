@@ -74,6 +74,55 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-vite-server-import" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2022/03/19/vite-server-import/" class="article-date">
+  <time datetime="2022-03-19T07:32:20.000Z" itemprop="datePublished">2022-03-19</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2022/03/19/vite-server-import/">vite server运行时替换请求路径</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><a target="_blank" rel="noopener" href="https://vitejs.cn/guide/">介绍</a><br><a target="_blank" rel="noopener" href="https://github.com/vitejs/vite">仓库</a>（当前<a target="_blank" rel="noopener" href="https://github.com/vitejs/vite/tree/12be4d22405c85235e0842e5ebbc7ca6b1356a22">commit</a>）</p>
+<p><strong>核心吸引力：<br>使用浏览器原生ES模块功能，不做耗时的打包，达到极速的启动速度。同时达到真正的按需加载。</strong></p>
+<p>问题一：<br>第三方不是Esmodule的依赖库要预先处理成ES输出，暂存起来。使用预构建，将处理结果打包输出到node_modules&#x2F;.vite。记录在 <code>_metadata.json</code> 文件上，这里了称为“优化依赖元数据”。</p>
+<p>问题二：<br>依赖资源的请求。我们代码里写的都是分散地对ES module的引用，但实际请求的确实只有一份打包合并的文件。所以必然在运行时挟持了请求路径。这里借助一下 <a target="_blank" rel="noopener" href="https://modernjs.dev/docs/guides/usages/debug/unbundled#%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86%E5%92%8C%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9">modern.js</a> 官网的文字给予解释。vite server也是这么处理的。</p>
+        
+          <p class="article-more-link">
+            <a href="/2022/03/19/vite-server-import/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      
+      <!-- <a data-url="https://blog.cchealthier.com/2022/03/19/vite-server-import/" data-id="clmyzjax70033va9mbhxfbs7k" class="article-share-link">分享</a> -->
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-beijing-winter" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2022/03/14/beijing-winter/" class="article-date">
@@ -111,7 +160,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2022/03/14/beijing-winter/" data-id="clmxk7z020005c39m8xff3in2" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2022/03/14/beijing-winter/" data-id="clmyzjawt0007va9mayd4cxdq" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -164,7 +213,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2021/01/09/performance-api/" data-id="clmxk7z0c0020c39mgrh703hq" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2021/01/09/performance-api/" data-id="clmyzjax30022va9mc2ts2xdn" class="article-share-link">分享</a> -->
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%80%A7%E8%83%BD/" rel="tag">性能</a></li></ul>
@@ -213,7 +262,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2020/12/06/autumn/" data-id="clmxk7z010003c39mg9og2uut" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2020/12/06/autumn/" data-id="clmyzjaws0004va9mc0eqayx7" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -318,90 +367,11 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2020/12/06/webpack-speed/" data-id="clmxk7z0i003kc39m8x05avqe" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2020/12/06/webpack-speed/" data-id="clmyzjax8003kva9mhr5e8w70" class="article-share-link">分享</a> -->
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" rel="tag">工程化</a></li></ul>
 
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-api-defference" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/11/29/api-defference/" class="article-date">
-  <time datetime="2020-11-29T15:15:36.000Z" itemprop="datePublished">2020-11-29</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/11/29/api-defference/">几个相似（splice slice，substr substring）方法的区别</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>数组有 splice，slice 这两个方法，字符串也有类似的，长得很像，经常混了，这里记录下。</p>
-<h4 id="arrayObject-splice-index-howmany-item1-…-itemX"><a href="#arrayObject-splice-index-howmany-item1-…-itemX" class="headerlink" title="arrayObject.splice(index, howmany, item1, ….., itemX)"></a>arrayObject.splice(index, howmany, item1, ….., itemX)</h4><p>splice：绞接，捻接(两段绳子)的意思。该方法向&#x2F;从数组中添加&#x2F;删除项目，然后返回被删除的项目。该方法会直接对数组进行修改。</p>
-<p>index：必需。整数，规定添加&#x2F;删除项目的位置，使用负数可从数组结尾处规定位置。<br>howmany：必需。要删除的项目数量。如果设置为 0，则不会删除项目。<br>item1, …, itemX：可选。向数组添加的新项目。</p>
-<pre><code class="js">const arr = [1, 2, 3, 4]
-arr.splice(2, 0, 7, 7, 7) // 返回[]，arr = [1, 2, 7, 7, 7, 3, 4]
-arr.splice(2, 1, 7, 7, 7) // 返回[3]，arr = [1, 2, 7, 7, 7, 4]
-arr.splice(0, 1) // 返回[1]，arr = [2, 3, 4]
-arr.splice(-1, 1, 7, 7, 7) // 返回[4]，arr = [1, 2, 3, 7, 7, 7]
-</code></pre>
-<h4 id="arrayObject-slice-start-end"><a href="#arrayObject-slice-start-end" class="headerlink" title="arrayObject.slice(start, end)"></a>arrayObject.slice(start, end)</h4><p>slice：切片的意思。该方法可从已有的数组中返回选定的元素。返回一个新的数组，包含从 start 到 end （不包括该元素）的 arrayObject 中的元素。不会改变原数组。</p>
-<p>start：必需。规定从何处开始选取。如果是负数，那么它规定从数组尾部开始算起的位置。也就是说，-1 指最后一个元素，-2 指倒数第二个元素，以此类推。<br>end：可选。规定从何处结束选取。该参数是数组片断结束处的数组下标。如果没有指定该参数，那么切分的数组包含从 start 到数组结束的所有元素。如果这个参数是负数，那么它规定的是从数组尾部开始算起的元素。</p>
-<pre><code class="js">const arr = [1, 2, 3, 4]
-arr.slice(0, 0) // []
-arr.slice(0, 1) // [1]
-arr.slice(2, 3) // [3]
-arr.slice(0) // [1, 2, 3, 4]
-arr.slice(-2) // [3, 4]
-arr.slice(-2, -1) // [3]
-</code></pre>
-<p>字符串的 slice，substr，substring 方法</p>
-<h4 id="stringObject-slice-start-end"><a href="#stringObject-slice-start-end" class="headerlink" title="stringObject.slice(start, end)"></a>stringObject.slice(start, end)</h4><p>该方法可提取字符串的某个部分，并以新的字符串返回被提取的部分。跟数组一样不赘述</p>
-<pre><code class="js">&#39;1234567&#39;.slice(1, 3) // 23
-&#39;1234567&#39;.slice(-4, -1) // 456
-</code></pre>
-<h4 id="stringObject-substr-start-length"><a href="#stringObject-substr-start-length" class="headerlink" title="stringObject.substr(start, length)"></a>stringObject.substr(start, length)</h4><p>该方法可在字符串中抽取从 start 下标开始的指定数目的字符。<br><em><strong>注意：ECMAscript 没有对该方法进行标准化，因此反对使用它。</strong></em></p>
-<p>start：必需。要抽取的子串的起始下标。必须是数值。如果是负数，那么该参数声明从字符串的尾部开始算起的位置。也就是说，-1 指字符串中最后一个字符，-2 指倒数第二个字符，以此类推。<br>length：可选。子串中的字符数。必须是数值。如果省略了该参数，那么返回从 stringObject 的开始位置到结尾的字串。</p>
-<pre><code class="js">&#39;1234567&#39;.substr(1, 3) // 234
-&#39;1234567&#39;.substr(0) // 1234567
-&#39;1234567&#39;.substr(-4, 2) // 45
-</code></pre>
-<h4 id="stringObject-substring-start-stop"><a href="#stringObject-substring-start-stop" class="headerlink" title="stringObject.substring(start, stop)"></a>stringObject.substring(start, stop)</h4><p>该方法用于提取字符串中介于两个指定下标之间的字符。</p>
-<p>start：必需。一个非负的整数，规定要提取的子串的第一个字符在 stringObject 中的位置。<br>stop：可选。一个非负的整数，比要提取的子串的最后一个字符在 stringObject 中的位置多 1。如果省略该参数，那么返回的子串会一直到字符串的结尾。</p>
-<p><em><strong>注意：与 slice 和 substr 方法不同的是，substring 不接受负的参数。substring 功能与 slice 一样。</strong></em></p>
-<pre><code class="js">&#39;1234567&#39;.substring(1, 3) // 23
-&#39;1234567&#39;.substring(3, 1) // 23，如果 start 比 stop 大，那么该方法在提取子串之前会先交换这两个参数。
-&#39;1234567&#39;.substring(3) // 4567
-&#39;1234567&#39;.substring(-1, 1) // 1，参数 -1 被解析成 0
-</code></pre>
-
-      
-    </div>
-    <footer class="article-footer">
-      
-      <!-- <a data-url="https://blog.cchealthier.com/2020/11/29/api-defference/" data-id="clmxk7yzz0001c39mb0j14c4k" class="article-share-link">分享</a> -->
-      
-      
     </footer>
   </div>
   
@@ -427,6 +397,10 @@ arr.slice(-2, -1) // [3]
       <ul>
         
           <li>
+            <a href="/2023/09/24/hexo-code-highlight/">记录 hexo 使用 highlight.js 实现代码高亮</a>
+          </li>
+        
+          <li>
             <a href="/2023/09/23/react-basic-app-2/">react 基础工程 Ⅱ（@reduxjs/toolkit &amp; @craco/craco &amp; vite）</a>
           </li>
         
@@ -440,10 +414,6 @@ arr.slice(-2, -1) // [3]
         
           <li>
             <a href="/2023/07/26/node-stream/">NodeJS 里的 stream（流）</a>
-          </li>
-        
-          <li>
-            <a href="/2023/06/07/webpack-modulefederationplugin/">用 webpack ModuleFederationPlugin 搭建微前端</a>
           </li>
         
       </ul>

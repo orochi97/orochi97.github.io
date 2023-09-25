@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://blog.cchealthier.com/2023/09/24/hexo-code-highlight/</loc>
+    <lastmod>2023-09-25</lastmod>
+  </url>
+  <url>
     <loc>https://blog.cchealthier.com/2023/09/23/react-basic-app-2/</loc>
     <lastmod>2023-09-24</lastmod>
   </url>
@@ -85,11 +89,11 @@
     <lastmod>2023-05-15</lastmod>
   </url>
   <url>
-    <loc>https://blog.cchealthier.com/2022/11/07/vue-observer-dep-watcher/</loc>
+    <loc>https://blog.cchealthier.com/2020/07/26/vue-life/</loc>
     <lastmod>2023-04-21</lastmod>
   </url>
   <url>
-    <loc>https://blog.cchealthier.com/2020/07/26/vue-life/</loc>
+    <loc>https://blog.cchealthier.com/2022/11/07/vue-observer-dep-watcher/</loc>
     <lastmod>2023-04-21</lastmod>
   </url>
   <url>
@@ -165,11 +169,11 @@
     <lastmod>2023-04-21</lastmod>
   </url>
   <url>
-    <loc>https://blog.cchealthier.com/2022/03/14/beijing-winter/</loc>
+    <loc>https://blog.cchealthier.com/2022/10/18/binary-tree-traversal/</loc>
     <lastmod>2023-04-21</lastmod>
   </url>
   <url>
-    <loc>https://blog.cchealthier.com/2022/10/18/binary-tree-traversal/</loc>
+    <loc>https://blog.cchealthier.com/2022/03/14/beijing-winter/</loc>
     <lastmod>2023-04-21</lastmod>
   </url>
   <url>

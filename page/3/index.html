@@ -74,6 +74,100 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-fontend-engineering-2" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2023/04/21/fontend-engineering-2/" class="article-date">
+  <time datetime="2023-04-20T17:19:20.000Z" itemprop="datePublished">2023-04-21</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2023/04/21/fontend-engineering-2/">从零搭建前端工程（下）</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><em><strong>文章内容太多，分为上下两部分，这里是下半部分。上半部分在《<a href="/2023/03/06/fontend-engineering/">从零搭建前端工程（上）</a>》，此篇的内容有：</strong></em><br><em><strong>4. 使用 eslint + prettier 让代码健壮和优雅</strong></em><br><em><strong>5. 使用 husky + lint-staged 强制增量各类检查</strong></em><br><em><strong>6. 使用 @commitlint&#x2F;cli 规范提交信息</strong></em><br><em><strong>7. 使用 埋点（性能 + 错误） 让项目运行更好</strong></em></p>
+<hr>
+<hr>
+<h2 id="四、使用-eslint-prettier-让代码健壮和优雅"><a href="#四、使用-eslint-prettier-让代码健壮和优雅" class="headerlink" title="四、使用 eslint + prettier 让代码健壮和优雅"></a>四、使用 eslint + prettier 让代码健壮和优雅</h2><p>到 eslint 了，是不是让人又爱又恨。刚接的时候应该很不爽吧，动辄就来个错，这也错那也错。满屏尽是红 error。其实都是没有配好，也有处理好。eslint 是非常必要的，可以尽早发现一些错误及不合理，也可以统一一些写法，减少冲突等。比如，vue template 的属性顺序，import 的顺序等等。</p>
+<p>循例先上代码示例，在项目根目录创建一份 <code>.eslintrc.js</code>，记得前面有个点的，上书代码：</p>
+<pre><code class="js">module.exports = &#123;
+  env: &#123;
+    // 关键字指定你想启用的环境
+    browser: true,
+    es2021: true,
+  &#125;,
+  extends: [
+    // 一个配置文件可以被基础配置中的已启用的规则继承
+    &#39;plugin:vue/essential&#39;,
+    &#39;plugin:vue/recommended&#39;,
+    &#39;standard&#39;,
+    &#39;plugin:prettier/recommended&#39;,
+  ],
+  parserOptions: &#123;
+    // 允许你指定你想要支持的 JavaScript 语言选项
+    ecmaVersion: 12,
+    sourceType: &#39;module&#39;,
+  &#125;,
+  plugins: [
+    // 支持使用第三方插件，检查自定义的语法
+    &#39;vue&#39;, // 省略了 eslint-plugin- 前缀，插件全称为 eslint-plugin-vue
+    &#39;prettier&#39;,
+  ],
+  rules: &#123;
+    // 直接声明的 eslint 规则
+    semi: [&#39;error&#39;, &#39;always&#39;], // 规则为：需要结束分号，优先级为 error，即抛错
+    // 当最后一个元素或属性与闭括号 ] 或 &#125; 在 不同的行时，要求使用拖尾逗号
+    // 当在 同一行时，禁止使用拖尾逗号。https://eslint.bootcss.com/docs/rules/comma-dangle
+    &#39;comma-dangle&#39;: [&#39;error&#39;, &#39;always-multiline&#39;],
+    &#39;no-console&#39;: [&#39;error&#39;, &#123; allow: [&#39;info&#39;, &#39;warn&#39;, &#39;error&#39;] &#125;],
+    &#39;no-unused-vars&#39;: [&#39;error&#39;, &#123; args: &#39;after-used&#39; &#125;],
+    // &quot;plugin1/rule1&quot;: &quot;error&quot; 配置定义在插件中的一个规则的时候，必须使用 插件名/规则ID 的形式
+    &#39;prettier/prettier&#39;: &#39;error&#39;,
+  &#125;,
+  globals: &#123;
+    var1: &#39;writable&#39;, // 对 var1 这个全局变量允许重写
+    var2: &#39;readonly&#39;, // 对 var2 这个全局变量只允许读取
+    var3: &#39;off&#39;, // 不支持 var3 这个全局变量
+  &#125;,
+&#125;;
+</code></pre>
+<p>说一下可能配置较多的。</p>
+        
+          <p class="article-more-link">
+            <a href="/2023/04/21/fontend-engineering-2/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      
+      <!-- <a data-url="https://blog.cchealthier.com/2023/04/21/fontend-engineering-2/" data-id="clmyzjaww000kva9mfxhz0mwe" class="article-share-link">分享</a> -->
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" rel="tag">工程化</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-fontend-engineering" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2023/03/06/fontend-engineering/" class="article-date">
@@ -129,7 +223,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2023/03/06/fontend-engineering/" data-id="clmxk7z06000lc39m7bszc1t8" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2023/03/06/fontend-engineering/" data-id="clmyzjawx000qva9m9sk60dm7" class="article-share-link">分享</a> -->
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" rel="tag">工程化</a></li></ul>
@@ -374,7 +468,7 @@ export default &#123;
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2023/02/07/multi-function-select/" data-id="clmxk7z09001ec39m0u0xe411" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2023/02/07/multi-function-select/" data-id="clmyzjax0001hva9m4ce3giax" class="article-share-link">分享</a> -->
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%80%A7%E8%83%BD/" rel="tag">性能</a></li></ul>
@@ -432,7 +526,7 @@ export default &#123;
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2022/11/07/vue-observer-dep-watcher/" data-id="clmxk7z0h0036c39mcxu7hq5f" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2022/11/07/vue-observer-dep-watcher/" data-id="clmyzjax70038va9mccnbas5o" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -479,100 +573,7 @@ export default &#123;
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2022/10/19/2022-autumn/" data-id="clmxk7yzx0000c39mafvs1s91" class="article-share-link">分享</a> -->
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-binary-tree-traversal" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2022/10/18/binary-tree-traversal/" class="article-date">
-  <time datetime="2022-10-18T13:35:33.000Z" itemprop="datePublished">2022-10-18</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E7%AE%97%E6%B3%95/">算法</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2022/10/18/binary-tree-traversal/">二叉树前序中序后序遍历</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>二叉树的遍历，详细概念还是看搜索引擎总结吧，<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E4%BA%8C%E5%8F%89%E6%A0%91%E9%81%8D%E5%8E%86/9796049">二叉树遍历</a></p>
-<p>二叉树，前序、中序、后序，遍历，都是深度优先遍历<br>前中后指的是根节点的访问顺序<br>对最底层的节点而言，前中后就是三个节点<br>对于非最底层的节点而言，左右两个节点就是分支，不仅仅是三个节点</p>
-<pre><code class="js">const tree = &#123;
-  value: 1,
-  left: &#123;
-    value: 2,
-    left: &#123;
-      value: 4,
-      left: &#123;
-        value: 8,
-      &#125;,
-      right: &#123;
-        value: 9,
-      &#125;,
-    &#125;,
-    right: &#123;
-      value: 5,
-      left: &#123;
-        value: 10,
-      &#125;,
-      right: &#123;
-        value: 11,
-      &#125;,
-    &#125;,
-  &#125;,
-  right: &#123;
-    value: 3,
-    left: &#123;
-      value: 6,
-      left: &#123;
-        value: 12,
-      &#125;,
-      right: &#123;
-        value: 13,
-      &#125;,
-    &#125;,
-    right: &#123;
-      value: 7,
-      left: &#123;
-        value: 14,
-      &#125;,
-      right: &#123;
-        value: 15,
-      &#125;,
-    &#125;,
-  &#125;,
-&#125;;
-</code></pre>
-        
-          <p class="article-more-link">
-            <a href="/2022/10/18/binary-tree-traversal/#more">Read More</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      
-      <!-- <a data-url="https://blog.cchealthier.com/2022/10/18/binary-tree-traversal/" data-id="clmxk7z020007c39m9ikka0ml" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2022/10/19/2022-autumn/" data-id="clmyzjawo0000va9m31z514u8" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -600,6 +601,10 @@ export default &#123;
       <ul>
         
           <li>
+            <a href="/2023/09/24/hexo-code-highlight/">记录 hexo 使用 highlight.js 实现代码高亮</a>
+          </li>
+        
+          <li>
             <a href="/2023/09/23/react-basic-app-2/">react 基础工程 Ⅱ（@reduxjs/toolkit &amp; @craco/craco &amp; vite）</a>
           </li>
         
@@ -613,10 +618,6 @@ export default &#123;
         
           <li>
             <a href="/2023/07/26/node-stream/">NodeJS 里的 stream（流）</a>
-          </li>
-        
-          <li>
-            <a href="/2023/06/07/webpack-modulefederationplugin/">用 webpack ModuleFederationPlugin 搭建微前端</a>
           </li>
         
       </ul>
