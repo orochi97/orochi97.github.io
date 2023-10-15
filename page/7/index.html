@@ -74,6 +74,115 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-puppeteer" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/08/30/puppeteer/" class="article-date">
+  <time datetime="2020-08-30T09:48:13.000Z" itemprop="datePublished">2020-08-30</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/08/30/puppeteer/">玩一玩puppeteer</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><a target="_blank" rel="noopener" href="https://zhaoqize.github.io/puppeteer-api-zh_CN/">puppeteer</a>官网上写着：</p>
+<blockquote>
+<p>Puppeteer 是一个 Node 库，它提供了一个高级 API 来通过 DevTools 协议控制 Chromium 或 Chrome。Puppeteer 默认以 headless 模式运行，但是可以通过修改配置文件运行“有头”模式。</p>
+</blockquote>
+<p>其实就是个浏览器，给了许多方法让我们可以控制这个浏览器，比如打开某某网页，输入什么字符，点击哪个按钮。看起来就像是用程序来模拟人工的行为。<br>这样就表示了它可以用来自动化测试。搭配 jest 或 mocha 之类的测试框架，进行e2e测试，模拟一个人去访问网站，进行一些操作。<br>当然不止这一个方案，还有 <a target="_blank" rel="noopener" href="http://www.selenium.org.cn/">selenium</a> 和在这之上的 <a target="_blank" rel="noopener" href="https://nightwatchjs.org/">night-watch</a>，也是干 web 自动化测试的活。</p>
+<p>我们项目上使用它来跑自动化测试的，我自己用它来做爬虫，奸笑~<br>可能也不叫爬虫，就是上新闻网站扫一下热搜，到图片库搜点图片之类的。</p>
+<h3 id="安装："><a href="#安装：" class="headerlink" title="安装："></a>安装：</h3><p>安装是个蛋疼的事，因为这个用到chromium，这玩意在谷歌仓库。所以如果不能科学上网，那就只能修改为淘宝源。</p>
+<pre><code class="bash">env puppeteer_download_host=https://npm.taobao.org/mirrors npm i puppeteer
+
+npm config set puppeteer_download_host  https://npm.taobao.org/mirrors
+npm i puppeteer
+</code></pre>
+<p>年代久远，记得都是可以的。不保证时效性…</p>
+<p>我们项目一开始使用它来截图</p>
+<pre><code class="js">const puppeteer = require(&#39;puppeteer&#39;)
+;(async () =&gt; &#123;
+  const browser = await puppeteer.launch(&#123;
+    headless: true // 无头就是不要弹出浏览器
+  &#125;)
+  const page = await browser.newPage()
+  await page.goto(&#39;https://www.baidu.com&#39;)
+  await page.setViewport(&#123;
+    width: 1200,
+    height: 800
+  &#125;)
+  await page.screenshot(&#123;
+    path: &#39;puppeteer.png&#39;,
+    fullPage: true
+  &#125;)
+  await browser.close()
+&#125;)()
+</code></pre>
+<p>来看下用它来搜百度热搜，之所以对 puppeteer 感兴趣，就是同事写了一篇这个教程，里面就是演示了爬热搜。</p>
+<pre><code class="js">const puppeteer = require(&#39;puppeteer&#39;)
+;(async () =&gt; &#123;
+  const browser = await puppeteer.launch(&#123;
+    headless: true // 无头就是不要弹出浏览器
+  &#125;)
+  const page = await browser.newPage()
+  await page.goto(&#39;http://top.baidu.com/buzz?b=1&amp;fr=topindex&#39;, &#123;
+    timeout: 0, // 设置超时时间为0
+    waitUntil: &#39;domcontentloaded&#39; // 有多个状态可设置，这里设置为 dom 渲染完成
+  &#125;)
+  // 有时候网速卡，加载慢，容易超时报错，所以上面把超时时间去掉
+  // 同时网页渲染也需要时间，可以等一下，
+  // 比如 await page.waitFor(1000) 等待1000ms
+  // 比如我之前爬图片的时候，都知道图片是相当耗时的
+  // 所以我写成等图片的 dom 可见即可，可见包括了它已经被赋予 src，不需要等到图片下载并渲染完成
+  // 然后获取其 src，再通过别的方法下载
+  // await page.waitForSelector(dom, &#123; visible: true, timeout: 0 &#125;)
+  const list = await page.evaluate((dom) =&gt; &#123;  // 爬取内容
+    // 这个 dom 需要去网站上看实际结构，很好找，跟 jQuery 一样
+    const $doms = document.querySelectorAll(&#39;.mainBody .keyword a&#39;)
+    const list = Array.from($doms).map(($dom) =&gt; &#123;
+      return &#123;
+        href: $dom.href,
+        text: $dom.innerText
+      &#125;
+    &#125;)
+    return list
+  &#125;)
+  // 这个 list 就记录了热搜的标题和网址
+  await page.close()
+  await browser.close()
+&#125;)()
+</code></pre>
+<p>对网页的抓取还有这个<a target="_blank" rel="noopener" href="https://github.com/cheeriojs/cheerio/wiki/Chinese-README">cheerio</a>，在 node 里面像 jQuery 一样获取dom。<br>不过好像对单页面的网站比较麻烦。因为是抓了整个网页内容下来，再来分析页面。那对于 SPA 抓下来也是一个容器一个js，没有实体dom。所以具体看用途啦。</p>
+<p>puppeteer还有很多牛的功能，这里只是用到了冰山一角，还能做更多有趣的事。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      
+      <!-- <a data-url="https://blog.cchealthier.com/2020/08/30/puppeteer/" data-id="clnqztawl002e119mejeuai5i" class="article-share-link">分享</a> -->
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-shenzhen-guanhucun" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2020/08/30/shenzhen-guanhucun/" class="article-date">
@@ -118,7 +227,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2020/08/30/shenzhen-guanhucun/" data-id="clmyzjax6002tva9mc433gceb" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2020/08/30/shenzhen-guanhucun/" data-id="clnqztawn002u119m0cekfcu7" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -281,7 +390,7 @@ addTimer(load1000, 2000)
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2020/08/30/promise-api/" data-id="clmyzjax4002ava9m4psi8uv6" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2020/08/30/promise-api/" data-id="clnqztawk0027119m34rx2kb9" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -634,7 +743,7 @@ console.log(Object(_util__WEBPACK_IMPORTED_MODULE_0__[&quot;default&quot;])(&#39
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2020/08/16/webpackJsonp/" data-id="clmyzjax9003rva9mbr9v6pc5" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2020/08/16/webpackJsonp/" data-id="clnqztawt005s119m8jzp4f9h" class="article-share-link">分享</a> -->
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" rel="tag">工程化</a></li></ul>
@@ -843,115 +952,7 @@ nextTick(() =&gt; &#123;
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2020/08/16/next-tick/" data-id="clmyzjax1001ova9mg5ex3eez" class="article-share-link">分享</a> -->
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-vertical-middle" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/07/29/vertical-middle/" class="article-date">
-  <time datetime="2020-07-29T14:30:18.000Z" itemprop="datePublished">2020-07-29</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/07/29/vertical-middle/">垂直居中的几个方法</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>四种方法，先在外面放四个容器, 赋予 “.container” 类。让其子元素居中，先赋予 “.box” 类，水平居中。</p>
-<pre><code class="xml">&lt;!DOCTYPE&gt;
-&lt;html xmlns=&quot;http://www.w3.org/1999/xhtml&quot;&gt;
-&lt;head&gt;
-&lt;meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=utf-8&quot; /&gt;
-&lt;title&gt;baidu&lt;/title&gt;
-&lt;/head&gt;
-&lt;style type=&quot;text/css&quot;&gt;
-.container &#123;
-  width: 22%;
-  height: 300px;
-  float: left;
-  background-color: #abcdef;
-  margin: 0 10px;
-  position: relative;
-&#125;
-.box &#123;
-  width: 100px;
-  height: 100px;
-  background-color: red;
-  text-align: center;
-&#125;
-&lt;!-- 绝对定位大法，设置为绝对定位，四个方向位移为0，外边距设为auto --&gt;
-.middle1 &#123;
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  margin: auto;
-&#125;
-&lt;!-- flex弹性布局，特别容易完成这个事 --&gt;
-.middle2 &#123;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-&#125;
-&lt;!-- 利用表格居中，注意的是还要多一层table-cell，真正居中是在table-cell --&gt;
-.middle3 &#123;
-  display: table-cell;
-  vertical-align: middle;
-  background-color: initial;
-&#125;
-.block &#123;
-  display: inline-block;
-&#125;
-&lt;!-- 绝对定位加translate大法，水平垂直位移50%，translate里面的50%是相对于自己的，所以不知宽高也可以使用 --&gt;
-.middle4 &#123;
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translateX(-50%) translateY(-50%);
-&#125;
-&lt;/style&gt;
-&lt;body&gt;
-&lt;div class=&quot;container&quot;&gt;&lt;div class=&quot;box middle1&quot;&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;div class=&quot;container middle2&quot;&gt;&lt;div class=&quot;box&quot;&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;div class=&quot;container&quot; style=&quot;display: table;&quot;&gt;
-  &lt;div class=&quot;box middle3&quot;&gt;
-    &lt;p class=&quot;box block&quot;&gt;&lt;/p&gt;
-  &lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&quot;container&quot;&gt;&lt;div class=&quot;box middle4&quot;&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;/body&gt;
-&lt;/html&gt;
-</code></pre>
-<p>总结：个人觉得，首先 <a target="_blank" rel="noopener" href="http://www.ruanyifeng.com/blog/2015/07/flex-grammar.html">flex</a> 布局最方便也最帅气。然后绝对定位加 <a target="_blank" rel="noopener" href="https://developer.mozilla.org/en-US/docs/Web/CSS/transform-function/translate">translate</a> 也好理解。至于第一种绝对定位加四个方向位移为0，其实不太理解其原理~ &#x3D; &#x3D;！</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      
-      <!-- <a data-url="https://blog.cchealthier.com/2020/07/29/vertical-middle/" data-id="clmyzjax70031va9m2iy900vn" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2020/08/16/next-tick/" data-id="clnqztawi001l119m66qj2lkb" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -979,6 +980,10 @@ nextTick(() =&gt; &#123;
       <ul>
         
           <li>
+            <a href="/2023/10/15/react-vite-qiankun/">react 用 vite 构建 &amp; 用 qiankun 做微前端</a>
+          </li>
+        
+          <li>
             <a href="/2023/09/24/hexo-code-highlight/">记录 hexo 使用 highlight.js 实现代码高亮</a>
           </li>
         
@@ -992,10 +997,6 @@ nextTick(() =&gt; &#123;
         
           <li>
             <a href="/2023/08/23/webpack5-background-url/">webpack5 下 background url 图片打包失败</a>
-          </li>
-        
-          <li>
-            <a href="/2023/07/26/node-stream/">NodeJS 里的 stream（流）</a>
           </li>
         
       </ul>
@@ -1017,7 +1018,7 @@ nextTick(() =&gt; &#123;
   <div class="widget-wrap">
     <h3 class="widget-title">标签</h3>
     <div class="widget">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nginx/" rel="tag">nginx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" rel="tag">工程化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%80%A7%E8%83%BD/" rel="tag">性能</a></li></ul>
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nginx/" rel="tag">nginx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" rel="tag">工程化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BE%AE%E5%89%8D%E7%AB%AF/" rel="tag">微前端</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%80%A7%E8%83%BD/" rel="tag">性能</a></li></ul>
     </div>
   </div>
 
@@ -1027,7 +1028,7 @@ nextTick(() =&gt; &#123;
   <div class="widget-wrap">
     <h3 class="widget-title">标签云</h3>
     <div class="widget tagcloud">
-      <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/nginx/" style="font-size: 13.33px;">nginx</a> <a href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" style="font-size: 20px;">工程化</a> <a href="/tags/%E6%80%A7%E8%83%BD/" style="font-size: 16.67px;">性能</a>
+      <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/nginx/" style="font-size: 13.33px;">nginx</a> <a href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" style="font-size: 20px;">工程化</a> <a href="/tags/%E5%BE%AE%E5%89%8D%E7%AB%AF/" style="font-size: 13.33px;">微前端</a> <a href="/tags/%E6%80%A7%E8%83%BD/" style="font-size: 16.67px;">性能</a>
     </div>
   </div>
 
@@ -1036,7 +1037,7 @@ nextTick(() =&gt; &#123;
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/09/">九月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/08/">八月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">七月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/06/">六月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/05/">五月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/04/">四月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/03/">三月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/02/">二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">十一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">十月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">九月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/10/">十月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/09/">九月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/08/">八月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">七月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/06/">六月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/05/">五月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/04/">四月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/03/">三月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/02/">二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">十一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">十月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">九月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a></li></ul>
     </div>
   </div>
 

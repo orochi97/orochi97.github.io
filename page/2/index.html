@@ -74,6 +74,128 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-node-stream" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2023/07/26/node-stream/" class="article-date">
+  <time datetime="2023-07-26T02:58:23.000Z" itemprop="datePublished">2023-07-26</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2023/07/26/node-stream/">NodeJS 里的 stream（流）</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>流文件？文件流？其实很多语言都有，这里只是对于 NodeJS 里的一些流的用法做一个记录。</p>
+<p>关于“流”的定义，<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/stream/62819745?fr=ge_ala">百度百科</a>的介绍也没有说出个所以然。我个人理解，就是顾名思义，类似于“水流”般的存在和运动，只不过实体不是水，而是二进制。作用是啥，缓冲效果，积少成多。对于大文件的读写，或者网络传输其实都用到流。</p>
+<p>这里先分享下两篇大佬的文章：</p>
+<ul>
+<li>《<a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?__biz=MzUxNzk1MjQ0Ng==&mid=2247484099&idx=1&sn=49778ebe663d936398b728c08376a7db&chksm=f9910412cee68d04bd409eb21b3a37c34904083a79b380d247371f6de2132aaf0cf37d0c84b2&scene=21#wechat_redirect">说Node.js做后端开发，stream有必要了解下</a>》</li>
+<li>以及绕不开的二进制对象 《<a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?__biz=MzUxNzk1MjQ0Ng==&mid=2247484111&idx=1&sn=1cb26d729d78fe8da2bbd93b61414535&chksm=f991041ecee68d086c8132c3e46934595e5219a4e8436111b1e624435d88dffdda1ddfe97f52&scene=21#wechat_redirect">Node进阶-探究不在V8堆内存中存储的Buffer对象</a>》。</li>
+</ul>
+<p>文章里也介绍了 stream 的一些用法，这里再记录巩固一下。这里也有我个人对于流操作的实操：《<a href="/2023/05/13/file-slice-upload/">文件切片上传（断点续传）</a>》。</p>
+<p>另外，官方文档镇楼：《<a target="_blank" rel="noopener" href="https://origin.nodejs.org/dist/latest-v20.x/docs/api/stream.html">Node.js v20.5.0 documentation</a>》。</p>
+<h4 id="1、简单的文件流读取写入，记得是-读取流-pipe-写入流-。"><a href="#1、简单的文件流读取写入，记得是-读取流-pipe-写入流-。" class="headerlink" title="1、简单的文件流读取写入，记得是 读取流.pipe(写入流)。"></a>1、简单的文件流读取写入，记得是 <code>读取流.pipe(写入流)</code>。</h4><pre><code class="js">const fs = require(&#39;fs&#39;);
+const readStream = fs.createReadStream(读取文件地址);
+const writeStream = fs.createWriteStream(写入文件地址);
+// 通过 pipe 执行拷贝，数据流转
+readStream.pipe(writeStream);
+// 数据读取完成监听，即拷贝完成
+readStream.on(&#39;end&#39;, function () &#123;
+  console.log(&#39;拷贝完成&#39;);
+&#125;);
+</code></pre>
+<h4 id="2、网络响应也可以用-stream-方式返回。也就是-response-对象是一个写入流，写回到请求的浏览器前。"><a href="#2、网络响应也可以用-stream-方式返回。也就是-response-对象是一个写入流，写回到请求的浏览器前。" class="headerlink" title="2、网络响应也可以用 stream 方式返回。也就是 response 对象是一个写入流，写回到请求的浏览器前。"></a>2、网络响应也可以用 stream 方式返回。也就是 response 对象是一个写入流，写回到请求的浏览器前。</h4><pre><code class="js">const fs = require(&#39;fs&#39;);
+const http = require(&#39;http&#39;);
+const server = http.createServer(function (req, res) &#123;
+  const readStream = fs.createReadStream(读取文件地址);
+  readStream.pipe(res); // 将 res 作为 stream 的 dest
+&#125;);
+server.listen(8000);
+</code></pre>
+<h4 id="3、根据上面文章对于-buffer-的介绍，测试确实不占内存"><a href="#3、根据上面文章对于-buffer-的介绍，测试确实不占内存" class="headerlink" title="3、根据上面文章对于 buffer 的介绍，测试确实不占内存"></a>3、根据上面文章对于 buffer 的介绍，测试确实不占内存</h4><pre><code class="js">const fs = require(&#39;fs&#39;);
+const json = &#123;&#125;;
+for(let i = 0; i &lt; 100; i++) &#123;
+  json[i] = fs.createReadStream(&#39;package-lock.json&#39;);
+  // json[i] = fs.readFileSync(&#39;package-lock.json&#39;);
+&#125;
+for (const [key,value] of Object.entries(process.memoryUsage()))&#123;
+  console.log(`Memory usage by $&#123;key&#125;, $&#123;value/1000000&#125;MB `);
+&#125;
+</code></pre>
+<p><strong>所以 node 做 server 的时候对于文件操作可以用流形式，减少内存泄露的可能性。</strong><br>依然大佬文章分享《<a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?__biz=MzUxNzk1MjQ0Ng==&mid=2247484183&idx=1&sn=5f29dc6c42c749397cee702145f0cab0&chksm=f99105c6cee68cd04f89181455ba37e18ab604a3102e1ded3e31a5c3cea28178c1023b917e89&cur_album_id=1529105963545313281&scene=190#rd">Node.js内存溢出时如何处理？</a>》。</p>
+<h4 id="4、可以在运输过程中修改内容"><a href="#4、可以在运输过程中修改内容" class="headerlink" title="4、可以在运输过程中修改内容"></a>4、可以在运输过程中修改内容</h4><p>如果有用过 <a target="_blank" rel="noopener" href="https://www.gulpjs.com.cn/">gulp</a> 打包过前端代码的话，可能会有印象它的用法就有流用法如 <code>src.pipe(transform).pipe(dest)</code> 这样子。<br>也就是数据可以在流管道中进行修改。靠的就是 <code>stream.Transform</code> 流。用法也很简单：</p>
+<pre><code class="js">const stream = require(&#39;stream&#39;);
+const myTransform = new stream.Transform(&#123;
+  transform(chunk, encoding, callback) &#123;
+    const content = 
+`/* prefix */
+$&#123;chunk.toString()&#125;
+/* suffix */`
+    callback(null, content);
+  &#125;
+&#125;);
+</code></pre>
+<p><code>src.pipe(dest)</code> 这样返回的是后者的写入流，也就是能写在中间的 <code>src.pipe(transform/duplex).pipe(dest)</code> 必须是个双工流，既可以是读取流也可以是写入流。</p>
+<h4 id="5、一些事件示例"><a href="#5、一些事件示例" class="headerlink" title="5、一些事件示例"></a>5、一些事件示例</h4><pre><code class="js">readStream.on(&#39;data&#39;, (chunk) =&gt; &#123; // chunk 传输的流二进制
+  console.log(&#39;读取流 data 事件在传输时触发&#39;);
+&#125;);
+readStream.on(&#39;end&#39;, () =&gt; &#123;
+  console.log(&#39;读取流 end 事件在消费完毕时触发&#39;);
+&#125;);
+readStream.on(&#39;close&#39;, () =&gt; &#123;
+  console.log(&#39;读取流 close 事件在 end 事件后触发&#39;);
+&#125;);
+writeStream.on(&#39;drain&#39;, () =&gt; &#123;
+  console.log(&#39;写入流 drain 事件在可以接收更多的数据时触发&#39;);
+&#125;);
+writeStream.on(&#39;pipe&#39;, (src) =&gt; &#123; // src =&gt; 读取流对象
+  console.log(&#39;写入流 pipe 事件在读取流导入写入流的 pipe 操作时触发&#39;);
+&#125;);
+writeStream.on(&#39;error&#39;, (error) =&gt; &#123; // src =&gt; 读取流对象
+  console.log(&#39;写入流在流通道关闭后再写入就会报错&#39;,  error);
+&#125;);
+writeStream.on(&#39;finish&#39;, () =&gt; &#123;
+  console.log(&#39;写入流 finish 事件调用 end 方法触发&#39;); 
+&#125;);
+writeStream.on(&#39;close&#39;, () =&gt; &#123;
+  console.log(&#39;写入流 close 事件在 finish 事件后触发&#39;);
+&#125;);
+</code></pre>
+<p>最后再放两篇国外大佬写的介绍文章，不必要全看，看看代码示例也可以了。</p>
+<ul>
+<li>《<a target="_blank" rel="noopener" href="https://www.freecodecamp.org/news/node-js-streams-everything-you-need-to-know-c9141306be93/">Node.js Streams: Everything you need to know</a>》</li>
+<li>《<a target="_blank" rel="noopener" href="https://nodesource.com/blog/understanding-streams-in-nodejs/">Understanding Streams in Node.js</a>》</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      
+      <!-- <a data-url="https://blog.cchealthier.com/2023/07/26/node-stream/" data-id="clnqztawk001x119mf3qj9w0r" class="article-share-link">分享</a> -->
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-webpack-modulefederationplugin" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2023/06/07/webpack-modulefederationplugin/" class="article-date">
@@ -145,10 +267,10 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2023/06/07/webpack-modulefederationplugin/" data-id="clmyzjax8003gva9m73kzamho" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2023/06/07/webpack-modulefederationplugin/" data-id="clnqztawp003m119mdc8k9hda" class="article-share-link">分享</a> -->
       
       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" rel="tag">工程化</a></li></ul>
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" rel="tag">工程化</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%BE%AE%E5%89%8D%E7%AB%AF/" rel="tag">微前端</a></li></ul>
 
     </footer>
   </div>
@@ -246,7 +368,7 @@ export default App;
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2023/05/31/react-basic-app/" data-id="clmyzjax5002mva9m6kth0fve" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2023/05/31/react-basic-app/" data-id="clnqztawm002j119m5ioncgf3" class="article-share-link">分享</a> -->
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" rel="tag">工程化</a></li></ul>
@@ -302,7 +424,7 @@ export default App;
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2023/05/19/performance-optimize/" data-id="clmyzjax30027va9mhk58a49z" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2023/05/19/performance-optimize/" data-id="clnqztawk0024119m4zeh3p42" class="article-share-link">分享</a> -->
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%80%A7%E8%83%BD/" rel="tag">性能</a></li></ul>
@@ -353,149 +475,9 @@ export default App;
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2023/05/13/file-slice-upload/" data-id="clmyzjaww000hva9m7bo569cp" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2023/05/13/file-slice-upload/" data-id="clnqztawe000h119mbw0ac3nd" class="article-share-link">分享</a> -->
       
       
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-nginx-basic" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2023/04/21/nginx-basic/" class="article-date">
-  <time datetime="2023-04-21T13:33:48.000Z" itemprop="datePublished">2023-04-21</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E6%9C%8D%E5%8A%A1/">服务</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2023/04/21/nginx-basic/">nginx 的基础用法 &amp; linux（centos）下支持 https 和 http2</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>其实之前写过一篇相关的《<a href="/2022/03/26/nginx/">记录下 nginx 使用配置</a>》，关于 nginx 的一些稍微复杂的场景。然后发现日常的基础用法，反而记不住。这里就记录一下。</p>
-<p>安装，mac 可以用 brew 下载。windows 的也很简单，去<a target="_blank" rel="noopener" href="http://nginx.org/en/download.html">官网</a>下载个压缩包就行了。至于 linux 的，就网上搜搜啦，我记得也很简单。</p>
-<pre><code class="bash"># 安装
-brew install nginx
-
-#查看
-brew info nginx
-</code></pre>
-<p>查看信息，可以看到配置文件在 <code>/opt/homebrew/etc/nginx/nginx.conf</code>。</p>
-<p>命令</p>
-<pre><code class="bash"># 启动
-nginx
-
-# 刷新，改了 nginx.conf 文件，要重新生效
-nginx -s reload
-
-# 关闭
-nginx -s stop
-</code></pre>
-<p>默认端口是 8080。所以直接访问本地地址 <code>http://localhost:8080/</code>，看到有显示 <strong>Welcome to nginx!</strong> 字样就是启动成功了。</p>
-<p>其实 nginx.conf 已经写了例子和注释，这里只是稍微补充点。</p>
-<p>root：资源文件夹<br>index： 默认的 index 文件</p>
-<pre><code class="yaml">location / &#123;
-  root   /电脑地址/nginx;
-  index  index.html index.htm;
-&#125;
-</code></pre>
-<p>如果要配置不同路由访问不同的文件，<code>root</code> 要改成 <code>alias</code>，比如访问 <code>http://localhost:8080/page</code></p>
-<pre><code class="yaml">location /page &#123;
-  alias /电脑地址/nginx;
-  index page.html;
-&#125;
-</code></pre>
-<p>当然最好是写个兜底返回。在 vue 或者 react 使用 router 时，兜底返回默认 index.html。不然每增加一个路由就要写多一个配置很麻烦。</p>
-<pre><code class="yaml">location ~* ^/* &#123;
-  root   /电脑地址/nginx;
-  try_files $uri $uri/ /index.html;
-&#125;
-</code></pre>
-<p><strong>注意</strong><br>root 与 alias<br>两者区别在于 nginx 如何解释 location 后面的 url</p>
-<p><strong>root:</strong><br>语法：root path<br>默认值：root html<br>配置段：http、server、location、if<br>处理结果：root 路径＋ location 路径</p>
-<p><strong>alias:</strong><br>语法：alias path<br>配置段：location<br>处理结果：使用 alias 路径替换 location 路径</p>
-<p><strong>所以用正则匹配写路径的要注意写好 root 或 alias，不然找不到资源就会出现 403！</strong></p>
-<p>可以写多个server，启动多个服务</p>
-<pre><code class="yaml">server &#123;
-  listen       3000;
-  server_name  0.0.0.0;
-
-  location / &#123;
-    root   /电脑地址/nginx;
-    index  3000.html 3000.htm;
-  &#125;
-&#125;
-</code></pre>
-<p>代理 ~ 为区分大小写，~*为不区分大小写，其他符号则请查询官网啦。</p>
-<pre><code class="yaml">location ~ /api/* &#123;
-  proxy_pass   http://localhost:3000;
-&#125;
-</code></pre>
-<p>https服务，声明好证书即可。这里只是把其中证书配置列出来，实际上 nginx.conf 的例子还有挺多配置，一般我们不是运维，应该默认就够了。作为调试用，可能都不需要启动到 https server。</p>
-<pre><code class="yaml">server &#123;
-  ssl_certificate      /电脑地址/nginx/cert/cert.pem;
-  ssl_certificate_key  /电脑地址/nginx/cert/server.key;
-&#125;
-</code></pre>
-<p>开启文本压缩</p>
-<pre><code class="yaml">http &#123;
-  gzip on;
-  # 压缩比例，比例越大，压缩时间越长。默认是1
-  gzip_comp_level 6;
-  # 哪些文件可以被压缩
-  gzip_types text/xml text/plain text/css application/javascript application/x-javascript application/rss+xml;
-&#125;
-</code></pre>
-<p>linux 下支持 https 和 http2，也是网上搜集的，实操了可以，这里记录一下。</p>
-<pre><code class="bash"># 安装依赖
-yum -y install gcc zlib zlib-devel pcre-devel openssl openssl-devel
-# 解压缩
-tar -zxvf nginx-1.23.4.tar.gz
-cd nginx-1.23.4
-# 执行配置
-./configure --with-http_ssl_module --with-http_v2_module
-# 编译安装
-make
-make install
-</code></pre>
-<pre><code class="bash"># 默认安装在
-/usr/local/nginx
-# 启动
-/usr/local/nginx/sbin/nginx
-# 刷新配置启动
-/usr/local/nginx/sbin/nginx -s reload
-# 关闭
-/usr/local/nginx/sbin/nginx -s stop
-# 修改配置
-vim  /usr/local/nginx/conf/nginx.conf
-</code></pre>
-
-      
-    </div>
-    <footer class="article-footer">
-      
-      <!-- <a data-url="https://blog.cchealthier.com/2023/04/21/nginx-basic/" data-id="clmyzjax1001rva9m241x3twc" class="article-share-link">分享</a> -->
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/nginx/" rel="tag">nginx</a></li></ul>
-
     </footer>
   </div>
   
@@ -521,6 +503,10 @@ vim  /usr/local/nginx/conf/nginx.conf
       <ul>
         
           <li>
+            <a href="/2023/10/15/react-vite-qiankun/">react 用 vite 构建 &amp; 用 qiankun 做微前端</a>
+          </li>
+        
+          <li>
             <a href="/2023/09/24/hexo-code-highlight/">记录 hexo 使用 highlight.js 实现代码高亮</a>
           </li>
         
@@ -534,10 +520,6 @@ vim  /usr/local/nginx/conf/nginx.conf
         
           <li>
             <a href="/2023/08/23/webpack5-background-url/">webpack5 下 background url 图片打包失败</a>
-          </li>
-        
-          <li>
-            <a href="/2023/07/26/node-stream/">NodeJS 里的 stream（流）</a>
           </li>
         
       </ul>
@@ -559,7 +541,7 @@ vim  /usr/local/nginx/conf/nginx.conf
   <div class="widget-wrap">
     <h3 class="widget-title">标签</h3>
     <div class="widget">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nginx/" rel="tag">nginx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" rel="tag">工程化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%80%A7%E8%83%BD/" rel="tag">性能</a></li></ul>
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nginx/" rel="tag">nginx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" rel="tag">工程化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BE%AE%E5%89%8D%E7%AB%AF/" rel="tag">微前端</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%80%A7%E8%83%BD/" rel="tag">性能</a></li></ul>
     </div>
   </div>
 
@@ -569,7 +551,7 @@ vim  /usr/local/nginx/conf/nginx.conf
   <div class="widget-wrap">
     <h3 class="widget-title">标签云</h3>
     <div class="widget tagcloud">
-      <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/nginx/" style="font-size: 13.33px;">nginx</a> <a href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" style="font-size: 20px;">工程化</a> <a href="/tags/%E6%80%A7%E8%83%BD/" style="font-size: 16.67px;">性能</a>
+      <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/nginx/" style="font-size: 13.33px;">nginx</a> <a href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" style="font-size: 20px;">工程化</a> <a href="/tags/%E5%BE%AE%E5%89%8D%E7%AB%AF/" style="font-size: 13.33px;">微前端</a> <a href="/tags/%E6%80%A7%E8%83%BD/" style="font-size: 16.67px;">性能</a>
     </div>
   </div>
 
@@ -578,7 +560,7 @@ vim  /usr/local/nginx/conf/nginx.conf
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/09/">九月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/08/">八月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">七月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/06/">六月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/05/">五月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/04/">四月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/03/">三月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/02/">二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">十一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">十月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">九月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/10/">十月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/09/">九月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/08/">八月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">七月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/06/">六月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/05/">五月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/04/">四月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/03/">三月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/02/">二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">十一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">十月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">九月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a></li></ul>
     </div>
   </div>
 
