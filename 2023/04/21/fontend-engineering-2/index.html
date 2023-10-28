@@ -17,7 +17,7 @@
 <meta property="og:description" content="文章内容太多，分为上下两部分，这里是下半部分。上半部分在《从零搭建前端工程（上）》，此篇的内容有：4. 使用 eslint + prettier 让代码健壮和优雅5. 使用 husky + lint-staged 强制增量各类检查6. 使用 @commitlint&#x2F;cli 规范提交信息7. 使用 埋点（性能 + 错误） 让项目运行更好   四、使用 eslint + prettier 让">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-04-20T17:19:20.000Z">
-<meta property="article:modified_time" content="2023-06-07T02:31:07.325Z">
+<meta property="article:modified_time" content="2023-10-28T03:10:20.000Z">
 <meta property="article:author" content="ChrisIori">
 <meta property="article:tag" content="工程化">
 <meta name="twitter:card" content="summary">
@@ -196,7 +196,7 @@ npx prettier --check src
 <p>然后执行</p>
 <pre><code class="bash">npx husky add .husky/pre-commit &quot;npm test&quot;
 </code></pre>
-<p>这样就会在项目根目录创建一个 <code>.husky</code> 的文件夹，里面有一份 <code>pre-commit</code> 文件，里面运行着 <code>npm test</code> 的命令。也就是接着把 npm test 改为 lint 操作就行。但是一般我们没有直接这样做。</p>
+<p>这样就会在项目根目录创建一个 <code>.husky</code> 的文件夹，里面有一份 <code>pre-commit</code> 文件，里面运行着 <code>npm test</code> 的命令。也就是接着把 npm test 改为 lint 操作就行。但是一般我们没有直接这样做，会加以下面的工具打配合。</p>
 <h4 id="2、用-lint-staged-对改动文件做检测"><a href="#2、用-lint-staged-对改动文件做检测" class="headerlink" title="2、用 lint-staged 对改动文件做检测"></a>2、用 lint-staged 对改动文件做检测</h4><p>我们知道 eslint 或者 prettier 其实是可以指定哪些文件做处理的。用 <a target="_blank" rel="noopener" href="https://github.com/okonet/lint-staged">lint-staged</a> 就可以帮我们做到只针对 git add 的文件进行检查，不需要全量检查。</p>
 <pre><code class="bash">npm install --save-dev lint-staged
 </code></pre>
@@ -211,6 +211,18 @@ npx prettier --check src
 &#125;
 </code></pre>
 <p>然后就有这个功能，执行：<code>git add file1.ext file2.ext</code>，<br>就会接着执行： <code>your-cmd（prettier或eslint） file1.ext file2.ext</code><br>这样就可以只检测新增的文件，不需要每次都全量。</p>
+<p><strong>注意：在上述生成的 <code>pre-commit</code> 钩子里，把默认生成的 <code>npm test</code> 改成 <code>npx lint-staged</code>。这才是它原本的触发命令，会去获取在 git 暂存区的文件作为处理。</strong></p>
+<h4 id="3、针对-monorepo-的处理"><a href="#3、针对-monorepo-的处理" class="headerlink" title="3、针对 monorepo 的处理"></a>3、针对 monorepo 的处理</h4><p>如果是 monorepo 这种多子项目的，可以参考官网《<a target="_blank" rel="noopener" href="https://github.com/lint-staged/lint-staged#how-to-use-lint-staged-in-a-multi-package-monorepo">how-to-use-lint-staged-in-a-multi-package-monorepo</a>》。就是可以在子项目也就是 <code>packages</code> 的各个目录下，配置各自的检测规则，因为项目可能不一，web 应用或者 node 工具的检测内容都有可能不一样。所以配置各自的是最好的。配置了各子项目的 <code>lint-staged</code> 规则后，好像根路径的设置就没效了。也可以理解，毕竟内容都在 packages 里。</p>
+<h4 id="4、针对-typescript-的语法检查"><a href="#4、针对-typescript-的语法检查" class="headerlink" title="4、针对 typescript 的语法检查"></a>4、针对 typescript 的语法检查</h4><p>官网《<a target="_blank" rel="noopener" href="https://github.com/lint-staged/lint-staged#example-run-tsc-on-changes-to-typescript-files-but-do-not-pass-any-filename-arguments">example-run-tsc-on-changes-to-typescript-files-but-do-not-pass-any-filename-arguments</a>》。<br>typescript 的设定，指定了检测文件就用默认的 tsconfig，指定了自定义的 tsconfig.json，是针对整个项目的，后面跟着指定文件就会报错。所以出了在 package.json 配上 lint-staged 规则。也可以在项目根路径写一份 <code>lint-staged.config.js</code>：</p>
+<pre><code class="js">export default &#123;
+  &#39;**/*.ts?(x)&#39;: (filenames) =&gt; [
+    &#39;tsc -p tsconfig.json --noEmit&#39;,
+    `eslint $&#123;filenames.join(&#39; &#39;)&#125;`, // 注意 join 有空格
+  ],
+&#125;
+</code></pre>
+<p>如官网所示，变成自定义函数返回要执行的命令，就可以去除默认带上的文件参数。</p>
+<p>其它使用例子请查看<a target="_blank" rel="noopener" href="https://github.com/lint-staged/lint-staged">官网</a>。</p>
 <h2 id="六、使用-commitlint-x2F-cli-规范提交信息"><a href="#六、使用-commitlint-x2F-cli-规范提交信息" class="headerlink" title="六、使用 @commitlint&#x2F;cli 规范提交信息"></a>六、使用 @commitlint&#x2F;cli 规范提交信息</h2><p>提交信息也是个技术活，和代码风格一样，最好也是有统一格式，这里使用 <a target="_blank" rel="noopener" href="https://commitlint.js.org/#/guides-local-setup">@commitlint&#x2F;cli</a> 来约束。</p>
 <pre><code class="bash">npm install --save-dev @commitlint/config-conventional @commitlint/cli
 </code></pre>
@@ -232,7 +244,7 @@ npx prettier --check src
 <li><strong>test：</strong> 添加&#x2F;修改现有的测试</li>
 <li><strong>chore：</strong> Build, .gitignore 或辅助工具、库（如文档生成）等变更</li>
 </ul>
-<h2 id="七、使用-埋点（性能-错误）-让项目运行更好"><a href="#七、使用-埋点（性能-错误）-让项目运行更好" class="headerlink" title="七、使用 埋点（性能 + 错误） 让项目运行更好"></a>七、使用 埋点（性能 + 错误） 让项目运行更好</h2><p>要想一个项目长治就好，需要我们长期去治理。要让我们的服务问题少，体验好。我们就必须要迅速主动地解决问题，等用户反馈再去修改修复就太慢了，可能人家直接弃坑了。<br>所以我们需要做一些埋点数据，一般用途有：</p>
+<h2 id="七、使用-埋点（性能-错误）-让项目运行更好"><a href="#七、使用-埋点（性能-错误）-让项目运行更好" class="headerlink" title="七、使用 埋点（性能 + 错误） 让项目运行更好"></a>七、使用 埋点（性能 + 错误） 让项目运行更好</h2><p>要想一个项目长治久安，需要我们长期去治理。要让我们的服务问题少，体验好。我们就必须要迅速主动地解决问题，等用户反馈再去修改修复就太慢了，可能人家直接弃坑了。<br>所以我们需要做一些埋点数据，一般用途有：</p>
 <h4 id="1、错误监控"><a href="#1、错误监控" class="headerlink" title="1、错误监控"></a>1、错误监控</h4><p>可以在 <code>window.onerror</code> 监听全局错误。或者再觉得可能会出错的地方 <code>try catch</code> 一下，然后上报错误。当然一般这种我们都知道可能会有问题主动去 catch 了，一般也是用来优化流程。减少可能的 catch 事件。这里简单提一下，不展开说了。</p>
 <h4 id="2、性能监控"><a href="#2、性能监控" class="headerlink" title="2、性能监控"></a>2、性能监控</h4><p>然后就是老生常谈的性能问题啦，收集页面的各项性能数据，然后分析优化，等等。具体指标可以看看这篇文章《<a href="/2021/01/09/performance-api/">前端性能监控</a>》。当然根据实际需求，还会有各式各样的指标，这里就不展开说了。</p>
 <h4 id="3、业务监控"><a href="#3、业务监控" class="headerlink" title="3、业务监控"></a>3、业务监控</h4><p>然后就是 pv&#x2F;pu 啊，日活多少啊这种。或者一些场景分析，比如进入一个页面停留多久啊，完成一个功能事项点了多少下啊。这些比较针对性的，一般都是核心场景，定向地分析了模块功能才埋的点。</p>
@@ -246,9 +258,9 @@ npx prettier --check src
     </div>
     <footer class="article-footer">
       
-        <a data-url="https://blog.cchealthier.com/2023/04/21/fontend-engineering-2/" data-id="clnqztawe000j119m4v2o20n6" class="article-thumbs-up">赞一个(<span class="article-thumbs-up-num">0</span>)</a>
+        <a data-url="https://blog.cchealthier.com/2023/04/21/fontend-engineering-2/" data-id="clo9hi485000jp29mabal8huc" class="article-thumbs-up">赞一个(<span class="article-thumbs-up-num">0</span>)</a>
       
-      <!-- <a data-url="https://blog.cchealthier.com/2023/04/21/fontend-engineering-2/" data-id="clnqztawe000j119m4v2o20n6" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2023/04/21/fontend-engineering-2/" data-id="clo9hi485000jp29mabal8huc" class="article-share-link">分享</a> -->
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" rel="tag">工程化</a></li></ul>
