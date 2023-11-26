@@ -74,6 +74,84 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-webpack5-background-url" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2023/08/23/webpack5-background-url/" class="article-date">
+  <time datetime="2023-08-23T12:19:03.000Z" itemprop="datePublished">2023-08-23</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2023/08/23/webpack5-background-url/">webpack5 下 background url 图片打包失败</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="一、省流"><a href="#一、省流" class="headerlink" title="一、省流"></a>一、省流</h3><p><code>webpack5</code> 下，<code>css-loader</code> 与 <code>file/url-loader</code> 对于 css 文件（无论是 import 一份 css 文件还是 vue 里面的 style 块）里的 <code>background-image: url()</code> 资源文件处理有冲突。表现在：</p>
+<p><strong>打包出来的 url 使用的是 <code>css-loader</code> 自己产出的图片。但是这张图片生成有问题，导致图片无法显示。</strong></p>
+<p>解决方法看最后面。</p>
+<h3 id="二、溯源"><a href="#二、溯源" class="headerlink" title="二、溯源"></a>二、溯源</h3><p>根据《<a href="/2023/05/31/react-basic-app/">react 基础工程（react-redux &amp; react-router）</a>》里的配置，里面配置了 <code>file/url-loader</code> 去处理资源文件。</p>
+<pre><code class="js">&#123;
+  test: /\.css$/,
+  use: [
+    isDev ? &#39;vue-style-loader&#39; : MiniCssExtractPlugin.loader,
+    &#39;css-loader&#39;,
+  ],
+&#125;,
+&#123;
+  test: /\.(png|jpg|gif)$/i,
+  use: [
+    &#123;
+      loader: &#39;file-loader&#39;,
+      options: &#123;
+        esModule: false,
+        limit: 8192,
+        name: &#39;media/[name].[hash].[ext]&#39;,
+      &#125;,
+    &#125;,
+  ],
+&#125;
+</code></pre>
+<p>对于普通使用并没有问题。但是后面使用了 <code>background-image: url()</code> 发现图片显示不出来。去产物文件夹（我这里是 dist 文件夹）一看，发现在根路径多了几张图片，但是打不开，显示图片格式损坏。而配置 <code>name: &#39;media/[name].[hash].[ext]&#39;</code> 里指定的 media 文件夹也有正常的图片。但是一看处理后的 css 使用的却是那一堆在根路径的损坏的图片。</p>
+<p>也就是：<strong>background-image: url() 没有使用 file&#x2F;url-loader 打包出来的图片，而是使用了别的 loader 产出的图片，而且这堆图片还生成失败了。</strong></p>
+<p>把 <code>file/url-loader</code> 去掉后，生成的图片正常了。也就是和这两个冲突了。接着看看问题在哪。插一句：<strong>我是在一个旧项目做了升级的，之前用的低版本也就是 webpack4 以及其他一系列低版本的配套是可以的，升级了后才出现问题。</strong></p>
+<p>一开始我怀疑是 <code>mini-css-extract-plugin</code>，怀疑是抽取 css 文件的时候，顺便生成了图片。后面我把这个去掉，只留下 <code>css-loader</code> 发现也会产出图片。这我着实没想到，以为只是单纯处理 css，遇到资源文件还是交给 <code>file/url-loader</code>。但是 webpack4 是好的，或者 webpack5 没有 <code>file/url-loader</code> 也是好的。</p>
+<h3 id="三、查找"><a href="#三、查找" class="headerlink" title="三、查找"></a>三、查找</h3><p>那就缩小了排查范围，就着这几个关键字进行了搜索，终于发现问题：webpack5 对于资源文件处理进行了更改，具体可看官网《<a target="_blank" rel="noopener" href="https://webpack.docschina.org/guides/asset-modules">资源模块</a>》介绍。也就是 webpack5 不需要再对资源文件指定相应的 loader 去处理了。而是加上 <code>type</code> 声明，比如 <code>type: asset/resource</code>。而如果我们还按照老的配置，可能会对资源重复处理，从而导致生成了一堆没法用的损坏图。</p>
+<p>确实是 <code>css-loader</code> 和 <code>file/url-loader</code> 有冲突，决定性证据也懒得去看源码了，这 webpack 4 升 5 真的改变好大。还记得刚出那会一大堆插件不兼容，不升级都没法用。</p>
+        
+          <p class="article-more-link">
+            <a href="/2023/08/23/webpack5-background-url/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      
+      <!-- <a data-url="https://blog.cchealthier.com/2023/08/23/webpack5-background-url/" data-id="clpexgotz005qx69mhlgb589z" class="article-share-link">分享</a> -->
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" rel="tag">工程化</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-node-stream" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2023/07/26/node-stream/" class="article-date">
@@ -186,7 +264,7 @@ writeStream.on(&#39;close&#39;, () =&gt; &#123;
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2023/07/26/node-stream/" data-id="clokx7mvr0020389mdgxk718j" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2023/07/26/node-stream/" data-id="clpexgotq001zx69mawik7q57" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -267,7 +345,7 @@ writeStream.on(&#39;close&#39;, () =&gt; &#123;
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2023/06/07/webpack-modulefederationplugin/" data-id="clokx7mvx003l389mfrfp2dzo" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2023/06/07/webpack-modulefederationplugin/" data-id="clpexgotw003qx69m70kpd6uu" class="article-share-link">分享</a> -->
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" rel="tag">工程化</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%BE%AE%E5%89%8D%E7%AB%AF/" rel="tag">微前端</a></li></ul>
@@ -368,7 +446,7 @@ export default App;
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2023/05/31/react-basic-app/" data-id="clokx7mvt002m389macioayk2" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2023/05/31/react-basic-app/" data-id="clpexgots002px69masu9gl8l" class="article-share-link">分享</a> -->
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" rel="tag">工程化</a></li></ul>
@@ -424,60 +502,11 @@ export default App;
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2023/05/19/performance-optimize/" data-id="clokx7mvs0027389m950512kh" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2023/05/19/performance-optimize/" data-id="clpexgotr0028x69m2f9p7c8h" class="article-share-link">分享</a> -->
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%80%A7%E8%83%BD/" rel="tag">性能</a></li></ul>
 
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-file-slice-upload" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2023/05/13/file-slice-upload/" class="article-date">
-  <time datetime="2023-05-13T14:25:47.000Z" itemprop="datePublished">2023-05-13</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2023/05/13/file-slice-upload/">文件切片上传（断点续传）</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>上传文件体积一大，要等很久。如果只是水管小，等一会也就算了。但是如果网络差，上传到 99% 突然断网了又重新开始，就比较难受了。所以又有了文件切片进行断点上传的方法。</p>
-<p>上传的文件对象是一个 <a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/API/File">File</a> 对象，然后它是 <a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/API/Blob">Blob</a> 对象的一个子类。再然后它有一个 <a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/API/Blob/slice">slice</a> 方法，用这个方法就可以对文件进行切片，就和数组的这个方法一样。用法如示例。</p>
-<p>话不多说直接上代码（里面代码是问了 chatgpt 然后改的，哈哈）。把下面两份代码分别保存为 <code>index.html</code> 和 <code>server.js</code>，安装好依赖，然后启动执行 <code>node server.js</code>，访问 <code>http://localhost:3000</code>。</p>
-<p>前端也大概美化了一下上传组件，支持点击选择文件或者拖拽文件上传。原生的 <code>&lt;input type=&quot;file&quot; &gt;&lt;/input&gt;</code> 组件的样式应该没人用吧，那么丑…。其中的 loading 效果出自网上大佬的《<a target="_blank" rel="noopener" href="https://juejin.cn/post/7037036742985121800">纯css实现117个Loading效果</a>》，里面挺多效果不错的。</p>
-        
-          <p class="article-more-link">
-            <a href="/2023/05/13/file-slice-upload/#more">Read More</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      
-      <!-- <a data-url="https://blog.cchealthier.com/2023/05/13/file-slice-upload/" data-id="clokx7mvl000h389m31bg5bk3" class="article-share-link">分享</a> -->
-      
-      
     </footer>
   </div>
   
@@ -503,6 +532,10 @@ export default App;
       <ul>
         
           <li>
+            <a href="/2023/11/24/ios-rn-integrate/">ios 原生应用集成 react-native</a>
+          </li>
+        
+          <li>
             <a href="/2023/10/15/react-vite-qiankun/">react 用 vite 构建 &amp; 用 qiankun 做微前端</a>
           </li>
         
@@ -516,10 +549,6 @@ export default App;
         
           <li>
             <a href="/2023/08/24/node-module/">NodeJS 的 commonjs、esm 模块使用以及一些字段释义</a>
-          </li>
-        
-          <li>
-            <a href="/2023/08/23/webpack5-background-url/">webpack5 下 background url 图片打包失败</a>
           </li>
         
       </ul>
@@ -560,7 +589,7 @@ export default App;
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/10/">十月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/09/">九月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/08/">八月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">七月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/06/">六月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/05/">五月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/04/">四月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/03/">三月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/02/">二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">十一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">十月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">九月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/11/">十一月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/10/">十月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/09/">九月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/08/">八月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">七月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/06/">六月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/05/">五月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/04/">四月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/03/">三月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/02/">二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">十一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">十月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">九月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a></li></ul>
     </div>
   </div>
 

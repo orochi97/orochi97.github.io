@@ -74,6 +74,168 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-algorithm" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/10/21/algorithm/" class="article-date">
+  <time datetime="2020-10-21T15:51:13.000Z" itemprop="datePublished">2020-10-21</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E7%AE%97%E6%B3%95/">算法</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/10/21/algorithm/">记录一些基础算法</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>开始补充一些算法和数据结构的知识</p>
+<h3 id="冒泡排序"><a href="#冒泡排序" class="headerlink" title="冒泡排序"></a>冒泡排序</h3><pre><code class="js">const arr = [162, 6, 3, 8, 90, 234, 5, 7, 31, 45, 12, 1, 98, 23, 87, 40]
+function sort(arr) &#123;
+  const len = arr.length - 1
+  for (let x = 0, y = len; x &lt; y; x++) &#123;
+    // 把第一个跟后面那个对比，如果比后面的数大，就交换位置，到最后就可以确定最大的数在最后
+    // 也就是在 length 的位置
+    // 在第一轮的时候，x=1，也就是遍历到倒数第二个就好，因为取到 i+1 的数
+    for (let i = 0, l = len - x; i &lt; l; i++) &#123;
+      const first = arr[i], second = arr[i+1]
+      if (first &gt; second) &#123;
+        [arr[i], arr[i+1]] = [second, first]
+      &#125;
+    &#125;
+    // 假设没有第一层，最大的数已经在最后，那么第二轮就是要在剩下的数找到最大，并放到倒数第二位置
+    // 也就是在 length-1 的位置
+    // 此时 x=2，因为依然是当轮最后数（第二轮为length-1）的前一个
+    // for (var i = 0, l = arr.length - 2; i &lt; l; i++) &#123;
+    //  if (arr[i] &gt; arr[i+1]) &#123;
+    //    [arr[i], arr[i+1]] = [arr[i+1], arr[i]]
+    //  &#125;
+    // &#125;
+    // 第三轮 x=3
+    // for (var i = 0, l = arr.length - 3; i &lt; l; i++) &#123;
+    //  if (arr[i] &gt; arr[i+1]) &#123;
+    //    [arr[i], arr[i+1]] = [arr[i+1], arr[i]]
+    //  &#125;
+    // &#125;
+    // 第四轮 x=4
+    // for (var i = 0, l = arr.length - 4; i &lt; l; i++) &#123;
+    //  if (arr[i] &gt; arr[i+1]) &#123;
+    //    [arr[i], arr[i+1]] = [arr[i+1], arr[i]]
+    //  &#125;
+    // &#125;
+    // 所以循环个遍，就成了外面一层的循环
+  &#125;
+  return arr
+&#125;
+console.log(sort(arr))
+</code></pre>
+<h3 id="二分法"><a href="#二分法" class="headerlink" title="二分法"></a>二分法</h3><p>就是在一个有序的序列中迅速找到要找的那个数的索引。一个一个遍历当然也可以找到，但是不确定性导致复杂度。<br>二分法就是中间砍一刀，这样数列就成了两半。看看中间值是不是，是那就刚好了。不是的话，判断目标数是在前一半还是后一半，如此这般的循环即可。</p>
+<p>这种思想应该在现实生活中还是经常用到的，比如<code>git bisect</code>（<a target="_blank" rel="noopener" href="http://www.ruanyifeng.com/blog/2018/12/git-bisect.html">看看大佬的介绍</a>）。<br>以及，让我想起以前 TVB 的《超级无敌掌门人》里面有个游戏叫“超级无敌开口中”，轮流在在100里面瞎说一个数，中了就受罚。特别是轮到说最后一个必中的数字时那种视死如归的神情，超搞笑。</p>
+<pre><code class="js">function getRandomNum(numMin, numMax) &#123;
+  return Math.round( Math.random()*(numMax-numMin) + numMin )
+&#125;  
+function getArr() &#123;
+  const arr = []
+  for(let i = 1, l = 100; i &lt;= l; i++) &#123;
+    arr.push(i)
+  &#125;
+  return arr
+&#125;
+// 随机生成 1 ~ 100 中的某数
+const num = getRandomNum(1, 100)
+// 生成 1 - 100 的数组
+const arr = getArr()
+function binarySearch(num, arr) &#123;
+  let start = arr.length
+  let end = 0
+  const getHalf = () =&gt; &#123;
+    let length = start + end
+    return (length % 2 === 0) ? (length / 2) : (length + 1) / 2
+  &#125;
+  // 取中值
+  let half = getHalf()
+  let current = arr[half]
+  while (current !== num) &#123;
+    if (current &gt; num) &#123;
+      start = half
+    &#125; else if (current &lt; num) &#123;
+      end = half
+    &#125;
+    half = getHalf()
+    current = arr[half]
+  &#125;
+  return half
+&#125;
+const idx = binarySearch(num, arr)
+console.log(idx, arr[idx], num)
+</code></pre>
+<h3 id="斐波那契数列"><a href="#斐波那契数列" class="headerlink" title="斐波那契数列"></a>斐波那契数列</h3><p>具体的数学意义就不说了，我也不懂，总而言之是满足这样的一个数列：F(0)&#x3D;0，F(1)&#x3D;1，F(n)&#x3D;F(n - 1)+F(n - 2)（n ≥ 3，n ∈ N*）</p>
+<pre><code class="js">// 第一反应就是递归，最简单最明晰。但效率最低，其实就是每次算出来的值没存起来，导致每个 n 位的值传进去都要重新递归的算
+function fibonacci(n) &#123;
+  if(n === 0 || n === 1) &#123;
+    return n
+  &#125;
+  return fibonacci(n-1) + fibonacci(n-2)
+&#125;
+// 改进一些，是个数列自然就可以用个数组来存
+// 把之前获得 n 位的值存起来，下次要拿就直接取就好
+function fibonacci2(n) &#123;
+  if(n === 0 || n === 1) &#123;
+    return n
+  &#125;
+  const arr = [0, 1]
+  for(let i = 2; i &lt;= n; i++) &#123;
+    arr[i] = arr[i-1] + arr[i-2]
+  &#125;
+  return arr[n]
+&#125;
+// 改进一些，其实每次都是需要上两位就可以了，不需要用整个数组来存全部
+function fibonacci3(n) &#123;
+  if(n === 0 || n === 1) &#123;
+    return n
+  &#125;
+  let lastOne = 1 // n-1
+  let lastTwo = 0 // n-2
+  for(let i = 2; i &lt;= n; i++) &#123;
+    var current = lastOne + lastTwo
+    // n-2 和 n-1 分别获取后一位的值
+    lastTwo = lastOne
+    lastOne = current
+  &#125;
+  return current
+&#125;
+// 第一种递归的方法，在浏览器 40 以后基本快跑不出来了
+// 第三种还是比第二种快那么些许
+console.time(&#39;fibonacci&#39;)
+console.log(fibonacci(40))
+console.timeEnd(&#39;fibonacci&#39;)
+</code></pre>
+
+      
+    </div>
+    <footer class="article-footer">
+      
+      <!-- <a data-url="https://blog.cchealthier.com/2020/10/21/algorithm/" data-id="clpexgote0001x69m4e3vc7ns" class="article-share-link">分享</a> -->
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-puppeteer" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2020/08/30/puppeteer/" class="article-date">
@@ -173,7 +335,7 @@ npm i puppeteer
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2020/08/30/puppeteer/" data-id="clokx7mvs002h389m5bvd2lvv" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2020/08/30/puppeteer/" data-id="clpexgotr002fx69m120haipm" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -227,7 +389,7 @@ npm i puppeteer
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2020/08/30/shenzhen-guanhucun/" data-id="clokx7mvu002x389mewk592uk" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2020/08/30/shenzhen-guanhucun/" data-id="clpexgott002yx69m1o394em6" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -390,7 +552,7 @@ addTimer(load1000, 2000)
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2020/08/30/promise-api/" data-id="clokx7mvs002a389m11nw0yhs" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2020/08/30/promise-api/" data-id="clpexgotr002cx69m0gev9ov2" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -743,218 +905,11 @@ console.log(Object(_util__WEBPACK_IMPORTED_MODULE_0__[&quot;default&quot;])(&#39
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2020/08/16/webpackJsonp/" data-id="clokx7mw0005n389mbei548ii" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2020/08/16/webpackJsonp/" data-id="clpexgou0005sx69mhu5l9u1a" class="article-share-link">分享</a> -->
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" rel="tag">工程化</a></li></ul>
 
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-next-tick" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/08/16/next-tick/" class="article-date">
-  <time datetime="2020-08-16T13:20:00.000Z" itemprop="datePublished">2020-08-16</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/08/16/next-tick/">vue的nextTick解析</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>用过 vue 的同学应该都知道，双向绑定中，更改了数据会去更新dom，但不是马上更新的。<br>直接跟在修改数据后，拿到的 dom 还是旧的。<br>vue有个<code>this.$nextTick</code>用法，用这个的回调可以保证拿到更新后的dom。</p>
-<p>直接看看 <a target="_blank" rel="noopener" href="https://github.com/vuejs/vue/blob/dev/src/core/util/next-tick.js">next-tick</a> 源码</p>
-<pre><code class="js">import &#123; noop &#125; from &#39;shared/util&#39;
-import &#123; handleError &#125; from &#39;./error&#39;
-import &#123; isIE, isIOS, isNative &#125; from &#39;./env&#39;
-
-export let isUsingMicroTask = false
-const callbacks = []
-let pending = false
-
-// 清异步队列，全部执行
-function flushCallbacks () &#123;
-  pending = false
-  const copies = callbacks.slice(0)
-  callbacks.length = 0
-  for (let i = 0; i &lt; copies.length; i++) &#123;
-    copies[i]()
-  &#125;
-&#125;
-let timerFunc
-if (typeof Promise !== &#39;undefined&#39; &amp;&amp; isNative(Promise)) &#123;
-  // 判断有没有 promise 且有没有被重写过，
-  // promise完好无损就使用 promise 做异步队列的触发，设置使用微任务标志为true
-  const p = Promise.resolve()
-  timerFunc = () =&gt; &#123;
-    p.then(flushCallbacks)
-    if (isIOS) setTimeout(noop)
-  &#125;
-  isUsingMicroTask = true
-&#125; else if (!isIE &amp;&amp; typeof MutationObserver !== &#39;undefined&#39; &amp;&amp; (
-  isNative(MutationObserver) ||
-  // PhantomJS and iOS 7.x
-  // 特殊场景用MutationObserver
-  MutationObserver.toString() === &#39;[object MutationObserverConstructor]&#39;
-)) &#123;
-  // Use MutationObserver where native Promise is not available,
-  // e.g. PhantomJS, iOS7, Android 4.4
-  // (#6466 MutationObserver is unreliable in IE11)
-  let counter = 1
-  const observer = new MutationObserver(flushCallbacks)
-  const textNode = document.createTextNode(String(counter))
-  observer.observe(textNode, &#123;
-    characterData: true
-  &#125;)
-  timerFunc = () =&gt; &#123;
-    counter = (counter + 1) % 2
-    textNode.data = String(counter)
-  &#125;
-  isUsingMicroTask = true
-&#125; else if (typeof setImmediate !== &#39;undefined&#39; &amp;&amp; isNative(setImmediate)) &#123;
-  // Fallback to setImmediate.
-  // Techinically it leverages the (macro) task queue,
-  // but it is still a better choice than setTimeout.
-  // 再不济看看有没有 setImmediate，虽然也是宏任务，但总比 setTimeout 强
-  timerFunc = () =&gt; &#123;
-    setImmediate(flushCallbacks)
-  &#125;
-&#125; else &#123;
-  // Fallback to setTimeout.
-  // 实在没办法了，setTimeout 兜底
-  timerFunc = () =&gt; &#123;
-    setTimeout(flushCallbacks, 0)
-  &#125;
-&#125;
-// nextTick 具体操作所在，其他队列方法也是用这个，比如 data 改动后通知 dom 修改，也是用这个
-// 即 vue 里面的响应式，不是实时更新的，而是存在一个队列，在下一回合进行任务更新。不然太耗损性能
-// 也就是解释了，在修改了 data 之后，dom 是没有马上更新，而在 $nextTick 的回调后，则可以看到 dom 更新
-// 原因就在于同样的异步任务，$nextTick 的回调，是在 dom 修改的操作后面，所以 $nextTick 能看到 dom 更新
-// 以下以 this.$nextTick(()=&gt;&#123;&#125;) 为例子，cb 为回调，ctx 为 vue 实例
-export function nextTick (cb?: Function, ctx?: Object) &#123;
-  let _resolve
-  // 把任务塞进异步队列
-  callbacks.push(() =&gt; &#123;
-    // 有回调就触发回调
-    if (cb) &#123;
-      try &#123;
-        cb.call(ctx)
-      &#125; catch (e) &#123;
-        handleError(e, ctx, &#39;nextTick&#39;)
-      &#125; 
-      // 这里注意，结合下面来看
-      //用 promise 的 resolve 触发，把 vue 实例当成参数传进去
-    &#125; else if (_resolve) &#123;
-      _resolve(ctx)
-    &#125;
-  &#125;)
-  // 在清任务 flushCallbacks 里赋值 pending 为 false
-  // 目的为了 timerFunc 在周期内只触发一次
-  // 执行 timerFunc，让其下一周期执行清异步队列任务
-  if (!pending) &#123;
-    pending = true
-    timerFunc()
-  &#125;
-  // 当没有回调且 Promise 正常
-  // $nextTick 返回的是一个 promise，触发时机与上面有回调一样
-  if (!cb &amp;&amp; typeof Promise !== &#39;undefined&#39;) &#123;
-    return new Promise(resolve =&gt; &#123;
-      _resolve = resolve
-    &#125;)
-  &#125;
-&#125;
-</code></pre>
-<p>除了常规的回调用法之外，还可以这样用</p>
-<pre><code class="js">this.$nextTick().then( vue实例 =&gt; &#123; console.log(vue实例 === this) &#125;) // =&gt; true
-</code></pre>
-<p>如果不传入回调，则返回promise，因为是 promise，也可以直接就 await 等待。参考<a target="_blank" rel="noopener" href="https://cn.vuejs.org/v2/guide/reactivity.html#%E5%BC%82%E6%AD%A5%E6%9B%B4%E6%96%B0%E9%98%9F%E5%88%97">官网</a>。</p>
-<p>接着来个简陋版简单模拟一下这个 nextTick 的实现。这其中还涉及到<a href="/2020/05/27/eventloop/">事件循环</a>的知识。</p>
-<pre><code class="js">// 模拟vue nextTick
-// 存储所有$nextTick的回调，变量的set修改后通知dom更新的，与$nextTick的回调进入同个微队列
-const callbacks = []
-// 微队列的触发载体，这里是Promise.resolve()
-// vue是先找Promise.resolve，没有就找setTimeout
-let run = null
-
-function next() &#123;
-  callbacks.forEach((cb) =&gt; &#123;
-    cb()
-  &#125;)
-&#125;
-// 这里的change可以看成修改了变量，里面的回调就是与nextTick的回调如出一辙
-function change() &#123;
-  nextTick(() =&gt; &#123;
-    // 这里面是同步
-    console.log(&#39;update dom -- 1&#39;)
-    const child = document.createElement(&#39;div&#39;)
-    child.id = &#39;new&#39;
-    document.getElementById(&#39;box&#39;).appendChild(child)
-    console.log(&#39;update dom&#39;)
-    console.log(&#39;update dom -- 2&#39;)
-  &#125;)
-&#125;
-
-function nextTick(cb) &#123;
-  if(!run) &#123;
-    // 初始化下个队列
-    run = Promise.resolve()
-    // 把next方法放在下个队列运行
-    // 看上面的next函数，是把callbacks的函数遍历执行
-    run.then(next)
-  &#125;
-  // nextTick的回调加入数组等着，遍历触发里面的每个函数
-  // 由于是同步，所以其实只是一个微任务，
-  callbacks.push(cb)
-&#125;
-
-// 调用了第一次nextTick
-nextTick(() =&gt; &#123;
-  // 表示该次微队列任务开始
-  console.log(&#39;nextTick -- 1&#39;)
-&#125;)
-Promise.resolve().then(() =&gt; &#123;
-  console.log(&#39;then -- &#39;)
-&#125;)
-// 修改变量，更改了dom
-change()
-// 同步任务，最早打印，但此时没有new元素
-console.log(&#39;script -- &#39;, document.getElementById(&#39;new&#39;))
-// 调用了第二次nextTick
-nextTick(() =&gt; &#123;
-  // 在修改变量之后调nextTick，已有new元素
-  console.log(&#39;nextTick -- 2&#39;, document.getElementById(&#39;new&#39;))
-&#125;)
-// nextTick -- 2 之所以在 then -- 前打印，是因为回调都放在callbacks里，同步触发了
-</code></pre>
-<br>
-<img src="/2020/08/16/next-tick/next.PNG" class="" title="next">
-<br>
-      
-    </div>
-    <footer class="article-footer">
-      
-      <!-- <a data-url="https://blog.cchealthier.com/2020/08/16/next-tick/" data-id="clokx7mvp001o389m9hc036rn" class="article-share-link">分享</a> -->
-      
-      
     </footer>
   </div>
   
@@ -980,6 +935,10 @@ nextTick(() =&gt; &#123;
       <ul>
         
           <li>
+            <a href="/2023/11/24/ios-rn-integrate/">ios 原生应用集成 react-native</a>
+          </li>
+        
+          <li>
             <a href="/2023/10/15/react-vite-qiankun/">react 用 vite 构建 &amp; 用 qiankun 做微前端</a>
           </li>
         
@@ -993,10 +952,6 @@ nextTick(() =&gt; &#123;
         
           <li>
             <a href="/2023/08/24/node-module/">NodeJS 的 commonjs、esm 模块使用以及一些字段释义</a>
-          </li>
-        
-          <li>
-            <a href="/2023/08/23/webpack5-background-url/">webpack5 下 background url 图片打包失败</a>
           </li>
         
       </ul>
@@ -1037,7 +992,7 @@ nextTick(() =&gt; &#123;
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/10/">十月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/09/">九月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/08/">八月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">七月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/06/">六月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/05/">五月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/04/">四月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/03/">三月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/02/">二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">十一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">十月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">九月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/11/">十一月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/10/">十月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/09/">九月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/08/">八月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">七月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/06/">六月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/05/">五月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/04/">四月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/03/">三月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/02/">二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">十一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">十月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">九月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a></li></ul>
     </div>
   </div>
 
