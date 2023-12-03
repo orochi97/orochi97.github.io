@@ -74,6 +74,121 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-search" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/11/15/search/" class="article-date">
+  <time datetime="2020-11-15T02:41:59.000Z" itemprop="datePublished">2020-11-15</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E7%AE%97%E6%B3%95/">算法</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/11/15/search/">深度优先遍历(DFS)-栈和广度优先遍历(BFS)-队列的理解</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>JS版本的，概念什么的就不赘述了。参考了这位大佬的<a target="_blank" rel="noopener" href="https://segmentfault.com/a/1190000018706578">文章（JS算法之深度优先遍历(DFS)和广度优先遍历(BFS)）</a>。<br>在这里记录下自己的理解，为啥一个是栈，一个是队列。看码：</p>
+<pre><code class="html">&lt;div id=&quot;box&quot;&gt;
+  &lt;ul&gt;
+    &lt;li&gt;&lt;div&gt;&lt;p&gt;&lt;/p&gt;&lt;/div&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;img /&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a&gt;&lt;/a&gt;&lt;/li&gt;
+  &lt;/ul&gt;
+  &lt;div&gt;
+    &lt;p&gt;1&lt;/p&gt;
+    &lt;p&gt;&lt;span&gt;&lt;strong&gt;&lt;/strong&gt;&lt;/span&gt;&lt;/p&gt;
+    &lt;p&gt;3&lt;/p&gt;
+  &lt;/div&gt;
+  &lt;button&gt;&lt;strong&gt;&lt;/strong&gt;&lt;/button&gt;
+&lt;/div&gt;
+</code></pre>
+<pre><code class="js">// 深度优先，用的是栈，同一边进出，后入先出
+function deepFirstSearch(node) &#123;
+  var nodes = []
+  if (node != null) &#123;
+    var stack = []
+    stack.push(node) // 第一个元素无论 push 还是 unshift 都一样，这里只是为了相呼应。
+    while(stack.length != 0) &#123;
+      // 最核心的差别在这里了
+      // 第一次进来：是[$box]，弹出来后都是为空
+      // 第二次进来: [button, div, ul]，然后 ul 被 pop 出去，收进结果数组 nodes 里
+      var item = stack.pop()
+      nodes.push(item)
+      var children = item.children
+      for (var i = children.length - 1; i &gt;= 0; i--) &#123;
+        // 这一步也是一样，把每个子节点放进去待遍历数组
+        // 把 $box 的子节点放进待选数组，此时是 [button, div, ul]
+        // 第一次 while 进来都是一样
+        // 这里先收集左边还是右边的子级意义都是一样的
+        // 这里是从先把 button 放进来，ul 最后，等下 pop 出去就是 ul 最先
+        stack.push(children[i])
+        // 点出 ul 的子级，收进 stack 的最后，下次 while 进来，pop 就会是 ul 的子级，也即是 li
+        // 然后再继续下去，还是会把 ul 的子级的子级，也就是 div，收进 stack 最后
+        // 也就是不断的子级优先，达成深挖
+      &#125;
+    &#125;
+  &#125;
+  return nodes
+&#125;
+
+// 广度优先，用的是队列，一边进另一边出，先入先出
+function breadthFirstSearch(node) &#123;
+  var nodes = []
+  if (node != null) &#123;
+    var queue = []
+    // 第一次进来：是[$box]，弹出来后都是为空
+    // 第二次进来：[button, div, ul]，然后 button 被 unshift 出去，收进结果数组 nodes 里
+    // 第三次进来：[div, ul, strong]，然后 div 被 unshift 出去，收进结果数组 nodes 里
+    // 第四次进来：[ul, strong, p, p, p]，然后 ul 被 unshift 出去，收进结果数组 nodes 里
+    // 可以看出跟深度的差别，点出子级都是排进待选数组的最后
+    // 但是深度是栈pop，加塞在数组最后的子级优先
+    // 广度是队列unshift，一起放进数组的兄弟级优先
+    queue.unshift(node)
+    while(queue.length != 0) &#123;
+      var item = queue.shift()
+      nodes.push(item)
+      var children = item.children
+      for (var i = children.length - 1; i &gt;= 0; i--) &#123;
+        queue.push(children[i])
+        // 对应上面第二次进来：点出 button 的子级，也就是 strong，收进 queue 的最后
+        // 但对 unshift 的结果没影响，下次 while 进来，unshift 依然是 div
+        // 对应上面第三次进来：点出 div 的子级，也就是 p，收进 queue 的最后
+      &#125;
+    &#125;
+  &#125;
+  return nodes
+&#125;
+</code></pre>
+<p>可以看出，就是在遍历时候暂存的数据结构不一样。<br><strong>深度优先</strong>，就是一直深挖，孩子的孩子的孩子…。<br><strong>广度优先</strong>，就是兄弟兄弟兄弟孩子兄弟…。需要注意的是，同级的就算兄弟。意思是相对于根级为孙子辈，就算不是同个父级，也算是兄弟级。</p>
+<p><strong>2022-10-18 21:31:18</strong><br>更新了一篇用 js 做遍历的<a href="/2022/10/18/deepth-breadth-traversal/">《深广度优先遍历》</a>。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      
+      <!-- <a data-url="https://blog.cchealthier.com/2020/11/15/search/" data-id="clppnx0gh002zzg9me2x78v70" class="article-share-link">分享</a> -->
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-algorithm" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2020/10/21/algorithm/" class="article-date">
@@ -226,7 +341,7 @@ console.timeEnd(&#39;fibonacci&#39;)
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2020/10/21/algorithm/" data-id="clpexgote0001x69m4e3vc7ns" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2020/10/21/algorithm/" data-id="clppnx0g30003zg9m3n1edeea" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -335,7 +450,7 @@ npm i puppeteer
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2020/08/30/puppeteer/" data-id="clpexgotr002fx69m120haipm" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2020/08/30/puppeteer/" data-id="clppnx0gg002lzg9m6ei1bdin" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -389,7 +504,7 @@ npm i puppeteer
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2020/08/30/shenzhen-guanhucun/" data-id="clpexgott002yx69m1o394em6" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2020/08/30/shenzhen-guanhucun/" data-id="clppnx0gi0035zg9mg4bu604f" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -552,364 +667,9 @@ addTimer(load1000, 2000)
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2020/08/30/promise-api/" data-id="clpexgotr002cx69m0gev9ov2" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2020/08/30/promise-api/" data-id="clppnx0gf002ezg9m0gjq6u10" class="article-share-link">分享</a> -->
       
       
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-webpackJsonp" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/08/16/webpackJsonp/" class="article-date">
-  <time datetime="2020-08-16T13:59:15.000Z" itemprop="datePublished">2020-08-16</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/08/16/webpackJsonp/">webpack通过webpackJsonp来连接多文件依赖</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>webpack一般是打成一份文件，但有时也需要打成几份，生成的文件可以把其中的公共部分抽取出来，省点代码。<br>这里就免不了依赖文件顺序的问题。这里用了很巧妙的方法，来连接不同的文件，以及依赖的前置性问题。<br>相当用心思，这里稍微记录下。</p>
-<p>先准备两份文件 foo.js，bar.js，util.js：</p>
-<pre><code class="js">// foo.js
-import util from &#39;./util&#39;
-
-console.log(&#39;foo&#39;)
-console.log(util(&#39;foo&#39;))
-
-// bar.js
-import util from &#39;./util&#39;
-
-console.log(util(&#39;bar&#39;))
-console.log(&#39;bar&#39;)
-
-export default function () &#123;
-    return &#39;bar-function&#39;
-&#125;
-
-// util.js
-console.log(&#39;util&#39;)
-
-export default function (flag) &#123;
-    return &#39;util&#39; + flag
-&#125;
-</code></pre>
-<p>webpack配置文件：</p>
-<pre><code class="js">const &#123; execSync &#125; = require(&#39;child_process&#39;)
-var webpack = require(&#39;webpack&#39;);
-
-execSync(`rm -rf build`)
-
-module.exports = &#123;
-    mode: &#39;development&#39;,
-    devtool: &#39;none&#39;,//配置生成Source Maps，选择合适的选项
-    entry:  &#123; 
-        foo: __dirname + &quot;/foo.js&quot;,
-        bar: __dirname + &quot;/bar.js&quot;
-    &#125;,//已多次提及的唯一入口文件
-    output: &#123;
-        path: __dirname + &quot;/build&quot;,//打包后的文件存放的地方
-        filename: &quot;[name].js&quot;//打包后输出文件的文件名
-    &#125;,
-     optimization: &#123;
-        splitChunks: &#123;
-          chunks: &#39;all&#39;,
-          minSize: 1,
-          maxSize: 0,
-          minChunks: 1,
-          maxAsyncRequests: 6,
-          maxInitialRequests: 4,
-          automaticNameDelimiter: &#39;~&#39;,
-          automaticNameMaxLength: 30,
-          cacheGroups: &#123;
-            vendors: &#123;
-              test: /[\\/]node_modules[\\/]/,
-              priority: -10
-            &#125;,
-            default: &#123;
-              minChunks: 2,
-              priority: -20,
-              reuseExistingChunk: true
-            &#125;
-          &#125;
-        &#125;
-      &#125;
-&#125;
-</code></pre>
-<p>会在 dist 文件夹生成三个文件：foo.js，bar.js，default<del>bar</del>foo.js<br>看得出 default-bar-foo.js 就是共用代码，这里就是 util.js，代码是：</p>
-<pre><code class="js">// window[&quot;webpackJsonp&quot;]是个数组，push了一个数组。元素1还是一个数组，里面只有一个值&quot;default~bar~foo&quot;
-// 其实就是这份文件名字，或者说是这份chunk名字
-// 而第二个值就又是各个module的集合。比如这里只有一个util.js，结合chunk名就很明显了，
-// util.js就是foo.js和bar.js共同用到的。如果还有其他共用到的，那么还有多几个字段
-(window[&quot;webpackJsonp&quot;] = window[&quot;webpackJsonp&quot;] || []).push([[&quot;default~bar~foo&quot;],&#123;
-/***/ &quot;./util.js&quot;:
-/*!*****************!*\
-  !*** ./util.js ***!
-  \*****************/
-/*! exports provided: default */
-      // __webpack_exports__=module.exports
-/***/ (function(module, __webpack_exports__, __webpack_require__) &#123;
-&quot;use strict&quot;;
-__webpack_require__.r(__webpack_exports__);
-console.log(&#39;util&#39;)
-/* harmony default export */ __webpack_exports__[&quot;default&quot;] = (function (flag) &#123;
-    return &#39;util&#39; + flag
-&#125;);
-/***/ &#125;)
-&#125;]);
-</code></pre>
-<p>如果平时有看过 webpack 生成的代码的话，就能很明显看出与入口文件打出来的内容很不一样，缺少了<code>webpackBootstrap</code>。<br>看看 foo.js，（bar.js也长得差不多），几个名词先说一下：</p>
-<p><strong>module：</strong>每一份文件的js代码。比如a.js引入了b.js，把a.js作为entry。那么到时打出来的就是只有一份a.js（该输出文件就是一份chunk，输出文件名字可变）。里面有两个模module，a.js和b.js。<br><strong>chunk：</strong>要输出的每一份文件就是一个chunk（一个或多个module组成一份chunk），一般是一个entry对应一个chunk。如果像这种抽离公共js的，也是一个chunk，也会多于entry数。</p>
-<p><strong>foo.js是</strong><br>一个自执行的函数，传入一个json对象。只有一个key值，是”.&#x2F;foo.js”。相对应的value其实是一个函数模块，就是foo.js的代码内容。<br>打包出来的js靠全局变量维系，window[“webpackJsonp”]。在每个entry chunk的最上面都有webpack加载代码，而附属chunk则没有，只有看起来像数组push的代码，如default-bar-foo.js文件所示。</p>
-<pre><code class="js">/******/ (function(modules) &#123; // webpackBootstrap
-/******/ 	// install a JSONP callback for chunk loading
-                    // 这data就是window[&quot;webpackJsonp&quot;] push进来的东西
-/******/ 	function webpackJsonpCallback(data) &#123;
-/******/ 		var chunkIds = data[0];// chunkId=&quot;default~bar~foo&quot;
-/******/ 		var moreModules = data[1];// &#123;&#39;./util.js&#39;:f&#125;
-/******/ 		var executeModules = data[2]; // 暂不知何用
-/******/
-/******/ 		// add &quot;moreModules&quot; to the modules object,
-/******/ 		// then flag all &quot;chunkIds&quot; as loaded and fire callback
-/******/ 		var moduleId, chunkId, i = 0, resolves = [];
-/******/ 		for(;i &lt; chunkIds.length; i++) &#123;
-/******/ 			chunkId = chunkIds[i];
-/******/ 			if(Object.prototype.hasOwnProperty.call(installedChunks, chunkId) &amp;&amp; installedChunks[chunkId]) &#123;
-                // resolves暂不知作何用
-/******/ 				resolves.push(installedChunks[chunkId][0]);
-/******/ 			&#125;
-              // 标记chunk安装
-/******/ 			installedChunks[chunkId] = 0;
-/******/ 		&#125;
-/******/ 		for(moduleId in moreModules) &#123;
-/******/ 			if(Object.prototype.hasOwnProperty.call(moreModules, moduleId)) &#123;
-                // 把每个chunk的每份module记录在modules，用以调用运行
-/******/ 				modules[moduleId] = moreModules[moduleId];
-/******/ 			&#125;
-/******/ 		&#125;
-            // 当有parentJsonpFunction这方法适合，就执行这个方法，参数为每个chunk代码
-            // window[&quot;webpackJsonp&quot;]里面的元素其实就是非入口chunk代码块
-            // parentJsonpFunction取自上一个window[&quot;webpackJsonp&quot;]的push的方法，
-            // 当第一个script的入口chunk，它的parentJsonpFunction就是普通数组的push
-            // 同时在第一个script的入口chunk，把window[&quot;webpackJsonp&quot;]的push改写为第一个script的入口chunk的webpackJsonpCallback方法
-            // 也就是第二个script的入口chunk里，这个parentJsonpFunction就是第一个script的入口chunk的webpackJsonpCallback方法
-            // 这样就把两份chunk的代码通过这种方式联系起来
-            // 当push（改写后的push）了非入口chunk，可以通过这种联系一层层传递到各个chunk的webpackJsonpCallback方法
-            // webpackJsonpCallback里面再调用checkDeferredModules方法，来检查并执行相应的模块代码
-            // 这样一来无论script顺序怎样，只要调用webpackJsonpCallback方法，就能达到加载的模块（chunk即为模块合集）传递到各个入口chunk
-/******/ 		if(parentJsonpFunction) parentJsonpFunction(data);
-/******/
-/******/ 		while(resolves.length) &#123;
-/******/ 			resolves.shift()();
-/******/ 		&#125;
-/******/
-/******/ 		// add entry modules from loaded chunk to deferred list
-            // 看原注释是添加新的前置依赖
-            // 暂不知为何是添加executeModules而不是一开始就写在deferredModules
-/******/ 		deferredModules.push.apply(deferredModules, executeModules || []);
-/******/
-/******/ 		// run deferred modules when all chunks ready
-/******/ 		return checkDeferredModules();
-/******/ 	&#125;;
-          // 检查依赖到齐没有，并执行
-          // 在主流程里会运行一次
-          // 在webpackJsonpCallback里最后再运行一次，也就是每次有chunk的加载都会检查运行一次
-/******/ 	function checkDeferredModules() &#123;
-/******/ 		var result;
-/******/ 		for(var i = 0; i &lt; deferredModules.length; i++) &#123;
-/******/ 			var deferredModule = deferredModules[i];
-/******/ 			var fulfilled = true;
-/******/ 			for(var j = 1; j &lt; deferredModule.length; j++) &#123;
-                // depId=&quot;./foo.js&quot;,&quot;default~bar~foo&quot;
-/******/ 				var depId = deferredModule[j];
-                // 是否已安装记录在installedChunks
-/******/ 				if(installedChunks[depId] !== 0) fulfilled = false;
-/******/ 			&#125;
-              // 全部安装完毕
-/******/ 			if(fulfilled) &#123;
-                // 把 deferredModules 清空
-/******/ 				deferredModules.splice(i--, 1);
-                // deferredModule[0]本chunk的名字，这里是&quot;./foo.js&quot;
-/******/ 				result = __webpack_require__(__webpack_require__.s = deferredModule[0]);
-/******/ 			&#125;
-/******/ 		&#125;
-/******/
-/******/ 		return result;
-/******/ 	&#125;
-/******/
-          // 先看同步代码，从这里开始看起
-/******/ 	// The module cache
-/******/ 	var installedModules = &#123;&#125;;
-/******/
-/******/ 	// object to store loaded and loading chunks
-/******/ 	// undefined = chunk not loaded, null = chunk preloaded/prefetched
-/******/ 	// Promise = chunk loading, 0 = chunk loaded
-          // 执行到这里，代表本身这个chunk也就是这个文件已加载
-          // 这里同时也会标记别的chunk加载了没有，来判断前置依赖有了没有
-/******/ 	var installedChunks = &#123;
-/******/ 		&quot;foo&quot;: 0
-/******/ 	&#125;;
-/******/
-/******/ 	var deferredModules = [];
-/******/
-/******/ 	// The require function
-/******/ 	function __webpack_require__(moduleId) &#123;
-/******/
-/******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId]) &#123;
-/******/ 			return installedModules[moduleId].exports;
-/******/ 		&#125;
-/******/ 		// Create a new module (and put it into the cache)
-            // 每个加载的模块结果缓存起来
-            // 这里每个module就是未打包前的每一份js
-/******/ 		var module = installedModules[moduleId] = &#123;
-/******/ 			i: moduleId,
-/******/ 			l: false,
-/******/ 			exports: &#123;&#125;
-/******/ 		&#125;;
-/******/
-/******/ 		// Execute the module function
-            // 这里注意到具体模块去看，会把这个模块的导出值赋值到module.exports
-            // 然后再 return 出去，所以 __webpack_require__ 模块会返回加载运行模块的结果
-/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
-/******/
-/******/ 		// Flag the module as loaded
-            // 标记这个 module 加载过
-/******/ 		module.l = true;
-/******/
-/******/ 		// Return the exports of the module
-/******/ 		return module.exports;
-/******/ 	&#125;
-/******/
-/******/  // 部分 __webpack_require__.字段 这里未体现作用
-/******/ 	// expose the modules object (__webpack_modules__)
-/******/ 	__webpack_require__.m = modules;
-/******/
-/******/ 	// expose the module cache
-/******/ 	__webpack_require__.c = installedModules;
-/******/
-/******/ 	// define getter function for harmony exports
-/******/ 	__webpack_require__.d = function(exports, name, getter) &#123;
-/******/ 		if(!__webpack_require__.o(exports, name)) &#123;
-/******/ 			Object.defineProperty(exports, name, &#123; enumerable: true, get: getter &#125;);
-/******/ 		&#125;
-/******/ 	&#125;;
-/******/
-/******/ 	// define __esModule on exports
-          // 打上 ES6 
-/******/ 	__webpack_require__.r = function(exports) &#123;
-/******/ 		if(typeof Symbol !== &#39;undefined&#39; &amp;&amp; Symbol.toStringTag) &#123;
-/******/ 			Object.defineProperty(exports, Symbol.toStringTag, &#123; value: &#39;Module&#39; &#125;);
-/******/ 		&#125;
-/******/ 		Object.defineProperty(exports, &#39;__esModule&#39;, &#123; value: true &#125;);
-/******/ 	&#125;;
-/******/
-/******/ 	// create a fake namespace object
-/******/ 	// mode &amp; 1: value is a module id, require it
-/******/ 	// mode &amp; 2: merge all properties of value into the ns
-/******/ 	// mode &amp; 4: return value when already ns object
-/******/ 	// mode &amp; 8|1: behave like require
-/******/ 	__webpack_require__.t = function(value, mode) &#123;
-/******/ 		if(mode &amp; 1) value = __webpack_require__(value);
-/******/ 		if(mode &amp; 8) return value;
-/******/ 		if((mode &amp; 4) &amp;&amp; typeof value === &#39;object&#39; &amp;&amp; value &amp;&amp; value.__esModule) return value;
-/******/ 		var ns = Object.create(null);
-/******/ 		__webpack_require__.r(ns);
-/******/ 		Object.defineProperty(ns, &#39;default&#39;, &#123; enumerable: true, value: value &#125;);
-/******/ 		if(mode &amp; 2 &amp;&amp; typeof value != &#39;string&#39;) for(var key in value) __webpack_require__.d(ns, key, function(key) &#123; return value[key]; &#125;.bind(null, key));
-/******/ 		return ns;
-/******/ 	&#125;;
-/******/
-/******/ 	// getDefaultExport function for compatibility with non-harmony modules
-/******/ 	__webpack_require__.n = function(module) &#123;
-/******/ 		var getter = module &amp;&amp; module.__esModule ?
-/******/ 			function getDefault() &#123; return module[&#39;default&#39;]; &#125; :
-/******/ 			function getModuleExports() &#123; return module; &#125;;
-/******/ 		__webpack_require__.d(getter, &#39;a&#39;, getter);
-/******/ 		return getter;
-/******/ 	&#125;;
-/******/
-/******/ 	// Object.prototype.hasOwnProperty.call
-/******/ 	__webpack_require__.o = function(object, property) &#123; return Object.prototype.hasOwnProperty.call(object, property); &#125;;
-/******/
-/******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = &quot;&quot;;
-/******/
-          // 初始化window[&quot;webpackJsonp&quot;]为一个数组
-/******/ 	var jsonpArray = window[&quot;webpackJsonp&quot;] = window[&quot;webpackJsonp&quot;] || [];
-          // 把旧的window[&quot;webpackJsonp&quot;]的push方法缓存起来，当然第一个就是数组的push方法
-/******/ 	var oldJsonpFunction = jsonpArray.push.bind(jsonpArray);
-          // 改写window[&quot;webpackJsonp&quot;]的push方法为webpackJsonpCallback
-/******/ 	jsonpArray.push = webpackJsonpCallback;
-/******/ 	jsonpArray = jsonpArray.slice();
-          // 把window[&quot;webpackJsonp&quot;]的chunk传入webpackJsonpCallback执行一下
-/******/ 	for(var i = 0; i &lt; jsonpArray.length; i++) webpackJsonpCallback(jsonpArray[i]);
-          // 这里再次把旧的window[&quot;webpackJsonp&quot;]的push方法赋值到parentJsonpFunction
-          // parentJsonpFunction会存在在这个chunk的作用域，在这个chunk的webpackJsonpCallback里被调用
-/******/ 	var parentJsonpFunction = oldJsonpFunction;
-/******/
-/******/
-/******/ 	// add entry module to deferred list
-                    // 首位为本身chunk，后面为所依赖的chunk
-                    // 所以可以得知靠着installedChunks和deferredModules这两个变量来判断到底所需的文件加载好了没有
-                    // 以至于在script标签里的引入顺序会干扰到依赖加载从而影响执行
-          // 注意这里是二维数组
-/******/ 	deferredModules.push([&quot;./foo.js&quot;,&quot;default~bar~foo&quot;]);
-/******/ 	// run deferred modules when ready
-/******/ 	return checkDeferredModules();
-/******/ &#125;)
-/************************************************************************/
-/******/ (&#123;
-
-/***/ &quot;./foo.js&quot;:
-/*!****************!*\
-  !*** ./foo.js ***!
-  \****************/
-/*! no exports provided */
-/***/ (function(module, __webpack_exports__, __webpack_require__) &#123;
-
-&quot;use strict&quot;;
-// 标记为 ES6 模块
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _util__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./util */ &quot;./util.js&quot;);
-
-console.log(&#39;foo&#39;)
-console.log(Object(_util__WEBPACK_IMPORTED_MODULE_0__[&quot;default&quot;])(&#39;foo&#39;))
-
-/***/ &#125;)
-
-/******/ &#125;);
-</code></pre>
-<p>通过全局的 webpackJsonp 这个数组来连接多份文件。改写了这个数组的 push 方法。让其在每次 push 的时候，都一层一层找上之前加载过的文件。<br>触发每份入口文件里的<code>检查依赖（checkDeferredModules）</code>，来判断前置依赖是否准备好。好则开始执行。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      
-      <!-- <a data-url="https://blog.cchealthier.com/2020/08/16/webpackJsonp/" data-id="clpexgou0005sx69mhu5l9u1a" class="article-share-link">分享</a> -->
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" rel="tag">工程化</a></li></ul>
-
     </footer>
   </div>
   
@@ -921,7 +681,7 @@ console.log(Object(_util__WEBPACK_IMPORTED_MODULE_0__[&quot;default&quot;])(&#39
 
   <nav id="page-nav">
     
-    <a class="extend prev" rel="prev" href="/page/6/">« 上一页</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="page-number" href="/page/6/">6</a><span class="page-number current">7</span><a class="page-number" href="/page/8/">8</a><a class="page-number" href="/page/9/">9</a><span class="space">&hellip;</span><a class="page-number" href="/page/11/">11</a><a class="extend next" rel="next" href="/page/8/">下一页 »</a>
+    <a class="extend prev" rel="prev" href="/page/6/">« 上一页</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="page-number" href="/page/6/">6</a><span class="page-number current">7</span><a class="page-number" href="/page/8/">8</a><a class="page-number" href="/page/9/">9</a><span class="space">&hellip;</span><a class="page-number" href="/page/12/">12</a><a class="extend next" rel="next" href="/page/8/">下一页 »</a>
   </nav>
 
 </section>
@@ -933,6 +693,10 @@ console.log(Object(_util__WEBPACK_IMPORTED_MODULE_0__[&quot;default&quot;])(&#39
     <h3 class="widget-title">最新文章</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2023/12/03/react-native-record/">react-native ios 流水账</a>
+          </li>
         
           <li>
             <a href="/2023/11/24/ios-rn-integrate/">ios 原生应用集成 react-native</a>
@@ -948,10 +712,6 @@ console.log(Object(_util__WEBPACK_IMPORTED_MODULE_0__[&quot;default&quot;])(&#39
         
           <li>
             <a href="/2023/09/23/react-basic-app-2/">react 基础工程 Ⅱ（@reduxjs/toolkit &amp; @craco/craco &amp; vite）</a>
-          </li>
-        
-          <li>
-            <a href="/2023/08/24/node-module/">NodeJS 的 commonjs、esm 模块使用以及一些字段释义</a>
           </li>
         
       </ul>
@@ -992,7 +752,7 @@ console.log(Object(_util__WEBPACK_IMPORTED_MODULE_0__[&quot;default&quot;])(&#39
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/11/">十一月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/10/">十月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/09/">九月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/08/">八月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">七月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/06/">六月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/05/">五月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/04/">四月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/03/">三月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/02/">二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">十一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">十月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">九月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/12/">十二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/11/">十一月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/10/">十月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/09/">九月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/08/">八月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">七月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/06/">六月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/05/">五月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/04/">四月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/03/">三月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/02/">二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">十一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">十月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">九月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a></li></ul>
     </div>
   </div>
 

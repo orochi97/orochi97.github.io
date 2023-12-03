@@ -74,6 +74,157 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-linked-list" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2022/09/25/linked-list/" class="article-date">
+  <time datetime="2022-09-25T15:22:55.000Z" itemprop="datePublished">2022-09-25</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E7%AE%97%E6%B3%95/">算法</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2022/09/25/linked-list/">链表</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E9%93%BE%E8%A1%A8/9794473?fr=aladdin">链表</a>的概念这里就不赘述了，直接上代码吧。<br>其他都没什么问题，主要是反转的做法。</p>
+<pre><code class="js">class Node &#123;
+  constructor(element) &#123;
+    this.element = element;
+    this.next = null;
+  &#125;
+&#125;
+
+class LinkedList &#123;
+  constructor() &#123;
+    this.head = new Node(&#39;head&#39;);
+    this.length = 0;
+  &#125;
+  insert(newElement, element = null) &#123; // 加在某个元素后面，如果该元素不在，则加在 head 后面
+    let currNode = this.find(element);
+    if (!currNode) &#123;
+      currNode = this.head;
+    &#125;
+    const newNode = new Node(newElement);
+    newNode.next = currNode.next;
+    currNode.next = newNode;
+    this.length++;
+    return this;
+  &#125;
+  remove(element) &#123;
+    const prevNode = this.prev(element);
+    if (prevNode &amp;&amp; prevNode.next) &#123;
+      const currNode = prevNode.next;
+      prevNode.next = currNode.next;
+      this.length--;
+    &#125;
+    return this;
+  &#125;
+  find(element) &#123;
+    let node = this.head;
+    while(node) &#123;
+      if (node.element === element) &#123;
+        break;
+      &#125;
+      node = node.next;
+    &#125;
+    return node;
+  &#125;
+  getAll() &#123;
+    const result = [];
+    let node = this.head;
+    while(node &amp;&amp; node.next) &#123;
+      node = node.next;
+      result.push(node.element);
+    &#125;
+    return result;
+  &#125;
+  prev(element) &#123;
+    let node = this.head;
+    while(node) &#123;
+      if (node.next &amp;&amp; node.next.element === element) &#123;
+        break;
+      &#125;
+      node = node.next;
+    &#125;
+    return node;
+  &#125;
+  next(element) &#123;
+    const currNode = this.find(element);
+    if (currNode) &#123;
+      return currNode.next;
+    &#125;
+    return null;
+  &#125;
+  reverse(element) &#123;
+    // 直接倒序重新生成的不正规解法
+    // let node = this.head;
+    // this.getAll().reverse().forEach((element) =&gt; &#123;
+    // 	node.next = new Node(element);
+    // 	node = node.next;
+    // &#125;);
+    // node.next = null;
+
+    // 只需要循环一次的正规解法
+    let head = this.prev(element); // 这个后面的元素要反转，所以也有可能是链表的 head
+    let first = this.find(element); // 一直指向要反转的链表第一个
+    if (!first) &#123;
+      head = this.head;
+      first = this.head.next;
+    &#125;
+    if (!first) return this;
+
+    const node = first; // node 是不需要变的，一直都是一开始的第一个，因为每次循环 node 都会变位置，它的 next 指向也会一直变
+    while(node &amp;&amp; node.next) &#123;
+      const nextNode = node.next;
+      node.next = nextNode.next;
+      nextNode.next = first;
+      first = nextNode;
+    &#125;
+    head.next = first;
+    // 每次都把 1 的 next 挪到 first 的前面，同时 1 也会相应的变位置
+    // 12345：first = 1，node = 1，把 1 的 next 指向 3，2 的 next 指向 1，即把 2 放到 1（frist） 前面
+    // 21345：first = 2，node = 1，把 1 的 next 指向 4，3 的 next 指向 2，即把 3 放到 2（frist） 前面
+    // 32145：first = 3，node = 1，把 1 的 next 指向 5，4 的 next 指向 3，即把 4 放到 3（frist） 前面
+    // 43215
+    // 54321
+    return this;
+  &#125;
+&#125;
+</code></pre>
+<p>下面是运行结果</p>
+        
+          <p class="article-more-link">
+            <a href="/2022/09/25/linked-list/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      
+      <!-- <a data-url="https://blog.cchealthier.com/2022/09/25/linked-list/" data-id="clppnx0gb001czg9mde11e6mu" class="article-share-link">分享</a> -->
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-webpack-babel-esm" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2022/09/05/webpack-babel-esm/" class="article-date">
@@ -122,7 +273,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2022/09/05/webpack-babel-esm/" data-id="clpexgotw003kx69m9ptv8pg9" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2022/09/05/webpack-babel-esm/" data-id="clppnx0gk003ozg9mhw833ozm" class="article-share-link">分享</a> -->
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" rel="tag">工程化</a></li></ul>
@@ -176,7 +327,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2022/03/26/nginx/" data-id="clpexgoto001vx69m44gufwvw" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2022/03/26/nginx/" data-id="clppnx0ge0021zg9m2walgdaw" class="article-share-link">分享</a> -->
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/nginx/" rel="tag">nginx</a></li></ul>
@@ -227,7 +378,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2022/03/19/vite-server-import/" data-id="clpexgotv003fx69mc0gmh0xb" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2022/03/19/vite-server-import/" data-id="clppnx0gj003hzg9m4ttk9sfk" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -274,64 +425,9 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2022/03/14/beijing-winter/" data-id="clpexgotg0005x69m1y7n31pf" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2022/03/14/beijing-winter/" data-id="clppnx0g30004zg9m93zh1lzh" class="article-share-link">分享</a> -->
       
       
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-performance-api" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2021/01/09/performance-api/" class="article-date">
-  <time datetime="2021-01-09T13:52:41.000Z" itemprop="datePublished">2021-01-09</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/01/09/performance-api/">前端性能监控</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>前端性能参数，可以直接敲 <code>performance</code>。里面记录了各个性能指标。具体的各个参数，可以查看大佬们的<a target="_blank" rel="noopener" href="http://www.alloyteam.com/2015/09/explore-performance/#prettyPhoto">总结</a>。</p>
-<p>这里记录几个参数</p>
-<h4 id="1、首屏绘制（First-Paint，FP）"><a href="#1、首屏绘制（First-Paint，FP）" class="headerlink" title="1、首屏绘制（First Paint，FP）"></a>1、首屏绘制（First Paint，FP）</h4><p>就是白屏时间啦。</p>
-<pre><code class="js">performance.getEntriesByType(&#39;paint&#39;)[0]
-</code></pre>
-<h4 id="2、首屏内容绘制（First-Contentful-Paint，FCP）"><a href="#2、首屏内容绘制（First-Contentful-Paint，FCP）" class="headerlink" title="2、首屏内容绘制（First Contentful Paint，FCP）"></a>2、首屏内容绘制（First Contentful Paint，FCP）</h4><p>就是首屏加载时间啦</p>
-<pre><code class="js">performance.getEntriesByType(&#39;paint&#39;)[1]
-</code></pre>
-        
-          <p class="article-more-link">
-            <a href="/2021/01/09/performance-api/#more">Read More</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      
-      <!-- <a data-url="https://blog.cchealthier.com/2021/01/09/performance-api/" data-id="clpexgotq0024x69m8f7abgai" class="article-share-link">分享</a> -->
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%80%A7%E8%83%BD/" rel="tag">性能</a></li></ul>
-
     </footer>
   </div>
   
@@ -343,7 +439,7 @@
 
   <nav id="page-nav">
     
-    <a class="extend prev" rel="prev" href="/page/4/">« 上一页</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><a class="page-number" href="/page/7/">7</a><span class="space">&hellip;</span><a class="page-number" href="/page/11/">11</a><a class="extend next" rel="next" href="/page/6/">下一页 »</a>
+    <a class="extend prev" rel="prev" href="/page/4/">« 上一页</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><a class="page-number" href="/page/7/">7</a><span class="space">&hellip;</span><a class="page-number" href="/page/12/">12</a><a class="extend next" rel="next" href="/page/6/">下一页 »</a>
   </nav>
 
 </section>
@@ -355,6 +451,10 @@
     <h3 class="widget-title">最新文章</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2023/12/03/react-native-record/">react-native ios 流水账</a>
+          </li>
         
           <li>
             <a href="/2023/11/24/ios-rn-integrate/">ios 原生应用集成 react-native</a>
@@ -370,10 +470,6 @@
         
           <li>
             <a href="/2023/09/23/react-basic-app-2/">react 基础工程 Ⅱ（@reduxjs/toolkit &amp; @craco/craco &amp; vite）</a>
-          </li>
-        
-          <li>
-            <a href="/2023/08/24/node-module/">NodeJS 的 commonjs、esm 模块使用以及一些字段释义</a>
           </li>
         
       </ul>
@@ -414,7 +510,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/11/">十一月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/10/">十月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/09/">九月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/08/">八月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">七月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/06/">六月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/05/">五月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/04/">四月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/03/">三月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/02/">二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">十一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">十月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">九月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/12/">十二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/11/">十一月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/10/">十月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/09/">九月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/08/">八月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">七月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/06/">六月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/05/">五月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/04/">四月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/03/">三月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/02/">二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">十一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">十月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">九月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a></li></ul>
     </div>
   </div>
 

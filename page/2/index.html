@@ -74,6 +74,92 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-node-module" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2023/08/24/node-module/" class="article-date">
+  <time datetime="2023-08-24T03:06:10.000Z" itemprop="datePublished">2023-08-24</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2023/08/24/node-module/">NodeJS 的 commonjs、esm 模块使用以及一些字段释义</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>在之前 js 的模块化迟迟没有落地，所以 NodeJS 自己整了个 <code>commonjs</code>，也就是我们代码里常看到 <code>require(&#39;moduleName&#39;)</code>。后来浏览器支持了 esm 标准也就是代码里的 <code>import export</code>，NodeJS 也给加上了。</p>
+<p>在不支持的年代，我们代码能直接写上模块化语句，都是 webpack 和 babel 的功劳。无论是 import 还是 require，最后都会处理成 <code>_webpack_require_</code>（应该是这个 api）。</p>
+<p>这里记录下 NodeJS 使用 commonjs、esm 的一些注意点，以及 package.json 一些看了老是记不住的字段。</p>
+<h3 id="一、文件格式区分"><a href="#一、文件格式区分" class="headerlink" title="一、文件格式区分"></a>一、文件格式区分</h3><p>NodeJS 要使用 esm 模块，文件必须声明为 .mjs 后缀。依然使用 .js 或者声明为 .cjs 都是使用 commonjs。</p>
+<ol>
+<li><p>当然硬要在 .js&#x2F;.cjs 文件使用 esm 语句（也就是 import）的话会<strong>报错</strong>：</p>
+<blockquote>
+<p>SyntaxError: Cannot use import statement outside a module</p>
+</blockquote>
+</li>
+<li><p>反过来在 .mjs 文件使用 commonjs 语句（也就是 require）的话会<strong>报错</strong>：</p>
+<blockquote>
+<p>ReferenceError: require is not defined in ES module scope, you can use import instead</p>
+</blockquote>
+</li>
+</ol>
+<h3 id="二、混搭使用"><a href="#二、混搭使用" class="headerlink" title="二、混搭使用"></a>二、混搭使用</h3><p>正常使用当然是两厢安好，但是可能还是会出现一些旧模块是 commonjs 写的，新的又想用 esm 去写的情况。</p>
+<ol>
+<li>在 .js&#x2F;.cjs 文件引用了 esm 模块的话会<strong>报错</strong>：<blockquote>
+<p>require() of ES Module &#x2F;xxx&#x2F;yyy&#x2F;zzz&#x2F;utils.mjs not supported.Instead change the require of &#x2F;xxx&#x2F;yyy&#x2F;zzz&#x2F;utils.mjs to a dynamic import() which is available in all CommonJS modules.</p>
+</blockquote>
+</li>
+</ol>
+<p>按照指示，改成动态引入 <code>import()</code> 就可以了。</p>
+<pre><code class="js">import(&#39;./utils.mjs&#39;).then(console.log);
+// [Module: null prototype] &#123;
+//   default: [Function: runEsm],
+//   runSub: [Function: runSub]
+// &#125;
+</code></pre>
+<p>可以看出，<code>export default</code> 导出的东西被挂载 <code>default</code> 字段上。上面说了在标准还没落地时，webpack 就是这么做的。不知道是不是 NodeJS 参考了这个实现。</p>
+<ol start="2">
+<li>在 .mjs 文件 文件引用了 commonjs 模块的话就<strong>没问题</strong>。&#x3D; &#x3D;！</li>
+</ol>
+<p>只不过 commonjs 里并没有 <code>default</code> 这个概念，所以如 <code>import runCommonDefault, &#123; runExport &#125; from &#39;./utils.cjs&#39;;</code> 里，<code>runCommonDefault</code> 就是整个 <code>module.exports</code> 导出的对象。而 <code>runExport</code> 就是纯粹对 <code>module.exports</code> 导出对象的解构，属于其中一个字段内容。</p>
+<h3 id="三、esm-模块不支持-filename，-dirname"><a href="#三、esm-模块不支持-filename，-dirname" class="headerlink" title="三、esm 模块不支持 __filename，__dirname"></a>三、esm 模块不支持 __filename，__dirname</h3><p>esm 模块里是没有 <code>__filename</code>，<code>__dirname</code> 这两个全局变量的（其实不是全局变量，和 require 一样是外部传进来，姑且当其是个全局变量）。可以这样实现：</p>
+<pre><code class="js">import path from &#39;path&#39;;
+import url from &#39;url&#39;;
+const __filename = url.fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+</code></pre>
+        
+          <p class="article-more-link">
+            <a href="/2023/08/24/node-module/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      
+      <!-- <a data-url="https://blog.cchealthier.com/2023/08/24/node-module/" data-id="clppnx0gc001xzg9mfr4j4d02" class="article-share-link">分享</a> -->
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-webpack5-background-url" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2023/08/23/webpack5-background-url/" class="article-date">
@@ -140,7 +226,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2023/08/23/webpack5-background-url/" data-id="clpexgotz005qx69mhlgb589z" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2023/08/23/webpack5-background-url/" data-id="clppnx0go005qzg9m6kvsfr29" class="article-share-link">分享</a> -->
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" rel="tag">工程化</a></li></ul>
@@ -264,7 +350,7 @@ writeStream.on(&#39;close&#39;, () =&gt; &#123;
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2023/07/26/node-stream/" data-id="clpexgotq001zx69mawik7q57" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2023/07/26/node-stream/" data-id="clppnx0ge0023zg9m9jrn2btr" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -345,7 +431,7 @@ writeStream.on(&#39;close&#39;, () =&gt; &#123;
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2023/06/07/webpack-modulefederationplugin/" data-id="clpexgotw003qx69m70kpd6uu" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2023/06/07/webpack-modulefederationplugin/" data-id="clppnx0gk003rzg9mcwm79f90" class="article-share-link">分享</a> -->
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" rel="tag">工程化</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%BE%AE%E5%89%8D%E7%AB%AF/" rel="tag">微前端</a></li></ul>
@@ -446,66 +532,10 @@ export default App;
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2023/05/31/react-basic-app/" data-id="clpexgots002px69masu9gl8l" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2023/05/31/react-basic-app/" data-id="clppnx0gh002qzg9m1kw9h8iq" class="article-share-link">分享</a> -->
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" rel="tag">工程化</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-performance-optimize" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2023/05/19/performance-optimize/" class="article-date">
-  <time datetime="2023-05-18T16:03:11.000Z" itemprop="datePublished">2023-05-19</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2023/05/19/performance-optimize/">一次前端性能优化的过程（多图）</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>性能优化听多了，又是各个注意点，又是监控什么的，如《<a href="/2020/05/28/js-performance/">JS性能优化探讨</a>》《<a href="/2021/01/09/performance-api/">前端性能监控</a>》，真正遇到了还是得具体场景具体分析。</p>
-<p>一直觉得我的<a target="_blank" rel="noopener" href="https://cchealthier.com/"><u>个人网站首页</u></a>（现在不会了）很慢，进去后背景和熊猫头渲染得特别慢。当然这个慢是相对的，就我做过的 TO B 系统单单是前置接口的获取都要几秒了，只是有 loading 效果看起来不难受。但是我这个网页啥都没有，就那么几个图片和动画，着实不该。那就实际一步步看看吧。</p>
-<h3 id="一-服务器连接速度"><a href="#一-服务器连接速度" class="headerlink" title="一. 服务器连接速度"></a>一. 服务器连接速度</h3><p>直接百度搜<code>网站访问速度测试</code>就有很多工具网站。一看都没啥问题，除了极个别的比较远的省份（我这是买的阿里云深圳的服务器）其他都在一秒以内。再 <code>ping</code> 一下，也可以看到并无延迟。也就是 <code>DNS</code> 解析和访问并没有问题。</p>
-<h3 id="二-减小图片体积"><a href="#二-减小图片体积" class="headerlink" title="二. 减小图片体积"></a>二. 减小图片体积</h3><p>那首先考虑资源图片过大，因为确实用了比较高清的图片，那就在不糊的情况下尽量缩小体积。兴冲冲地更新一看，没啥变化。还是有那个等待过程。那好吧，一不做而不休，我尝试把其他图片都去掉，只留下一个熊猫头，还是很慢，就证明不该是图片背锅。当然缩小体积是没有问题的。省流量嘛。</p>
-<h3 id="三-使用-Devtool-Performance"><a href="#三-使用-Devtool-Performance" class="headerlink" title="三. 使用 Devtool Performance"></a>三. 使用 Devtool Performance</h3><p>那就直接用工具看吧，打开开发者工具，切到 <code>Performance</code>，启动录制看看效果。找一下，在 Timings 那里看到 <code>FP</code> <code>FCP</code> 等事件，这里就是影响视觉观看的主要节点了。当然前面还有 <code>Parse HTML</code> 或者 <code>Function call</code> 等等事件。主要看 <code>Parse HTML</code>，因为要解析了 html，才会加载一系列资源，可以看出这一步并没有什么问题，也是很快就响应了。但是到 <code>FCP</code> 却隔了好几秒。也就是中间有东西耽搁了。<br>看了一下，是<strong>必要的 js 文件加载</strong>。有两个，一个是 <code>app.***.js</code>，基础的业务 js， 一个是 <code>chunk-vendor.***.js</code>，vue 框架的打包产物。毫无疑问，这两者都是不可或缺的。<code>appjs</code> 比较小还好，很快就获取完了。<code>chunk-vendorjs</code>有 300+kb，耗时几秒。可以看到它加载完后，很快就 <code>FCP</code> 了。所以它的加载就是问题关键了。</p>
-<h3 id="四-js-文件太大？"><a href="#四-js-文件太大？" class="headerlink" title="四. js 文件太大？"></a>四. js 文件太大？</h3><p>讲道理，300+kb 的 js 文件不算小，但也不能叫很大啊。怎么要好几秒才能加载完？当然我的服务器没有加速功能，如果放到 CDN 服务，我想应该效果会好点。但是没有这条件，那只能另外想想办法。我代码里用了 <code>Element-UI</code>，测试了一下确实是按需引入，去掉几个组件后，体积变小了。<br>但，这些就是要用到的，减不了。路由页面用的也是 <code>import()</code> 动态引入，也就是到了真正访问那个页面组件，才会去加载相应的 js。再说了业务代码也不会打包到 vendor 去。那体积没法减了。然后在自己本地测试了一下，以及线上的缓存状态下，页面出现都很快，更加印证了我的猜测，就是这个 “大 js 文件” 导致了页面渲染慢。（当然最好有个 CDN 什么的加速可以验证…）</p>
-<img src="/2023/05/19/performance-optimize/%E4%BC%98%E5%8C%96%E5%89%8Dnetwork.png" class="" title="优化前network">
-
-<p>事情本到这里就结束了（啥都没干，555…），结果又看到一个神奇的网站，谷歌的性能分析网站，地址：<a target="_blank" rel="noopener" href="https://pagespeed.web.dev/">https://pagespeed.web.dev</a> （可能需要科学上网）</p>
-        
-          <p class="article-more-link">
-            <a href="/2023/05/19/performance-optimize/#more">Read More</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      
-      <!-- <a data-url="https://blog.cchealthier.com/2023/05/19/performance-optimize/" data-id="clpexgotr0028x69m2f9p7c8h" class="article-share-link">分享</a> -->
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%80%A7%E8%83%BD/" rel="tag">性能</a></li></ul>
 
     </footer>
   </div>
@@ -518,7 +548,7 @@ export default App;
 
   <nav id="page-nav">
     
-    <a class="extend prev" rel="prev" href="/">« 上一页</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/11/">11</a><a class="extend next" rel="next" href="/page/3/">下一页 »</a>
+    <a class="extend prev" rel="prev" href="/">« 上一页</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/12/">12</a><a class="extend next" rel="next" href="/page/3/">下一页 »</a>
   </nav>
 
 </section>
@@ -530,6 +560,10 @@ export default App;
     <h3 class="widget-title">最新文章</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2023/12/03/react-native-record/">react-native ios 流水账</a>
+          </li>
         
           <li>
             <a href="/2023/11/24/ios-rn-integrate/">ios 原生应用集成 react-native</a>
@@ -545,10 +579,6 @@ export default App;
         
           <li>
             <a href="/2023/09/23/react-basic-app-2/">react 基础工程 Ⅱ（@reduxjs/toolkit &amp; @craco/craco &amp; vite）</a>
-          </li>
-        
-          <li>
-            <a href="/2023/08/24/node-module/">NodeJS 的 commonjs、esm 模块使用以及一些字段释义</a>
           </li>
         
       </ul>
@@ -589,7 +619,7 @@ export default App;
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/11/">十一月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/10/">十月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/09/">九月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/08/">八月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">七月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/06/">六月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/05/">五月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/04/">四月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/03/">三月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/02/">二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">十一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">十月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">九月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/12/">十二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/11/">十一月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/10/">十月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/09/">九月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/08/">八月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">七月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/06/">六月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/05/">五月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/04/">四月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/03/">三月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/02/">二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">十一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">十月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">九月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a></li></ul>
     </div>
   </div>
 
