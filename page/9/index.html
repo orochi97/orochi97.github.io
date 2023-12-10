@@ -74,6 +74,180 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-variable-type" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/07/25/variable-type/" class="article-date">
+  <time datetime="2020-07-25T09:44:02.000Z" itemprop="datePublished">2020-07-25</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/07/25/variable-type/">判断变量类型的几个方法</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>前置</p>
+<pre><code class="js">function Person() &#123;&#125;
+const p = new Person()
+</code></pre>
+<h2 id="一、-typeof"><a href="#一、-typeof" class="headerlink" title="一、 typeof"></a>一、 typeof</h2><pre><code class="js">console.log(typeof []) // object
+console.log(typeof &#123;&#125;) // object
+console.log(typeof function()&#123;&#125;) // function
+console.log(typeof &#39;&#39;) // string
+console.log(typeof 1) // number
+console.log(typeof true) // boolean
+console.log(typeof undefined) // undefined
+console.log(typeof null) // object
+console.log(typeof NaN) // number
+console.log(typeof /abc/) // object
+console.log(typeof Symbol()) // symbol
+console.log(typeof new Date()) // object
+console.log(typeof new Map()) // object
+console.log(typeof new Set()) // object
+console.log(typeof Person) // function
+console.log(typeof p) // object
+</code></pre>
+<p>区分不了更精细的对象，比如数组和后面三个也被判断为对象。虽说数组和函数也是对象的一种。但函数都有自己的姓名。<br>参考了 <a target="_blank" rel="noopener" href="http://www.w3help.org/zh-cn/causes/SD9028">w3help</a> 上的资料来看，标准如此：</p>
+<img src="/2020/07/25/variable-type/typeof.PNG" class="" title="typeof">
+
+<p>最新的 <a target="_blank" rel="noopener" href="https://tc39.es/ecma262/#sec-typeof-operator">标准</a> 图是这样子：</p>
+<img src="/2020/07/25/variable-type/typeof2.PNG" class="" title="typeof">
+
+<p><strong>PS：</strong><br>__native object：__原生对象，ECMAScript 实现中，并非由宿主环境，而是完全由本规范定义其语义的对象。这些引用类型在运行过程中需要通过new来创建所需的实例对象。如：Object、Array、Date、RegExp、Function、Boolean、Number、String。（听起来就是语言标准自带的）<br>__built-in object：__内置对象，由 ECMAScript 实现提供，独立于宿主环境的对象，ECMAScript 程序开始执行时就存在。内置对象是本地对象的子集。包含：Global和Math、JSON。<br>__host object：__宿主对象，由宿主环境提供的对象，用于完善 ECMAScript 执行环境，如 Window 和 Document。</p>
+<p>看起来数组属于 <strong>native object</strong>，同时没有 <strong>implement [[Call]]</strong> （没有这个内置属性？），所以返回会是个对象。</p>
+<p>不过如果不需要判断得那么精细，那也够用了。而且这个可以直接 typeof 一个没有定义过的变量，会返回undefined。或许有些地方也可以利用起来。<br>另，可以看下 <a target="_blank" rel="noopener" href="https://segmentfault.com/q/1010000011846328">segmentfault</a> 大佬对于 <code>typeof(null) === &#39;object&#39;</code> 的回答。</p>
+<h2 id="二、-constructor"><a href="#二、-constructor" class="headerlink" title="二、 constructor"></a>二、 constructor</h2><pre><code class="js">console.log([].constructor.name) // Array
+console.log(&#123;&#125;.constructor.name) // Object
+console.log(function()&#123;&#125;.constructor.name) // Function
+console.log(&#39;&#39;.constructor.name) // String
+const number = 1
+console.log(number.constructor.name) // Number
+console.log(true.constructor.name) // Boolean
+// console.log(undefined.constructor.name) // 报错
+// console.log(null.constructor.name) // 报错
+console.log(NaN.constructor.name) // Number
+console.log(/abc/.constructor.name) // RegExp
+console.log(Symbol().constructor.name) // Symbol
+console.log(new Date().constructor.name) // Date
+console.log(new Map().constructor.name) // Map
+console.log(new Set().constructor.name) // Set
+console.log(Person.constructor.name) // Function
+console.log(p.constructor.name) // Person
+</code></pre>
+<p>只有 constructor 也行，返回就是这个这个变量的原型。</p>
+<p>需要注意的是实例 p 返回的是 Person 这个原型。</p>
+<h2 id="三、-instanceof"><a href="#三、-instanceof" class="headerlink" title="三、 instanceof"></a>三、 instanceof</h2><p>先看 <a target="_blank" rel="noopener" href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/instanceof">定义</a>。从名字上看，该变量是否为某原型的实例。</p>
+<pre><code class="js">console.log([] instanceof Array) // true
+console.log([] instanceof Object) // true
+console.log(&#123;&#125; instanceof Object) // true
+console.log(function()&#123;&#125; instanceof Function) // true
+console.log(&#39;&#39; instanceof String) // false
+console.log(1 instanceof Number) // false
+console.log(true instanceof Boolean) // false
+// console.log(undefined instanceof undefined)
+// 报错：Right-hand side of &#39;instanceof&#39; is not an object
+// console.log(null instanceof null)
+// 报错：Right-hand side of &#39;instanceof&#39; is not an object
+console.log(NaN instanceof Number) // false
+console.log(/abc/ instanceof RegExp) // true
+console.log(Symbol() instanceof Symbol) // false
+console.log(new Date() instanceof Date) // true
+console.log(new Map() instanceof Map) // true
+console.log(new Set() instanceof Set) // true
+console.log(Person instanceof Function) // true
+console.log(p instanceof Person) // true
+console.log(p instanceof Object) // true
+</code></pre>
+<p><code>[]</code>既是数组的实例，又是对象的实例。</p>
+<p>可参阅此<a target="_blank" rel="noopener" href="https://developer.ibm.com/zh/articles/1306-jiangjj-jsinstanceof/">文章</a>介绍，这里直接摘取下里面的翻译与代码</p>
+<pre><code class="js">function instance_of(L, R) &#123;//L 表示左表达式，R 表示右表达式
+  var O = R.prototype;// 取 R 的显示原型
+  L = L.__proto__;// 取 L 的隐式原型
+  while (true) &#123;
+    if (L === null)
+      return false;
+    if (O === L)// 这里重点：当 O 严格等于 L 时，返回 true
+      return true;
+    L = L.__proto__;
+  &#125;
+&#125;
+// 上面的代码就很好地解释了，根据原型链的知识，我们知道以下两条等式成立，所以 [] 也是 Object 的实例
+[].__proto__ === Array.prototype
+Array.prototype.__proto__ === Object.prototype
+</code></pre>
+<p>这时候又出现了个问题，<code>NaN instanceof Number === false</code>…真是没完没了。按照上面的方法来应该是true的。<br>其实这个可以跟上面的 <code>&#39;&#39; instanceof String === false</code> <code>1 instanceof Number === false</code> <code>true instanceof Boolean === false</code> 一起看。<br>NaN也是一个数字值，跟1、2、3这种一样。上面那样写就是返回 false，写出 new 出来的实例就为 true。比如：</p>
+<pre><code class="js">const num = new Number(1)
+console.log(num instanceof Number) // true
+</code></pre>
+<p><strong>个人理解：</strong>这里的 num 是 Number 的一个实例，但其实它是对象。实例首先肯定是个对象。比如 1 ‘’ true，都是基础类型。上面的方法是站在真正的实例对象来判断，是一个简单化步骤的方法。<br>但标准里面说的，还有调用内部方法与内部属性，当判断到不是对象，其实就返回 false 了。<strong>这里与 typeof 联系起来，typeof 不是 object 的，用 instanceof 都是 false 了</strong>。</p>
+<h2 id="四、-Object-prototype-toString-call"><a href="#四、-Object-prototype-toString-call" class="headerlink" title="四、 Object.prototype.toString.call"></a>四、 Object.prototype.toString.call</h2><pre><code class="js">console.log(Object.prototype.toString.call([])) // [object Array]
+console.log(Object.prototype.toString.call(&#123;&#125;)) // [object Object]
+console.log(Object.prototype.toString.call(function()&#123;&#125;)) // [object Function]
+console.log(Object.prototype.toString.call(&#39;&#39;)) // [object String]
+console.log(Object.prototype.toString.call(1)) // [object Number]
+console.log(Object.prototype.toString.call(true)) // [object Boolean]
+console.log(Object.prototype.toString.call(undefined)) // [object Undefined]
+console.log(Object.prototype.toString.call(null)) // [object Null]
+console.log(Object.prototype.toString.call(NaN)) // [object Number]
+console.log(Object.prototype.toString.call(/abc/)) // [object RegExp]
+console.log(Object.prototype.toString.call(Symbol())) // [object Symbol]
+console.log(Object.prototype.toString.call(new Date())) // [object Date]
+console.log(Object.prototype.toString.call(new Map())) // [object Map]
+console.log(Object.prototype.toString.call(new Set())) // [object Set]
+console.log(Object.prototype.toString.call(Person)) // [object Function]
+console.log(Object.prototype.toString.call(p)) // [object Object]
+console.log([1,2,3,4].toString()) // 1,2,3,4
+</code></pre>
+<p>这个就厉害了，居然精确到每一个都不一样。细看跟 typeof 还有点像，但是精细很多。所以一定也是有个什么内置属性在记录着这个东西。<br>要写成 <code>Object.prototype.toString.call</code> 这个样子，是因为别的原型重写了该方法，比如最后一个数组的 <code>toString</code> 方法返回就不一样了。<br>在控制台打印一个数组看看，就能清晰看到 Array 本身也有一个 <code>toString</code> 方法。</p>
+<p>简而言之，分两种，一种是对象内置了 <code>Symbol.toStringTag</code> 这个属性，来返回 <code>[object $&#123;tag&#125;]</code> tag 部分的值。<br>另外一种是没有这个内置属性，但是 <a target="_blank" rel="noopener" href="https://tc39.es/ecma262/#sec-object.prototype.tostring">语言标准tc39</a> 为其指定了返回 tag，比如：Array String 等这几个老面孔。<br>这也就意味着可以自定义自己的tag。</p>
+<img src="/2020/07/25/variable-type/Object.prototype.toString.PNG" class="" title="Object.prototype.toString">
+<br/>
+
+<pre><code class="js">console.log(Promise.prototype[Symbol.toStringTag]) // Promise
+console.log(Array.prototype[Symbol.toStringTag]) // undefined
+
+function Tag() &#123;&#125;
+Tag.prototype[Symbol.toStringTag] = &#39;newTag&#39;
+const t = new Tag()
+console.log(Object.prototype.toString.call(t)) // [object newTag]
+
+function Tag1() &#123;&#125;
+Tag1.prototype[Symbol.toStringTag] = &#123;&#125;
+const t1 = new Tag1()
+console.log(Object.prototype.toString.call(t1)) // [object Object]
+// 从上面 tc39 的介绍14，15，16来看，当 [Symbol.toStringTag] 不为 string，则将内置 tag 设置为 Object
+</code></pre>
+<p>里面还涉及其他知识，可以参阅 <a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/118793721">知乎</a> 和 <a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Symbol/toStringTag">MDN-Symbol.toStringTag</a>、<a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Object/toString">MDN-toString</a>。</p>
+<p>码后感：几个判断类型方法，居然有这么多细节点在里面。平时可能用了就用了，都不知道其中原理。真是路漫漫啊。。。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      
+      <!-- <a data-url="https://blog.cchealthier.com/2020/07/25/variable-type/" data-id="clpzmj0s0003ela9mh1xfe4jc" class="article-share-link">分享</a> -->
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-traversal-property" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2020/07/25/traversal-property/" class="article-date">
@@ -183,7 +357,7 @@ show(obj3)
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2020/07/25/traversal-property/" data-id="clppnx0gi0037zg9m1lsncgx1" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2020/07/25/traversal-property/" data-id="clpzmj0rz003bla9m0orm3hcq" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -335,7 +509,7 @@ window.onload = function () &#123;
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2020/07/12/lazyload/" data-id="clppnx0ga0018zg9m3t687lwx" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2020/07/12/lazyload/" data-id="clpzmj0rt001hla9mb2ba8tf0" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -510,7 +684,7 @@ _bindFn3(12, 13, 14)
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2020/07/09/callapplybind/" data-id="clppnx0g5000azg9me2c82iz7" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2020/07/09/callapplybind/" data-id="clpzmj0ro000gla9mglwq86hf" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -601,49 +775,7 @@ app.use(express.static(&#39;public&#39;, options))
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2020/07/02/cache/" data-id="clppnx0g5000bzg9m117u091f" class="article-share-link">分享</a> -->
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-ssl-lts" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/06/22/ssl-lts/" class="article-date">
-  <time datetime="2020-06-21T16:08:00.000Z" itemprop="datePublished">2020-06-22</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/http%E5%8D%8F%E8%AE%AE/">http协议</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/06/22/ssl-lts/">ssl-lts 协议过程</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>资料来源于网上，自己大概归纳一下，部分文字照抄，省得到处找。</p>
-<img src="/2020/06/22/ssl-lts/SSL&TLS%E8%BF%87%E7%A8%8B.PNG" class="" title="SSL&amp;TLS">
-      
-    </div>
-    <footer class="article-footer">
-      
-      <!-- <a data-url="https://blog.cchealthier.com/2020/06/22/ssl-lts/" data-id="clppnx0gi0033zg9mg1c7dmx7" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2020/07/02/cache/" data-id="clpzmj0rn000cla9m3m4pcrdh" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -671,6 +803,10 @@ app.use(express.static(&#39;public&#39;, options))
       <ul>
         
           <li>
+            <a href="/2023/12/10/babel-ast-transform/">使用 babel ast 做代码转换</a>
+          </li>
+        
+          <li>
             <a href="/2023/12/03/react-native-record/">react-native ios 流水账</a>
           </li>
         
@@ -684,10 +820,6 @@ app.use(express.static(&#39;public&#39;, options))
         
           <li>
             <a href="/2023/09/24/hexo-code-highlight/">记录 hexo 使用 highlight.js 实现代码高亮</a>
-          </li>
-        
-          <li>
-            <a href="/2023/09/23/react-basic-app-2/">react 基础工程 Ⅱ（@reduxjs/toolkit &amp; @craco/craco &amp; vite）</a>
           </li>
         
       </ul>
@@ -709,7 +841,7 @@ app.use(express.static(&#39;public&#39;, options))
   <div class="widget-wrap">
     <h3 class="widget-title">标签</h3>
     <div class="widget">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nginx/" rel="tag">nginx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" rel="tag">工程化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BE%AE%E5%89%8D%E7%AB%AF/" rel="tag">微前端</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%80%A7%E8%83%BD/" rel="tag">性能</a></li></ul>
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nginx/" rel="tag">nginx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/node/" rel="tag">node</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" rel="tag">工程化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BE%AE%E5%89%8D%E7%AB%AF/" rel="tag">微前端</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%80%A7%E8%83%BD/" rel="tag">性能</a></li></ul>
     </div>
   </div>
 
@@ -719,7 +851,7 @@ app.use(express.static(&#39;public&#39;, options))
   <div class="widget-wrap">
     <h3 class="widget-title">标签云</h3>
     <div class="widget tagcloud">
-      <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/nginx/" style="font-size: 13.33px;">nginx</a> <a href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" style="font-size: 20px;">工程化</a> <a href="/tags/%E5%BE%AE%E5%89%8D%E7%AB%AF/" style="font-size: 13.33px;">微前端</a> <a href="/tags/%E6%80%A7%E8%83%BD/" style="font-size: 16.67px;">性能</a>
+      <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/nginx/" style="font-size: 12.5px;">nginx</a> <a href="/tags/node/" style="font-size: 15px;">node</a> <a href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" style="font-size: 20px;">工程化</a> <a href="/tags/%E5%BE%AE%E5%89%8D%E7%AB%AF/" style="font-size: 12.5px;">微前端</a> <a href="/tags/%E6%80%A7%E8%83%BD/" style="font-size: 17.5px;">性能</a>
     </div>
   </div>
 

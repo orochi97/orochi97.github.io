@@ -74,6 +74,114 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-deepth-breadth-traversal" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2022/10/18/deepth-breadth-traversal/" class="article-date">
+  <time datetime="2022-10-18T13:18:08.000Z" itemprop="datePublished">2022-10-18</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E7%AE%97%E6%B3%95/">算法</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2022/10/18/deepth-breadth-traversal/">深广度优先遍历</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>之前其实有写过一篇类似的文章<a href="/2020/11/15/search/">《深度优先遍历(DFS)-栈和广度优先遍历(BFS)-队列的理解》</a>。<br>再次复习一下，写了不一样的注释。而且之前是用 dom 做的遍历，这次还是回到数据来。</p>
+<pre><code class="js">// 深广度优先遍历
+
+const tree = &#123;
+  value: 1,
+  children: [
+    &#123;
+      value: 2,
+      children: [
+        &#123;
+          value: 4,
+          children: [
+            &#123;
+              value: 8
+            &#125;,
+            &#123;
+              value: 9
+            &#125;,
+          ],
+        &#125;,
+        &#123;
+          value: 5,
+          children: [
+            &#123;
+              value: 10
+            &#125;,
+            &#123;
+              value: 11
+            &#125;,
+          ],
+        &#125;,
+      ],
+    &#125;,
+    &#123;
+      value: 3,
+      children: [
+        &#123;
+          value: 6,
+          children: [
+            &#123;
+              value: 12
+            &#125;,
+            &#123;
+              value: 13
+            &#125;,
+          ],
+        &#125;,
+        &#123;
+          value: 7,
+          children: [
+            &#123;
+              value: 14
+            &#125;,
+            &#123;
+              value: 15
+            &#125;,
+          ],
+        &#125;,
+      ],
+    &#125;
+  ],
+&#125;;
+</code></pre>
+        
+          <p class="article-more-link">
+            <a href="/2022/10/18/deepth-breadth-traversal/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      
+      <!-- <a data-url="https://blog.cchealthier.com/2022/10/18/deepth-breadth-traversal/" data-id="clpzmj0ro000ila9mhxd5g2lo" class="article-share-link">分享</a> -->
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-linked-list" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2022/09/25/linked-list/" class="article-date">
@@ -215,7 +323,7 @@ class LinkedList &#123;
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2022/09/25/linked-list/" data-id="clppnx0gb001czg9mde11e6mu" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2022/09/25/linked-list/" data-id="clpzmj0rs001dla9mfrr13rdu" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -273,7 +381,7 @@ class LinkedList &#123;
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2022/09/05/webpack-babel-esm/" data-id="clppnx0gk003ozg9mhw833ozm" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2022/09/05/webpack-babel-esm/" data-id="clpzmj0s1003tla9m0zljfg0j" class="article-share-link">分享</a> -->
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" rel="tag">工程化</a></li></ul>
@@ -327,7 +435,7 @@ class LinkedList &#123;
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2022/03/26/nginx/" data-id="clppnx0ge0021zg9m2walgdaw" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2022/03/26/nginx/" data-id="clpzmj0rv001zla9m8yi77nht" class="article-share-link">分享</a> -->
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/nginx/" rel="tag">nginx</a></li></ul>
@@ -378,56 +486,11 @@ class LinkedList &#123;
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2022/03/19/vite-server-import/" data-id="clppnx0gj003hzg9m4ttk9sfk" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2022/03/19/vite-server-import/" data-id="clpzmj0s0003lla9m7yucck6b" class="article-share-link">分享</a> -->
       
       
-    </footer>
-  </div>
-  
-</article>
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/node/" rel="tag">node</a></li></ul>
 
-
-  
-    <article id="post-beijing-winter" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2022/03/14/beijing-winter/" class="article-date">
-  <time datetime="2022-03-14T15:48:23.000Z" itemprop="datePublished">2022-03-14</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E6%97%85%E8%A1%8C/">旅行</a>►<a class="article-category-link" href="/categories/%E6%97%85%E8%A1%8C/%E8%AE%B0%E5%BD%95/">记录</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2022/03/14/beijing-winter/">首次体验北方冬天</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>22年元旦又去了趟北京，当然是想看看雪，不过那几天天气好到不行，大晴空。即便没看到雪，这也是本南方人第一次见识北方的冬天。无论是光秃秃的树木，结冰的河面，还是凛冽的寒风，喷香的铜炉羊肉，都很有趣。</p>
-<p><img src="https://file.cchealthier.com/file/blog/beijing-winter/beijing1.jpg" alt="1.jpg"></p>
-        
-          <p class="article-more-link">
-            <a href="/2022/03/14/beijing-winter/#more">Read More</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      
-      <!-- <a data-url="https://blog.cchealthier.com/2022/03/14/beijing-winter/" data-id="clppnx0g30004zg9m93zh1lzh" class="article-share-link">分享</a> -->
-      
-      
     </footer>
   </div>
   
@@ -453,6 +516,10 @@ class LinkedList &#123;
       <ul>
         
           <li>
+            <a href="/2023/12/10/babel-ast-transform/">使用 babel ast 做代码转换</a>
+          </li>
+        
+          <li>
             <a href="/2023/12/03/react-native-record/">react-native ios 流水账</a>
           </li>
         
@@ -466,10 +533,6 @@ class LinkedList &#123;
         
           <li>
             <a href="/2023/09/24/hexo-code-highlight/">记录 hexo 使用 highlight.js 实现代码高亮</a>
-          </li>
-        
-          <li>
-            <a href="/2023/09/23/react-basic-app-2/">react 基础工程 Ⅱ（@reduxjs/toolkit &amp; @craco/craco &amp; vite）</a>
           </li>
         
       </ul>
@@ -491,7 +554,7 @@ class LinkedList &#123;
   <div class="widget-wrap">
     <h3 class="widget-title">标签</h3>
     <div class="widget">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nginx/" rel="tag">nginx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" rel="tag">工程化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BE%AE%E5%89%8D%E7%AB%AF/" rel="tag">微前端</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%80%A7%E8%83%BD/" rel="tag">性能</a></li></ul>
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nginx/" rel="tag">nginx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/node/" rel="tag">node</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" rel="tag">工程化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BE%AE%E5%89%8D%E7%AB%AF/" rel="tag">微前端</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%80%A7%E8%83%BD/" rel="tag">性能</a></li></ul>
     </div>
   </div>
 
@@ -501,7 +564,7 @@ class LinkedList &#123;
   <div class="widget-wrap">
     <h3 class="widget-title">标签云</h3>
     <div class="widget tagcloud">
-      <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/nginx/" style="font-size: 13.33px;">nginx</a> <a href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" style="font-size: 20px;">工程化</a> <a href="/tags/%E5%BE%AE%E5%89%8D%E7%AB%AF/" style="font-size: 13.33px;">微前端</a> <a href="/tags/%E6%80%A7%E8%83%BD/" style="font-size: 16.67px;">性能</a>
+      <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/nginx/" style="font-size: 12.5px;">nginx</a> <a href="/tags/node/" style="font-size: 15px;">node</a> <a href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" style="font-size: 20px;">工程化</a> <a href="/tags/%E5%BE%AE%E5%89%8D%E7%AB%AF/" style="font-size: 12.5px;">微前端</a> <a href="/tags/%E6%80%A7%E8%83%BD/" style="font-size: 17.5px;">性能</a>
     </div>
   </div>
 

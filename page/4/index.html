@@ -74,6 +74,73 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-fontend-engineering" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2023/03/06/fontend-engineering/" class="article-date">
+  <time datetime="2023-03-06T14:22:43.000Z" itemprop="datePublished">2023-03-06</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2023/03/06/fontend-engineering/">从零搭建前端工程（上）</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><em><strong>文章内容太多，分为上下两部分，这里是上半部分。下半部分在《<a href="/2023/04/21/fontend-engineering-2/">从零搭建前端工程（下）</a>》，此篇的内容有：</strong></em><br><em><strong>1. 使用 webpack 打包（编译）vue</strong></em><br><em><strong>2. 使用 babel 处理 js</strong></em><br><em><strong>3. 使用 webpack-dev-sever 做热调试开发</strong></em></p>
+<hr>
+<hr>
+<p>产生这个的想法来自于某天接手一个项目，eslint 没配好，想着弄好格式化一下，一时之前忘了 cli 命令。<br>想一下，现在我们用的各种框架，都自带了脚手架工具，初始化后基本上不用怎么改造就可以上手开发。导致很多工程化的东西被人忽视了，就容易遇到问题时被卡住或者东找西找翻资料。<br>所以就想着自己从头搭建一个项目看看，遇到的一些配置、工具、命令都给记录下来，方便后面再遇到时候就不会生手了。</p>
+<p>这里我就用 vue 来做基础框架，用 react 也一样，就一些编译工具的差别，大部分是一样的。要做的事有：</p>
+<ol>
+<li>使用 webpack 打包（编译）vue</li>
+<li>使用 babel 处理 js</li>
+<li>使用 webpack-dev-sever 做热调试开发</li>
+<li>使用 eslint + prettier 让代码健壮和优雅</li>
+<li>使用 husky + lint-staged 强制增量各类检查</li>
+<li>使用 @commitlint&#x2F;cli 规范提交信息</li>
+<li>使用 埋点（性能 + 错误） 让项目运行更好</li>
+</ol>
+<h2 id="零、文件初始化"><a href="#零、文件初始化" class="headerlink" title="零、文件初始化"></a>零、文件初始化</h2><p>准备一个和 vue 脚手架创建出来的初始工程一样。有：</p>
+<p>src：项目源代码<br>src&#x2F;main.js：工程入口文件，在这里做 vue 初始化，也是 webpack 的entry<br>src&#x2F;App.vue：一个主页面<br>src&#x2F;components&#x2F;HelloWorld.vue：一个子组件<br>src&#x2F;assets&#x2F;logo.png：一张图片资源<br>src&#x2F;public：公共资源文件夹，这里放的东西依样拷贝进打包里（除了index.html）<br>src&#x2F;public&#x2F;index.html：用来做单页面工程入口 html 的基础模板</p>
+<p>然后初始化一下 npm 环境：</p>
+<pre><code class="bash">npm init -y
+</code></pre>
+<p><code>-y</code> 就是创建一份默认的，不需要一步步问要填什么。直接生成空信息，有需要自己再去填就好了。</p>
+        
+          <p class="article-more-link">
+            <a href="/2023/03/06/fontend-engineering/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      
+      <!-- <a data-url="https://blog.cchealthier.com/2023/03/06/fontend-engineering/" data-id="clpzmj0rq000wla9m9zqw27rn" class="article-share-link">分享</a> -->
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" rel="tag">工程化</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-multi-function-select" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2023/02/07/multi-function-select/" class="article-date">
@@ -307,7 +374,7 @@ export default &#123;
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2023/02/07/multi-function-select/" data-id="clppnx0gc001lzg9m1co473zg" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2023/02/07/multi-function-select/" data-id="clpzmj0ru001mla9m38ki2yhn" class="article-share-link">分享</a> -->
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%80%A7%E8%83%BD/" rel="tag">性能</a></li></ul>
@@ -365,7 +432,7 @@ export default &#123;
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2022/11/07/vue-observer-dep-watcher/" data-id="clppnx0gk003mzg9mgpr0bv71" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2022/11/07/vue-observer-dep-watcher/" data-id="clpzmj0s1003rla9mfv98hy70" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -412,7 +479,7 @@ export default &#123;
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2022/10/19/2022-autumn/" data-id="clppnx0g00000zg9m3n7k4ukm" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2022/10/19/2022-autumn/" data-id="clpzmj0rh0000la9m0klgbl3c" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -505,115 +572,7 @@ export default &#123;
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2022/10/18/binary-tree-traversal/" data-id="clppnx0g40007zg9mbltf39yg" class="article-share-link">分享</a> -->
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-deepth-breadth-traversal" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2022/10/18/deepth-breadth-traversal/" class="article-date">
-  <time datetime="2022-10-18T13:18:08.000Z" itemprop="datePublished">2022-10-18</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E7%AE%97%E6%B3%95/">算法</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2022/10/18/deepth-breadth-traversal/">深广度优先遍历</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>之前其实有写过一篇类似的文章<a href="/2020/11/15/search/">《深度优先遍历(DFS)-栈和广度优先遍历(BFS)-队列的理解》</a>。<br>再次复习一下，写了不一样的注释。而且之前是用 dom 做的遍历，这次还是回到数据来。</p>
-<pre><code class="js">// 深广度优先遍历
-
-const tree = &#123;
-  value: 1,
-  children: [
-    &#123;
-      value: 2,
-      children: [
-        &#123;
-          value: 4,
-          children: [
-            &#123;
-              value: 8
-            &#125;,
-            &#123;
-              value: 9
-            &#125;,
-          ],
-        &#125;,
-        &#123;
-          value: 5,
-          children: [
-            &#123;
-              value: 10
-            &#125;,
-            &#123;
-              value: 11
-            &#125;,
-          ],
-        &#125;,
-      ],
-    &#125;,
-    &#123;
-      value: 3,
-      children: [
-        &#123;
-          value: 6,
-          children: [
-            &#123;
-              value: 12
-            &#125;,
-            &#123;
-              value: 13
-            &#125;,
-          ],
-        &#125;,
-        &#123;
-          value: 7,
-          children: [
-            &#123;
-              value: 14
-            &#125;,
-            &#123;
-              value: 15
-            &#125;,
-          ],
-        &#125;,
-      ],
-    &#125;
-  ],
-&#125;;
-</code></pre>
-        
-          <p class="article-more-link">
-            <a href="/2022/10/18/deepth-breadth-traversal/#more">Read More</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      
-      <!-- <a data-url="https://blog.cchealthier.com/2022/10/18/deepth-breadth-traversal/" data-id="clppnx0g7000ezg9m3694f4pv" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2022/10/18/binary-tree-traversal/" data-id="clpzmj0rl0007la9m6eum9w2j" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -641,6 +600,10 @@ const tree = &#123;
       <ul>
         
           <li>
+            <a href="/2023/12/10/babel-ast-transform/">使用 babel ast 做代码转换</a>
+          </li>
+        
+          <li>
             <a href="/2023/12/03/react-native-record/">react-native ios 流水账</a>
           </li>
         
@@ -654,10 +617,6 @@ const tree = &#123;
         
           <li>
             <a href="/2023/09/24/hexo-code-highlight/">记录 hexo 使用 highlight.js 实现代码高亮</a>
-          </li>
-        
-          <li>
-            <a href="/2023/09/23/react-basic-app-2/">react 基础工程 Ⅱ（@reduxjs/toolkit &amp; @craco/craco &amp; vite）</a>
           </li>
         
       </ul>
@@ -679,7 +638,7 @@ const tree = &#123;
   <div class="widget-wrap">
     <h3 class="widget-title">标签</h3>
     <div class="widget">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nginx/" rel="tag">nginx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" rel="tag">工程化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BE%AE%E5%89%8D%E7%AB%AF/" rel="tag">微前端</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%80%A7%E8%83%BD/" rel="tag">性能</a></li></ul>
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nginx/" rel="tag">nginx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/node/" rel="tag">node</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" rel="tag">工程化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BE%AE%E5%89%8D%E7%AB%AF/" rel="tag">微前端</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%80%A7%E8%83%BD/" rel="tag">性能</a></li></ul>
     </div>
   </div>
 
@@ -689,7 +648,7 @@ const tree = &#123;
   <div class="widget-wrap">
     <h3 class="widget-title">标签云</h3>
     <div class="widget tagcloud">
-      <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/nginx/" style="font-size: 13.33px;">nginx</a> <a href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" style="font-size: 20px;">工程化</a> <a href="/tags/%E5%BE%AE%E5%89%8D%E7%AB%AF/" style="font-size: 13.33px;">微前端</a> <a href="/tags/%E6%80%A7%E8%83%BD/" style="font-size: 16.67px;">性能</a>
+      <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/nginx/" style="font-size: 12.5px;">nginx</a> <a href="/tags/node/" style="font-size: 15px;">node</a> <a href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" style="font-size: 20px;">工程化</a> <a href="/tags/%E5%BE%AE%E5%89%8D%E7%AB%AF/" style="font-size: 12.5px;">微前端</a> <a href="/tags/%E6%80%A7%E8%83%BD/" style="font-size: 17.5px;">性能</a>
     </div>
   </div>
 

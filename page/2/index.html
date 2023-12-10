@@ -74,6 +74,117 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-react-basic-app-2" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2023/09/23/react-basic-app-2/" class="article-date">
+  <time datetime="2023-09-23T02:53:58.000Z" itemprop="datePublished">2023-09-23</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2023/09/23/react-basic-app-2/">react 基础工程 Ⅱ（@reduxjs/toolkit &amp; @craco/craco &amp; vite）</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>书接上回《<a href="/2023/05/31/react-basic-app/">react 基础工程（react-redux &amp; react-router）</a>》，由于最近项目上的新实践新体验，所以记录一下。</p>
+<p><strong>依然，代码仓库：<a target="_blank" rel="noopener" href="https://github.com/orochi97/react-app">github</a>。</strong></p>
+<h2 id="一、用-reduxjs-x2F-toolkit-创建-reducer-和-api"><a href="#一、用-reduxjs-x2F-toolkit-创建-reducer-和-api" class="headerlink" title="一、用 @reduxjs&#x2F;toolkit 创建 reducer 和 api"></a>一、用 @reduxjs&#x2F;toolkit 创建 reducer 和 api</h2><p>其实工程里已经用到这个工具，但是当时还没完全发现它的优势，还以为不过是官方推荐的比较好用的三方库而已。才知道确实简化了处理以及还有别的封装功能。</p>
+<h3 id="1、简化写法"><a href="#1、简化写法" class="headerlink" title="1、简化写法"></a>1、简化写法</h3><p>以前老式的 redux 写法：</p>
+<pre><code class="js">import &#123; cloneDeep &#125; from &#39;lodash&#39;;
+export const addStringAction = payload =&gt; (&#123;
+  type: &#39;ADD_STRING&#39;,
+  payload: payload,
+&#125;);
+export const minusStringAction = payload =&gt; (&#123;
+  type: &#39;MINUS_STRING&#39;,
+  payload: payload,
+&#125;);
+const defaultState = &#123;
+  b: &#39;abc&#39;,
+&#125;;
+export default function stringReducer(state = defaultState, action) &#123;
+  const &#123; type, payload &#125; = action;
+  state = cloneDeep(state);
+  switch (type) &#123;
+    case &#39;ADD_STRING&#39;:
+      state.b += payload;
+      return state;
+    case &#39;MINUS_STRING&#39;:
+      state.b = &#39;&#39;;
+      return state;
+    default:
+      return state;
+  &#125;
+&#125;;
+</code></pre>
+<p>用 @reduxjs&#x2F;toolkit 的写法：</p>
+<pre><code class="js">import &#123; createSlice &#125; from &#39;@reduxjs/toolkit&#39;;
+export const counterSlice = createSlice(&#123;
+  name: &#39;counter&#39;,
+  initialState: &#123;
+    value: 0,
+  &#125;,
+  reducers: &#123;
+    increment: (state) =&gt; &#123;
+      state.value += 1;
+    &#125;,
+    decrement: (state) =&gt; &#123;
+      state.value -= 1;
+    &#125;,
+    incrementByAmount: (state, action) =&gt; &#123;
+      state.value += action.payload;
+    &#125;,
+  &#125;,
+&#125;);
+export const &#123; increment, decrement, incrementByAmount &#125; = counterSlice.actions;
+export default counterSlice.reducer;
+</code></pre>
+<ul>
+<li><p>a. 不需要再额外声明 action 了，不需要定义那些 type 了。reducers 字段下的每个方法就是个 action。用的时候直接 <code>dispatch(increment(123))</code> 即可。</p>
+</li>
+<li><p>b. 而且好像可以直接改 state 上的字段，不需要返回一个完全新的 state 了？其实也是里面做了处理。看<a target="_blank" rel="noopener" href="https://redux-toolkit.js.org/tutorials/quick-start#create-a-redux-state-slice">官方介绍</a>，在注释里：</p>
+</li>
+</ul>
+<blockquote>
+<blockquote>
+<p>Redux Toolkit allows us to write “mutating” logic in reducers. It doesn’t actually mutate the state because it uses the Immer library, which detects changes to a “draft state” and produces a brand new immutable state based off those changes</p>
+</blockquote>
+</blockquote>
+        
+          <p class="article-more-link">
+            <a href="/2023/09/23/react-basic-app-2/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      
+      <!-- <a data-url="https://blog.cchealthier.com/2023/09/23/react-basic-app-2/" data-id="clpzmj0ry002ula9maaxecejl" class="article-share-link">分享</a> -->
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" rel="tag">工程化</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-node-module" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2023/08/24/node-module/" class="article-date">
@@ -150,9 +261,11 @@ const __dirname = path.dirname(__filename);
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2023/08/24/node-module/" data-id="clppnx0gc001xzg9mfr4j4d02" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2023/08/24/node-module/" data-id="clpzmj0rw0025la9m4yfc00ba" class="article-share-link">分享</a> -->
       
       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/node/" rel="tag">node</a></li></ul>
+
     </footer>
   </div>
   
@@ -226,7 +339,7 @@ const __dirname = path.dirname(__filename);
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2023/08/23/webpack5-background-url/" data-id="clppnx0go005qzg9m6kvsfr29" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2023/08/23/webpack5-background-url/" data-id="clpzmj0s20043la9mfui16h8u" class="article-share-link">分享</a> -->
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" rel="tag">工程化</a></li></ul>
@@ -350,9 +463,11 @@ writeStream.on(&#39;close&#39;, () =&gt; &#123;
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2023/07/26/node-stream/" data-id="clppnx0ge0023zg9m9jrn2btr" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2023/07/26/node-stream/" data-id="clpzmj0rv0022la9mhqkx5u5x" class="article-share-link">分享</a> -->
       
       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/node/" rel="tag">node</a></li></ul>
+
     </footer>
   </div>
   
@@ -431,111 +546,10 @@ writeStream.on(&#39;close&#39;, () =&gt; &#123;
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2023/06/07/webpack-modulefederationplugin/" data-id="clppnx0gk003rzg9mcwm79f90" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2023/06/07/webpack-modulefederationplugin/" data-id="clpzmj0s2003zla9mfrw21us2" class="article-share-link">分享</a> -->
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" rel="tag">工程化</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%BE%AE%E5%89%8D%E7%AB%AF/" rel="tag">微前端</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-react-basic-app" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2023/05/31/react-basic-app/" class="article-date">
-  <time datetime="2023-05-31T09:06:08.000Z" itemprop="datePublished">2023-05-31</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2023/05/31/react-basic-app/">react 基础工程（react-redux &amp; react-router）</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>vue 已经很熟悉。react 虽然也用过，但是对于整体的搭建还不是很熟。这次就使用 <a target="_blank" rel="noopener" href="https://react-redux.js.org/introduction/getting-started">react-redux(^8.0.5)</a> 和 <a target="_blank" rel="noopener" href="https://reactrouter.com/en/main/start/tutorial#tutorial">react-router(^6.11.2)</a>，<br>结合上次的《<a href="/2023/03/06/fontend-engineering/">从零搭建前端工程</a>》，搭建一个基础的 react 项目。加上一点注释，后面有用到也可以代码直接拷。</p>
-<p><strong>代码仓库：<a target="_blank" rel="noopener" href="https://github.com/orochi97/react-app">github</a>。</strong></p>
-<h2 id="一、Router"><a href="#一、Router" class="headerlink" title="一、Router"></a>一、Router</h2><p>当前最新版本为 v6，据说有些大改动，旧版本请参考《<a target="_blank" rel="noopener" href="https://reactrouter.com/en/main/upgrading/v5">升级指南</a>》。</p>
-<p>路由文件声明：</p>
-<pre><code class="js">import &#123; createBrowserRouter, Navigate &#125; from &#39;react-router-dom&#39;;
-import Home from &#39;@/views/Home&#39;;
-import NotFound from &#39;@/views/NotFound&#39;;
-
-const router = createBrowserRouter([
-  &#123;
-    path: &#39;/home&#39;,
-    element: &lt;Home /&gt;,
-  &#125;,
-  &#123;
-    path: &#39;/game&#39;,
-    // element: &lt;CardGame /&gt;,
-    async lazy() &#123; // 路由页面懒加载，也就是真的访问到再下载，打包也是独立的 js
-      const comp = await import(&#39;@/views/CardGame&#39;);
-      // 这里的 default 是 webpack 的处理，会把 export default 挂在 default 属性上
-      return &#123; Component: comp.default &#125;;
-    &#125;,
-  &#125;,
-  &#123;
-    path: &#39;/demo/:id&#39;,
-    // element: &lt;Demo /&gt;,
-    async lazy() &#123;
-      // 注意：这里要 loader 结果返回，才会渲染组件。也就是会阻塞页面。
-      const comp = await import(&#39;@/views/Demo&#39;);
-      return &#123; Component: comp.default, loader: comp.loader &#125;;
-    &#125;,
-  &#125;,
-  &#123;
-    path: &#39;/&#39;, // v6 的重定向改为 Navigate 组件
-    element: &lt;Navigate to=&#123;&#39;/home&#39;&#125;/&gt;,
-  &#125;,
-  &#123;
-    path: &#39;*&#39;, // 404页面兜底，我觉得改成和上面的一样的重定向处理应该也可以
-    element: &lt;NotFound /&gt;,
-  &#125;,
-]);
-
-export default router;
-</code></pre>
-<p>然后路由声明对象的使用：</p>
-<pre><code class="js">import &#123; RouterProvider &#125; from &#39;react-router-dom&#39;;
-import router from &#39;@/router&#39;;
-
-function App() &#123;
-  return (
-    &lt;RouterProvider router=&#123;router&#125; /&gt;
-  );
-&#125;
-export default App;
-</code></pre>
-        
-          <p class="article-more-link">
-            <a href="/2023/05/31/react-basic-app/#more">Read More</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      
-      <!-- <a data-url="https://blog.cchealthier.com/2023/05/31/react-basic-app/" data-id="clppnx0gh002qzg9m1kw9h8iq" class="article-share-link">分享</a> -->
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" rel="tag">工程化</a></li></ul>
 
     </footer>
   </div>
@@ -562,6 +576,10 @@ export default App;
       <ul>
         
           <li>
+            <a href="/2023/12/10/babel-ast-transform/">使用 babel ast 做代码转换</a>
+          </li>
+        
+          <li>
             <a href="/2023/12/03/react-native-record/">react-native ios 流水账</a>
           </li>
         
@@ -575,10 +593,6 @@ export default App;
         
           <li>
             <a href="/2023/09/24/hexo-code-highlight/">记录 hexo 使用 highlight.js 实现代码高亮</a>
-          </li>
-        
-          <li>
-            <a href="/2023/09/23/react-basic-app-2/">react 基础工程 Ⅱ（@reduxjs/toolkit &amp; @craco/craco &amp; vite）</a>
           </li>
         
       </ul>
@@ -600,7 +614,7 @@ export default App;
   <div class="widget-wrap">
     <h3 class="widget-title">标签</h3>
     <div class="widget">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nginx/" rel="tag">nginx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" rel="tag">工程化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BE%AE%E5%89%8D%E7%AB%AF/" rel="tag">微前端</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%80%A7%E8%83%BD/" rel="tag">性能</a></li></ul>
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nginx/" rel="tag">nginx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/node/" rel="tag">node</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" rel="tag">工程化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BE%AE%E5%89%8D%E7%AB%AF/" rel="tag">微前端</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%80%A7%E8%83%BD/" rel="tag">性能</a></li></ul>
     </div>
   </div>
 
@@ -610,7 +624,7 @@ export default App;
   <div class="widget-wrap">
     <h3 class="widget-title">标签云</h3>
     <div class="widget tagcloud">
-      <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/nginx/" style="font-size: 13.33px;">nginx</a> <a href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" style="font-size: 20px;">工程化</a> <a href="/tags/%E5%BE%AE%E5%89%8D%E7%AB%AF/" style="font-size: 13.33px;">微前端</a> <a href="/tags/%E6%80%A7%E8%83%BD/" style="font-size: 16.67px;">性能</a>
+      <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/nginx/" style="font-size: 12.5px;">nginx</a> <a href="/tags/node/" style="font-size: 15px;">node</a> <a href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" style="font-size: 20px;">工程化</a> <a href="/tags/%E5%BE%AE%E5%89%8D%E7%AB%AF/" style="font-size: 12.5px;">微前端</a> <a href="/tags/%E6%80%A7%E8%83%BD/" style="font-size: 17.5px;">性能</a>
     </div>
   </div>
 
