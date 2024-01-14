@@ -74,6 +74,75 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-js-performance" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/05/28/js-performance/" class="article-date">
+  <time datetime="2020-05-28T15:56:30.000Z" itemprop="datePublished">2020-05-28</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/05/28/js-performance/">JS性能优化探讨</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="一、最核心一点，减少http请求，3次握手，冷启动，成本昂贵"><a href="#一、最核心一点，减少http请求，3次握手，冷启动，成本昂贵" class="headerlink" title="一、最核心一点，减少http请求，3次握手，冷启动，成本昂贵"></a>一、最核心一点，减少http请求，3次握手，冷启动，成本昂贵</h3><ol>
+<li>合并小js文件</li>
+<li>使用雪碧图</li>
+<li>小图转换成base64放到代码里</li>
+<li>设置缓存</li>
+</ol>
+<h3 id="二、加快响应"><a href="#二、加快响应" class="headerlink" title="二、加快响应"></a>二、加快响应</h3><ol>
+<li>CDN</li>
+<li>减少DNS查询次数</li>
+<li>提前加载，延迟加载</li>
+<li>首页最小内容显示，将样式表置顶渲染页面，将js放到底部不阻塞页面渲染。</li>
+</ol>
+<h3 id="三、资源层面"><a href="#三、资源层面" class="headerlink" title="三、资源层面"></a>三、资源层面</h3><ol>
+<li>能用不那么高清图片，就用体积小的图片</li>
+<li>压缩业务代码</li>
+<li>压缩减少或不要cookie，每次请求头都会带上</li>
+<li>把静态资源放在另外一个域名，根据域名划分内容。<br>浏览器一般对同一个域的下载连接数有所限制，按照域名划分下载内容可以浏览器增大并行下载连接。<br>但是注意控制域名使用在2-4个之间，不然dns查询也是个问题。<br>一般网站规划会将静态资源放在类似于static.example.com，动态内容放在<a target="_blank" rel="noopener" href="http://www.example.com上./">www.example.com上。</a><br>这样做还有一个好处是可以在静态的域名上避免使用cookie。页面内容使用无cookie域名</li>
+<li>使用小且可缓存的favicon.ico网站图标文件favicon.ico。<br>不管你服务器有还是没有，浏览器都会去尝试请求这个图标。所以我们要确保这个图标存在文件尽量小，最好小于1k设置一个长的过期时间</li>
+</ol>
+<h3 id="四、代码层面"><a href="#四、代码层面" class="headerlink" title="四、代码层面"></a>四、代码层面</h3><ol>
+<li>html尽量减少dom的数量（可以 document.getElementsByTagName(‘*’).length 查看有多少个）</li>
+<li>避免CSS表达式，CSS表达式的问题在于它被重新计算的次数远比我们想象的要多，不仅在网页绘制或大小改变时计算，即使我们滚动屏幕或者移动鼠标的时候也在计算，因此我们还是尽量避免使用它来防止使用不当而造成的性能损耗。</li>
+<li>减少对dom的操作</li>
+<li>用<link>代替@import，避免使用@import的原因很简单，因为它相当于将css放在网页内容底部。</li>
+<li>使用智能事件处理<br>这里说智能的事件处理需要开发者对事件处理有更深入的了解，通过不同的方式尽量少去触发事件，如果必要就尽早的去处理事件。比如一个div中10个按钮都需要事件句柄，那么我们可以将事件放在div上，在事件冒泡过程中捕获该事件然后判断事件来源。</li>
+</ol>
+
+      
+    </div>
+    <footer class="article-footer">
+      
+      <!-- <a data-url="https://blog.cchealthier.com/2020/05/28/js-performance/" data-id="clrcwy7mq001ejj9m6l457623" class="article-share-link">分享</a> -->
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%80%A7%E8%83%BD/" rel="tag">性能</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-eventloop" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2020/05/27/eventloop/" class="article-date">
@@ -212,7 +281,7 @@ process.nextTick(() =&gt; &#123;
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2020/05/27/eventloop/" data-id="clpzmk05q000jq69meyx71fbf" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2020/05/27/eventloop/" data-id="clrcwy7mn000njj9m1gxbf3wi" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -284,7 +353,7 @@ console.log(man2.attr)
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2020/05/25/new-object/" data-id="clpzmk05v001pq69meesj0b8c" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2020/05/25/new-object/" data-id="clrcwy7mr001vjj9mad338tb5" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -566,7 +635,7 @@ console.log(&#39;~4~&#39;, n1, n2)
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2020/05/21/js-inherit/" data-id="clpzmk05t0018q69maixw0hrh" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2020/05/21/js-inherit/" data-id="clrcwy7mq001bjj9m45ftepmi" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -613,52 +682,7 @@ console.log(&#39;~4~&#39;, n1, n2)
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2020/05/14/mood/" data-id="clpzmk05v001mq69m7se775jr" class="article-share-link">分享</a> -->
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-buyu" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/05/03/buyu/" class="article-date">
-  <time datetime="2020-05-03T12:15:41.000Z" itemprop="datePublished">2020-05-03</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E7%83%B9%E9%A5%AA/">烹饪</a>►<a class="article-category-link" href="/categories/%E7%83%B9%E9%A5%AA/%E4%BC%A0%E7%BB%9F/">传统</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/05/03/buyu/">“bu”鱼</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>5.1那天家里寄了些生鲜小鱼，用传统的“bu”法，我也不知这个是什么做法，用普通话怎么念。</p>
-<h3 id="做法"><a href="#做法" class="headerlink" title="做法"></a>做法</h3><p>取一铁盆，加水没过鱼，倒入酱油，撒上盐，量全凭自己把握。滚 15~20 分钟即可。期间注意翻身，以免粘锅和受热不均匀。</p>
-<img src="/2020/05/03/buyu/fish.png" class="" title="fish">
-<br />
-
-      
-    </div>
-    <footer class="article-footer">
-      
-      <!-- <a data-url="https://blog.cchealthier.com/2020/05/03/buyu/" data-id="clpzmk05n0009q69m80ge0y2m" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2020/05/14/mood/" data-id="clrcwy7mr001pjj9mct73fawj" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -686,6 +710,10 @@ console.log(&#39;~4~&#39;, n1, n2)
       <ul>
         
           <li>
+            <a href="/2024/01/12/android-rn-integrate/">android 原生应用集成 react-native</a>
+          </li>
+        
+          <li>
             <a href="/2023/12/10/babel-ast-transform/">使用 babel ast 做代码转换</a>
           </li>
         
@@ -699,10 +727,6 @@ console.log(&#39;~4~&#39;, n1, n2)
         
           <li>
             <a href="/2023/10/15/react-vite-qiankun/">react 用 vite 构建 &amp; 用 qiankun 做微前端</a>
-          </li>
-        
-          <li>
-            <a href="/2023/09/24/hexo-code-highlight/">记录 hexo 使用 highlight.js 实现代码高亮</a>
           </li>
         
       </ul>
@@ -724,7 +748,7 @@ console.log(&#39;~4~&#39;, n1, n2)
   <div class="widget-wrap">
     <h3 class="widget-title">标签</h3>
     <div class="widget">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nginx/" rel="tag">nginx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/node/" rel="tag">node</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" rel="tag">工程化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BE%AE%E5%89%8D%E7%AB%AF/" rel="tag">微前端</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%80%A7%E8%83%BD/" rel="tag">性能</a></li></ul>
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nginx/" rel="tag">nginx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/node/" rel="tag">node</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/react-native/" rel="tag">react-native</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" rel="tag">工程化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BE%AE%E5%89%8D%E7%AB%AF/" rel="tag">微前端</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%80%A7%E8%83%BD/" rel="tag">性能</a></li></ul>
     </div>
   </div>
 
@@ -734,7 +758,7 @@ console.log(&#39;~4~&#39;, n1, n2)
   <div class="widget-wrap">
     <h3 class="widget-title">标签云</h3>
     <div class="widget tagcloud">
-      <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/nginx/" style="font-size: 12.5px;">nginx</a> <a href="/tags/node/" style="font-size: 15px;">node</a> <a href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" style="font-size: 20px;">工程化</a> <a href="/tags/%E5%BE%AE%E5%89%8D%E7%AB%AF/" style="font-size: 12.5px;">微前端</a> <a href="/tags/%E6%80%A7%E8%83%BD/" style="font-size: 17.5px;">性能</a>
+      <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/nginx/" style="font-size: 12px;">nginx</a> <a href="/tags/node/" style="font-size: 16px;">node</a> <a href="/tags/react-native/" style="font-size: 14px;">react-native</a> <a href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" style="font-size: 20px;">工程化</a> <a href="/tags/%E5%BE%AE%E5%89%8D%E7%AB%AF/" style="font-size: 12px;">微前端</a> <a href="/tags/%E6%80%A7%E8%83%BD/" style="font-size: 18px;">性能</a>
     </div>
   </div>
 
@@ -743,7 +767,7 @@ console.log(&#39;~4~&#39;, n1, n2)
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/12/">十二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/11/">十一月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/10/">十月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/09/">九月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/08/">八月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">七月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/06/">六月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/05/">五月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/04/">四月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/03/">三月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/02/">二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">十一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">十月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">九月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/01/">一月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/12/">十二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/11/">十一月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/10/">十月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/09/">九月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/08/">八月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">七月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/06/">六月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/05/">五月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/04/">四月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/03/">三月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/02/">二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">十一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">十月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">九月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a></li></ul>
     </div>
   </div>
 
@@ -756,7 +780,7 @@ console.log(&#39;~4~&#39;, n1, n2)
   
   <div class="outer">
     <div id="footer-info" class="inner">
-      &copy; 2023 ChrisIori<br>
+      &copy; 2024 ChrisIori<br>
       Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
     </div>
   </div>
