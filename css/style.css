@@ -802,6 +802,7 @@ a.article-title:hover {
   padding: 10px 0;
 }
 .article-entry blockquote {
+  color: #808080;
   font-family: Georgia, "Times New Roman", serif;
   font-size: 1.4em;
   margin: 1.6em 20px;

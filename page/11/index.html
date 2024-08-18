@@ -74,6 +74,102 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-database" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/05/31/database/" class="article-date">
+  <time datetime="2020-05-31T02:32:42.000Z" itemprop="datePublished">2020-05-31</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/05/31/database/">MySql 基本指令</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>不做后端开发，不常操作数据库，很容易忘记。记录下自己用到过几条数据库命令。（持续）</p>
+<p>连上数据库</p>
+<pre><code class="bash">// -u 指向用户， -p 需要密码
+mysql -u root -p
+</code></pre>
+<p>显示数据库</p>
+<pre><code class="bash">show databases;
+</code></pre>
+<p>创建数据库</p>
+<pre><code class="bash">create database 数据库名字;
+</code></pre>
+<p>删除数据库</p>
+<pre><code class="bash">drop table 数据库名字;
+</code></pre>
+<p>选择数据库</p>
+<pre><code class="bash">use 数据库名字;
+</code></pre>
+<p>显示表</p>
+<pre><code class="bash">show tables;
+</code></pre>
+<p>创建表</p>
+<pre><code class="bash">create table 表名字;
+</code></pre>
+<p>删除表</p>
+<pre><code class="bash">drop table 表名字;
+</code></pre>
+<p>查看表结构</p>
+<pre><code class="bash">show create table 表名字;
+</code></pre>
+<p>查看表内容</p>
+<pre><code class="bash">select * from 表名字;
+</code></pre>
+<p>查看表条数</p>
+<pre><code class="bash">select count(*) from 表名字;
+</code></pre>
+<p>查看表索引</p>
+<pre><code class="bash">show index table 表名字;
+</code></pre>
+<p>清空表</p>
+<pre><code class="bash">truncate table 表名字;
+</code></pre>
+<p>更新数据，注意搜索的值字符串的话要加引号</p>
+<pre><code class="bash">update table_name set 要更新的字段=要更新的值 where 搜索的字段=搜索的值;
+</code></pre>
+<p>设置密码</p>
+<pre><code class="bash">// set password for 用户名@localhost = password(‘新密码’);
+set password for root@localhost = password(&#39;123456&#39;);
+</code></pre>
+<p>更新数据是从另外一张表拿的值</p>
+<pre><code class="bash">update 表A,表B set 表A.字段A=表B.字段A where 表A.字段B=表B.字段B and 表A.字段A=字段值;
+</code></pre>
+<p>增加字段名</p>
+<pre><code class="bash">// 字段类型可以先看表结构参考其他字段 show create table 表名字;
+alter table 表名 add 字段名 字段类型 default 默认值;
+</code></pre>
+
+      
+    </div>
+    <footer class="article-footer">
+      
+      <!-- <a data-url="https://blog.cchealthier.com/2020/05/31/database/" data-id="clzz00mi7000ky19mh3u661xt" class="article-share-link">分享</a> -->
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-js-performance" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2020/05/28/js-performance/" class="article-date">
@@ -131,7 +227,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2020/05/28/js-performance/" data-id="clrcwy7mq001ejj9m6l457623" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2020/05/28/js-performance/" data-id="clzz00mia001jy19m7luz96fc" class="article-share-link">分享</a> -->
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%80%A7%E8%83%BD/" rel="tag">性能</a></li></ul>
@@ -281,7 +377,7 @@ process.nextTick(() =&gt; &#123;
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2020/05/27/eventloop/" data-id="clrcwy7mn000njj9m1gxbf3wi" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2020/05/27/eventloop/" data-id="clzz00mi7000oy19m1ayn4nt5" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -353,7 +449,7 @@ console.log(man2.attr)
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2020/05/25/new-object/" data-id="clrcwy7mr001vjj9mad338tb5" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2020/05/25/new-object/" data-id="clzz00mib001zy19m145halph" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -635,54 +731,7 @@ console.log(&#39;~4~&#39;, n1, n2)
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2020/05/21/js-inherit/" data-id="clrcwy7mq001bjj9m45ftepmi" class="article-share-link">分享</a> -->
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-mood" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/05/14/mood/" class="article-date">
-  <time datetime="2020-05-14T15:55:33.000Z" itemprop="datePublished">2020-05-14</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E9%9A%8F%E6%83%B3/">随想</a>►<a class="article-category-link" href="/categories/%E9%9A%8F%E6%83%B3/%E5%BF%83%E6%83%85/">心情</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/05/14/mood/">空间起源</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>&amp;emsp;&amp;emsp;好记性不如烂笔头。从小听到大，真的很有道理。但其实小时候仗着记忆力好，就懒得动笔。无论是记作业还是上课记笔记。当然所谓的好记忆其实那一瞬间，犹如内存，断电就没了。随着年纪增大，可能记忆力变差，可能经历的事多，确实遗忘的东西变多了。所以琢磨着找个地方给记下来。当然这种地方很多，自己搭建一个纯属好（第四声）玩。记录一些心情随想，所见所闻，所接触到的开发技术，烹饪煮食。<br>&amp;emsp;&amp;emsp;另外一个就是照片，以前老是觉得在于精不在于多，明明身处随时随地可照相的时代。后来在看一些地方旅游照片的时候，发现自己喜欢的街头巷尾照片太少了，就感觉缺失了那一环一样。以后也多给拍下来。<br>&amp;emsp;&amp;emsp;放两张偶然拍的自己觉得好的照片。</p>
-<img src="/2020/05/14/mood/suzhou.JPG" class="" title="苏州公车站">
-</br>
-</br>
-</br>
-<img src="/2020/05/14/mood/taibei.JPG" class="" title="台北淡水捷运站">
-
-      
-    </div>
-    <footer class="article-footer">
-      
-      <!-- <a data-url="https://blog.cchealthier.com/2020/05/14/mood/" data-id="clrcwy7mr001pjj9mct73fawj" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2020/05/21/js-inherit/" data-id="clzz00mia001fy19m2e5t9kt5" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -710,6 +759,10 @@ console.log(&#39;~4~&#39;, n1, n2)
       <ul>
         
           <li>
+            <a href="/2024/08/17/dependency-injection-inversify/">依赖反转/注入与 IOC 容器 inversify</a>
+          </li>
+        
+          <li>
             <a href="/2024/01/12/android-rn-integrate/">android 原生应用集成 react-native</a>
           </li>
         
@@ -723,10 +776,6 @@ console.log(&#39;~4~&#39;, n1, n2)
         
           <li>
             <a href="/2023/11/24/ios-rn-integrate/">ios 原生应用集成 react-native</a>
-          </li>
-        
-          <li>
-            <a href="/2023/10/15/react-vite-qiankun/">react 用 vite 构建 &amp; 用 qiankun 做微前端</a>
           </li>
         
       </ul>
@@ -767,7 +816,7 @@ console.log(&#39;~4~&#39;, n1, n2)
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/01/">一月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/12/">十二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/11/">十一月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/10/">十月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/09/">九月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/08/">八月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">七月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/06/">六月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/05/">五月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/04/">四月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/03/">三月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/02/">二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">十一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">十月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">九月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/08/">八月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/01/">一月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/12/">十二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/11/">十一月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/10/">十月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/09/">九月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/08/">八月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">七月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/06/">六月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/05/">五月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/04/">四月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/03/">三月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/02/">二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">十一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">十月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">九月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a></li></ul>
     </div>
   </div>
 

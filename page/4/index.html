@@ -74,6 +74,146 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-nginx-basic" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2023/04/21/nginx-basic/" class="article-date">
+  <time datetime="2023-04-21T13:33:48.000Z" itemprop="datePublished">2023-04-21</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E6%9C%8D%E5%8A%A1/">服务</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2023/04/21/nginx-basic/">nginx 的基础用法 &amp; linux（centos）下支持 https 和 http2</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>其实之前写过一篇相关的《<a href="/2022/03/26/nginx/">记录下 nginx 使用配置</a>》，关于 nginx 的一些稍微复杂的场景。然后发现日常的基础用法，反而记不住。这里就记录一下。</p>
+<p>安装，mac 可以用 brew 下载。windows 的也很简单，去<a target="_blank" rel="noopener" href="http://nginx.org/en/download.html">官网</a>下载个压缩包就行了。至于 linux 的，就网上搜搜啦，我记得也很简单。</p>
+<pre><code class="bash"># 安装
+brew install nginx
+
+#查看
+brew info nginx
+</code></pre>
+<p>查看信息，可以看到配置文件在 <code>/opt/homebrew/etc/nginx/nginx.conf</code>。</p>
+<p>命令</p>
+<pre><code class="bash"># 启动
+nginx
+
+# 刷新，改了 nginx.conf 文件，要重新生效
+nginx -s reload
+
+# 关闭
+nginx -s stop
+</code></pre>
+<p>默认端口是 8080。所以直接访问本地地址 <code>http://localhost:8080/</code>，看到有显示 <strong>Welcome to nginx!</strong> 字样就是启动成功了。</p>
+<p>其实 nginx.conf 已经写了例子和注释，这里只是稍微补充点。</p>
+<p>root：资源文件夹<br>index： 默认的 index 文件</p>
+<pre><code class="yaml">location / &#123;
+  root   /电脑地址/nginx;
+  index  index.html index.htm;
+&#125;
+</code></pre>
+<p>如果要配置不同路由访问不同的文件，<code>root</code> 要改成 <code>alias</code>，比如访问 <code>http://localhost:8080/page</code></p>
+<pre><code class="yaml">location /page &#123;
+  alias /电脑地址/nginx;
+  index page.html;
+&#125;
+</code></pre>
+<p>当然最好是写个兜底返回。在 vue 或者 react 使用 router 时，兜底返回默认 index.html。不然每增加一个路由就要写多一个配置很麻烦。</p>
+<pre><code class="yaml">location ~* ^/* &#123;
+  root   /电脑地址/nginx;
+  try_files $uri $uri/ /index.html;
+&#125;
+</code></pre>
+<p><strong>注意</strong><br>root 与 alias<br>两者区别在于 nginx 如何解释 location 后面的 url</p>
+<p><strong>root:</strong><br>语法：root path<br>默认值：root html<br>配置段：http、server、location、if<br>处理结果：root 路径＋ location 路径</p>
+<p><strong>alias:</strong><br>语法：alias path<br>配置段：location<br>处理结果：使用 alias 路径替换 location 路径</p>
+<p><strong>所以用正则匹配写路径的要注意写好 root 或 alias，不然找不到资源就会出现 403！</strong></p>
+<p>可以写多个server，启动多个服务</p>
+<pre><code class="yaml">server &#123;
+  listen       3000;
+  server_name  0.0.0.0;
+
+  location / &#123;
+    root   /电脑地址/nginx;
+    index  3000.html 3000.htm;
+  &#125;
+&#125;
+</code></pre>
+<p>代理 ~ 为区分大小写，~*为不区分大小写，其他符号则请查询官网啦。</p>
+<pre><code class="yaml">location ~ /api/* &#123;
+  proxy_pass   http://localhost:3000;
+&#125;
+</code></pre>
+<p>https服务，声明好证书即可。这里只是把其中证书配置列出来，实际上 nginx.conf 的例子还有挺多配置，一般我们不是运维，应该默认就够了。作为调试用，可能都不需要启动到 https server。</p>
+<pre><code class="yaml">server &#123;
+  ssl_certificate      /电脑地址/nginx/cert/cert.pem;
+  ssl_certificate_key  /电脑地址/nginx/cert/server.key;
+&#125;
+</code></pre>
+<p>开启文本压缩</p>
+<pre><code class="yaml">http &#123;
+  gzip on;
+  # 压缩比例，比例越大，压缩时间越长。默认是1
+  gzip_comp_level 6;
+  # 哪些文件可以被压缩
+  gzip_types text/xml text/plain text/css application/javascript application/x-javascript application/rss+xml;
+&#125;
+</code></pre>
+<p>linux 下支持 https 和 http2，也是网上搜集的，实操了可以，这里记录一下。</p>
+<pre><code class="bash"># 安装依赖
+yum -y install gcc zlib zlib-devel pcre-devel openssl openssl-devel
+# 解压缩
+tar -zxvf nginx-1.23.4.tar.gz
+cd nginx-1.23.4
+# 执行配置
+./configure --with-http_ssl_module --with-http_v2_module
+# 编译安装
+make
+make install
+</code></pre>
+<pre><code class="bash"># 默认安装在
+/usr/local/nginx
+# 启动
+/usr/local/nginx/sbin/nginx
+# 刷新配置启动
+/usr/local/nginx/sbin/nginx -s reload
+# 关闭
+/usr/local/nginx/sbin/nginx -s stop
+# 修改配置
+vim  /usr/local/nginx/conf/nginx.conf
+</code></pre>
+
+      
+    </div>
+    <footer class="article-footer">
+      
+      <!-- <a data-url="https://blog.cchealthier.com/2023/04/21/nginx-basic/" data-id="clzz00mic0026y19m9nc5aany" class="article-share-link">分享</a> -->
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/nginx/" rel="tag">nginx</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-fontend-engineering-2" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2023/04/21/fontend-engineering-2/" class="article-date">
@@ -156,7 +296,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2023/04/21/fontend-engineering-2/" data-id="clrcwy7mo000tjj9mgb99cfvz" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2023/04/21/fontend-engineering-2/" data-id="clzz00mi8000ty19m2qkget7q" class="article-share-link">分享</a> -->
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" rel="tag">工程化</a></li></ul>
@@ -223,7 +363,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2023/03/06/fontend-engineering/" data-id="clrcwy7mo000rjj9m8ugi8n96" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2023/03/06/fontend-engineering/" data-id="clzz00mi8000wy19mdk5md8x2" class="article-share-link">分享</a> -->
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" rel="tag">工程化</a></li></ul>
@@ -468,7 +608,7 @@ export default &#123;
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2023/02/07/multi-function-select/" data-id="clrcwy7mr001sjj9m3sms6mze" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2023/02/07/multi-function-select/" data-id="clzz00mib001xy19mby1e1th1" class="article-share-link">分享</a> -->
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%80%A7%E8%83%BD/" rel="tag">性能</a></li></ul>
@@ -526,54 +666,7 @@ export default &#123;
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2022/11/07/vue-observer-dep-watcher/" data-id="clrcwy7mx003zjj9m1ljhe1fi" class="article-share-link">分享</a> -->
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-2022-autumn" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2022/10/19/2022-autumn/" class="article-date">
-  <time datetime="2022-10-18T16:11:02.000Z" itemprop="datePublished">2022-10-19</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E6%97%85%E8%A1%8C/">旅行</a>►<a class="article-category-link" href="/categories/%E6%97%85%E8%A1%8C/%E8%AE%B0%E5%BD%95/">记录</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2022/10/19/2022-autumn/">最近看到的一些美景</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h4 id="泉州"><a href="#泉州" class="headerlink" title="泉州"></a>泉州</h4><p><img src="https://file.cchealthier.com/file/blog/202210/2022_10_01.jpg" alt="1.jpg"></p>
-<p><img src="https://file.cchealthier.com/file/blog/202210/2022_10_02.jpg" alt="2.jpg"></p>
-        
-          <p class="article-more-link">
-            <a href="/2022/10/19/2022-autumn/#more">Read More</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      
-      <!-- <a data-url="https://blog.cchealthier.com/2022/10/19/2022-autumn/" data-id="clrcwy7mg0000jj9m4hv89hpu" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2022/11/07/vue-observer-dep-watcher/" data-id="clzz00mih0041y19m6eog3j52" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -601,6 +694,10 @@ export default &#123;
       <ul>
         
           <li>
+            <a href="/2024/08/17/dependency-injection-inversify/">依赖反转/注入与 IOC 容器 inversify</a>
+          </li>
+        
+          <li>
             <a href="/2024/01/12/android-rn-integrate/">android 原生应用集成 react-native</a>
           </li>
         
@@ -614,10 +711,6 @@ export default &#123;
         
           <li>
             <a href="/2023/11/24/ios-rn-integrate/">ios 原生应用集成 react-native</a>
-          </li>
-        
-          <li>
-            <a href="/2023/10/15/react-vite-qiankun/">react 用 vite 构建 &amp; 用 qiankun 做微前端</a>
           </li>
         
       </ul>
@@ -658,7 +751,7 @@ export default &#123;
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/01/">一月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/12/">十二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/11/">十一月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/10/">十月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/09/">九月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/08/">八月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">七月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/06/">六月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/05/">五月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/04/">四月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/03/">三月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/02/">二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">十一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">十月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">九月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/08/">八月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/01/">一月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/12/">十二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/11/">十一月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/10/">十月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/09/">九月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/08/">八月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">七月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/06/">六月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/05/">五月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/04/">四月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/03/">三月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/02/">二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">十一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">十月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">九月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a></li></ul>
     </div>
   </div>
 

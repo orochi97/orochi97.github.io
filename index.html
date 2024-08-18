@@ -74,6 +74,109 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-dependency-injection-inversify" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2024/08/17/dependency-injection-inversify/" class="article-date">
+  <time datetime="2024-08-17T02:10:28.000Z" itemprop="datePublished">2024-08-17</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2024/08/17/dependency-injection-inversify/">依赖反转/注入与 IOC 容器 inversify</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="一、概念"><a href="#一、概念" class="headerlink" title="一、概念"></a>一、概念</h2><p>先看看概念释义（百度）- 依赖反转原则：</p>
+<blockquote>
+<p>在面向对象编程领域中，依赖反转原则（Dependency inversion principle，DIP）是指一种特定的解耦（传统的依赖关系创建在高层次上，而具体的策略设置则应用在低层次的模块上）形式，使得高层次的模块不依赖于低层次的模块的实现细节，依赖关系被颠倒（反转），从而使得低层次模块依赖于高层次模块的需求抽象。</p>
+</blockquote>
+<p>我第一个想法就是反转什么？再看看释义（chatgpt）：</p>
+<blockquote>
+<p>“反转” 指的是将依赖关系从具体实现转向抽象，这样高层模块就不会直接依赖低层模块的实现细节，而是依赖于抽象接口或抽象类。依赖注入则是实现这一反转原则的一个具体手段，通过将依赖项注入到类中，减少了类与其依赖项之间的耦合。</p>
+</blockquote>
+<p>结合给的例子，虽然是 java 的例子，不过大同小异。</p>
+<p><strong>传统实现：</strong></p>
+<pre><code class="java">public class UserService &#123;
+    private UserRepository userRepository;
+    public UserService() &#123;
+        this.userRepository = new UserRepository(); // 依赖于具体实现
+    &#125;
+    public void someServiceMethod() &#123;
+        userRepository.someMethod();
+    &#125;
+&#125;
+</code></pre>
+<p><strong>应用依赖反转原则的实现：</strong></p>
+<pre><code class="java">// 定义抽象
+public interface UserRepository &#123;
+    void someMethod();
+&#125;
+// 实现具体细节
+public class UserRepositoryImpl implements UserRepository &#123;
+    public void someMethod() &#123;
+        // 实现细节
+    &#125;
+&#125;
+// 高层模块依赖于抽象
+public class UserService &#123;
+    private UserRepository userRepository;
+    // 依赖注入
+    public UserService(UserRepository userRepository) &#123;
+        this.userRepository = userRepository;
+    &#125;
+    public void someServiceMethod() &#123;
+        userRepository.someMethod();
+    &#125;
+&#125;
+</code></pre>
+<p>那么依赖注入又是什么，如果接触过 angular 的话，应该会知道这个概念。释义（chatgpt）：</p>
+<blockquote>
+<p>依赖注入是一种实现依赖反转的方法，通过将依赖项（如 UserRepository）注入到 UserService 中，而不是由 UserService 自行创建依赖项。依赖注入可以通过多种方式实现，例如：</p>
+</blockquote>
+<ul>
+<li>构造器注入：通过构造函数将依赖项注入类。</li>
+<li>属性注入：通过类的属性（setter 方法）注入依赖项。</li>
+<li>接口注入：通过实现特定接口注入依赖项（这种方式在实践中不太常见）。</li>
+</ul>
+<p><strong>个人理解：依赖反转是一种编程思想，而依赖注入是其原则的一种实现方式。反转了对依赖的使用。</strong></p>
+<ul>
+<li><strong>传统：</strong>直接在类里面声明使用一个依赖。如果需求上要改动依赖，就得改动调用方，或者重写一个新的调用方，去调用新的一个依赖。</li>
+<li><strong>依赖反转：</strong>给调用方传递一个依赖，大家约定好依赖要实现某个接口（方法），调用方就直接用。如此一来，如果需要更改依赖方法，就传递一个新的依赖进去就好。调用方的代码就不用改。<br>比如：跑自动化测试和正式使用，就可以给某些功能注入不同的 service，来达到适配不同环境。</li>
+</ul>
+<p>个人觉得叫依赖注入还好理解点。不过一个是指导思想，一个是实施方案嘛。</p>
+        
+          <p class="article-more-link">
+            <a href="/2024/08/17/dependency-injection-inversify/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      
+      <!-- <a data-url="https://blog.cchealthier.com/2024/08/17/dependency-injection-inversify/" data-id="clzz00mi7000ny19m6ccjce13" class="article-share-link">分享</a> -->
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-android-rn-integrate" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2024/01/12/android-rn-integrate/" class="article-date">
@@ -221,7 +324,7 @@ public class MyReactActivity extends AppCompatActivity implements DefaultHardwar
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2024/01/12/android-rn-integrate/" data-id="clrcwy7mj0004jj9mc5rseiwm" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2024/01/12/android-rn-integrate/" data-id="clzz00mi30003y19m5maoc58a" class="article-share-link">分享</a> -->
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/react-native/" rel="tag">react-native</a></li></ul>
@@ -287,7 +390,7 @@ export default function Component(props) &#123;
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2023/12/10/babel-ast-transform/" data-id="clrcwy7mk0008jj9m18q2c7e9" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2023/12/10/babel-ast-transform/" data-id="clzz00mi40008y19me8ocg5qg" class="article-share-link">分享</a> -->
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/node/" rel="tag">node</a></li></ul>
@@ -352,7 +455,7 @@ export default function Component(props) &#123;
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2023/12/03/react-native-record/" data-id="clrcwy7mv0032jj9megrr3w4r" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2023/12/03/react-native-record/" data-id="clzz00mie0037y19mb315fhhj" class="article-share-link">分享</a> -->
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/react-native/" rel="tag">react-native</a></li></ul>
@@ -415,78 +518,10 @@ export default function Component(props) &#123;
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2023/11/24/ios-rn-integrate/" data-id="clrcwy7mp0016jj9m38845mft" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2023/11/24/ios-rn-integrate/" data-id="clzz00mia001by19m22h17icg" class="article-share-link">分享</a> -->
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/react-native/" rel="tag">react-native</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-react-vite-qiankun" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2023/10/15/react-vite-qiankun/" class="article-date">
-  <time datetime="2023-10-15T02:53:31.000Z" itemprop="datePublished">2023-10-15</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2023/10/15/react-vite-qiankun/">react 用 vite 构建 &amp; 用 qiankun 做微前端</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>工程不经常改动，就不建仓库了，弄个压缩包完事。<br>代码压缩包：<a target="_blank" rel="noopener" href="https://file.cchealthier.com/file/blog/attachment/micro-qiankun.tar.gz">micro-qiankun.tar.gz</a></p>
-<h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><p>文章不是为了讲怎么用 react &amp; vite &amp; qiankun 结合搭建。搭建也不复杂，直接看示例代码就可以了。主要是这其中遇到的一个问题：</p>
-<blockquote>
-<p>qiankun.js:17 [import-html-entry]: error occurs while executing normal script &lt;script type&#x3D;”module”&gt;</p>
-</blockquote>
-<p>详情如图：</p>
-<img src="/2023/10/15/react-vite-qiankun/qiankun-error.png" class="" title="qiankun-error">
-
-<p>记录下这个问题的产生及解决。</p>
-<h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p><a target="_blank" rel="noopener" href="https://qiankun.umijs.org/zh/guide">qiankun.js</a> 是一个微前端框架。对于微前端，之前也尝试过《<a href="/2023/06/07/webpack-modulefederationplugin/">用 webpack ModuleFederationPlugin 搭建微前端</a>》。</p>
-<p>两者差别的话：</p>
-<ol>
-<li>如果用 vite，那 webpack5 MF 肯定用不了（废话~）。</li>
-<li>对于 qiankun，是不论框架的，基座和各个子应用可以完全不同框架，因为用的沙箱机制，可以可以云云（详看官网介绍）。</li>
-<li>而 webpack MF 其实也不是为了微前端出来，而是共享一部分功能出来，恰好能用作微前端。最终形式是暴露出一份 js 文件给主应用引用。那就最好基座和子应用都是同框架。</li>
-</ol>
-<p>个人理解：</p>
-<ul>
-<li>如果是成熟的几个不同项目，要揉在一起，但是彼此关联又不是很大，可以用 qiankun。</li>
-<li>如果是本身就是同一个大项目，要拆成不同模块分工维护。有很多共享的数据，可以用 webpack ModuleFederationPlugin。</li>
-</ul>
-        
-          <p class="article-more-link">
-            <a href="/2023/10/15/react-vite-qiankun/#more">Read More</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      
-      <!-- <a data-url="https://blog.cchealthier.com/2023/10/15/react-vite-qiankun/" data-id="clrcwy7mv0036jj9m5tgy07e9" class="article-share-link">分享</a> -->
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" rel="tag">工程化</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%BE%AE%E5%89%8D%E7%AB%AF/" rel="tag">微前端</a></li></ul>
 
     </footer>
   </div>
@@ -513,6 +548,10 @@ export default function Component(props) &#123;
       <ul>
         
           <li>
+            <a href="/2024/08/17/dependency-injection-inversify/">依赖反转/注入与 IOC 容器 inversify</a>
+          </li>
+        
+          <li>
             <a href="/2024/01/12/android-rn-integrate/">android 原生应用集成 react-native</a>
           </li>
         
@@ -526,10 +565,6 @@ export default function Component(props) &#123;
         
           <li>
             <a href="/2023/11/24/ios-rn-integrate/">ios 原生应用集成 react-native</a>
-          </li>
-        
-          <li>
-            <a href="/2023/10/15/react-vite-qiankun/">react 用 vite 构建 &amp; 用 qiankun 做微前端</a>
           </li>
         
       </ul>
@@ -570,7 +605,7 @@ export default function Component(props) &#123;
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/01/">一月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/12/">十二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/11/">十一月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/10/">十月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/09/">九月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/08/">八月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">七月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/06/">六月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/05/">五月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/04/">四月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/03/">三月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/02/">二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">十一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">十月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">九月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/08/">八月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/01/">一月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/12/">十二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/11/">十一月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/10/">十月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/09/">九月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/08/">八月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">七月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/06/">六月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/05/">五月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/04/">四月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/03/">三月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/02/">二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">十一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">十月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">九月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a></li></ul>
     </div>
   </div>
 

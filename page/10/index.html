@@ -74,6 +74,181 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-callapplybind" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/07/09/callapplybind/" class="article-date">
+  <time datetime="2020-07-09T14:58:38.000Z" itemprop="datePublished">2020-07-09</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/07/09/callapplybind/">自己实现call，apply，bind</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>这三个都是改变函数里的 this 指向<br>第一个参数都是用来替换 this 的对象，后面是原来函数的参数，不定个数<br>当第一个参数为 null 或 undefined，则里面 this 指向 window</p>
+<p>call，apply用法一样，区别在于</p>
+<pre><code class="js">func.call(obj, a, b, c, ...) // 后面的参数是一个一个
+func.apply(obj, []) // 后面的参数是一个数组
+// 这里有个帅气的找出数组最大值
+Math.max.apply(null, [1,2,3,4,1,2,3])
+</code></pre>
+<p>bind 比较特别，返回的是个函数，不执行</p>
+<pre><code class="js">// 后面的参数也是一个一个，同时会被锁住，成为原函数的前几个参数
+const newFn = bind.call(obj, a, b, c, ...)
+// 再调用的时候，参数为原函数的第n+1个参数
+newFn(e, f, g, ...)
+</code></pre>
+<h3 id="上码"><a href="#上码" class="headerlink" title="上码"></a>上码</h3><pre><code class="js">var name = &#39;windowname&#39;
+var age = &#39;windowage&#39;  
+const boy = &#123;
+  name: &#39;xiaoming&#39;,
+  age: 18,
+  show (a, b, c) &#123;
+    console.log(`$&#123;this.name&#125; is $&#123;this.age&#125;`, a, b, c)
+  &#125;
+&#125;
+const girl = &#123;
+  name: &#39;xiaohong&#39;,
+  age: 16
+&#125;
+boy.show(7, 8, 9) // xiaoming is 18 7 8 9
+
+// 先来正常的结果
+console.log(&#39;------------------- 对比 -------------------&#39;)
+boy.show.call(girl, 17, 18, 19, 10) // xiaohong is 16 17 18 19
+boy.show.apply(girl, [27, 28, 29, 20]) // xiaohong is 16 27 28 29
+boy.show.call(null, 17, 18, 19, 10) // windowname is windowage 17 18 19
+boy.show.apply(undefined, [27, 28, 29, 20]) // windowname is windowage 27 28 29
+
+const bindFn1 = boy.show.bind(girl, 17, 18, 19, 10)
+bindFn1() // xiaohong is 16 17 18 19
+bindFn1(1, 2, 3) // xiaohong is 16 17 18 19
+
+const bindFn2 = boy.show.bind(girl, 27)
+bindFn2() // xiaohong is 16 27 undefined undefined
+bindFn2(1, 2, 3) // xiaohong is 16 27 1 2
+
+const bindFn3 = boy.show.bind(null, 27)
+bindFn3() // windowname is windowage 27 undefined undefined
+bindFn3(12, 13, 14) // windowname is windowage 27 12 13
+
+console.log(&#39;------------------- 分割线 -------------------&#39;)
+// 通俗来讲就是哪个对象调用了函数，this就指向谁，当前面没有谁调用则是window
+// 绑定对象赋予一个字段为函数，来调用这个函数
+// 当绑定对象为 null 或者 undefined，则让这个函数单独运行，自然 this 会指向window
+// 随机数的为了不要不小心覆盖到绑定对象原来的属性
+// 不能绑定后对象多了个新属性，要删掉多出来的字段函数，雁过不留痕
+Function.prototype._call = function(context, ...param) &#123;
+  // 随便的随机名字
+  const functionName = Math.floor(Math.random() * 100000)
+  let result
+  if (context) &#123;
+    context[functionName] = this
+    result = context[functionName](...param)
+    delete context[functionName]
+  &#125; else &#123;
+    result = this(...param)
+  &#125;
+  return result
+&#125;
+
+// 当不能用 ES6 的解构时候，就用字符串拼接起来，然后用 eval 触发
+Function.prototype._call2 = function() &#123;
+  const functionName = Math.floor(Math.random() * 100000)
+  const params = []
+  let _context
+  for (let i = 1, l = arguments.length; i &lt; l; i++) &#123;
+    params.push(arguments[i])
+  &#125;
+  if (arguments[0]) &#123;
+    _context = arguments[0]
+    _context[functionName] = this
+    paramStr = `_context[functionName]($&#123;params.join(&#39;, &#39;)&#125;)`
+  &#125; else &#123;
+    _context = this
+    paramStr = `_context($&#123;params.join(&#39;, &#39;)&#125;)`
+  &#125;
+  const result = eval(paramStr)
+  delete _context[functionName]
+  return result
+&#125;
+
+Function.prototype._apply = function(context, arr) &#123;
+  const functionName = Math.floor(Math.random() * 100000)
+  let result
+  if (context) &#123;
+    context[functionName] = this
+    result = context[functionName](...arr)
+    delete context[functionName]
+  &#125; else &#123;
+    result = this(...arr)
+  &#125;
+  return result
+&#125;
+
+Function.prototype._bind = function(context, ...oldParam) &#123;
+  const fn = this
+  if (context) &#123;
+    return (...newParam) =&gt; &#123;
+      const functionName = Math.floor(Math.random() * 100000)
+      context[functionName] = fn
+      const result = context[functionName](...oldParam, ...newParam)
+      delete context[functionName]
+      return result
+    &#125;
+  &#125;
+  return (...newParam) =&gt; &#123;
+    return fn(...oldParam, ...newParam)
+  &#125;
+&#125;
+
+boy.show._call(girl, 17, 18, 19, 10)
+boy.show._apply(girl, [27, 28, 29, 20])
+boy.show._call(null, 17, 18, 19, 10)
+boy.show._apply(undefined, [27, 28, 29, 20])
+
+const _bindFn1 = boy.show._bind(girl, 17, 18, 19, 10)
+_bindFn1()
+_bindFn1(1, 2, 3)
+
+const _bindFn2 = boy.show._bind(girl, 27)
+_bindFn2()
+_bindFn2(1, 2, 3)
+
+const _bindFn3 = boy.show._bind(null, 27)
+_bindFn3()
+_bindFn3(12, 13, 14)
+</code></pre>
+
+      
+    </div>
+    <footer class="article-footer">
+      
+      <!-- <a data-url="https://blog.cchealthier.com/2020/07/09/callapplybind/" data-id="clzz00mi6000iy19m308132er" class="article-share-link">分享</a> -->
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-cache" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2020/07/02/cache/" class="article-date">
@@ -155,7 +330,7 @@ app.use(express.static(&#39;public&#39;, options))
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2020/07/02/cache/" data-id="clrcwy7mm000gjj9m1ikx2viv" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2020/07/02/cache/" data-id="clzz00mi6000gy19mbcet2cwi" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -197,7 +372,7 @@ app.use(express.static(&#39;public&#39;, options))
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2020/06/22/ssl-lts/" data-id="clrcwy7mw003fjj9mc0m97n48" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2020/06/22/ssl-lts/" data-id="clzz00mif003iy19m9c2bdpqh" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -239,7 +414,7 @@ app.use(express.static(&#39;public&#39;, options))
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2020/05/31/html-resource/" data-id="clrcwy7mp0014jj9m6kgq6plc" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2020/05/31/html-resource/" data-id="clzz00mi90018y19mhdwg08i9" class="article-share-link">分享</a> -->
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%80%A7%E8%83%BD/" rel="tag">性能</a></li></ul>
@@ -298,103 +473,7 @@ app.use(express.static(&#39;public&#39;, options))
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2020/05/31/protocol/" data-id="clrcwy7mu002pjj9m1yxc3dl2" class="article-share-link">分享</a> -->
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-database" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/05/31/database/" class="article-date">
-  <time datetime="2020-05-31T02:32:42.000Z" itemprop="datePublished">2020-05-31</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/05/31/database/">MySql 基本指令</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>不做后端开发，不常操作数据库，很容易忘记。记录下自己用到过几条数据库命令。（持续）</p>
-<p>连上数据库</p>
-<pre><code class="bash">// -u 指向用户， -p 需要密码
-mysql -u root -p
-</code></pre>
-<p>显示数据库</p>
-<pre><code class="bash">show databases;
-</code></pre>
-<p>创建数据库</p>
-<pre><code class="bash">create database 数据库名字;
-</code></pre>
-<p>删除数据库</p>
-<pre><code class="bash">drop table 数据库名字;
-</code></pre>
-<p>选择数据库</p>
-<pre><code class="bash">use 数据库名字;
-</code></pre>
-<p>显示表</p>
-<pre><code class="bash">show tables;
-</code></pre>
-<p>创建表</p>
-<pre><code class="bash">create table 表名字;
-</code></pre>
-<p>删除表</p>
-<pre><code class="bash">drop table 表名字;
-</code></pre>
-<p>查看表结构</p>
-<pre><code class="bash">show create table 表名字;
-</code></pre>
-<p>查看表内容</p>
-<pre><code class="bash">select * from 表名字;
-</code></pre>
-<p>查看表条数</p>
-<pre><code class="bash">select count(*) from 表名字;
-</code></pre>
-<p>查看表索引</p>
-<pre><code class="bash">show index table 表名字;
-</code></pre>
-<p>清空表</p>
-<pre><code class="bash">truncate table 表名字;
-</code></pre>
-<p>更新数据，注意搜索的值字符串的话要加引号</p>
-<pre><code class="bash">update table_name set 要更新的字段=要更新的值 where 搜索的字段=搜索的值;
-</code></pre>
-<p>设置密码</p>
-<pre><code class="bash">// set password for 用户名@localhost = password(‘新密码’);
-set password for root@localhost = password(&#39;123456&#39;);
-</code></pre>
-<p>更新数据是从另外一张表拿的值</p>
-<pre><code class="bash">update 表A,表B set 表A.字段A=表B.字段A where 表A.字段B=表B.字段B and 表A.字段A=字段值;
-</code></pre>
-<p>增加字段名</p>
-<pre><code class="bash">// 字段类型可以先看表结构参考其他字段 show create table 表名字;
-alter table 表名 add 字段名 字段类型 default 默认值;
-</code></pre>
-
-      
-    </div>
-    <footer class="article-footer">
-      
-      <!-- <a data-url="https://blog.cchealthier.com/2020/05/31/database/" data-id="clrcwy7mn000ljj9memhfb0se" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2020/05/31/protocol/" data-id="clzz00mie002uy19m0z93bokx" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -422,6 +501,10 @@ alter table 表名 add 字段名 字段类型 default 默认值;
       <ul>
         
           <li>
+            <a href="/2024/08/17/dependency-injection-inversify/">依赖反转/注入与 IOC 容器 inversify</a>
+          </li>
+        
+          <li>
             <a href="/2024/01/12/android-rn-integrate/">android 原生应用集成 react-native</a>
           </li>
         
@@ -435,10 +518,6 @@ alter table 表名 add 字段名 字段类型 default 默认值;
         
           <li>
             <a href="/2023/11/24/ios-rn-integrate/">ios 原生应用集成 react-native</a>
-          </li>
-        
-          <li>
-            <a href="/2023/10/15/react-vite-qiankun/">react 用 vite 构建 &amp; 用 qiankun 做微前端</a>
           </li>
         
       </ul>
@@ -479,7 +558,7 @@ alter table 表名 add 字段名 字段类型 default 默认值;
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/01/">一月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/12/">十二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/11/">十一月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/10/">十月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/09/">九月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/08/">八月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">七月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/06/">六月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/05/">五月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/04/">四月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/03/">三月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/02/">二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">十一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">十月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">九月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/08/">八月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/01/">一月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/12/">十二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/11/">十一月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/10/">十月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/09/">九月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/08/">八月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">七月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/06/">六月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/05/">五月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/04/">四月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/03/">三月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/02/">二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">十一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">十月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">九月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a></li></ul>
     </div>
   </div>
 
