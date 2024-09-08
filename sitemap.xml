@@ -335,6 +335,15 @@
   </url>
   
   <url>
+    <loc>https://blog.cchealthier.com/2020/08/30/promise-api/</loc>
+    
+    <lastmod>2023-04-21</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://blog.cchealthier.com/2020/05/31/protocol/</loc>
     
     <lastmod>2023-04-21</lastmod>
@@ -345,15 +354,6 @@
   
   <url>
     <loc>https://blog.cchealthier.com/2020/08/30/puppeteer/</loc>
-    
-    <lastmod>2023-04-21</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://blog.cchealthier.com/2020/08/30/promise-api/</loc>
     
     <lastmod>2023-04-21</lastmod>
     
@@ -425,15 +425,6 @@
   </url>
   
   <url>
-    <loc>https://blog.cchealthier.com/2020/11/29/api-defference/</loc>
-    
-    <lastmod>2023-04-21</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>https://blog.cchealthier.com/2020/12/06/autumn/</loc>
     
     <lastmod>2023-04-21</lastmod>
@@ -443,7 +434,7 @@
   </url>
   
   <url>
-    <loc>https://blog.cchealthier.com/2022/03/14/beijing-winter/</loc>
+    <loc>https://blog.cchealthier.com/2020/11/29/api-defference/</loc>
     
     <lastmod>2023-04-21</lastmod>
     
@@ -453,6 +444,15 @@
   
   <url>
     <loc>https://blog.cchealthier.com/2022/10/18/binary-tree-traversal/</loc>
+    
+    <lastmod>2023-04-21</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.cchealthier.com/2022/03/14/beijing-winter/</loc>
     
     <lastmod>2023-04-21</lastmod>
     
@@ -651,14 +651,14 @@
   </url>
   
   <url>
-    <loc>https://blog.cchealthier.com/categories/%E7%83%B9%E9%A5%AA/%E4%BC%A0%E7%BB%9F/</loc>
+    <loc>https://blog.cchealthier.com/categories/%E9%9A%8F%E6%83%B3/</loc>
     <lastmod>2024-09-08</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>https://blog.cchealthier.com/categories/%E9%9A%8F%E6%83%B3/</loc>
+    <loc>https://blog.cchealthier.com/categories/%E7%83%B9%E9%A5%AA/%E4%BC%A0%E7%BB%9F/</loc>
     <lastmod>2024-09-08</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
