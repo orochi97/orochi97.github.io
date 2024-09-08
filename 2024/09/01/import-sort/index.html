@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="baidu-site-verification" content="codeva-nIjDp6ZZc0" />
+  <meta name="referrer" content="no-referrer"/>
+  <meta charset="utf-8">
+  
+
+  
+  <title>js 几种导入依赖排序 import sort | 凝雪密境</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="前言现在前端工程化一般都会加上 eslint + prettier （从零搭建前端工程（下））做格式化，为了团队风格，美观，还有为了减少不必要的冲突，比如 import 文件的顺序。合并代码的时候，冲突无可避免，但是能尽量减少最好。能够统一排序，添加的文件的改动也比较一目了然。相应的工具其实也不少，大同小异，选择适合自己的而用之。 一、eslint 自带的 sort-imports《sort-im">
+<meta property="og:type" content="article">
+<meta property="og:title" content="js 几种导入依赖排序 import sort">
+<meta property="og:url" content="https://blog.cchealthier.com/2024/09/01/import-sort/index.html">
+<meta property="og:site_name" content="凝雪密境">
+<meta property="og:description" content="前言现在前端工程化一般都会加上 eslint + prettier （从零搭建前端工程（下））做格式化，为了团队风格，美观，还有为了减少不必要的冲突，比如 import 文件的顺序。合并代码的时候，冲突无可避免，但是能尽量减少最好。能够统一排序，添加的文件的改动也比较一目了然。相应的工具其实也不少，大同小异，选择适合自己的而用之。 一、eslint 自带的 sort-imports《sort-im">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-09-01T02:58:11.000Z">
+<meta property="article:modified_time" content="2024-09-08T04:46:03.507Z">
+<meta property="article:author" content="ChrisIori">
+<meta name="twitter:card" content="summary">
+  
+  
+    <link rel="icon" href="/favicon.ico">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  <link href="https://www.jq22.com/demo/jqueryToast201708310012/css/toast.style.css" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="/css/highlight/styles/monokai-sublime.min.css">
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">凝雪密境</a>
+      </h1>
+      
+        <div id="avatar" style="background-image: url( /avatar.jpg )">
+          <div class="container">
+            <div class="ball wind"></div>
+            <div class="ball fire"></div>
+            <div class="ball water"></div>
+            <div class="ball soil"></div>
+          </div>
+        </div>
+      
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">首页</a>
+        
+          <a class="main-nav-link" href="/archives">归档</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://blog.cchealthier.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-import-sort" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2024/09/01/import-sort/" class="article-date">
+  <time datetime="2024-09-01T02:58:11.000Z" itemprop="datePublished">2024-09-01</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      js 几种导入依赖排序 import sort
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>现在前端工程化一般都会加上 eslint + prettier （<a href="/2023/04/21/fontend-engineering-2/">从零搭建前端工程（下）</a>）做格式化，为了团队风格，美观，还有为了减少不必要的冲突，比如 import 文件的顺序。合并代码的时候，冲突无可避免，但是能尽量减少最好。能够统一排序，添加的文件的改动也比较一目了然。相应的工具其实也不少，大同小异，选择适合自己的而用之。</p>
+<h3 id="一、eslint-自带的-sort-imports"><a href="#一、eslint-自带的-sort-imports" class="headerlink" title="一、eslint 自带的 sort-imports"></a>一、eslint 自带的 sort-imports</h3><p>《<a target="_blank" rel="noopener" href="https://eslint.org/docs/latest/rules/sort-imports">sort-imports</a>》。不看了，自定义差，还几乎不能 auto fix。</p>
+<h3 id="二、eslint-插件-eslint-plugin-import"><a href="#二、eslint-插件-eslint-plugin-import" class="headerlink" title="二、eslint 插件 eslint-plugin-import"></a>二、eslint 插件 eslint-plugin-import</h3><p>《<a target="_blank" rel="noopener" href="https://github.com/import-js/eslint-plugin-import/blob/HEAD/docs/rules/order.md">eslint-plugin-import</a>》。支持自定义配置，支持 auto fix，后面说的都是，不然没啥意义了。示例代码：</p>
+<pre><code class="js">module.exports = &#123;
+  parser: &#39;@typescript-eslint/parser&#39;,
+  parserOptions: &#123;
+    sourceType: &#39;module&#39;,
+    ecmaVersion: &#39;latest&#39;,
+  &#125;,
+  plugins: [&#39;import&#39;],
+  rules: &#123;
+    &#39;import/order&#39;: [
+      &#39;error&#39;,
+      &#123;
+        groups: [
+          &#39;index&#39;,
+          &#39;builtin&#39;,
+          &#39;external&#39;,
+          &#39;internal&#39;,
+          &#39;object&#39;,
+          &#39;type&#39;,
+          &#39;unknown&#39;,
+          [&#39;parent&#39;, &#39;sibling&#39;],
+        ],
+        pathGroups: [
+          &#123;
+            pattern: &#39;react*&#39;,
+            group: &#39;builtin&#39;,
+            position: &#39;after&#39;,
+          &#125;,
+          &#123;
+            pattern: &#39;@/*&#39;,
+            group: &#39;internal&#39;,
+            position: &#39;after&#39;,
+          &#125;,
+          &#123;
+            pattern: &#39;@*/**&#39;,
+            group: &#39;internal&#39;,
+            position: &#39;before&#39;,
+          &#125;,
+        ],
+        pathGroupsExcludedImportTypes: [],
+        distinctGroup: false,
+        &#39;newlines-between&#39;: &#39;always&#39;,
+        alphabetize: &#123;
+          order: &#39;asc&#39;,
+          orderImportKind: &#39;asc&#39;,
+          caseInsensitive: true,
+        &#125;,
+        warnOnUnassignedImports: false,
+      &#125;,
+    ],
+  &#125;,
+&#125;;
+</code></pre>
+<p>大部分配置都很好理解，就是这个 <code>pathGroupsExcludedImportTypes</code> 实在不明所以。</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/import-js/eslint-plugin-import/pull/2156#issuecomment-927559466">Issue#2156</a> 有个老哥给出答案：<br><u>想要 <code>pathGroups</code> 的配置生效，那么它原本所属的类型就不要出现在 <code>pathGroupsExcludedImportTypes</code> react* 属于 <code>external</code>，而这个属性的默认值是 [‘buildin’, ‘external’]，所以配置了 react* 的话，就要重定义这个值。</u> 所以示例代码是空数组。<br>老哥又提到：<u>But now, it has been applied exactly the opposite way.</u></p>
+<p>囧，确实我理解反了，我以为是要使其生效才要写在里面。而且理解成是 pattern 定义的分类是属于下面 group 的，也就是一开始以为是指定 react* 属于 builtin。而其实不是，而是说 react* 在 builtin 类型的相对位置。&#x3D; &#x3D;!</p>
+<span id="more"></span>
+
+<h3 id="三、eslint-插件-eslint-plugin-simple-import-sort"><a href="#三、eslint-插件-eslint-plugin-simple-import-sort" class="headerlink" title="三、eslint 插件 eslint-plugin-simple-import-sort"></a>三、eslint 插件 eslint-plugin-simple-import-sort</h3><p>《<a target="_blank" rel="noopener" href="https://github.com/lydell/eslint-plugin-simple-import-sort/?tab=readme-ov-file#custom-grouping">eslint-plugin-simple-import-sort</a>》。如其名，为 simple 而生，配置确实比上面的 eslint-plugin-import 好懂，作者也简单列举了对比：《<a target="_blank" rel="noopener" href="https://github.com/lydell/eslint-plugin-simple-import-sort/?tab=readme-ov-file#how-is-this-rule-different-from-importorder">How is this rule different from import&#x2F;order</a>》。<br>其实对我最大的吸引的还是对于 type 类型的处理，这里有多个例子：<a target="_blank" rel="noopener" href="https://github.com/lydell/eslint-plugin-simple-import-sort/blob/52733db21d14a9d4e9f67aeea711fa65c9498a35/examples/.eslintrc.js#L124">examples
+</a>，可以配置 type 导入是在全部最上（下）面，或者在每个分组的最上（下）面。当然注意引入的时候，type 关键字要在外面，比如：<strong>import type { Kind } from ‘foo’;</strong> 而不是 <strong>import { type Kind } from ‘foo’;</strong></p>
+<p>示例代码，拿 <code>groups.type-imports-last-in-each-group.ts</code> 改的：</p>
+<pre><code class="js">module.exports = &#123;
+  parser: &#39;@typescript-eslint/parser&#39;,
+  parserOptions: &#123;
+    sourceType: &#39;module&#39;,
+    ecmaVersion: &#39;latest&#39;,
+  &#125;,
+  plugins: [&#39;simple-import-sort&#39;, &#39;import&#39;],
+  rules: &#123;
+    &#39;simple-import-sort/imports&#39;: [
+      &#39;error&#39;,
+      &#123;
+        groups: [
+          // 副作用，就是单纯 import 没 from
+          [&#39;^\\u0000&#39;],
+          // react 全家桶
+          [&#39;^react&#39;],
+          // react 内置，web 项目应该没有
+          [&#39;^node:&#39;, &#39;^node:.*\\u0000$&#39;],
+          // mono 包，@foo
+          [&#39;^@?\\w&#39;, &#39;^@?\\w.*\\u0000$&#39;],
+          // 自定义别名的包，@/bar
+          [&#39;(?&lt;!\\u0000)$&#39;, &#39;(?&lt;=\\u0000)$&#39;],
+          // 相对路径
+          [&#39;^\\..*\\u0000$&#39;, &#39;^\\.&#39;],
+          // 样式引入
+          [&#39;^.+\\.(s?css|less)$&#39;],
+        ],
+      &#125;,
+    ],
+  &#125;,
+&#125;;
+</code></pre>
+<p>不过，有些匹配不是很明白。。。不深究了。</p>
+<h3 id="四、prettier-插件-trivago-x2F-prettier-plugin-sort-imports"><a href="#四、prettier-插件-trivago-x2F-prettier-plugin-sort-imports" class="headerlink" title="四、prettier 插件 @trivago&#x2F;prettier-plugin-sort-imports"></a>四、prettier 插件 @trivago&#x2F;prettier-plugin-sort-imports</h3><p>《<a target="_blank" rel="noopener" href="https://www.npmjs.com/package/@trivago/prettier-plugin-sort-imports">@trivago&#x2F;prettier-plugin-sort-imports</a>》。这个也很简单好用，基本满足需求，官网示例也简单。</p>
+<h3 id="五、prettier-插件-ianvs-x2F-prettier-plugin-sort-imports"><a href="#五、prettier-插件-ianvs-x2F-prettier-plugin-sort-imports" class="headerlink" title="五、prettier 插件 @ianvs&#x2F;prettier-plugin-sort-imports"></a>五、prettier 插件 @ianvs&#x2F;prettier-plugin-sort-imports</h3><p>《<a target="_blank" rel="noopener" href="https://www.npmjs.com/package/@ianvs/prettier-plugin-sort-imports">@ianvs&#x2F;prettier-plugin-sort-imports</a>》。一开始搜的时候，搜到这两个名字相像的，看了一下挑了个多使用的，而且这个自己也说了是基于上面那个扩展的。所以没细看就选了原本版本的也就是上面的。结果后面细看还增强了功能，而且是看起来确实还挺实用的。我觉得最吸引我的是对于 type 关键字的排序。</p>
+<p>示例代码：</p>
+<pre><code class="js">/** @type &#123;import(&quot;prettier&quot;).Config&#125; */
+module.exports = &#123;
+  singleQuote: true,
+  semi: true,
+  plugins: [&#39;@ianvs/prettier-plugin-sort-imports&#39;],
+  importOrder: [
+    &#39;^react&#39;,
+    &#39;&#39;,
+    &#39;&lt;TYPES&gt;&#39;,
+    &#39;&lt;TYPES&gt;^[.]&#39;,
+    &#39;&#39;,
+    &#39;&lt;THIRD_PARTY_MODULES&gt;&#39;,
+    &#39;^@(.*)&#39;,
+    &#39;^@/(.*)&#39;,
+    &#39;&#39;,
+    &#39;&#39;,
+    &#39;^[.]((?!.s?css$|.less$).)*$&#39;,
+    &#39;&#39;,
+    &#39;(.s?css|.less)$&#39;,
+  ],
+  importOrderParserPlugins: [&#39;typescript&#39;, &#39;jsx&#39;, &#39;decorators-legacy&#39;],
+  importOrderTypeScriptVersion: &#39;5.0.0&#39;,
+&#125;;
+</code></pre>
+<p>有趣的是，直接用<code>空字符串</code>作为换行标志，也算是这几个里面最灵活的。不过它这里是把所有 type 关键字统一处理，就是全部放在一个地方，我会比较倾向于放在每个 group 的最后面。当然这样也没问题，个人习惯。</p>
+<p>还有，这里也说了，对于副作用的导入，不做处理，因为认为副作用的顺序是会影响加载功能的。我也觉得不处理问题不大，毕竟副作用的引入一般比较少，自己注意就行。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>个人觉得 eslint-plugin-simple-import-sort 满足使用，我会倾向于用这个。然后 @ianvs&#x2F;prettier-plugin-sort-imports 这个也很不错，也可以。</p>
+<h2 id="另外"><a href="#另外" class="headerlink" title="另外"></a>另外</h2><p>发现 prettier 有针对 tailwindcss 的排序插件《<a target="_blank" rel="noopener" href="https://www.npmjs.com/package/prettier-plugin-tailwindcss">prettier-plugin-tailwindcss</a>》。如果项目有用上 tailwindcss 的话，也可以考虑一用。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      
+        <a data-url="https://blog.cchealthier.com/2024/09/01/import-sort/" data-id="cm0t3ig3t0018rt9m0g045qls" class="article-thumbs-up">赞一个(<span class="article-thumbs-up-num">0</span>)</a>
+      
+      <!-- <a data-url="https://blog.cchealthier.com/2024/09/01/import-sort/" data-id="cm0t3ig3t0018rt9m0g045qls" class="article-share-link">分享</a> -->
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2024/08/17/dependency-injection-inversify/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">依赖反转/注入与 IOC 容器 inversify</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2024/09/01/import-sort/">js 几种导入依赖排序 import sort</a>
+          </li>
+        
+          <li>
+            <a href="/2024/08/17/dependency-injection-inversify/">依赖反转/注入与 IOC 容器 inversify</a>
+          </li>
+        
+          <li>
+            <a href="/2024/01/12/android-rn-integrate/">android 原生应用集成 react-native</a>
+          </li>
+        
+          <li>
+            <a href="/2023/12/10/babel-ast-transform/">使用 babel ast 做代码转换</a>
+          </li>
+        
+          <li>
+            <a href="/2023/12/03/react-native-record/">react-native ios 流水账</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/http%E5%8D%8F%E8%AE%AE/">http协议</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/%E6%9C%8D%E5%8A%A1/">服务</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/%E7%AE%97%E6%B3%95/">算法</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%97%85%E8%A1%8C/">旅行</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%97%85%E8%A1%8C/%E8%AE%B0%E5%BD%95/">记录</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%83%B9%E9%A5%AA/">烹饪</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%83%B9%E9%A5%AA/%E4%BC%A0%E7%BB%9F/">传统</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%9A%8F%E6%83%B3/">随想</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%9A%8F%E6%83%B3/%E5%BF%83%E6%83%85/">心情</a></li></ul></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nginx/" rel="tag">nginx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/node/" rel="tag">node</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/react-native/" rel="tag">react-native</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" rel="tag">工程化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BE%AE%E5%89%8D%E7%AB%AF/" rel="tag">微前端</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%80%A7%E8%83%BD/" rel="tag">性能</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/nginx/" style="font-size: 12px;">nginx</a> <a href="/tags/node/" style="font-size: 16px;">node</a> <a href="/tags/react-native/" style="font-size: 14px;">react-native</a> <a href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" style="font-size: 20px;">工程化</a> <a href="/tags/%E5%BE%AE%E5%89%8D%E7%AB%AF/" style="font-size: 12px;">微前端</a> <a href="/tags/%E6%80%A7%E8%83%BD/" style="font-size: 18px;">性能</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/09/">九月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/08/">八月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/01/">一月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/12/">十二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/11/">十一月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/10/">十月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/09/">九月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/08/">八月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">七月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/06/">六月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/05/">五月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/04/">四月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/03/">三月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/02/">二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">十一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">十月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">九月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a></li></ul>
+    </div>
+  </div>
+
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2024 ChrisIori<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">首页</a>
+  
+    <a href="/archives" class="mobile-nav-link">归档</a>
+  
+</nav>
+    
+
+<script src="//cdn.staticfile.org/jquery/2.0.3/jquery.min.js"></script>
+<script type="text/javascript" src="https://www.jq22.com/demo/jqueryToast201708310012/js/toast.script.js"></script>
+<script src="/js/highlight.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlightjs-line-numbers.js/2.8.0/highlightjs-line-numbers.min.js"></script>
+<script>
+  $(function(){
+    $('pre code').each((i, el) => {
+    hljs.highlightElement(el);
+  });
+  $('code.hljs').each(function(i, el) {
+     hljs.lineNumbersBlock(el);
+  });
+  }());
+</script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>

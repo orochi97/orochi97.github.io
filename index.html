@@ -74,6 +74,109 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-import-sort" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2024/09/01/import-sort/" class="article-date">
+  <time datetime="2024-09-01T02:58:11.000Z" itemprop="datePublished">2024-09-01</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2024/09/01/import-sort/">js 几种导入依赖排序 import sort</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>现在前端工程化一般都会加上 eslint + prettier （<a href="/2023/04/21/fontend-engineering-2/">从零搭建前端工程（下）</a>）做格式化，为了团队风格，美观，还有为了减少不必要的冲突，比如 import 文件的顺序。合并代码的时候，冲突无可避免，但是能尽量减少最好。能够统一排序，添加的文件的改动也比较一目了然。相应的工具其实也不少，大同小异，选择适合自己的而用之。</p>
+<h3 id="一、eslint-自带的-sort-imports"><a href="#一、eslint-自带的-sort-imports" class="headerlink" title="一、eslint 自带的 sort-imports"></a>一、eslint 自带的 sort-imports</h3><p>《<a target="_blank" rel="noopener" href="https://eslint.org/docs/latest/rules/sort-imports">sort-imports</a>》。不看了，自定义差，还几乎不能 auto fix。</p>
+<h3 id="二、eslint-插件-eslint-plugin-import"><a href="#二、eslint-插件-eslint-plugin-import" class="headerlink" title="二、eslint 插件 eslint-plugin-import"></a>二、eslint 插件 eslint-plugin-import</h3><p>《<a target="_blank" rel="noopener" href="https://github.com/import-js/eslint-plugin-import/blob/HEAD/docs/rules/order.md">eslint-plugin-import</a>》。支持自定义配置，支持 auto fix，后面说的都是，不然没啥意义了。示例代码：</p>
+<pre><code class="js">module.exports = &#123;
+  parser: &#39;@typescript-eslint/parser&#39;,
+  parserOptions: &#123;
+    sourceType: &#39;module&#39;,
+    ecmaVersion: &#39;latest&#39;,
+  &#125;,
+  plugins: [&#39;import&#39;],
+  rules: &#123;
+    &#39;import/order&#39;: [
+      &#39;error&#39;,
+      &#123;
+        groups: [
+          &#39;index&#39;,
+          &#39;builtin&#39;,
+          &#39;external&#39;,
+          &#39;internal&#39;,
+          &#39;object&#39;,
+          &#39;type&#39;,
+          &#39;unknown&#39;,
+          [&#39;parent&#39;, &#39;sibling&#39;],
+        ],
+        pathGroups: [
+          &#123;
+            pattern: &#39;react*&#39;,
+            group: &#39;builtin&#39;,
+            position: &#39;after&#39;,
+          &#125;,
+          &#123;
+            pattern: &#39;@/*&#39;,
+            group: &#39;internal&#39;,
+            position: &#39;after&#39;,
+          &#125;,
+          &#123;
+            pattern: &#39;@*/**&#39;,
+            group: &#39;internal&#39;,
+            position: &#39;before&#39;,
+          &#125;,
+        ],
+        pathGroupsExcludedImportTypes: [],
+        distinctGroup: false,
+        &#39;newlines-between&#39;: &#39;always&#39;,
+        alphabetize: &#123;
+          order: &#39;asc&#39;,
+          orderImportKind: &#39;asc&#39;,
+          caseInsensitive: true,
+        &#125;,
+        warnOnUnassignedImports: false,
+      &#125;,
+    ],
+  &#125;,
+&#125;;
+</code></pre>
+<p>大部分配置都很好理解，就是这个 <code>pathGroupsExcludedImportTypes</code> 实在不明所以。</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/import-js/eslint-plugin-import/pull/2156#issuecomment-927559466">Issue#2156</a> 有个老哥给出答案：<br><u>想要 <code>pathGroups</code> 的配置生效，那么它原本所属的类型就不要出现在 <code>pathGroupsExcludedImportTypes</code> react* 属于 <code>external</code>，而这个属性的默认值是 [‘buildin’, ‘external’]，所以配置了 react* 的话，就要重定义这个值。</u> 所以示例代码是空数组。<br>老哥又提到：<u>But now, it has been applied exactly the opposite way.</u></p>
+<p>囧，确实我理解反了，我以为是要使其生效才要写在里面。而且理解成是 pattern 定义的分类是属于下面 group 的，也就是一开始以为是指定 react* 属于 builtin。而其实不是，而是说 react* 在 builtin 类型的相对位置。&#x3D; &#x3D;!</p>
+        
+          <p class="article-more-link">
+            <a href="/2024/09/01/import-sort/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      
+      <!-- <a data-url="https://blog.cchealthier.com/2024/09/01/import-sort/" data-id="cm0t3ig3t0018rt9m0g045qls" class="article-share-link">分享</a> -->
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-dependency-injection-inversify" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2024/08/17/dependency-injection-inversify/" class="article-date">
@@ -167,7 +270,7 @@ public class UserService &#123;
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2024/08/17/dependency-injection-inversify/" data-id="clzz00mi7000ny19m6ccjce13" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2024/08/17/dependency-injection-inversify/" data-id="cm0t3ig3r000nrt9ma6cddguj" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -324,7 +427,7 @@ public class MyReactActivity extends AppCompatActivity implements DefaultHardwar
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2024/01/12/android-rn-integrate/" data-id="clzz00mi30003y19m5maoc58a" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2024/01/12/android-rn-integrate/" data-id="cm0t3ig3n0003rt9medkp2bu8" class="article-share-link">分享</a> -->
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/react-native/" rel="tag">react-native</a></li></ul>
@@ -390,7 +493,7 @@ export default function Component(props) &#123;
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2023/12/10/babel-ast-transform/" data-id="clzz00mi40008y19me8ocg5qg" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2023/12/10/babel-ast-transform/" data-id="cm0t3ig3o0008rt9m667r75ke" class="article-share-link">分享</a> -->
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/node/" rel="tag">node</a></li></ul>
@@ -455,70 +558,7 @@ export default function Component(props) &#123;
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2023/12/03/react-native-record/" data-id="clzz00mie0037y19mb315fhhj" class="article-share-link">分享</a> -->
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/react-native/" rel="tag">react-native</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-ios-rn-integrate" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2023/11/24/ios-rn-integrate/" class="article-date">
-  <time datetime="2023-11-24T12:43:44.000Z" itemprop="datePublished">2023-11-24</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2023/11/24/ios-rn-integrate/">ios 原生应用集成 react-native</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>其实官方文档《<a target="_blank" rel="noopener" href="https://reactnative.dev/docs/integration-with-existing-apps?language=objc">Integration with Existing Apps</a>》讲得挺详细，但是有点面向 ios 开发，对于 ios 开发的同学应该很容易看懂吧。不熟悉的我摸索了很久，记录一下。</p>
-<p><strong>重要！！！</strong></p>
-<p>先参考官网《<a target="_blank" rel="noopener" href="https://reactnative.dev/docs/environment-setup">Setting up the development environment</a>》把 react-native 的开发环境搭建起来，因为基本如出一辙。对于 ios 而言， react-native 像是它的一部分子应用，本质上还是原生应用。<br>因为就是要用到原生的东西，所以不要用 Expo 这种方式。这个是方便开发用的，最后应该要回到原生来。</p>
-<p>能成功启动 react-native，想必也搞定了 CocoaPods 这个麻烦的工具，用来下载原生相关依赖的。</p>
-<h2 id="创建-ios-app"><a href="#创建-ios-app" class="headerlink" title="创建 ios app"></a>创建 ios app</h2><p>Xcode Version 14.3 (14E222b)</p>
-<h3 id="1、创建一个-ios-app"><a href="#1、创建一个-ios-app" class="headerlink" title="1、创建一个 ios app"></a>1、创建一个 ios app</h3><img src="/2023/11/24/ios-rn-integrate/ios-rn-integrate-1.png" class="" title="ios-rn-integrate-1">
-
-<h3 id="2、填写相关信息"><a href="#2、填写相关信息" class="headerlink" title="2、填写相关信息"></a>2、填写相关信息</h3><img src="/2023/11/24/ios-rn-integrate/ios-rn-integrate-2.png" class="" title="ios-rn-integrate-2">
-
-<p>Product Name：顾名思义，这个应用的名字，随便填，自己记住。<br>Team：没有就先跳过，苹果开发要求的，上线要用到。<br>Organization Identifier：组织标识，公司或者产品网址倒着写，随便填。<br><strong>Interface：有 SwiftUI 和 Storyboard 可选，选择 Storyboard。</strong><br>Language：选 Swift 或 Objective-C 都可以。</p>
-<h3 id="3、操作-xcode"><a href="#3、操作-xcode" class="headerlink" title="3、操作 xcode"></a>3、操作 xcode</h3><img src="/2023/11/24/ios-rn-integrate/ios-rn-integrate-3.png" class="" title="ios-rn-integrate-3">
-
-<p>上图为例</p>
-<p>先点击中间的“分屏按钮”，编辑器就会变成两个编辑区，一个打开 <code>ViewController.m</code> 文件，一个打开 <code>Main</code> 文件。虽然显示是 Main 文件，但硬盘上可以看到是叫 <code>Main.storyboard</code> 文件。</p>
-<p>然后点击右边的“组件库按钮”，打开组件库，拖拽一个 button 组件到 storyboard 编辑区，也就是生成一个按钮到应用上。</p>
-<p>最后点击左边的“运行按钮”，看到弹出来的手机模拟器上有自己加的 button 就算成功了。</p>
-        
-          <p class="article-more-link">
-            <a href="/2023/11/24/ios-rn-integrate/#more">Read More</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      
-      <!-- <a data-url="https://blog.cchealthier.com/2023/11/24/ios-rn-integrate/" data-id="clzz00mia001by19m22h17icg" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2023/12/03/react-native-record/" data-id="cm0t3ig3z0038rt9m4n1z1rxx" class="article-share-link">分享</a> -->
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/react-native/" rel="tag">react-native</a></li></ul>
@@ -548,6 +588,10 @@ export default function Component(props) &#123;
       <ul>
         
           <li>
+            <a href="/2024/09/01/import-sort/">js 几种导入依赖排序 import sort</a>
+          </li>
+        
+          <li>
             <a href="/2024/08/17/dependency-injection-inversify/">依赖反转/注入与 IOC 容器 inversify</a>
           </li>
         
@@ -561,10 +605,6 @@ export default function Component(props) &#123;
         
           <li>
             <a href="/2023/12/03/react-native-record/">react-native ios 流水账</a>
-          </li>
-        
-          <li>
-            <a href="/2023/11/24/ios-rn-integrate/">ios 原生应用集成 react-native</a>
           </li>
         
       </ul>
@@ -605,7 +645,7 @@ export default function Component(props) &#123;
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/08/">八月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/01/">一月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/12/">十二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/11/">十一月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/10/">十月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/09/">九月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/08/">八月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">七月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/06/">六月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/05/">五月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/04/">四月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/03/">三月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/02/">二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">十一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">十月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">九月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/09/">九月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/08/">八月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/01/">一月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/12/">十二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/11/">十一月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/10/">十月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/09/">九月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/08/">八月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">七月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/06/">六月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/05/">五月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/04/">四月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/03/">三月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/02/">二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">十一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">十月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">九月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a></li></ul>
     </div>
   </div>
 

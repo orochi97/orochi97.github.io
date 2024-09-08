@@ -74,6 +74,213 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-next-tick" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/08/16/next-tick/" class="article-date">
+  <time datetime="2020-08-16T13:20:00.000Z" itemprop="datePublished">2020-08-16</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/08/16/next-tick/">vue的nextTick解析</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>用过 vue 的同学应该都知道，双向绑定中，更改了数据会去更新dom，但不是马上更新的。<br>直接跟在修改数据后，拿到的 dom 还是旧的。<br>vue有个<code>this.$nextTick</code>用法，用这个的回调可以保证拿到更新后的dom。</p>
+<p>直接看看 <a target="_blank" rel="noopener" href="https://github.com/vuejs/vue/blob/dev/src/core/util/next-tick.js">next-tick</a> 源码</p>
+<pre><code class="js">import &#123; noop &#125; from &#39;shared/util&#39;
+import &#123; handleError &#125; from &#39;./error&#39;
+import &#123; isIE, isIOS, isNative &#125; from &#39;./env&#39;
+
+export let isUsingMicroTask = false
+const callbacks = []
+let pending = false
+
+// 清异步队列，全部执行
+function flushCallbacks () &#123;
+  pending = false
+  const copies = callbacks.slice(0)
+  callbacks.length = 0
+  for (let i = 0; i &lt; copies.length; i++) &#123;
+    copies[i]()
+  &#125;
+&#125;
+let timerFunc
+if (typeof Promise !== &#39;undefined&#39; &amp;&amp; isNative(Promise)) &#123;
+  // 判断有没有 promise 且有没有被重写过，
+  // promise完好无损就使用 promise 做异步队列的触发，设置使用微任务标志为true
+  const p = Promise.resolve()
+  timerFunc = () =&gt; &#123;
+    p.then(flushCallbacks)
+    if (isIOS) setTimeout(noop)
+  &#125;
+  isUsingMicroTask = true
+&#125; else if (!isIE &amp;&amp; typeof MutationObserver !== &#39;undefined&#39; &amp;&amp; (
+  isNative(MutationObserver) ||
+  // PhantomJS and iOS 7.x
+  // 特殊场景用MutationObserver
+  MutationObserver.toString() === &#39;[object MutationObserverConstructor]&#39;
+)) &#123;
+  // Use MutationObserver where native Promise is not available,
+  // e.g. PhantomJS, iOS7, Android 4.4
+  // (#6466 MutationObserver is unreliable in IE11)
+  let counter = 1
+  const observer = new MutationObserver(flushCallbacks)
+  const textNode = document.createTextNode(String(counter))
+  observer.observe(textNode, &#123;
+    characterData: true
+  &#125;)
+  timerFunc = () =&gt; &#123;
+    counter = (counter + 1) % 2
+    textNode.data = String(counter)
+  &#125;
+  isUsingMicroTask = true
+&#125; else if (typeof setImmediate !== &#39;undefined&#39; &amp;&amp; isNative(setImmediate)) &#123;
+  // Fallback to setImmediate.
+  // Techinically it leverages the (macro) task queue,
+  // but it is still a better choice than setTimeout.
+  // 再不济看看有没有 setImmediate，虽然也是宏任务，但总比 setTimeout 强
+  timerFunc = () =&gt; &#123;
+    setImmediate(flushCallbacks)
+  &#125;
+&#125; else &#123;
+  // Fallback to setTimeout.
+  // 实在没办法了，setTimeout 兜底
+  timerFunc = () =&gt; &#123;
+    setTimeout(flushCallbacks, 0)
+  &#125;
+&#125;
+// nextTick 具体操作所在，其他队列方法也是用这个，比如 data 改动后通知 dom 修改，也是用这个
+// 即 vue 里面的响应式，不是实时更新的，而是存在一个队列，在下一回合进行任务更新。不然太耗损性能
+// 也就是解释了，在修改了 data 之后，dom 是没有马上更新，而在 $nextTick 的回调后，则可以看到 dom 更新
+// 原因就在于同样的异步任务，$nextTick 的回调，是在 dom 修改的操作后面，所以 $nextTick 能看到 dom 更新
+// 以下以 this.$nextTick(()=&gt;&#123;&#125;) 为例子，cb 为回调，ctx 为 vue 实例
+export function nextTick (cb?: Function, ctx?: Object) &#123;
+  let _resolve
+  // 把任务塞进异步队列
+  callbacks.push(() =&gt; &#123;
+    // 有回调就触发回调
+    if (cb) &#123;
+      try &#123;
+        cb.call(ctx)
+      &#125; catch (e) &#123;
+        handleError(e, ctx, &#39;nextTick&#39;)
+      &#125; 
+      // 这里注意，结合下面来看
+      //用 promise 的 resolve 触发，把 vue 实例当成参数传进去
+    &#125; else if (_resolve) &#123;
+      _resolve(ctx)
+    &#125;
+  &#125;)
+  // 在清任务 flushCallbacks 里赋值 pending 为 false
+  // 目的为了 timerFunc 在周期内只触发一次
+  // 执行 timerFunc，让其下一周期执行清异步队列任务
+  if (!pending) &#123;
+    pending = true
+    timerFunc()
+  &#125;
+  // 当没有回调且 Promise 正常
+  // $nextTick 返回的是一个 promise，触发时机与上面有回调一样
+  if (!cb &amp;&amp; typeof Promise !== &#39;undefined&#39;) &#123;
+    return new Promise(resolve =&gt; &#123;
+      _resolve = resolve
+    &#125;)
+  &#125;
+&#125;
+</code></pre>
+<p>除了常规的回调用法之外，还可以这样用</p>
+<pre><code class="js">this.$nextTick().then( vue实例 =&gt; &#123; console.log(vue实例 === this) &#125;) // =&gt; true
+</code></pre>
+<p>如果不传入回调，则返回promise，因为是 promise，也可以直接就 await 等待。参考<a target="_blank" rel="noopener" href="https://cn.vuejs.org/v2/guide/reactivity.html#%E5%BC%82%E6%AD%A5%E6%9B%B4%E6%96%B0%E9%98%9F%E5%88%97">官网</a>。</p>
+<p>接着来个简陋版简单模拟一下这个 nextTick 的实现。这其中还涉及到<a href="/2020/05/27/eventloop/">事件循环</a>的知识。</p>
+<pre><code class="js">// 模拟vue nextTick
+// 存储所有$nextTick的回调，变量的set修改后通知dom更新的，与$nextTick的回调进入同个微队列
+const callbacks = []
+// 微队列的触发载体，这里是Promise.resolve()
+// vue是先找Promise.resolve，没有就找setTimeout
+let run = null
+
+function next() &#123;
+  callbacks.forEach((cb) =&gt; &#123;
+    cb()
+  &#125;)
+&#125;
+// 这里的change可以看成修改了变量，里面的回调就是与nextTick的回调如出一辙
+function change() &#123;
+  nextTick(() =&gt; &#123;
+    // 这里面是同步
+    console.log(&#39;update dom -- 1&#39;)
+    const child = document.createElement(&#39;div&#39;)
+    child.id = &#39;new&#39;
+    document.getElementById(&#39;box&#39;).appendChild(child)
+    console.log(&#39;update dom&#39;)
+    console.log(&#39;update dom -- 2&#39;)
+  &#125;)
+&#125;
+
+function nextTick(cb) &#123;
+  if(!run) &#123;
+    // 初始化下个队列
+    run = Promise.resolve()
+    // 把next方法放在下个队列运行
+    // 看上面的next函数，是把callbacks的函数遍历执行
+    run.then(next)
+  &#125;
+  // nextTick的回调加入数组等着，遍历触发里面的每个函数
+  // 由于是同步，所以其实只是一个微任务，
+  callbacks.push(cb)
+&#125;
+
+// 调用了第一次nextTick
+nextTick(() =&gt; &#123;
+  // 表示该次微队列任务开始
+  console.log(&#39;nextTick -- 1&#39;)
+&#125;)
+Promise.resolve().then(() =&gt; &#123;
+  console.log(&#39;then -- &#39;)
+&#125;)
+// 修改变量，更改了dom
+change()
+// 同步任务，最早打印，但此时没有new元素
+console.log(&#39;script -- &#39;, document.getElementById(&#39;new&#39;))
+// 调用了第二次nextTick
+nextTick(() =&gt; &#123;
+  // 在修改变量之后调nextTick，已有new元素
+  console.log(&#39;nextTick -- 2&#39;, document.getElementById(&#39;new&#39;))
+&#125;)
+// nextTick -- 2 之所以在 then -- 前打印，是因为回调都放在callbacks里，同步触发了
+</code></pre>
+<br>
+<img src="/2020/08/16/next-tick/next.PNG" class="" title="next">
+<br>
+      
+    </div>
+    <footer class="article-footer">
+      
+      <!-- <a data-url="https://blog.cchealthier.com/2020/08/16/next-tick/" data-id="cm0t3ig3w0025rt9m2ix6298m" class="article-share-link">分享</a> -->
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-vertical-middle" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2020/07/29/vertical-middle/" class="article-date">
@@ -172,7 +379,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2020/07/29/vertical-middle/" data-id="clzz00mig003ry19m1fg8638t" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2020/07/29/vertical-middle/" data-id="cm0t3ig41003urt9m67cl8gsi" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -340,7 +547,7 @@ var app = new Vue(&#123;
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2020/07/26/vue-life/" data-id="clzz00mig003yy19mdpclh79q" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2020/07/26/vue-life/" data-id="cm0t3ig41003yrt9m7ukraqhz" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -514,7 +721,7 @@ console.log(Object.prototype.toString.call(t1)) // [object Object]
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2020/07/25/variable-type/" data-id="clzz00mig003oy19mfyol7tb5" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2020/07/25/variable-type/" data-id="cm0t3ig41003rrt9mexaehtkw" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -633,159 +840,7 @@ show(obj3)
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2020/07/25/traversal-property/" data-id="clzz00mif003my19m6t2i8c83" class="article-share-link">分享</a> -->
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-lazyload" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/07/12/lazyload/" class="article-date">
-  <time datetime="2020-07-11T16:48:49.000Z" itemprop="datePublished">2020-07-12</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/07/12/lazyload/">简单实现图片懒加载、预加载、分批加载</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>图片我这里是随便找了十张图片，起名 0~9 的名字，方便获取。</p>
-<p><strong>懒加载：</strong>原理就是先放一批空图片占位，当图片进入可视区，再来赋予图片src值，让其显示。<br><strong>预加载：</strong>提前请求一批图片资源。下载缓存里。到真的渲染图片时候就可以快速获取到图片。用 new Image() 来请求资源，就不用先创建dom。<br><strong>分批加载：</strong>设定一个距离值，在滑动到距离底部小于这个距离值，则请求下一批图片。</p>
-<p>分批加载可以与其他两者混用，懒加载与预加载应该不混用了，一个减低服务器压力，一个是增加服务器压力换取体验。</p>
-<pre><code class="xml">&lt;!DOCTYPE&gt;
-&lt;head&gt;
-&lt;meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=utf-8&quot; /&gt;
-&lt;title&gt;lazyload&lt;/title&gt;
-&lt;/head&gt;
-&lt;style type=&quot;text/css&quot;&gt;
-  #box &#123;
-    width: 100%;
-    background: black;
-    border-radius: 10px;
-  &#125;
-  ul &#123;
-    padding: 0;
-    margin: 0;
-  &#125;
-  li &#123;
-    margin: 5px;
-    background: gray;
-    text-align: center;
-  &#125;
-  img &#123;
-    height: 300px;
-    width: auto;
-  &#125;
-&lt;/style&gt;
-&lt;body&gt;
-&lt;script type=&quot;text/javascript&quot;&gt;
-// 简单节流
-function throttle(fn, time) &#123;
-  let timer
-  return (ev) =&gt; &#123;
-    if (timer) &#123;
-      return
-    &#125;
-    timer = setTimeout(() =&gt; &#123;
-      timer = null
-      fn(ev)
-    &#125;, time)
-  &#125;
-&#125;
-function getNum(numMin, numMax) &#123;
-  return Math.round( Math.random()*(numMax-numMin) + numMin );
-&#125;
-function getImg (len) &#123;
-  const arr = []
-  for (let i = 0; i &lt; len; i++) &#123;
-    arr.push(getNum(0, 9))
-  &#125;
-  // 模拟异步获取图片资源
-  return Promise.resolve(arr)
-&#125;
-window.onload = function () &#123;
-  const $ui = document.querySelector(&#39;#box ul&#39;)
-  const loading = &#39;./img/loading.gif&#39;
-  const distance = 20
-  function initImg() &#123;
-    return getImg(5).then((imgs) =&gt;&#123;
-      imgs.forEach((img) =&gt; &#123;
-        const url = `./img/$&#123;img&#125;.JPG`
-        // 先预加载，演示一下，不然这里懒加载没什么意义了，都是发了请求
-        // 用一个img对象来先对资源进行请求
-        const imgObj = new Image()
-        imgObj.src = url
-        // 创建图片dom
-        const $li = document.createElement(&#39;li&#39;)
-        $ui.appendChild($li)
-        const $img = document.createElement(&#39;img&#39;)
-        $img.src = loading
-        $img.dataset.src = `./img/$&#123;img&#125;.JPG`
-        $li.appendChild($img)
-      &#125;)
-    &#125;)    
-  &#125;
-  function checkImg() &#123;
-    const $imgs = document.querySelectorAll(&#39;#box li img&#39;)
-    $imgs.forEach((dom) =&gt; &#123;
-      const dataSrc = dom.getAttribute(&#39;data-src&#39;)
-      // 此top为该元素距离窗口顶部距离，
-      // 所以直接判断该值是否小于窗口可视区的值，即在可视区内
-      const &#123; top &#125; = dom.getBoundingClientRect()
-      // 先判断有没有data-src，防止不断修改图片src
-      if (dataSrc &amp;&amp; (top &lt; window.innerHeight)) &#123;
-        dom.src = dataSrc
-        dom.removeAttribute(&#39;data-src&#39;)
-      &#125;
-    &#125;)
-  &#125;
-  window.addEventListener(&#39;scroll&#39;, throttle(function(ev) &#123;
-    // 距离底部还有20px
-    const &#123; scrollTop, clientHeight, offsetHeight &#125; = document.documentElement
-    if (offsetHeight - ( scrollTop + clientHeight ) &lt; distance) &#123;
-      initImg()
-    &#125;
-    checkImg()
-  &#125;, 200))
-  // 进行首次的资源获取
-  initImg().then(() =&gt; &#123;
-    checkImg()
-  &#125;)
-&#125;
-&lt;/script&gt;
-&lt;div id=&quot;box&quot;&gt;
-  &lt;ul&gt;&lt;/ul&gt;
-&lt;/div&gt;
-&lt;/body&gt;
-&lt;/html&gt;
-</code></pre>
-<p>除此之外还有个 api 专门来处理这种可视回调的<a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/API/IntersectionObserver">IntersectionObserver</a>。<br>具体可参阅下<a target="_blank" rel="noopener" href="http://www.ruanyifeng.com/blog/2016/11/intersectionobserver_api.html">阮老师的文章</a>。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      
-      <!-- <a data-url="https://blog.cchealthier.com/2020/07/12/lazyload/" data-id="clzz00mib001qy19meug9e0gu" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2020/07/25/traversal-property/" data-id="cm0t3ig40003nrt9m5h7ybv0h" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -813,6 +868,10 @@ window.onload = function () &#123;
       <ul>
         
           <li>
+            <a href="/2024/09/01/import-sort/">js 几种导入依赖排序 import sort</a>
+          </li>
+        
+          <li>
             <a href="/2024/08/17/dependency-injection-inversify/">依赖反转/注入与 IOC 容器 inversify</a>
           </li>
         
@@ -826,10 +885,6 @@ window.onload = function () &#123;
         
           <li>
             <a href="/2023/12/03/react-native-record/">react-native ios 流水账</a>
-          </li>
-        
-          <li>
-            <a href="/2023/11/24/ios-rn-integrate/">ios 原生应用集成 react-native</a>
           </li>
         
       </ul>
@@ -870,7 +925,7 @@ window.onload = function () &#123;
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/08/">八月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/01/">一月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/12/">十二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/11/">十一月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/10/">十月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/09/">九月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/08/">八月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">七月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/06/">六月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/05/">五月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/04/">四月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/03/">三月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/02/">二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">十一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">十月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">九月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/09/">九月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/08/">八月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/01/">一月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/12/">十二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/11/">十一月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/10/">十月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/09/">九月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/08/">八月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">七月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/06/">六月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/05/">五月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/04/">四月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/03/">三月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/02/">二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">十一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">十月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">九月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a></li></ul>
     </div>
   </div>
 

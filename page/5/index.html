@@ -74,6 +74,62 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-vue-observer-dep-watcher" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2022/11/07/vue-observer-dep-watcher/" class="article-date">
+  <time datetime="2022-11-07T15:13:16.000Z" itemprop="datePublished">2022-11-07</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2022/11/07/vue-observer-dep-watcher/">vue 的里 observer、dep、watcher</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>简单梳理一下 vue 源码里，observer、dep、watcher 这三者的作用，捋清了基本上就知道 vue 的响应式操作了。看一张图：</p>
+<p><img src="https://file.cchealthier.com/file/blog/202210/vue-observer-dep-watcher.png" alt="vue-observer-dep-watcher.jpg"></p>
+<p>总结一下就是，我们在 vue 文件定义数据 data 属性，会生成一个 _data 的对象，遍历这个 _data 对象的属性，会通过 defineProperty 挂载到 vue 实例上。以图里 src 为例：</p>
+<ul>
+<li>vm.src，被 defineProperty 处理</li>
+<li>&#x3D;&gt; 读取和设置都是 vm._data.src</li>
+<li>&#x3D;&gt; vm._data.src 被 defineProperty 处理</li>
+<li>&#x3D;&gt; 在其 set get 函数进行依赖收集即更新通知</li>
+</ul>
+<h5 id="再细述两个小点"><a href="#再细述两个小点" class="headerlink" title="再细述两个小点"></a>再细述两个小点</h5><ol>
+<li><p>原来 dom 的更新是在 watcher 的 getter 里。watcher 有两种，一种是在实例上声明的 watch 对象或者主动调用 vm.$watch 方法的，这种都是属性 user&#x3D;&#x3D;&#x3D; true 的 watcher，其 getter 都是直接获取 vm 上的值。一种是生命周期由框架生成的 watcher，这个的 getter 是 updateComponent，里面包含了对 dom 的更新。当然接下来就是 diff 算法更新 dom 的事了，不属于依赖更新的内容。</p>
+</li>
+<li><p>vue 文件的 template 代码会被解析成 render 函数，对，就是那个说直接写会效率更快的 render 函数。原过程是：template &#x3D;&gt; ast &#x3D;&gt; render，这一步还是比较消耗。直接写 render 函数相当于省去前面两步。然后 render 执行后会生成虚拟 dom，也就是 VNode。接下来就是 vm.<em>patch</em> 里通过双指针的 diff 算法，来对比新旧 VNode 的差别，算出变更的地方，然后执行 js 原生的元素操作语句进行 dom 的修改。</p>
+</li>
+</ol>
+
+      
+    </div>
+    <footer class="article-footer">
+      
+      <!-- <a data-url="https://blog.cchealthier.com/2022/11/07/vue-observer-dep-watcher/" data-id="cm0t3ig410041rt9m3m33flbb" class="article-share-link">分享</a> -->
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-2022-autumn" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2022/10/19/2022-autumn/" class="article-date">
@@ -111,7 +167,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2022/10/19/2022-autumn/" data-id="clzz00mhz0000y19m2v3y98eo" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2022/10/19/2022-autumn/" data-id="cm0t3ig3m0001rt9mcqos3ht2" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -204,7 +260,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2022/10/18/binary-tree-traversal/" data-id="clzz00mi5000dy19mc0gt9n1t" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2022/10/18/binary-tree-traversal/" data-id="cm0t3ig3q000drt9m11pd1nwc" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -312,7 +368,7 @@ const tree = &#123;
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2022/10/18/deepth-breadth-traversal/" data-id="clzz00mi7000ly19m5kmh60xh" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2022/10/18/deepth-breadth-traversal/" data-id="cm0t3ig3r000irt9ma6qm8j6y" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -463,69 +519,9 @@ class LinkedList &#123;
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2022/09/25/linked-list/" data-id="clzz00mia001my19m1qtn7vfj" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2022/09/25/linked-list/" data-id="cm0t3ig3v001qrt9m3imf3g6r" class="article-share-link">分享</a> -->
       
       
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-webpack-babel-esm" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2022/09/05/webpack-babel-esm/" class="article-date">
-  <time datetime="2022-09-05T13:19:04.000Z" itemprop="datePublished">2022-09-05</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2022/09/05/webpack-babel-esm/">“@babel/plugin-transform-runtime” 影响 webpack 的打包结果</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="一、现象与结果"><a href="#一、现象与结果" class="headerlink" title="一、现象与结果"></a>一、现象与结果</h3><p>先说结果，要不从问题到结果可能太大相庭径，都看不下去。</p>
-<p>结论就是：</p>
-<ul>
-<li>webpack + react 的业务项目，使用了一份由 webpack 打包出来的 umd（不了解 umd 可以看知乎上大佬的<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/75980415">文章</a>） 库 library。</li>
-<li>library 源代码是用 es6 语法写的。</li>
-<li>业务项目 这边对于这个 library 的 import 出来的值只是个空对象，<strong>没有源代码导出的东西</strong>。</li>
-<li>在 react 脚手架（create-react-app）创建出来的项目使用 library，<strong>却可以得到导出值</strong>。<br><strong><u>抽丝剥茧后发现是 <code>@babel/plugin-transform-runtime</code> 插件，将 library 处理为 es module，导致项目在使用 library 的时候，因为 webpack 自身的包装函数作用，使得 library 使用出现了偏差而有问题。</u></strong></li>
-</ul>
-<h3 id="二、从头看起"><a href="#二、从头看起" class="headerlink" title="二、从头看起"></a>二、从头看起</h3><p>上面描述还是有点难理解，需要结合代码来看，否则云里雾里。<br>起因是需求为，想要把一些 react 组件或者页面打包成一个完整的功能块，发成依赖库。选择了用 webpack 打出 umd 功能的包。<br><strong>（这里说一下，对于打包库的工具，还是不建议用 webpack，可以选择 rollup 等其他。因为 webpack 为了处理模块化，引入了自身的<a href="https://blog.cchealthier.com/2020/08/16/webpackJsonp/">包装函数</a>，导致代码不太“纯净”。对此需求其实之前已经对 vue 工程有过这样的实操，用 rollup 打包，以路由模块的形式引入。）</strong></p>
-<p>同事试了之后，<strong>就是没导出值</strong>。找我一起探讨，我看到网上说，webpack4 似乎不支持产出 es module 的包，只有 umd 格式的。由此还有相应专门处理的<a target="_blank" rel="noopener" href="https://www.npmjs.com/package/@purtuga/esm-webpack-plugin">插件</a>，至此，我以为就单纯是 webpack4 不支持而已。</p>
-<p>周末时候有时间，我就想确实自己没细细研究过 webpack 到底能不能打出 es module 的库，知道能打出 umd 格式的。之前做工具库的时候，使用的也是 rollup 和 gulp。正好研究下，看看到底打出来的东西有虾米不同。</p>
-<p>首先用 webpack5（这里说一下，webpack 4 和 5 差别挺大，包装函数都大大缩小了） 打包出一份 umd 的 library，然后顺手在一个 react 脚手架 cra 创建出来的项目试了，嗯，可以。webpack5 果然可以。</p>
-<p>接着换成 webpack4，同样配置，打包输出，还是在刚刚的项目引入，来看看到底为啥…woc？也可以？webpack 4、5 打包出来的 umd library 在 cra 项目都可以。马上换到实际项目一看，还是没有导出值。<strong>也就是和 webpack 版本打包出来无关，和具体的使用方项目的配置有关！</strong>这就刺激了，因为不知道原因和原理，只能逐一分析对比，没想到又来到大家来找茬环节。</p>
-        
-          <p class="article-more-link">
-            <a href="/2022/09/05/webpack-babel-esm/#more">Read More</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      
-      <!-- <a data-url="https://blog.cchealthier.com/2022/09/05/webpack-babel-esm/" data-id="clzz00mih0044y19m3l03gh7b" class="article-share-link">分享</a> -->
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" rel="tag">工程化</a></li></ul>
-
     </footer>
   </div>
   
@@ -551,6 +547,10 @@ class LinkedList &#123;
       <ul>
         
           <li>
+            <a href="/2024/09/01/import-sort/">js 几种导入依赖排序 import sort</a>
+          </li>
+        
+          <li>
             <a href="/2024/08/17/dependency-injection-inversify/">依赖反转/注入与 IOC 容器 inversify</a>
           </li>
         
@@ -564,10 +564,6 @@ class LinkedList &#123;
         
           <li>
             <a href="/2023/12/03/react-native-record/">react-native ios 流水账</a>
-          </li>
-        
-          <li>
-            <a href="/2023/11/24/ios-rn-integrate/">ios 原生应用集成 react-native</a>
           </li>
         
       </ul>
@@ -608,7 +604,7 @@ class LinkedList &#123;
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/08/">八月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/01/">一月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/12/">十二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/11/">十一月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/10/">十月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/09/">九月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/08/">八月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">七月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/06/">六月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/05/">五月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/04/">四月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/03/">三月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/02/">二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">十一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">十月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">九月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/09/">九月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/08/">八月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/01/">一月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/12/">十二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/11/">十一月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/10/">十月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/09/">九月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/08/">八月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">七月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/06/">六月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/05/">五月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/04/">四月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/03/">三月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/02/">二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">十一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">十月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">九月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a></li></ul>
     </div>
   </div>
 

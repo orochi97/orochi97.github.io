@@ -74,6 +74,55 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-file-slice-upload" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2023/05/13/file-slice-upload/" class="article-date">
+  <time datetime="2023-05-13T14:25:47.000Z" itemprop="datePublished">2023-05-13</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2023/05/13/file-slice-upload/">文件切片上传（断点续传）</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>上传文件体积一大，要等很久。如果只是水管小，等一会也就算了。但是如果网络差，上传到 99% 突然断网了又重新开始，就比较难受了。所以又有了文件切片进行断点上传的方法。</p>
+<p>上传的文件对象是一个 <a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/API/File">File</a> 对象，然后它是 <a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/API/Blob">Blob</a> 对象的一个子类。再然后它有一个 <a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/API/Blob/slice">slice</a> 方法，用这个方法就可以对文件进行切片，就和数组的这个方法一样。用法如示例。</p>
+<p>话不多说直接上代码（里面代码是问了 chatgpt 然后改的，哈哈）。把下面两份代码分别保存为 <code>index.html</code> 和 <code>server.js</code>，安装好依赖，然后启动执行 <code>node server.js</code>，访问 <code>http://localhost:3000</code>。</p>
+<p>前端也大概美化了一下上传组件，支持点击选择文件或者拖拽文件上传。原生的 <code>&lt;input type=&quot;file&quot; &gt;&lt;/input&gt;</code> 组件的样式应该没人用吧，那么丑…。其中的 loading 效果出自网上大佬的《<a target="_blank" rel="noopener" href="https://juejin.cn/post/7037036742985121800">纯css实现117个Loading效果</a>》，里面挺多效果不错的。</p>
+        
+          <p class="article-more-link">
+            <a href="/2023/05/13/file-slice-upload/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      
+      <!-- <a data-url="https://blog.cchealthier.com/2023/05/13/file-slice-upload/" data-id="cm0t3ig3s000rrt9m2mj8dxrz" class="article-share-link">分享</a> -->
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-nginx-basic" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2023/04/21/nginx-basic/" class="article-date">
@@ -202,7 +251,7 @@ vim  /usr/local/nginx/conf/nginx.conf
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2023/04/21/nginx-basic/" data-id="clzz00mic0026y19m9nc5aany" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2023/04/21/nginx-basic/" data-id="cm0t3ig3w0028rt9m163e9cks" class="article-share-link">分享</a> -->
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/nginx/" rel="tag">nginx</a></li></ul>
@@ -296,7 +345,7 @@ vim  /usr/local/nginx/conf/nginx.conf
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2023/04/21/fontend-engineering-2/" data-id="clzz00mi8000ty19m2qkget7q" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2023/04/21/fontend-engineering-2/" data-id="cm0t3ig3s000zrt9m6om6933q" class="article-share-link">分享</a> -->
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" rel="tag">工程化</a></li></ul>
@@ -363,7 +412,7 @@ vim  /usr/local/nginx/conf/nginx.conf
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2023/03/06/fontend-engineering/" data-id="clzz00mi8000wy19mdk5md8x2" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2023/03/06/fontend-engineering/" data-id="cm0t3ig3s000trt9m7neagg4u" class="article-share-link">分享</a> -->
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" rel="tag">工程化</a></li></ul>
@@ -608,67 +657,11 @@ export default &#123;
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2023/02/07/multi-function-select/" data-id="clzz00mib001xy19mby1e1th1" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2023/02/07/multi-function-select/" data-id="cm0t3ig3v001zrt9ma5plb43b" class="article-share-link">分享</a> -->
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%80%A7%E8%83%BD/" rel="tag">性能</a></li></ul>
 
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-vue-observer-dep-watcher" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2022/11/07/vue-observer-dep-watcher/" class="article-date">
-  <time datetime="2022-11-07T15:13:16.000Z" itemprop="datePublished">2022-11-07</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2022/11/07/vue-observer-dep-watcher/">vue 的里 observer、dep、watcher</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>简单梳理一下 vue 源码里，observer、dep、watcher 这三者的作用，捋清了基本上就知道 vue 的响应式操作了。看一张图：</p>
-<p><img src="https://file.cchealthier.com/file/blog/202210/vue-observer-dep-watcher.png" alt="vue-observer-dep-watcher.jpg"></p>
-<p>总结一下就是，我们在 vue 文件定义数据 data 属性，会生成一个 _data 的对象，遍历这个 _data 对象的属性，会通过 defineProperty 挂载到 vue 实例上。以图里 src 为例：</p>
-<ul>
-<li>vm.src，被 defineProperty 处理</li>
-<li>&#x3D;&gt; 读取和设置都是 vm._data.src</li>
-<li>&#x3D;&gt; vm._data.src 被 defineProperty 处理</li>
-<li>&#x3D;&gt; 在其 set get 函数进行依赖收集即更新通知</li>
-</ul>
-<h5 id="再细述两个小点"><a href="#再细述两个小点" class="headerlink" title="再细述两个小点"></a>再细述两个小点</h5><ol>
-<li><p>原来 dom 的更新是在 watcher 的 getter 里。watcher 有两种，一种是在实例上声明的 watch 对象或者主动调用 vm.$watch 方法的，这种都是属性 user&#x3D;&#x3D;&#x3D; true 的 watcher，其 getter 都是直接获取 vm 上的值。一种是生命周期由框架生成的 watcher，这个的 getter 是 updateComponent，里面包含了对 dom 的更新。当然接下来就是 diff 算法更新 dom 的事了，不属于依赖更新的内容。</p>
-</li>
-<li><p>vue 文件的 template 代码会被解析成 render 函数，对，就是那个说直接写会效率更快的 render 函数。原过程是：template &#x3D;&gt; ast &#x3D;&gt; render，这一步还是比较消耗。直接写 render 函数相当于省去前面两步。然后 render 执行后会生成虚拟 dom，也就是 VNode。接下来就是 vm.<em>patch</em> 里通过双指针的 diff 算法，来对比新旧 VNode 的差别，算出变更的地方，然后执行 js 原生的元素操作语句进行 dom 的修改。</p>
-</li>
-</ol>
-
-      
-    </div>
-    <footer class="article-footer">
-      
-      <!-- <a data-url="https://blog.cchealthier.com/2022/11/07/vue-observer-dep-watcher/" data-id="clzz00mih0041y19m6eog3j52" class="article-share-link">分享</a> -->
-      
-      
     </footer>
   </div>
   
@@ -694,6 +687,10 @@ export default &#123;
       <ul>
         
           <li>
+            <a href="/2024/09/01/import-sort/">js 几种导入依赖排序 import sort</a>
+          </li>
+        
+          <li>
             <a href="/2024/08/17/dependency-injection-inversify/">依赖反转/注入与 IOC 容器 inversify</a>
           </li>
         
@@ -707,10 +704,6 @@ export default &#123;
         
           <li>
             <a href="/2023/12/03/react-native-record/">react-native ios 流水账</a>
-          </li>
-        
-          <li>
-            <a href="/2023/11/24/ios-rn-integrate/">ios 原生应用集成 react-native</a>
           </li>
         
       </ul>
@@ -751,7 +744,7 @@ export default &#123;
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/08/">八月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/01/">一月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/12/">十二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/11/">十一月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/10/">十月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/09/">九月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/08/">八月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">七月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/06/">六月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/05/">五月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/04/">四月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/03/">三月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/02/">二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">十一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">十月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">九月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/09/">九月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/08/">八月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/01/">一月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/12/">十二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/11/">十一月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/10/">十月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/09/">九月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/08/">八月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">七月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/06/">六月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/05/">五月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/04/">四月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/03/">三月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/02/">二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">十一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">十月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">九月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a></li></ul>
     </div>
   </div>
 

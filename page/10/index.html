@@ -74,6 +74,158 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-lazyload" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/07/12/lazyload/" class="article-date">
+  <time datetime="2020-07-11T16:48:49.000Z" itemprop="datePublished">2020-07-12</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/07/12/lazyload/">简单实现图片懒加载、预加载、分批加载</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>图片我这里是随便找了十张图片，起名 0~9 的名字，方便获取。</p>
+<p><strong>懒加载：</strong>原理就是先放一批空图片占位，当图片进入可视区，再来赋予图片src值，让其显示。<br><strong>预加载：</strong>提前请求一批图片资源。下载缓存里。到真的渲染图片时候就可以快速获取到图片。用 new Image() 来请求资源，就不用先创建dom。<br><strong>分批加载：</strong>设定一个距离值，在滑动到距离底部小于这个距离值，则请求下一批图片。</p>
+<p>分批加载可以与其他两者混用，懒加载与预加载应该不混用了，一个减低服务器压力，一个是增加服务器压力换取体验。</p>
+<pre><code class="xml">&lt;!DOCTYPE&gt;
+&lt;head&gt;
+&lt;meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=utf-8&quot; /&gt;
+&lt;title&gt;lazyload&lt;/title&gt;
+&lt;/head&gt;
+&lt;style type=&quot;text/css&quot;&gt;
+  #box &#123;
+    width: 100%;
+    background: black;
+    border-radius: 10px;
+  &#125;
+  ul &#123;
+    padding: 0;
+    margin: 0;
+  &#125;
+  li &#123;
+    margin: 5px;
+    background: gray;
+    text-align: center;
+  &#125;
+  img &#123;
+    height: 300px;
+    width: auto;
+  &#125;
+&lt;/style&gt;
+&lt;body&gt;
+&lt;script type=&quot;text/javascript&quot;&gt;
+// 简单节流
+function throttle(fn, time) &#123;
+  let timer
+  return (ev) =&gt; &#123;
+    if (timer) &#123;
+      return
+    &#125;
+    timer = setTimeout(() =&gt; &#123;
+      timer = null
+      fn(ev)
+    &#125;, time)
+  &#125;
+&#125;
+function getNum(numMin, numMax) &#123;
+  return Math.round( Math.random()*(numMax-numMin) + numMin );
+&#125;
+function getImg (len) &#123;
+  const arr = []
+  for (let i = 0; i &lt; len; i++) &#123;
+    arr.push(getNum(0, 9))
+  &#125;
+  // 模拟异步获取图片资源
+  return Promise.resolve(arr)
+&#125;
+window.onload = function () &#123;
+  const $ui = document.querySelector(&#39;#box ul&#39;)
+  const loading = &#39;./img/loading.gif&#39;
+  const distance = 20
+  function initImg() &#123;
+    return getImg(5).then((imgs) =&gt;&#123;
+      imgs.forEach((img) =&gt; &#123;
+        const url = `./img/$&#123;img&#125;.JPG`
+        // 先预加载，演示一下，不然这里懒加载没什么意义了，都是发了请求
+        // 用一个img对象来先对资源进行请求
+        const imgObj = new Image()
+        imgObj.src = url
+        // 创建图片dom
+        const $li = document.createElement(&#39;li&#39;)
+        $ui.appendChild($li)
+        const $img = document.createElement(&#39;img&#39;)
+        $img.src = loading
+        $img.dataset.src = `./img/$&#123;img&#125;.JPG`
+        $li.appendChild($img)
+      &#125;)
+    &#125;)    
+  &#125;
+  function checkImg() &#123;
+    const $imgs = document.querySelectorAll(&#39;#box li img&#39;)
+    $imgs.forEach((dom) =&gt; &#123;
+      const dataSrc = dom.getAttribute(&#39;data-src&#39;)
+      // 此top为该元素距离窗口顶部距离，
+      // 所以直接判断该值是否小于窗口可视区的值，即在可视区内
+      const &#123; top &#125; = dom.getBoundingClientRect()
+      // 先判断有没有data-src，防止不断修改图片src
+      if (dataSrc &amp;&amp; (top &lt; window.innerHeight)) &#123;
+        dom.src = dataSrc
+        dom.removeAttribute(&#39;data-src&#39;)
+      &#125;
+    &#125;)
+  &#125;
+  window.addEventListener(&#39;scroll&#39;, throttle(function(ev) &#123;
+    // 距离底部还有20px
+    const &#123; scrollTop, clientHeight, offsetHeight &#125; = document.documentElement
+    if (offsetHeight - ( scrollTop + clientHeight ) &lt; distance) &#123;
+      initImg()
+    &#125;
+    checkImg()
+  &#125;, 200))
+  // 进行首次的资源获取
+  initImg().then(() =&gt; &#123;
+    checkImg()
+  &#125;)
+&#125;
+&lt;/script&gt;
+&lt;div id=&quot;box&quot;&gt;
+  &lt;ul&gt;&lt;/ul&gt;
+&lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+<p>除此之外还有个 api 专门来处理这种可视回调的<a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/API/IntersectionObserver">IntersectionObserver</a>。<br>具体可参阅下<a target="_blank" rel="noopener" href="http://www.ruanyifeng.com/blog/2016/11/intersectionobserver_api.html">阮老师的文章</a>。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      
+      <!-- <a data-url="https://blog.cchealthier.com/2020/07/12/lazyload/" data-id="cm0t3ig3v001xrt9m5b6xbux5" class="article-share-link">分享</a> -->
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-callapplybind" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2020/07/09/callapplybind/" class="article-date">
@@ -239,7 +391,7 @@ _bindFn3(12, 13, 14)
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2020/07/09/callapplybind/" data-id="clzz00mi6000iy19m308132er" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2020/07/09/callapplybind/" data-id="cm0t3ig3r000lrt9m5u5n4wjh" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -330,7 +482,7 @@ app.use(express.static(&#39;public&#39;, options))
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2020/07/02/cache/" data-id="clzz00mi6000gy19mbcet2cwi" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2020/07/02/cache/" data-id="cm0t3ig3q000grt9m977h7sd6" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -372,7 +524,7 @@ app.use(express.static(&#39;public&#39;, options))
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2020/06/22/ssl-lts/" data-id="clzz00mif003iy19m9c2bdpqh" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2020/06/22/ssl-lts/" data-id="cm0t3ig40003lrt9m9hpf7d0a" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -414,68 +566,11 @@ app.use(express.static(&#39;public&#39;, options))
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2020/05/31/html-resource/" data-id="clzz00mi90018y19mhdwg08i9" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2020/05/31/html-resource/" data-id="cm0t3ig3u001brt9m2ivweno5" class="article-share-link">分享</a> -->
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%80%A7%E8%83%BD/" rel="tag">性能</a></li></ul>
 
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-protocol" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/05/31/protocol/" class="article-date">
-  <time datetime="2020-05-31T02:50:08.000Z" itemprop="datePublished">2020-05-31</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/http%E5%8D%8F%E8%AE%AE/">http协议</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/05/31/protocol/">http协议等内容</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="注：资料来源于网络，省得到处找"><a href="#注：资料来源于网络，省得到处找" class="headerlink" title="注：资料来源于网络，省得到处找"></a>注：资料来源于网络，省得到处找</h3><h4 id="TCP冷启动："><a href="#TCP冷启动：" class="headerlink" title="TCP冷启动："></a>TCP冷启动：</h4><p>TCP连接有一个预热和保护的过程，先检查数据是否传送成功，一旦成功过，则慢慢加大传输速度。因此对应瞬时并发的连接，服务器的响应就会变慢。所以最好能使用一个建立好的连接，并且这个连接可以支持瞬时并发的请求。</p>
-<h4 id="HTTP1-1"><a href="#HTTP1-1" class="headerlink" title="HTTP1.1"></a>HTTP1.1</h4><p><strong>1、长连接</strong><br>        在一个TCP连接上可以传送多个HTTP请求和响应，减少了建立和关闭连接的消耗和延迟。<br>一个包含有许多图像的网页文件的多个请求和应答可以在一个连接中传输，但每个单独的网页文件的请求和应答仍<br>然需要使用各自的连接。HTTP 1.1还允许客户端不用等待上一次请求结果返回，就可以发出下一次请求，但服务器<br>端必须按照接收到客户端请求的先后顺序依次回送响应结果，以保证客户端能够区分出每次请求的响应内容，这样<br>也显著地减少了整个下载过程所需要的时间。基于HTTP 1.1协议的客户机与服务器的信息交换过程。</p>
-<p><strong>2、丰富缓存</strong><br>        在HTTP1.0中主要使用header里的If-Modified-Since,Expires来做为缓存判断的标准，HTTP1.1则引入了<br>更多的缓存控制策略例如Entity tag，If-Unmodified-Since, If-Match,<br>If-None-Match等更多可供选择的缓存头来控制缓存策略。</p>
-<p><strong>3、节约带宽</strong><br>HTTP 1.1支持只发送header信息(不带任何body信息)，如果服务器认为客户端有权限请求服务器，则返回100，<br>否则返回401。客户端如果接受到100，才开始把请求body发送到服务器。<br>这样当服务器返回401的时候，客户端就可以不用发送请求body了，节约了带宽。<br>另外HTTP还支持传送内容的一部分。这样当客户端已经有一部分的资源后，只需要跟服务器请求另外的部分资源即可。这是支持文件断点续传的基础。</p>
-<p><strong>4、host域</strong><br>在HTTP1.0中认为每台服务器都绑定一个唯一的IP地址，因此，请求消息中的URL并没有传递主机名（hostname），HTTP1.0没有host域。随着虚拟主机技术的发展，在一台物理服务器上可以存在多个虚拟主机（Multi-homed Web Servers），并且它们共享一个IP地址。HTTP1.1的请求消息和响应消息都支持host域，且请求消息中如果没有host域会报告一个错误（400 Bad Request）。</p>
-<p><strong>5、丰富报错码</strong><br>在HTTP1.1中新增了24个错误状态响应码。</p>
-<h4 id="HTTP2-0"><a href="#HTTP2-0" class="headerlink" title="HTTP2.0"></a>HTTP2.0</h4><p><strong>1、多路复用</strong><br>所有的HTTP2.0通信都在一个TCP连接上完成，这个连接可以承载任意数量的双向数据流。<br>每个数据流以消息的形式发送，而消息由一或多个帧组成。这些帧可以乱序发送，然后再根据每个帧头部的流标识符（stream id）重新组装。</p>
-<p>举个例子，每个请求是一个数据流，数据流以消息的方式发送，而消息又分为多个帧，帧头部记录着stream id用来标识所属的数据流，不同属的帧可以在连接中随机混杂在一起。接收方可以根据stream id将帧再归属到各自不同的请求当中去。</p>
-<p>另外，多路复用（连接共享）可能会导致关键请求被阻塞。HTTP2.0里每个数据流都可以设置优先级和依赖，优先级高的数据流会被服务器优先处理和返回给客户端，数据流还可以依赖其他的子数据流。<br>可见，HTTP2.0实现了真正的并行传输，它能够在一个TCP上进行任意数量HTTP请求。而这个强大的功能则是基于“二进制分帧”的特性。</p>
-<p><strong>2、头部数据压缩</strong><br>在HTTP1.1中，HTTP请求和响应都是由状态行、请求&#x2F;响应头部、消息主体三部分组成。一般而言，消息主体都会经过gzip压缩，或者本身传输的就是压缩过后的二进制文件，但状态行和头部却没有经过任何压缩，直接以纯文本传输。随着Web功能越来越复杂，每个页面产生的请求数也越来越多，导致消耗在头部的流量越来越多，尤其是每次都要传输UserAgent、Cookie这类不会频繁变动的内容，完全是一种浪费。<br>HTTP1.1不支持header数据的压缩，HTTP2.0使用HPACK算法对header的数据进行压缩，这样数据体积小了，在网络上传输就会更快。</p>
-<p><strong>3、服务器推送</strong><br>当我们对支持HTTP2.0的web server请求数据的时候，服务器会顺便把一些客户端需要的资源一起推送到客户端，免得客户端再次创建连接发送请求到服务器端获取。这种方式非常合适加载静态资源。<br>服务器端推送的这些资源其实存在客户端的某处地方，客户端直接从本地加载这些资源就可以了，不用走网络，速度自然是快很多的。</p>
-<h4 id="UDP和TCP的区别"><a href="#UDP和TCP的区别" class="headerlink" title="UDP和TCP的区别"></a>UDP和TCP的区别</h4><p><strong>1、连接方面区别</strong><br>TCP面向连接（如打电话要先拨号建立连接）。<br>UDP是无连接的，即发送数据之前不需要建立连接。</p>
-<p><strong>2、安全方面的区别</strong><br>TCP提供可靠的服务，通过TCP连接传送的数据，无差错，不丢失，不重复，且按序到达。<br>UDP尽最大努力交付，即不保证可靠交付。</p>
-<p><strong>3、传输效率的区别</strong><br>TCP传输效率相对较低。<br>UDP传输效率高，适用于对高速传输和实时性有较高的通信或广播通信。</p>
-<p><strong>4、连接对象数量的区别</strong><br>TCP连接只能是点到点、一对一的。<br>UDP支持一对一，一对多，多对一和多对多的交互通信。</p>
-<p>TCP 是面向字节流（流模式）的，UDP 是基于数据报的</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      
-      <!-- <a data-url="https://blog.cchealthier.com/2020/05/31/protocol/" data-id="clzz00mie002uy19m0z93bokx" class="article-share-link">分享</a> -->
-      
-      
     </footer>
   </div>
   
@@ -501,6 +596,10 @@ app.use(express.static(&#39;public&#39;, options))
       <ul>
         
           <li>
+            <a href="/2024/09/01/import-sort/">js 几种导入依赖排序 import sort</a>
+          </li>
+        
+          <li>
             <a href="/2024/08/17/dependency-injection-inversify/">依赖反转/注入与 IOC 容器 inversify</a>
           </li>
         
@@ -514,10 +613,6 @@ app.use(express.static(&#39;public&#39;, options))
         
           <li>
             <a href="/2023/12/03/react-native-record/">react-native ios 流水账</a>
-          </li>
-        
-          <li>
-            <a href="/2023/11/24/ios-rn-integrate/">ios 原生应用集成 react-native</a>
           </li>
         
       </ul>
@@ -558,7 +653,7 @@ app.use(express.static(&#39;public&#39;, options))
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/08/">八月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/01/">一月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/12/">十二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/11/">十一月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/10/">十月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/09/">九月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/08/">八月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">七月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/06/">六月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/05/">五月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/04/">四月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/03/">三月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/02/">二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">十一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">十月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">九月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/09/">九月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/08/">八月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/01/">一月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/12/">十二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/11/">十一月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/10/">十月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/09/">九月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/08/">八月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">七月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/06/">六月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/05/">五月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/04/">四月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/03/">三月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/02/">二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">十一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">十月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">九月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a></li></ul>
     </div>
   </div>
 

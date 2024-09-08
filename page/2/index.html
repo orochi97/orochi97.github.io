@@ -74,6 +74,69 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-ios-rn-integrate" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2023/11/24/ios-rn-integrate/" class="article-date">
+  <time datetime="2023-11-24T12:43:44.000Z" itemprop="datePublished">2023-11-24</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2023/11/24/ios-rn-integrate/">ios 原生应用集成 react-native</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>其实官方文档《<a target="_blank" rel="noopener" href="https://reactnative.dev/docs/integration-with-existing-apps?language=objc">Integration with Existing Apps</a>》讲得挺详细，但是有点面向 ios 开发，对于 ios 开发的同学应该很容易看懂吧。不熟悉的我摸索了很久，记录一下。</p>
+<p><strong>重要！！！</strong></p>
+<p>先参考官网《<a target="_blank" rel="noopener" href="https://reactnative.dev/docs/environment-setup">Setting up the development environment</a>》把 react-native 的开发环境搭建起来，因为基本如出一辙。对于 ios 而言， react-native 像是它的一部分子应用，本质上还是原生应用。<br>因为就是要用到原生的东西，所以不要用 Expo 这种方式。这个是方便开发用的，最后应该要回到原生来。</p>
+<p>能成功启动 react-native，想必也搞定了 CocoaPods 这个麻烦的工具，用来下载原生相关依赖的。</p>
+<h2 id="创建-ios-app"><a href="#创建-ios-app" class="headerlink" title="创建 ios app"></a>创建 ios app</h2><p>Xcode Version 14.3 (14E222b)</p>
+<h3 id="1、创建一个-ios-app"><a href="#1、创建一个-ios-app" class="headerlink" title="1、创建一个 ios app"></a>1、创建一个 ios app</h3><img src="/2023/11/24/ios-rn-integrate/ios-rn-integrate-1.png" class="" title="ios-rn-integrate-1">
+
+<h3 id="2、填写相关信息"><a href="#2、填写相关信息" class="headerlink" title="2、填写相关信息"></a>2、填写相关信息</h3><img src="/2023/11/24/ios-rn-integrate/ios-rn-integrate-2.png" class="" title="ios-rn-integrate-2">
+
+<p>Product Name：顾名思义，这个应用的名字，随便填，自己记住。<br>Team：没有就先跳过，苹果开发要求的，上线要用到。<br>Organization Identifier：组织标识，公司或者产品网址倒着写，随便填。<br><strong>Interface：有 SwiftUI 和 Storyboard 可选，选择 Storyboard。</strong><br>Language：选 Swift 或 Objective-C 都可以。</p>
+<h3 id="3、操作-xcode"><a href="#3、操作-xcode" class="headerlink" title="3、操作 xcode"></a>3、操作 xcode</h3><img src="/2023/11/24/ios-rn-integrate/ios-rn-integrate-3.png" class="" title="ios-rn-integrate-3">
+
+<p>上图为例</p>
+<p>先点击中间的“分屏按钮”，编辑器就会变成两个编辑区，一个打开 <code>ViewController.m</code> 文件，一个打开 <code>Main</code> 文件。虽然显示是 Main 文件，但硬盘上可以看到是叫 <code>Main.storyboard</code> 文件。</p>
+<p>然后点击右边的“组件库按钮”，打开组件库，拖拽一个 button 组件到 storyboard 编辑区，也就是生成一个按钮到应用上。</p>
+<p>最后点击左边的“运行按钮”，看到弹出来的手机模拟器上有自己加的 button 就算成功了。</p>
+        
+          <p class="article-more-link">
+            <a href="/2023/11/24/ios-rn-integrate/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      
+      <!-- <a data-url="https://blog.cchealthier.com/2023/11/24/ios-rn-integrate/" data-id="cm0t3ig3u001frt9mb9laga0x" class="article-share-link">分享</a> -->
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/react-native/" rel="tag">react-native</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-react-vite-qiankun" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2023/10/15/react-vite-qiankun/" class="article-date">
@@ -130,7 +193,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2023/10/15/react-vite-qiankun/" data-id="clzz00mif003gy19m8631ffu0" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2023/10/15/react-vite-qiankun/" data-id="cm0t3ig3z003brt9m7e4mchlm" class="article-share-link">分享</a> -->
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" rel="tag">工程化</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%BE%AE%E5%89%8D%E7%AB%AF/" rel="tag">微前端</a></li></ul>
@@ -196,7 +259,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2023/09/24/hexo-code-highlight/" data-id="clzz00mi90011y19m6ncx8zsn" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2023/09/24/hexo-code-highlight/" data-id="cm0t3ig3t0011rt9m9ib07h1z" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -305,7 +368,7 @@ export default counterSlice.reducer;
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2023/09/23/react-basic-app-2/" data-id="clzz00mie0031y19md1e51fyz" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2023/09/23/react-basic-app-2/" data-id="cm0t3ig3z0032rt9mezxl9e60" class="article-share-link">分享</a> -->
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" rel="tag">工程化</a></li></ul>
@@ -393,88 +456,10 @@ const __dirname = path.dirname(__filename);
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2023/08/24/node-module/" data-id="clzz00mic002cy19m4ldtb535" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2023/08/24/node-module/" data-id="cm0t3ig3x002ert9m9nwp0p57" class="article-share-link">分享</a> -->
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/node/" rel="tag">node</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-webpack5-background-url" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2023/08/23/webpack5-background-url/" class="article-date">
-  <time datetime="2023-08-23T12:19:03.000Z" itemprop="datePublished">2023-08-23</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2023/08/23/webpack5-background-url/">webpack5 下 background url 图片打包失败</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="一、省流"><a href="#一、省流" class="headerlink" title="一、省流"></a>一、省流</h3><p><code>webpack5</code> 下，<code>css-loader</code> 与 <code>file/url-loader</code> 对于 css 文件（无论是 import 一份 css 文件还是 vue 里面的 style 块）里的 <code>background-image: url()</code> 资源文件处理有冲突。表现在：</p>
-<p><strong>打包出来的 url 使用的是 <code>css-loader</code> 自己产出的图片。但是这张图片生成有问题，导致图片无法显示。</strong></p>
-<p>解决方法看最后面。</p>
-<h3 id="二、溯源"><a href="#二、溯源" class="headerlink" title="二、溯源"></a>二、溯源</h3><p>根据《<a href="/2023/05/31/react-basic-app/">react 基础工程（react-redux &amp; react-router）</a>》里的配置，里面配置了 <code>file/url-loader</code> 去处理资源文件。</p>
-<pre><code class="js">&#123;
-  test: /\.css$/,
-  use: [
-    isDev ? &#39;vue-style-loader&#39; : MiniCssExtractPlugin.loader,
-    &#39;css-loader&#39;,
-  ],
-&#125;,
-&#123;
-  test: /\.(png|jpg|gif)$/i,
-  use: [
-    &#123;
-      loader: &#39;file-loader&#39;,
-      options: &#123;
-        esModule: false,
-        limit: 8192,
-        name: &#39;media/[name].[hash].[ext]&#39;,
-      &#125;,
-    &#125;,
-  ],
-&#125;
-</code></pre>
-<p>对于普通使用并没有问题。但是后面使用了 <code>background-image: url()</code> 发现图片显示不出来。去产物文件夹（我这里是 dist 文件夹）一看，发现在根路径多了几张图片，但是打不开，显示图片格式损坏。而配置 <code>name: &#39;media/[name].[hash].[ext]&#39;</code> 里指定的 media 文件夹也有正常的图片。但是一看处理后的 css 使用的却是那一堆在根路径的损坏的图片。</p>
-<p>也就是：<strong>background-image: url() 没有使用 file&#x2F;url-loader 打包出来的图片，而是使用了别的 loader 产出的图片，而且这堆图片还生成失败了。</strong></p>
-<p>把 <code>file/url-loader</code> 去掉后，生成的图片正常了。也就是和这两个冲突了。接着看看问题在哪。插一句：<strong>我是在一个旧项目做了升级的，之前用的低版本也就是 webpack4 以及其他一系列低版本的配套是可以的，升级了后才出现问题。</strong></p>
-<p>一开始我怀疑是 <code>mini-css-extract-plugin</code>，怀疑是抽取 css 文件的时候，顺便生成了图片。后面我把这个去掉，只留下 <code>css-loader</code> 发现也会产出图片。这我着实没想到，以为只是单纯处理 css，遇到资源文件还是交给 <code>file/url-loader</code>。但是 webpack4 是好的，或者 webpack5 没有 <code>file/url-loader</code> 也是好的。</p>
-<h3 id="三、查找"><a href="#三、查找" class="headerlink" title="三、查找"></a>三、查找</h3><p>那就缩小了排查范围，就着这几个关键字进行了搜索，终于发现问题：webpack5 对于资源文件处理进行了更改，具体可看官网《<a target="_blank" rel="noopener" href="https://webpack.docschina.org/guides/asset-modules">资源模块</a>》介绍。也就是 webpack5 不需要再对资源文件指定相应的 loader 去处理了。而是加上 <code>type</code> 声明，比如 <code>type: asset/resource</code>。而如果我们还按照老的配置，可能会对资源重复处理，从而导致生成了一堆没法用的损坏图。</p>
-<p>确实是 <code>css-loader</code> 和 <code>file/url-loader</code> 有冲突，决定性证据也懒得去看源码了，这 webpack 4 升 5 真的改变好大。还记得刚出那会一大堆插件不兼容，不升级都没法用。</p>
-        
-          <p class="article-more-link">
-            <a href="/2023/08/23/webpack5-background-url/#more">Read More</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      
-      <!-- <a data-url="https://blog.cchealthier.com/2023/08/23/webpack5-background-url/" data-id="clzz00mij006cy19m9ekede9o" class="article-share-link">分享</a> -->
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" rel="tag">工程化</a></li></ul>
 
     </footer>
   </div>
@@ -501,6 +486,10 @@ const __dirname = path.dirname(__filename);
       <ul>
         
           <li>
+            <a href="/2024/09/01/import-sort/">js 几种导入依赖排序 import sort</a>
+          </li>
+        
+          <li>
             <a href="/2024/08/17/dependency-injection-inversify/">依赖反转/注入与 IOC 容器 inversify</a>
           </li>
         
@@ -514,10 +503,6 @@ const __dirname = path.dirname(__filename);
         
           <li>
             <a href="/2023/12/03/react-native-record/">react-native ios 流水账</a>
-          </li>
-        
-          <li>
-            <a href="/2023/11/24/ios-rn-integrate/">ios 原生应用集成 react-native</a>
           </li>
         
       </ul>
@@ -558,7 +543,7 @@ const __dirname = path.dirname(__filename);
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/08/">八月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/01/">一月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/12/">十二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/11/">十一月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/10/">十月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/09/">九月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/08/">八月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">七月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/06/">六月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/05/">五月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/04/">四月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/03/">三月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/02/">二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">十一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">十月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">九月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/09/">九月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/08/">八月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/01/">一月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/12/">十二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/11/">十一月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/10/">十月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/09/">九月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/08/">八月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">七月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/06/">六月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/05/">五月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/04/">四月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/03/">三月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/02/">二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">十一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">十月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">九月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a></li></ul>
     </div>
   </div>
 
