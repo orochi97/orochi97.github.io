@@ -74,6 +74,251 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-multi-function-select" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2023/02/07/multi-function-select/" class="article-date">
+  <time datetime="2023-02-07T13:17:59.000Z" itemprop="datePublished">2023-02-07</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2023/02/07/multi-function-select/">懒加载-虚拟列表-下拉菜单选择器</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>最近，遇到 <code>select</code> 表单下拉选项过多的问题。由于业务场景需要，选项是由接口请求回来，数量取决于线上数据的多少。</p>
+<p>借此，顺便记录下目前遇到 <code>select</code> 组件有哪些优化选择。附上一些例子，使用 vue 写的。当然用 react 也是类似的做法，这个和用什么框架关系不大。</p>
+<p><strong>为了文章内容不要太长，例子里的共同样式放在了最后。</strong></p>
+<h3 id="一、懒加载"><a href="#一、懒加载" class="headerlink" title="一、懒加载"></a>一、懒加载</h3><p>懒加载这个词各位应该也很熟悉。在一个古老的例子，瀑布流显示图片就有这个词语了。就是第一屏只显示几条，用户有兴趣往下拉，再继续加载（或请求）新的数据。<br>以前的话应该是监听 <code>scroll</code> 事件，判断是否要见底了，来补充新数据。后面出了一个厉害的 <a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/API/IntersectionObserver">IntersectionObserver</a> 方法。具体怎么用就不赘述了，总之就是能监听一个 dom 的显隐，来触发回调。</p>
+<p>例子可看代码，支持前端自己分批数据或者每次下拉由后端处理分批</p>
+<pre><code class="html">&lt;template&gt;
+  &lt;div ref=&quot;lazy-load-select&quot; class=&quot;lazy-load-select&quot; :class=&quot;&#123; active: active &#125;&quot;&gt;
+    &lt;a class=&quot;display-label&quot; href=&quot;javascript:;&quot; @click=&quot;active = !active&quot;&gt;&#123;&#123;
+      displayLabel
+    &#125;&#125;&lt;/a&gt;
+    &lt;div class=&quot;list&quot; v-show=&quot;active&quot;&gt;
+      &lt;input
+        type=&quot;text&quot;
+        class=&quot;select-input&quot;
+        @input=&quot;search&quot;
+        v-model=&quot;searchText&quot;
+      /&gt;
+      &lt;ul class=&quot;select-ul&quot; ref=&quot;select-ul&quot;&gt;
+        &lt;li
+          v-for=&quot;item in displayData&quot;
+          ref=&quot;select-li&quot;
+          :class=&quot;&#123; &#39;select-li&#39;: true, selected: item.value === currentValue &#125;&quot;
+          :key=&quot;item.value&quot;
+          @click=&quot;select(item.value)&quot;
+        &gt;
+          &#123;&#123; item.label &#125;&#125;
+        &lt;/li&gt;
+      &lt;/ul&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/template&gt;
+
+&lt;script&gt;
+function genData(&#123; pageno, count, keyword &#125;) &#123;
+  return new Array(count).fill(&#39;1&#39;).map((_, index) =&gt; &#123;
+    const value = (pageno - 1) * count + index + 1 + &#39;&#39;;
+    return &#123;
+      value,
+      label: &#39;LazyLoad-&#39; + value + (keyword || &#39;&#39;),
+    &#125;;
+  &#125;);
+&#125;
+
+const originData = genData(&#123; pageno: 1, count: 100 &#125;);
+
+// 调试用的声明，true：使用全部数据返回，由前端分批，false：分批从后端获取数据
+const defaultProps = false ? &#123;
+  originData: () =&gt; originData,
+  getData: undefined,
+&#125; : &#123;
+  originData: () =&gt; [],
+  getData: (&#123; pageno, count, keyword &#125;) =&gt; &#123;
+    return Promise.resolve(genData(&#123; pageno, count, keyword &#125;));
+  &#125;,
+&#125;;
+
+// 上面是调试示例用的代码
+
+const ONE_LOAD = 10; // 每次加载10条
+
+const LAZY_LOAD_COMP = 2; // 倒数第几个开始新的加载
+
+export default &#123;
+  name: &#39;LazyLoadSelect&#39;, // 懒加载下拉菜单，支持前端分批处理或后端分批处理
+  props: &#123;
+    originData: &#123;
+      type: Array,
+      default: defaultProps.originData,
+    &#125;,
+    getData: &#123;
+      type: Function,
+      default: defaultProps.getData,
+    &#125;,
+  &#125;,
+  data() &#123;
+    return &#123;
+      currentValue: 0,
+      active: false,
+      searchText: &#39;&#39;,
+      displayData: [],
+      filterData: [],
+      intersectionObserver: null,
+    &#125;;
+  &#125;,
+  computed: &#123;
+    displayLabel() &#123;
+      const selectd = this.originData.find(
+        item =&gt; item.value === this.currentValue
+      );
+      return selectd ? selectd.label : &#39;请选择&#39;;
+    &#125;,
+    useRemoteData() &#123;
+      return typeof this.getData === &#39;function&#39;;
+    &#125;,
+    count() &#123;
+      return ONE_LOAD;
+    &#125;,
+    pageno() &#123;
+      return this.displayData.length / this.count || 1;
+    &#125;,
+  &#125;,
+  methods: &#123;
+    async initFilterData(keyword) &#123;
+      this.displayData = [];
+      if (this.useRemoteData) &#123;
+        // 如果有外部方法，初始化则不需要过滤，直接更新接口来的数据即可
+        const data = await this.loadRemoteData();
+        this.displayData = data;
+      &#125; else &#123;
+        // 如果没有外部方法，初始化则先根据搜索词过滤得出过滤数据，然后再对过滤数据分批
+        this.filterData = this.originData.filter(item =&gt; &#123;
+          return keyword ? item.label.indexOf(keyword) !== -1 : true;
+        &#125;);
+        this.displayData = this.filterData.slice(0, 0 + ONE_LOAD);
+      &#125;
+      this.$selectUl &amp;&amp; (this.$selectUl.scrollTop = 0);
+      this.updateObserveLayzload();
+    &#125;,
+    search(event) &#123;
+      // 应防抖
+      this.initFilterData(this.searchText);
+    &#125;,
+    select(value) &#123;
+      this.currentValue = value;
+      this.active = false;
+      this.$emit(&#39;change&#39;, value);
+    &#125;,
+    updateObserveLayzload() &#123;
+      this.$nextTick(() =&gt; &#123;
+        if (this.displayData.length &gt;= this.filterData.length &amp;&amp; !this.useRemoteData) &#123;
+          this.$lazyLoadLi &amp;&amp;
+            this.intersectionObserver.unobserve(this.$lazyLoadLi);
+          return;
+        &#125;
+        const $liArr = this.$refs[&#39;select-li&#39;];
+
+        this.$lazyLoadLi &amp;&amp;
+          this.intersectionObserver.unobserve(this.$lazyLoadLi);
+        this.$lazyLoadLi = $liArr[$liArr.length - 1 - LAZY_LOAD_COMP];
+        this.intersectionObserver.observe(this.$lazyLoadLi);
+      &#125;);
+    &#125;,
+    async loadRemoteData() &#123; // 从外部方法获取数据
+      try &#123;
+        const data = await this.getData(
+            &#123; pageno: this.pageno, count: this.count, keyword: this.searchText &#125;
+        );
+        return data;
+      &#125; catch(error) &#123;
+        console.error(&#39;get data error:&#39;, error);
+      &#125;
+      return [];
+    &#125;,
+    async getNewBatchData() &#123;
+      if (this.useRemoteData) &#123;
+        // 数据（包括筛选）完全由后端处理
+        const addData = await this.loadRemoteData();
+        return addData;
+      &#125;
+      // 由前端对数据分批
+      const addData = this.filterData.slice(
+        this.displayData.length,
+        this.displayData.length + ONE_LOAD,
+      );
+      return addData;
+    &#125;,
+    async updateData() &#123;
+      const addData = await this.getNewBatchData();
+      this.displayData.push(...addData);
+      this.updateObserveLayzload();
+    &#125;,
+  &#125;,
+  created() &#123;
+    this.initFilterData(&#39;&#39;);
+  &#125;,
+  mounted() &#123;
+    this.$selectUl = this.$refs[&#39;select-ul&#39;];
+    this.intersectionObserver = new IntersectionObserver(entries =&gt; &#123;
+      if (entries[0].intersectionRatio) &#123;
+        this.updateData();
+      &#125;
+    &#125;);
+
+    const $main = this.$refs[&#39;lazy-load-select&#39;];
+    window.addEventListener(
+      &#39;click&#39;,
+      (ev) =&gt; &#123;
+        // 判断是否点击在 select 组件上
+        const isSelectComp = ev.composedPath().find(dom =&gt; $main === dom);
+        if (!isSelectComp) &#123;
+          this.active = false;
+        &#125;
+      &#125;
+    );
+  &#125;
+&#125;;
+&lt;/script&gt;
+</code></pre>
+        
+          <p class="article-more-link">
+            <a href="/2023/02/07/multi-function-select/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      
+      <!-- <a data-url="https://blog.cchealthier.com/2023/02/07/multi-function-select/" data-id="cm3l53zuv001x549mg88b3rgf" class="article-share-link">分享</a> -->
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%80%A7%E8%83%BD/" rel="tag">性能</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-vue-observer-dep-watcher" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2022/11/07/vue-observer-dep-watcher/" class="article-date">
@@ -120,7 +365,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2022/11/07/vue-observer-dep-watcher/" data-id="cm0t3mkw300417d9mh4ih57ew" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2022/11/07/vue-observer-dep-watcher/" data-id="cm3l53zv10048549mfla09dej" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -167,7 +412,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2022/10/19/2022-autumn/" data-id="cm0t3mkvl00007d9mg6g3ghhi" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2022/10/19/2022-autumn/" data-id="cm3l53zuj0000549mgpj8937u" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -260,7 +505,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2022/10/18/binary-tree-traversal/" data-id="cm0t3mkvq00097d9m4sgb23zz" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2022/10/18/binary-tree-traversal/" data-id="cm3l53zup000d549mf6wl2q0n" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -368,158 +613,7 @@ const tree = &#123;
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2022/10/18/deepth-breadth-traversal/" data-id="cm0t3mkvt000t7d9mhsz97tve" class="article-share-link">分享</a> -->
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-linked-list" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2022/09/25/linked-list/" class="article-date">
-  <time datetime="2022-09-25T15:22:55.000Z" itemprop="datePublished">2022-09-25</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E7%AE%97%E6%B3%95/">算法</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2022/09/25/linked-list/">链表</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p><a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E9%93%BE%E8%A1%A8/9794473?fr=aladdin">链表</a>的概念这里就不赘述了，直接上代码吧。<br>其他都没什么问题，主要是反转的做法。</p>
-<pre><code class="js">class Node &#123;
-  constructor(element) &#123;
-    this.element = element;
-    this.next = null;
-  &#125;
-&#125;
-
-class LinkedList &#123;
-  constructor() &#123;
-    this.head = new Node(&#39;head&#39;);
-    this.length = 0;
-  &#125;
-  insert(newElement, element = null) &#123; // 加在某个元素后面，如果该元素不在，则加在 head 后面
-    let currNode = this.find(element);
-    if (!currNode) &#123;
-      currNode = this.head;
-    &#125;
-    const newNode = new Node(newElement);
-    newNode.next = currNode.next;
-    currNode.next = newNode;
-    this.length++;
-    return this;
-  &#125;
-  remove(element) &#123;
-    const prevNode = this.prev(element);
-    if (prevNode &amp;&amp; prevNode.next) &#123;
-      const currNode = prevNode.next;
-      prevNode.next = currNode.next;
-      this.length--;
-    &#125;
-    return this;
-  &#125;
-  find(element) &#123;
-    let node = this.head;
-    while(node) &#123;
-      if (node.element === element) &#123;
-        break;
-      &#125;
-      node = node.next;
-    &#125;
-    return node;
-  &#125;
-  getAll() &#123;
-    const result = [];
-    let node = this.head;
-    while(node &amp;&amp; node.next) &#123;
-      node = node.next;
-      result.push(node.element);
-    &#125;
-    return result;
-  &#125;
-  prev(element) &#123;
-    let node = this.head;
-    while(node) &#123;
-      if (node.next &amp;&amp; node.next.element === element) &#123;
-        break;
-      &#125;
-      node = node.next;
-    &#125;
-    return node;
-  &#125;
-  next(element) &#123;
-    const currNode = this.find(element);
-    if (currNode) &#123;
-      return currNode.next;
-    &#125;
-    return null;
-  &#125;
-  reverse(element) &#123;
-    // 直接倒序重新生成的不正规解法
-    // let node = this.head;
-    // this.getAll().reverse().forEach((element) =&gt; &#123;
-    // 	node.next = new Node(element);
-    // 	node = node.next;
-    // &#125;);
-    // node.next = null;
-
-    // 只需要循环一次的正规解法
-    let head = this.prev(element); // 这个后面的元素要反转，所以也有可能是链表的 head
-    let first = this.find(element); // 一直指向要反转的链表第一个
-    if (!first) &#123;
-      head = this.head;
-      first = this.head.next;
-    &#125;
-    if (!first) return this;
-
-    const node = first; // node 是不需要变的，一直都是一开始的第一个，因为每次循环 node 都会变位置，它的 next 指向也会一直变
-    while(node &amp;&amp; node.next) &#123;
-      const nextNode = node.next;
-      node.next = nextNode.next;
-      nextNode.next = first;
-      first = nextNode;
-    &#125;
-    head.next = first;
-    // 每次都把 1 的 next 挪到 first 的前面，同时 1 也会相应的变位置
-    // 12345：first = 1，node = 1，把 1 的 next 指向 3，2 的 next 指向 1，即把 2 放到 1（frist） 前面
-    // 21345：first = 2，node = 1，把 1 的 next 指向 4，3 的 next 指向 2，即把 3 放到 2（frist） 前面
-    // 32145：first = 3，node = 1，把 1 的 next 指向 5，4 的 next 指向 3，即把 4 放到 3（frist） 前面
-    // 43215
-    // 54321
-    return this;
-  &#125;
-&#125;
-</code></pre>
-<p>下面是运行结果</p>
-        
-          <p class="article-more-link">
-            <a href="/2022/09/25/linked-list/#more">Read More</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      
-      <!-- <a data-url="https://blog.cchealthier.com/2022/09/25/linked-list/" data-id="cm0t3mkvx001t7d9marzo8x68" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2022/10/18/deepth-breadth-traversal/" data-id="cm3l53zuq000l549m1bgq2sa9" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -533,7 +627,7 @@ class LinkedList &#123;
 
   <nav id="page-nav">
     
-    <a class="extend prev" rel="prev" href="/page/4/">« 上一页</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><a class="page-number" href="/page/7/">7</a><span class="space">&hellip;</span><a class="page-number" href="/page/12/">12</a><a class="extend next" rel="next" href="/page/6/">下一页 »</a>
+    <a class="extend prev" rel="prev" href="/page/4/">« 上一页</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><a class="page-number" href="/page/7/">7</a><span class="space">&hellip;</span><a class="page-number" href="/page/13/">13</a><a class="extend next" rel="next" href="/page/6/">下一页 »</a>
   </nav>
 
 </section>
@@ -545,6 +639,10 @@ class LinkedList &#123;
     <h3 class="widget-title">最新文章</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2024/11/17/node-ssr-app/">react、vue、solid 实现低代码 ssr 页面渲染</a>
+          </li>
         
           <li>
             <a href="/2024/09/01/import-sort/">js 几种导入依赖排序 import sort</a>
@@ -560,10 +658,6 @@ class LinkedList &#123;
         
           <li>
             <a href="/2023/12/10/babel-ast-transform/">使用 babel ast 做代码转换</a>
-          </li>
-        
-          <li>
-            <a href="/2023/12/03/react-native-record/">react-native ios 流水账</a>
           </li>
         
       </ul>
@@ -585,7 +679,7 @@ class LinkedList &#123;
   <div class="widget-wrap">
     <h3 class="widget-title">标签</h3>
     <div class="widget">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nginx/" rel="tag">nginx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/node/" rel="tag">node</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/react-native/" rel="tag">react-native</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" rel="tag">工程化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BE%AE%E5%89%8D%E7%AB%AF/" rel="tag">微前端</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%80%A7%E8%83%BD/" rel="tag">性能</a></li></ul>
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nginx/" rel="tag">nginx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/node/" rel="tag">node</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/react-native/" rel="tag">react-native</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ssr/" rel="tag">ssr</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" rel="tag">工程化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BE%AE%E5%89%8D%E7%AB%AF/" rel="tag">微前端</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%80%A7%E8%83%BD/" rel="tag">性能</a></li></ul>
     </div>
   </div>
 
@@ -595,7 +689,7 @@ class LinkedList &#123;
   <div class="widget-wrap">
     <h3 class="widget-title">标签云</h3>
     <div class="widget tagcloud">
-      <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/nginx/" style="font-size: 12px;">nginx</a> <a href="/tags/node/" style="font-size: 16px;">node</a> <a href="/tags/react-native/" style="font-size: 14px;">react-native</a> <a href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" style="font-size: 20px;">工程化</a> <a href="/tags/%E5%BE%AE%E5%89%8D%E7%AB%AF/" style="font-size: 12px;">微前端</a> <a href="/tags/%E6%80%A7%E8%83%BD/" style="font-size: 18px;">性能</a>
+      <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/nginx/" style="font-size: 12.5px;">nginx</a> <a href="/tags/node/" style="font-size: 17.5px;">node</a> <a href="/tags/react-native/" style="font-size: 15px;">react-native</a> <a href="/tags/ssr/" style="font-size: 10px;">ssr</a> <a href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" style="font-size: 20px;">工程化</a> <a href="/tags/%E5%BE%AE%E5%89%8D%E7%AB%AF/" style="font-size: 12.5px;">微前端</a> <a href="/tags/%E6%80%A7%E8%83%BD/" style="font-size: 17.5px;">性能</a>
     </div>
   </div>
 
@@ -604,7 +698,7 @@ class LinkedList &#123;
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/09/">九月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/08/">八月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/01/">一月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/12/">十二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/11/">十一月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/10/">十月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/09/">九月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/08/">八月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">七月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/06/">六月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/05/">五月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/04/">四月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/03/">三月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/02/">二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">十一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">十月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">九月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/11/">十一月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/09/">九月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/08/">八月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/01/">一月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/12/">十二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/11/">十一月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/10/">十月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/09/">九月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/08/">八月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">七月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/06/">六月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/05/">五月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/04/">四月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/03/">三月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/02/">二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">十一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">十月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">九月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a></li></ul>
     </div>
   </div>
 

@@ -74,6 +74,61 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-performance-api" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2021/01/09/performance-api/" class="article-date">
+  <time datetime="2021-01-09T13:52:41.000Z" itemprop="datePublished">2021-01-09</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/01/09/performance-api/">前端性能监控</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>前端性能参数，可以直接敲 <code>performance</code>。里面记录了各个性能指标。具体的各个参数，可以查看大佬们的<a target="_blank" rel="noopener" href="http://www.alloyteam.com/2015/09/explore-performance/#prettyPhoto">总结</a>。</p>
+<p>这里记录几个参数</p>
+<h4 id="1、首屏绘制（First-Paint，FP）"><a href="#1、首屏绘制（First-Paint，FP）" class="headerlink" title="1、首屏绘制（First Paint，FP）"></a>1、首屏绘制（First Paint，FP）</h4><p>就是白屏时间啦。</p>
+<pre><code class="js">performance.getEntriesByType(&#39;paint&#39;)[0]
+</code></pre>
+<h4 id="2、首屏内容绘制（First-Contentful-Paint，FCP）"><a href="#2、首屏内容绘制（First-Contentful-Paint，FCP）" class="headerlink" title="2、首屏内容绘制（First Contentful Paint，FCP）"></a>2、首屏内容绘制（First Contentful Paint，FCP）</h4><p>就是首屏加载时间啦</p>
+<pre><code class="js">performance.getEntriesByType(&#39;paint&#39;)[1]
+</code></pre>
+        
+          <p class="article-more-link">
+            <a href="/2021/01/09/performance-api/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      
+      <!-- <a data-url="https://blog.cchealthier.com/2021/01/09/performance-api/" data-id="cm3l53zux002o549m6f942ml0" class="article-share-link">分享</a> -->
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%80%A7%E8%83%BD/" rel="tag">性能</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-autumn" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2020/12/06/autumn/" class="article-date">
@@ -111,7 +166,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2020/12/06/autumn/" data-id="cm0t3mkvp00047d9m8inr17mo" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2020/12/06/autumn/" data-id="cm3l53zun0006549m7gd21igr" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -216,7 +271,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2020/12/06/webpack-speed/" data-id="cm0t3mkw500697d9maqcndk12" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2020/12/06/webpack-speed/" data-id="cm3l53zv1004j549mck5m7ad6" class="article-share-link">分享</a> -->
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" rel="tag">工程化</a></li></ul>
@@ -297,7 +352,7 @@ arr.slice(-2, -1) // [3]
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2020/11/29/api-defference/" data-id="cm0t3mkvp00067d9mgw5ugcxw" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2020/11/29/api-defference/" data-id="cm3l53zun0004549mau2maxgm" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -489,7 +544,7 @@ module.exports = CustomPlugin
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2020/11/22/webpack-config/" data-id="cm0t3mkw300477d9mhkx1f8t0" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2020/11/22/webpack-config/" data-id="cm3l53zv1004d549m8dbih5uz" class="article-share-link">分享</a> -->
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" rel="tag">工程化</a></li></ul>
@@ -501,126 +556,11 @@ module.exports = CustomPlugin
 
 
   
-    <article id="post-search" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/11/15/search/" class="article-date">
-  <time datetime="2020-11-15T02:41:59.000Z" itemprop="datePublished">2020-11-15</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E7%AE%97%E6%B3%95/">算法</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/11/15/search/">深度优先遍历(DFS)-栈和广度优先遍历(BFS)-队列的理解</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>JS版本的，概念什么的就不赘述了。参考了这位大佬的<a target="_blank" rel="noopener" href="https://segmentfault.com/a/1190000018706578">文章（JS算法之深度优先遍历(DFS)和广度优先遍历(BFS)）</a>。<br>在这里记录下自己的理解，为啥一个是栈，一个是队列。看码：</p>
-<pre><code class="html">&lt;div id=&quot;box&quot;&gt;
-  &lt;ul&gt;
-    &lt;li&gt;&lt;div&gt;&lt;p&gt;&lt;/p&gt;&lt;/div&gt;&lt;/li&gt;
-    &lt;li&gt;&lt;img /&gt;&lt;/li&gt;
-    &lt;li&gt;&lt;a&gt;&lt;/a&gt;&lt;/li&gt;
-  &lt;/ul&gt;
-  &lt;div&gt;
-    &lt;p&gt;1&lt;/p&gt;
-    &lt;p&gt;&lt;span&gt;&lt;strong&gt;&lt;/strong&gt;&lt;/span&gt;&lt;/p&gt;
-    &lt;p&gt;3&lt;/p&gt;
-  &lt;/div&gt;
-  &lt;button&gt;&lt;strong&gt;&lt;/strong&gt;&lt;/button&gt;
-&lt;/div&gt;
-</code></pre>
-<pre><code class="js">// 深度优先，用的是栈，同一边进出，后入先出
-function deepFirstSearch(node) &#123;
-  var nodes = []
-  if (node != null) &#123;
-    var stack = []
-    stack.push(node) // 第一个元素无论 push 还是 unshift 都一样，这里只是为了相呼应。
-    while(stack.length != 0) &#123;
-      // 最核心的差别在这里了
-      // 第一次进来：是[$box]，弹出来后都是为空
-      // 第二次进来: [button, div, ul]，然后 ul 被 pop 出去，收进结果数组 nodes 里
-      var item = stack.pop()
-      nodes.push(item)
-      var children = item.children
-      for (var i = children.length - 1; i &gt;= 0; i--) &#123;
-        // 这一步也是一样，把每个子节点放进去待遍历数组
-        // 把 $box 的子节点放进待选数组，此时是 [button, div, ul]
-        // 第一次 while 进来都是一样
-        // 这里先收集左边还是右边的子级意义都是一样的
-        // 这里是从先把 button 放进来，ul 最后，等下 pop 出去就是 ul 最先
-        stack.push(children[i])
-        // 点出 ul 的子级，收进 stack 的最后，下次 while 进来，pop 就会是 ul 的子级，也即是 li
-        // 然后再继续下去，还是会把 ul 的子级的子级，也就是 div，收进 stack 最后
-        // 也就是不断的子级优先，达成深挖
-      &#125;
-    &#125;
-  &#125;
-  return nodes
-&#125;
-
-// 广度优先，用的是队列，一边进另一边出，先入先出
-function breadthFirstSearch(node) &#123;
-  var nodes = []
-  if (node != null) &#123;
-    var queue = []
-    // 第一次进来：是[$box]，弹出来后都是为空
-    // 第二次进来：[button, div, ul]，然后 button 被 unshift 出去，收进结果数组 nodes 里
-    // 第三次进来：[div, ul, strong]，然后 div 被 unshift 出去，收进结果数组 nodes 里
-    // 第四次进来：[ul, strong, p, p, p]，然后 ul 被 unshift 出去，收进结果数组 nodes 里
-    // 可以看出跟深度的差别，点出子级都是排进待选数组的最后
-    // 但是深度是栈pop，加塞在数组最后的子级优先
-    // 广度是队列unshift，一起放进数组的兄弟级优先
-    queue.unshift(node)
-    while(queue.length != 0) &#123;
-      var item = queue.shift()
-      nodes.push(item)
-      var children = item.children
-      for (var i = children.length - 1; i &gt;= 0; i--) &#123;
-        queue.push(children[i])
-        // 对应上面第二次进来：点出 button 的子级，也就是 strong，收进 queue 的最后
-        // 但对 unshift 的结果没影响，下次 while 进来，unshift 依然是 div
-        // 对应上面第三次进来：点出 div 的子级，也就是 p，收进 queue 的最后
-      &#125;
-    &#125;
-  &#125;
-  return nodes
-&#125;
-</code></pre>
-<p>可以看出，就是在遍历时候暂存的数据结构不一样。<br><strong>深度优先</strong>，就是一直深挖，孩子的孩子的孩子…。<br><strong>广度优先</strong>，就是兄弟兄弟兄弟孩子兄弟…。需要注意的是，同级的就算兄弟。意思是相对于根级为孙子辈，就算不是同个父级，也算是兄弟级。</p>
-<p><strong>2022-10-18 21:31:18</strong><br>更新了一篇用 js 做遍历的<a href="/2022/10/18/deepth-breadth-traversal/">《深广度优先遍历》</a>。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      
-      <!-- <a data-url="https://blog.cchealthier.com/2020/11/15/search/" data-id="cm0t3mkw1003e7d9m52w408pn" class="article-share-link">分享</a> -->
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
 
 
   <nav id="page-nav">
     
-    <a class="extend prev" rel="prev" href="/page/6/">« 上一页</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="page-number" href="/page/6/">6</a><span class="page-number current">7</span><a class="page-number" href="/page/8/">8</a><a class="page-number" href="/page/9/">9</a><span class="space">&hellip;</span><a class="page-number" href="/page/12/">12</a><a class="extend next" rel="next" href="/page/8/">下一页 »</a>
+    <a class="extend prev" rel="prev" href="/page/6/">« 上一页</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="page-number" href="/page/6/">6</a><span class="page-number current">7</span><a class="page-number" href="/page/8/">8</a><a class="page-number" href="/page/9/">9</a><span class="space">&hellip;</span><a class="page-number" href="/page/13/">13</a><a class="extend next" rel="next" href="/page/8/">下一页 »</a>
   </nav>
 
 </section>
@@ -632,6 +572,10 @@ function breadthFirstSearch(node) &#123;
     <h3 class="widget-title">最新文章</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2024/11/17/node-ssr-app/">react、vue、solid 实现低代码 ssr 页面渲染</a>
+          </li>
         
           <li>
             <a href="/2024/09/01/import-sort/">js 几种导入依赖排序 import sort</a>
@@ -647,10 +591,6 @@ function breadthFirstSearch(node) &#123;
         
           <li>
             <a href="/2023/12/10/babel-ast-transform/">使用 babel ast 做代码转换</a>
-          </li>
-        
-          <li>
-            <a href="/2023/12/03/react-native-record/">react-native ios 流水账</a>
           </li>
         
       </ul>
@@ -672,7 +612,7 @@ function breadthFirstSearch(node) &#123;
   <div class="widget-wrap">
     <h3 class="widget-title">标签</h3>
     <div class="widget">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nginx/" rel="tag">nginx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/node/" rel="tag">node</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/react-native/" rel="tag">react-native</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" rel="tag">工程化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BE%AE%E5%89%8D%E7%AB%AF/" rel="tag">微前端</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%80%A7%E8%83%BD/" rel="tag">性能</a></li></ul>
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nginx/" rel="tag">nginx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/node/" rel="tag">node</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/react-native/" rel="tag">react-native</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ssr/" rel="tag">ssr</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" rel="tag">工程化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BE%AE%E5%89%8D%E7%AB%AF/" rel="tag">微前端</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%80%A7%E8%83%BD/" rel="tag">性能</a></li></ul>
     </div>
   </div>
 
@@ -682,7 +622,7 @@ function breadthFirstSearch(node) &#123;
   <div class="widget-wrap">
     <h3 class="widget-title">标签云</h3>
     <div class="widget tagcloud">
-      <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/nginx/" style="font-size: 12px;">nginx</a> <a href="/tags/node/" style="font-size: 16px;">node</a> <a href="/tags/react-native/" style="font-size: 14px;">react-native</a> <a href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" style="font-size: 20px;">工程化</a> <a href="/tags/%E5%BE%AE%E5%89%8D%E7%AB%AF/" style="font-size: 12px;">微前端</a> <a href="/tags/%E6%80%A7%E8%83%BD/" style="font-size: 18px;">性能</a>
+      <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/nginx/" style="font-size: 12.5px;">nginx</a> <a href="/tags/node/" style="font-size: 17.5px;">node</a> <a href="/tags/react-native/" style="font-size: 15px;">react-native</a> <a href="/tags/ssr/" style="font-size: 10px;">ssr</a> <a href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" style="font-size: 20px;">工程化</a> <a href="/tags/%E5%BE%AE%E5%89%8D%E7%AB%AF/" style="font-size: 12.5px;">微前端</a> <a href="/tags/%E6%80%A7%E8%83%BD/" style="font-size: 17.5px;">性能</a>
     </div>
   </div>
 
@@ -691,7 +631,7 @@ function breadthFirstSearch(node) &#123;
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/09/">九月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/08/">八月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/01/">一月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/12/">十二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/11/">十一月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/10/">十月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/09/">九月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/08/">八月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">七月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/06/">六月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/05/">五月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/04/">四月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/03/">三月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/02/">二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">十一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">十月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">九月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/11/">十一月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/09/">九月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/08/">八月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/01/">一月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/12/">十二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/11/">十一月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/10/">十月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/09/">九月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/08/">八月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">七月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/06/">六月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/05/">五月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/04/">四月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/03/">三月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/02/">二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">十一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">十月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">九月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a></li></ul>
     </div>
   </div>
 
