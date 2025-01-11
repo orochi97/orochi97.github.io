@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="baidu-site-verification" content="codeva-nIjDp6ZZc0" />
+  <meta name="referrer" content="no-referrer"/>
+  <meta charset="utf-8">
+  
+
+  
+  <title>chrome 插件基础模板 | 凝雪密境</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="一直以来，都觉得 chrome 插件挺方便的，可以做出灵活又好用的工具。工作中也接触过一些插件的开发，但是都没有系统的了解下。这次花点时间记录下。 因为刚好发现这个工具《What is CRXJS》，用 vite 做开发工具，支持前端框架有 react、vue、solid 等。这样一来就省了很多事了，chrome 插件也可以使用漂漂亮亮的组件库了。 具体有《官方文档》，这里记录一下快速使用的点。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="chrome 插件基础模板">
+<meta property="og:url" content="https://blog.cchealthier.com/2025/01/11/chrome-extension-plugin/index.html">
+<meta property="og:site_name" content="凝雪密境">
+<meta property="og:description" content="一直以来，都觉得 chrome 插件挺方便的，可以做出灵活又好用的工具。工作中也接触过一些插件的开发，但是都没有系统的了解下。这次花点时间记录下。 因为刚好发现这个工具《What is CRXJS》，用 vite 做开发工具，支持前端框架有 react、vue、solid 等。这样一来就省了很多事了，chrome 插件也可以使用漂漂亮亮的组件库了。 具体有《官方文档》，这里记录一下快速使用的点。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-01-11T13:13:03.000Z">
+<meta property="article:modified_time" content="2025-01-11T14:16:36.517Z">
+<meta property="article:author" content="ChrisIori">
+<meta property="article:tag" content="chrome 插件">
+<meta name="twitter:card" content="summary">
+  
+  
+    <link rel="icon" href="/favicon.ico">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  <link href="https://www.jq22.com/demo/jqueryToast201708310012/css/toast.style.css" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="/css/highlight/styles/monokai-sublime.min.css">
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">凝雪密境</a>
+      </h1>
+      
+        <div id="avatar" style="background-image: url( /avatar.jpg )">
+          <div class="container">
+            <div class="ball wind"></div>
+            <div class="ball fire"></div>
+            <div class="ball water"></div>
+            <div class="ball soil"></div>
+          </div>
+        </div>
+      
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">首页</a>
+        
+          <a class="main-nav-link" href="/archives">归档</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://blog.cchealthier.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-chrome-extension-plugin" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2025/01/11/chrome-extension-plugin/" class="article-date">
+  <time datetime="2025-01-11T13:13:03.000Z" itemprop="datePublished">2025-01-11</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      chrome 插件基础模板
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>一直以来，都觉得 chrome 插件挺方便的，可以做出灵活又好用的工具。工作中也接触过一些插件的开发，但是都没有系统的了解下。这次花点时间记录下。</p>
+<p>因为刚好发现这个工具《<a target="_blank" rel="noopener" href="https://crxjs.dev/vite-plugin">What is CRXJS</a>》，用 vite 做开发工具，支持前端框架有 react、vue、solid 等。这样一来就省了很多事了，chrome 插件也可以使用漂漂亮亮的组件库了。</p>
+<p>具体有《<a target="_blank" rel="noopener" href="https://developer.chrome.com/docs/extensions/get-started/tutorial/hello-world?hl=zh-cn">官方文档</a>》，这里记录一下快速使用的点。</p>
+<p>工程地址：《<a target="_blank" rel="noopener" href="https://github.com/orochi97/chrome-extension-plugin-demo">chrome-extension-plugin-demo</a>》</p>
+<p><strong>注意：</strong><br><strong>1. 最新 chrome 浏览器版本已经禁止的 manifest_version 2 版本的使用了，现在开始都是 3 了。</strong><br><strong>2. 这个 @crxjs&#x2F;vite-plugin 工具要使用 beta 版本，latest 在 manifest_version 3 会因为资源安全问题加载报错。</strong></p>
+<h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>以 <code>manifest</code> 的字段为介绍：</p>
+<pre><code class="json">&#123;
+  &quot;manifest_version&quot;: 3,
+  &quot;name&quot;: &quot;Chrome Extension&quot;,
+  &quot;version&quot;: &quot;1.0.0&quot;,
+  &quot;description&quot;: &quot;Chrome Extension React Vite Example&quot;,
+  &quot;permissions&quot;: [&quot;tabs&quot;, &quot;notifications&quot;],
+  &quot;action&quot;: &#123;
+    &quot;default_popup&quot;: &quot;src/popup/index.html&quot;,
+    &quot;default_icon&quot;: &quot;src/assets/images/icon.png&quot;
+  &#125;,
+  &quot;icons&quot;: &#123;
+    &quot;16&quot;: &quot;src/assets/images/icon-16.png&quot;,
+    &quot;32&quot;: &quot;src/assets/images/icon-32.png&quot;,
+    &quot;48&quot;: &quot;src/assets/images/icon-48.png&quot;,
+    &quot;128&quot;: &quot;src/assets/images/icon-128.png&quot;
+  &#125;,
+  &quot;background&quot;: &#123;
+    &quot;service_worker&quot;: &quot;src/background/index.ts&quot;,
+    &quot;type&quot;: &quot;module&quot;
+  &#125;,
+  &quot;content_scripts&quot;: [
+    &#123;
+      &quot;js&quot;: [&quot;src/scripts/content.ts&quot;],
+      &quot;matches&quot;: [&quot;&lt;all_urls&gt;&quot;]
+    &#125;
+  ]
+&#125;
+</code></pre>
+<ul>
+<li>permissions：声明要开通的模块，不然调用 api 会失败。</li>
+<li>action：就是右上角插件面板里，那个按钮点击后弹出框的入口文件和显示图标。</li>
+<li>background：后台运行的代码，这里可以调用的 api 更全一点。可以指定以 es module 模式加载。</li>
+<li>content_scripts：会嵌入到当前访问网站里，可以读取当前网站的 dom，storage 等，实际就是当前网站的一部分了。matches 可以指定哪些网站可以嵌入。具体可以看《<a target="_blank" rel="noopener" href="https://developer.chrome.com/docs/extensions/develop/concepts/match-patterns?hl=zh-cn">匹配模式</a>》。</li>
+</ul>
+<p>示例工程，用了多页面，但是这个 @crxjs&#x2F;vite-plugin 只默认加载了 action 做入口文件。所以要自己配一下其它入口页面。</p>
+<pre><code class="ts">import &#123; resolve &#125; from &#39;node:path&#39;;
+import &#123; defineConfig &#125; from &#39;vite&#39;;
+import react from &#39;@vitejs/plugin-react&#39;;
+import &#123; crx, type ManifestV3Export &#125; from &#39;@crxjs/vite-plugin&#39;;
+import manifest from &#39;./manifest.json&#39;;
+
+export default defineConfig(&#123;
+  plugins: [react(), crx(&#123; manifest: manifest as ManifestV3Export &#125;)],
+  build: &#123;
+    rollupOptions: &#123;
+      input: &#123;
+        main: resolve(__dirname, &#39;src/main/index.html&#39;),
+      &#125;,
+    &#125;,
+  &#125;,
+&#125;);
+</code></pre>
+<h3 id="开发"><a href="#开发" class="headerlink" title="开发"></a>开发</h3><p>像往常一样启动 vite 工程就行，只不过配置了开发时也把文件存在硬盘，因为要丢到插件库里去运行。执行 <code>pnpm dev</code> 后就会产出 <code>dist</code> 文件夹，浏览器打开 <code>chrome://extensions/</code>，然后把整个 dist 文件夹往浏览器界面拖就行。当然右上角的开发者模式要打开。<br>chrome:&#x2F;&#x2F;extensions 页面 “所有扩展程序” 下，有自己的开发程序那就是成功了。大部分代码更新都是可以马上生效不需要刷新加载的。改了配置之类的就得刷新加载，此时点击该插件面板右下角的刷新按钮就行了。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      
+        <a data-url="https://blog.cchealthier.com/2025/01/11/chrome-extension-plugin/" data-id="cm5s9thvs000kg99m1jci5a2t" class="article-thumbs-up">赞一个(<span class="article-thumbs-up-num">0</span>)</a>
+      
+      <!-- <a data-url="https://blog.cchealthier.com/2025/01/11/chrome-extension-plugin/" data-id="cm5s9thvs000kg99m1jci5a2t" class="article-share-link">分享</a> -->
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/chrome-%E6%8F%92%E4%BB%B6/" rel="tag">chrome 插件</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2024/11/17/node-ssr-app/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">react、vue、solid 实现低代码 ssr 页面渲染</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2025/01/11/chrome-extension-plugin/">chrome 插件基础模板</a>
+          </li>
+        
+          <li>
+            <a href="/2024/11/17/node-ssr-app/">react、vue、solid 实现低代码 ssr 页面渲染</a>
+          </li>
+        
+          <li>
+            <a href="/2024/09/01/import-sort/">js 几种导入依赖排序 import sort</a>
+          </li>
+        
+          <li>
+            <a href="/2024/08/17/dependency-injection-inversify/">依赖反转/注入与 IOC 容器 inversify</a>
+          </li>
+        
+          <li>
+            <a href="/2024/01/12/android-rn-integrate/">android 原生应用集成 react-native</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/http%E5%8D%8F%E8%AE%AE/">http协议</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/%E6%9C%8D%E5%8A%A1/">服务</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91/%E7%AE%97%E6%B3%95/">算法</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%97%85%E8%A1%8C/">旅行</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%97%85%E8%A1%8C/%E8%AE%B0%E5%BD%95/">记录</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%83%B9%E9%A5%AA/">烹饪</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%83%B9%E9%A5%AA/%E4%BC%A0%E7%BB%9F/">传统</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%9A%8F%E6%83%B3/">随想</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%9A%8F%E6%83%B3/%E5%BF%83%E6%83%85/">心情</a></li></ul></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/chrome-%E6%8F%92%E4%BB%B6/" rel="tag">chrome 插件</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nginx/" rel="tag">nginx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/node/" rel="tag">node</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/react-native/" rel="tag">react-native</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ssr/" rel="tag">ssr</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" rel="tag">工程化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BE%AE%E5%89%8D%E7%AB%AF/" rel="tag">微前端</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%80%A7%E8%83%BD/" rel="tag">性能</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/chrome-%E6%8F%92%E4%BB%B6/" style="font-size: 10px;">chrome 插件</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/nginx/" style="font-size: 12.5px;">nginx</a> <a href="/tags/node/" style="font-size: 17.5px;">node</a> <a href="/tags/react-native/" style="font-size: 15px;">react-native</a> <a href="/tags/ssr/" style="font-size: 10px;">ssr</a> <a href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" style="font-size: 20px;">工程化</a> <a href="/tags/%E5%BE%AE%E5%89%8D%E7%AB%AF/" style="font-size: 12.5px;">微前端</a> <a href="/tags/%E6%80%A7%E8%83%BD/" style="font-size: 17.5px;">性能</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2025/01/">一月 2025</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/11/">十一月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/09/">九月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/08/">八月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/01/">一月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/12/">十二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/11/">十一月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/10/">十月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/09/">九月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/08/">八月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">七月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/06/">六月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/05/">五月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/04/">四月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/03/">三月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/02/">二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">十一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">十月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">九月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a></li></ul>
+    </div>
+  </div>
+
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2025 ChrisIori<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">首页</a>
+  
+    <a href="/archives" class="mobile-nav-link">归档</a>
+  
+</nav>
+    
+
+<script src="//cdn.staticfile.org/jquery/2.0.3/jquery.min.js"></script>
+<script type="text/javascript" src="https://www.jq22.com/demo/jqueryToast201708310012/js/toast.script.js"></script>
+<script src="/js/highlight.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlightjs-line-numbers.js/2.8.0/highlightjs-line-numbers.min.js"></script>
+<script>
+  $(function(){
+    $('pre code').each((i, el) => {
+    hljs.highlightElement(el);
+  });
+  $('code.hljs').each(function(i, el) {
+     hljs.lineNumbersBlock(el);
+  });
+  }());
+</script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>

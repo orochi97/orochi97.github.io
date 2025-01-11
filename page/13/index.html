@@ -74,6 +74,76 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-hexo-githubpage" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/05/03/hexo-githubpage/" class="article-date">
+  <time datetime="2020-05-03T09:30:27.000Z" itemprop="datePublished">2020-05-03</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/05/03/hexo-githubpage/">Hexo结合Github Page注意点</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>新手记录一些使用 hexo 和 Github Page 搭建个人空间遇到的。<br>其实不难，只是为了找个地方记录下来，方便后面可能的再次搭建。</p>
+<h2 id="一、Github-Page"><a href="#一、Github-Page" class="headerlink" title="一、Github Page"></a>一、Github Page</h2><h3 id="1、使用-username-github-io"><a href="#1、使用-username-github-io" class="headerlink" title="1、使用 username.github.io"></a>1、使用 username.github.io</h3><p>如果想通过 username.github.io 就访问到相应的静态页面，那么必须有一个 username.github.io 名字的项目。<br>username 指的是个人或者组织的名字。如下图第一个红框是用户的名字，则第二个红框处必须一模一样。</p>
+<img src="/2020/05/03/hexo-githubpage/img1.png" class="" title="github_page">
+
+<h3 id="2、使用-username-github-io-x2F-projectName"><a href="#2、使用-username-github-io-x2F-projectName" class="headerlink" title="2、使用 username.github.io&#x2F;projectName"></a>2、使用 username.github.io&#x2F;projectName</h3><p>主的 username.github.io 域名只对应一个项目，其他项目就通过 username.github.io&#x2F;项目名 来访问。</p>
+<h3 id="3、使用自定义域名"><a href="#3、使用自定义域名" class="headerlink" title="3、使用自定义域名"></a>3、使用自定义域名</h3><p>由于是直接在阿里云买的域名，所以对应的阿里云的操作，其他平台不确定。</p>
+<ul>
+<li><p>首先购买一个域名，进入域名服务</p>
+<img src="/2020/05/03/hexo-githubpage/img2.png" class="" title="阿里云域名">
+</li>
+<li><p>添加下图两道记录，1的ip是 ping 2 的域名出来</p>
+<img src="/2020/05/03/hexo-githubpage/img3.png" class="" title="阿里云域名2">
+</li>
+<li><p>进入 github 项目，右上方的 setting，到下图的地方设置相应域名。这个博客域名是买的域名的二级域名。</p>
+<img src="/2020/05/03/hexo-githubpage/img4.png" class="" title="custom_domain"></li>
+</ul>
+<h2 id="二、Hexo"><a href="#二、Hexo" class="headerlink" title="二、Hexo"></a>二、Hexo</h2><h3 id="1、设置-config-yml"><a href="#1、设置-config-yml" class="headerlink" title="1、设置_config.yml"></a>1、设置_config.yml</h3><ul>
+<li>打开 hexo 项目下的 _config.yml，进行下图设置，git的地址就是使用的工程地址。<img src="/2020/05/03/hexo-githubpage/img5.png" class="" title="_config.yml"></li>
+</ul>
+<h3 id="2、CNAME"><a href="#2、CNAME" class="headerlink" title="2、CNAME"></a>2、CNAME</h3><ul>
+<li><p>上面的工程 setting 部分，实际上就是在工程根目录创建了一份CNAME名字的文件，没有后缀的文件类型。里面的内容为设置的那个二级域名，也就是原来是访问 username.github.io 地址的，就会跳到自定义的域名。</p>
+</li>
+<li><p>为了防止每次部署都会清除掉该文件，从而要重复设置，可以将 CNAME 文件防止到 source 文件里，到时会依样拷贝过去。</p>
+</li>
+</ul>
+<hr>
+<p>相关传送门：<br><a target="_blank" rel="noopener" href="https://hexo.io/zh-cn/">Hexo</a><br><a target="_blank" rel="noopener" href="https://pages.github.com/">Github Page</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      
+      <!-- <a data-url="https://blog.cchealthier.com/2020/05/03/hexo-githubpage/" data-id="cm5s9thvv0018g99mbxlr74ac" class="article-share-link">分享</a> -->
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/hexo/" rel="tag">hexo</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-hello-world" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2020/05/03/hello-world/" class="article-date">
@@ -114,7 +184,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2020/05/03/hello-world/" data-id="cm3l53zus000z549mcaq264wf" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2020/05/03/hello-world/" data-id="cm5s9thvu0014g99m7dym5kdv" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -142,6 +212,10 @@
       <ul>
         
           <li>
+            <a href="/2025/01/11/chrome-extension-plugin/">chrome 插件基础模板</a>
+          </li>
+        
+          <li>
             <a href="/2024/11/17/node-ssr-app/">react、vue、solid 实现低代码 ssr 页面渲染</a>
           </li>
         
@@ -155,10 +229,6 @@
         
           <li>
             <a href="/2024/01/12/android-rn-integrate/">android 原生应用集成 react-native</a>
-          </li>
-        
-          <li>
-            <a href="/2023/12/10/babel-ast-transform/">使用 babel ast 做代码转换</a>
           </li>
         
       </ul>
@@ -180,7 +250,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">标签</h3>
     <div class="widget">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nginx/" rel="tag">nginx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/node/" rel="tag">node</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/react-native/" rel="tag">react-native</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ssr/" rel="tag">ssr</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" rel="tag">工程化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BE%AE%E5%89%8D%E7%AB%AF/" rel="tag">微前端</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%80%A7%E8%83%BD/" rel="tag">性能</a></li></ul>
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/chrome-%E6%8F%92%E4%BB%B6/" rel="tag">chrome 插件</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nginx/" rel="tag">nginx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/node/" rel="tag">node</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/react-native/" rel="tag">react-native</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ssr/" rel="tag">ssr</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" rel="tag">工程化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BE%AE%E5%89%8D%E7%AB%AF/" rel="tag">微前端</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%80%A7%E8%83%BD/" rel="tag">性能</a></li></ul>
     </div>
   </div>
 
@@ -190,7 +260,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">标签云</h3>
     <div class="widget tagcloud">
-      <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/nginx/" style="font-size: 12.5px;">nginx</a> <a href="/tags/node/" style="font-size: 17.5px;">node</a> <a href="/tags/react-native/" style="font-size: 15px;">react-native</a> <a href="/tags/ssr/" style="font-size: 10px;">ssr</a> <a href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" style="font-size: 20px;">工程化</a> <a href="/tags/%E5%BE%AE%E5%89%8D%E7%AB%AF/" style="font-size: 12.5px;">微前端</a> <a href="/tags/%E6%80%A7%E8%83%BD/" style="font-size: 17.5px;">性能</a>
+      <a href="/tags/chrome-%E6%8F%92%E4%BB%B6/" style="font-size: 10px;">chrome 插件</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/nginx/" style="font-size: 12.5px;">nginx</a> <a href="/tags/node/" style="font-size: 17.5px;">node</a> <a href="/tags/react-native/" style="font-size: 15px;">react-native</a> <a href="/tags/ssr/" style="font-size: 10px;">ssr</a> <a href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" style="font-size: 20px;">工程化</a> <a href="/tags/%E5%BE%AE%E5%89%8D%E7%AB%AF/" style="font-size: 12.5px;">微前端</a> <a href="/tags/%E6%80%A7%E8%83%BD/" style="font-size: 17.5px;">性能</a>
     </div>
   </div>
 
@@ -199,7 +269,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/11/">十一月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/09/">九月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/08/">八月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/01/">一月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/12/">十二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/11/">十一月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/10/">十月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/09/">九月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/08/">八月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">七月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/06/">六月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/05/">五月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/04/">四月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/03/">三月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/02/">二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">十一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">十月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">九月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2025/01/">一月 2025</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/11/">十一月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/09/">九月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/08/">八月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/01/">一月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/12/">十二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/11/">十一月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/10/">十月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/09/">九月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/08/">八月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">七月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/06/">六月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/05/">五月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/04/">四月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/03/">三月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/02/">二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">十一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">十月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">九月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a></li></ul>
     </div>
   </div>
 
@@ -212,7 +282,7 @@
   
   <div class="outer">
     <div id="footer-info" class="inner">
-      &copy; 2024 ChrisIori<br>
+      &copy; 2025 ChrisIori<br>
       Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
     </div>
   </div>

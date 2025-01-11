@@ -74,6 +74,108 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-chrome-extension-plugin" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2025/01/11/chrome-extension-plugin/" class="article-date">
+  <time datetime="2025-01-11T13:13:03.000Z" itemprop="datePublished">2025-01-11</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2025/01/11/chrome-extension-plugin/">chrome 插件基础模板</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>一直以来，都觉得 chrome 插件挺方便的，可以做出灵活又好用的工具。工作中也接触过一些插件的开发，但是都没有系统的了解下。这次花点时间记录下。</p>
+<p>因为刚好发现这个工具《<a target="_blank" rel="noopener" href="https://crxjs.dev/vite-plugin">What is CRXJS</a>》，用 vite 做开发工具，支持前端框架有 react、vue、solid 等。这样一来就省了很多事了，chrome 插件也可以使用漂漂亮亮的组件库了。</p>
+<p>具体有《<a target="_blank" rel="noopener" href="https://developer.chrome.com/docs/extensions/get-started/tutorial/hello-world?hl=zh-cn">官方文档</a>》，这里记录一下快速使用的点。</p>
+<p>工程地址：《<a target="_blank" rel="noopener" href="https://github.com/orochi97/chrome-extension-plugin-demo">chrome-extension-plugin-demo</a>》</p>
+<p><strong>注意：</strong><br><strong>1. 最新 chrome 浏览器版本已经禁止的 manifest_version 2 版本的使用了，现在开始都是 3 了。</strong><br><strong>2. 这个 @crxjs&#x2F;vite-plugin 工具要使用 beta 版本，latest 在 manifest_version 3 会因为资源安全问题加载报错。</strong></p>
+<h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>以 <code>manifest</code> 的字段为介绍：</p>
+<pre><code class="json">&#123;
+  &quot;manifest_version&quot;: 3,
+  &quot;name&quot;: &quot;Chrome Extension&quot;,
+  &quot;version&quot;: &quot;1.0.0&quot;,
+  &quot;description&quot;: &quot;Chrome Extension React Vite Example&quot;,
+  &quot;permissions&quot;: [&quot;tabs&quot;, &quot;notifications&quot;],
+  &quot;action&quot;: &#123;
+    &quot;default_popup&quot;: &quot;src/popup/index.html&quot;,
+    &quot;default_icon&quot;: &quot;src/assets/images/icon.png&quot;
+  &#125;,
+  &quot;icons&quot;: &#123;
+    &quot;16&quot;: &quot;src/assets/images/icon-16.png&quot;,
+    &quot;32&quot;: &quot;src/assets/images/icon-32.png&quot;,
+    &quot;48&quot;: &quot;src/assets/images/icon-48.png&quot;,
+    &quot;128&quot;: &quot;src/assets/images/icon-128.png&quot;
+  &#125;,
+  &quot;background&quot;: &#123;
+    &quot;service_worker&quot;: &quot;src/background/index.ts&quot;,
+    &quot;type&quot;: &quot;module&quot;
+  &#125;,
+  &quot;content_scripts&quot;: [
+    &#123;
+      &quot;js&quot;: [&quot;src/scripts/content.ts&quot;],
+      &quot;matches&quot;: [&quot;&lt;all_urls&gt;&quot;]
+    &#125;
+  ]
+&#125;
+</code></pre>
+<ul>
+<li>permissions：声明要开通的模块，不然调用 api 会失败。</li>
+<li>action：就是右上角插件面板里，那个按钮点击后弹出框的入口文件和显示图标。</li>
+<li>background：后台运行的代码，这里可以调用的 api 更全一点。可以指定以 es module 模式加载。</li>
+<li>content_scripts：会嵌入到当前访问网站里，可以读取当前网站的 dom，storage 等，实际就是当前网站的一部分了。matches 可以指定哪些网站可以嵌入。具体可以看《<a target="_blank" rel="noopener" href="https://developer.chrome.com/docs/extensions/develop/concepts/match-patterns?hl=zh-cn">匹配模式</a>》。</li>
+</ul>
+<p>示例工程，用了多页面，但是这个 @crxjs&#x2F;vite-plugin 只默认加载了 action 做入口文件。所以要自己配一下其它入口页面。</p>
+<pre><code class="ts">import &#123; resolve &#125; from &#39;node:path&#39;;
+import &#123; defineConfig &#125; from &#39;vite&#39;;
+import react from &#39;@vitejs/plugin-react&#39;;
+import &#123; crx, type ManifestV3Export &#125; from &#39;@crxjs/vite-plugin&#39;;
+import manifest from &#39;./manifest.json&#39;;
+
+export default defineConfig(&#123;
+  plugins: [react(), crx(&#123; manifest: manifest as ManifestV3Export &#125;)],
+  build: &#123;
+    rollupOptions: &#123;
+      input: &#123;
+        main: resolve(__dirname, &#39;src/main/index.html&#39;),
+      &#125;,
+    &#125;,
+  &#125;,
+&#125;);
+</code></pre>
+<h3 id="开发"><a href="#开发" class="headerlink" title="开发"></a>开发</h3><p>像往常一样启动 vite 工程就行，只不过配置了开发时也把文件存在硬盘，因为要丢到插件库里去运行。执行 <code>pnpm dev</code> 后就会产出 <code>dist</code> 文件夹，浏览器打开 <code>chrome://extensions/</code>，然后把整个 dist 文件夹往浏览器界面拖就行。当然右上角的开发者模式要打开。<br>chrome:&#x2F;&#x2F;extensions 页面 “所有扩展程序” 下，有自己的开发程序那就是成功了。大部分代码更新都是可以马上生效不需要刷新加载的。改了配置之类的就得刷新加载，此时点击该插件面板右下角的刷新按钮就行了。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      
+      <!-- <a data-url="https://blog.cchealthier.com/2025/01/11/chrome-extension-plugin/" data-id="cm5s9thvs000kg99m1jci5a2t" class="article-share-link">分享</a> -->
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/chrome-%E6%8F%92%E4%BB%B6/" rel="tag">chrome 插件</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-node-ssr-app" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2024/11/17/node-ssr-app/" class="article-date">
@@ -128,14 +230,16 @@
 </ul>
 </li>
 </ul>
+<p><strong>对于逻辑编排的实现，我这里直接采用写代码的方式了。</strong></p>
 <h3 id="后话"><a href="#后话" class="headerlink" title="后话"></a>后话</h3><p>实际上我们还支持了 <a target="_blank" rel="noopener" href="https://qwik.dev/">qwik.js</a>，据说是个 ssr 很厉害的框架。同时还支持 <a target="_blank" rel="noopener" href="https://reactnative.dev/">react-native</a>，就是把 html 的 dom 标签，替换成 rn 提供的原生组件。这个适配巨复杂，本来就是个原生应用，只是改成开发像前端。也写了相关几篇文章：《<a href="/2023/12/03/react-native-record/">react-native ios 流水账</a>》、《<a href="/2023/11/24/ios-rn-integrate/">ios 原生应用集成 react-native</a>》、《<a href="/2024/01/12/android-rn-integrate/">android 原生应用集成 react-native</a>》。</p>
 <p>其实也是为了适配而适配，真正用的就是一套就够了。而且组件库一般也不会从基础搭建起，都是使用现有的组件库，最多改点东西适配一下。</p>
+<p>真的有这种适配多框架的需求，可以用这个「<a target="_blank" rel="noopener" href="https://mitosis.builder.io/docs/overview/">Mitosis</a>」，用 jsx 写组件，可以编译成多个前端库的对应组件，包括：Angular, React, Qwik, Vue, Svelte, Solid, and React Native。也就是按照它要求的有一定约束的写法，就是写出一套适配多框架的组件库。</p>
 
       
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2024/11/17/node-ssr-app/" data-id="cm3l53zux002g549m4rmf322y" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2024/11/17/node-ssr-app/" data-id="cm5s9thvz002og99mfxkzhycp" class="article-share-link">分享</a> -->
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/node/" rel="tag">node</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ssr/" rel="tag">ssr</a></li></ul>
@@ -240,7 +344,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2024/09/01/import-sort/" data-id="cm3l53zut001b549m4kt7g34o" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2024/09/01/import-sort/" data-id="cm5s9thvw001mg99m1qloa8fa" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -343,7 +447,7 @@ public class UserService &#123;
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2024/08/17/dependency-injection-inversify/" data-id="cm3l53zur000o549m9x5tc9k2" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2024/08/17/dependency-injection-inversify/" data-id="cm5s9thvt000pg99mf1bcd4sx" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -500,76 +604,10 @@ public class MyReactActivity extends AppCompatActivity implements DefaultHardwar
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2024/01/12/android-rn-integrate/" data-id="cm3l53zum0003549m554h2gy5" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2024/01/12/android-rn-integrate/" data-id="cm5s9thvo0003g99m9k7c8qvj" class="article-share-link">分享</a> -->
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/react-native/" rel="tag">react-native</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-babel-ast-transform" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2023/12/10/babel-ast-transform/" class="article-date">
-  <time datetime="2023-12-10T08:33:11.000Z" itemprop="datePublished">2023-12-10</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2023/12/10/babel-ast-transform/">使用 babel ast 做代码转换</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>现在对 ast（abstract syntax tree 虚拟语法树）应该也不陌生了。像 vue react 开发所写的非浏览器标准的代码，最后都是转化成符合标准的代码，都是中间靠这个处理。也包括小程序，react-native 这些也是要经过同样处理转换。</p>
-<p>ast 三板斧：parse（解析）-&gt; transform（转换）-&gt; generate（生成）。<br>听起来有点像变形金刚，我在想法术里的变身是不是原理也是这样：实体拆散成原子，原子转换变形，然后再重新组合。哈哈。</p>
-<p>ast 工具其实很多，babel 应该是前端接触较多较早的一个，毕竟很长一段时间内都是它在帮着处理前端的编译。babel 对于上面三板斧拆成了三个工具：<a target="_blank" rel="noopener" href="https://babeljs.io/docs/babel-parser">@babel&#x2F;parser</a>，<a target="_blank" rel="noopener" href="https://babeljs.io/docs/babel-traverse">@babel&#x2F;traverse</a>，<a target="_blank" rel="noopener" href="https://babeljs.io/docs/babel-generator">@babel&#x2F;generator</a>。<br>乍看之下，其它两个都对得上，好像 transform 不太对。其实转换规则是自己定的，babel 也不知道使用者要转成啥，所以它提供了一个 traverse 工具，用来方便获取节点。因为 ast 是一串层级深又复杂的对象，很难自己手动找到想要的节点，所以提供了一个遍历工具。</p>
-<p>当然有个遍历工具还是不够，最好还是搭配一个很牛网站：<a target="_blank" rel="noopener" href="https://www.astexplorer.net/">https://www.astexplorer.net</a> 可以直接左边输入源代码，右边看结构树。从这个网站里可以看到其实还有很多别的 ast 工具，每个工具都有自己的节点定义。</p>
-<h2 id="实践"><a href="#实践" class="headerlink" title="实践"></a>实践</h2><p>现在尝试进行一段代码的转换：</p>
-<pre><code class="js">// input:
-import Input from &#39;./Input&#39;;
-export const Component = (props) =&gt; &lt;div&gt;&lt;Input onChange=&#123;props.onChange&#125; /&gt;&lt;/div&gt;;
-
-// output:
-import &#123; Input &#125; from &#39;./Input&#39;;
-const map = &#123;
-  run: () =&gt; &#123;&#125;
-&#125;;
-export default function Component(props) &#123;
-  return &lt;div&gt;&lt;Input onChange=&#123;map[props.method]&#125; /&gt;&lt;/div&gt;;
-&#125;
-</code></pre>
-<p>就是，1、把 import default 导出变成解构导出，2、把 export 分散导出变成 default 导出，3、把事件的触发函数变成调用一个事件映射的属性。</p>
-        
-          <p class="article-more-link">
-            <a href="/2023/12/10/babel-ast-transform/#more">Read More</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      
-      <!-- <a data-url="https://blog.cchealthier.com/2023/12/10/babel-ast-transform/" data-id="cm3l53zuo0008549mflrtdfeb" class="article-share-link">分享</a> -->
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/node/" rel="tag">node</a></li></ul>
 
     </footer>
   </div>
@@ -596,6 +634,10 @@ export default function Component(props) &#123;
       <ul>
         
           <li>
+            <a href="/2025/01/11/chrome-extension-plugin/">chrome 插件基础模板</a>
+          </li>
+        
+          <li>
             <a href="/2024/11/17/node-ssr-app/">react、vue、solid 实现低代码 ssr 页面渲染</a>
           </li>
         
@@ -609,10 +651,6 @@ export default function Component(props) &#123;
         
           <li>
             <a href="/2024/01/12/android-rn-integrate/">android 原生应用集成 react-native</a>
-          </li>
-        
-          <li>
-            <a href="/2023/12/10/babel-ast-transform/">使用 babel ast 做代码转换</a>
           </li>
         
       </ul>
@@ -634,7 +672,7 @@ export default function Component(props) &#123;
   <div class="widget-wrap">
     <h3 class="widget-title">标签</h3>
     <div class="widget">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nginx/" rel="tag">nginx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/node/" rel="tag">node</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/react-native/" rel="tag">react-native</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ssr/" rel="tag">ssr</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" rel="tag">工程化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BE%AE%E5%89%8D%E7%AB%AF/" rel="tag">微前端</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%80%A7%E8%83%BD/" rel="tag">性能</a></li></ul>
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/chrome-%E6%8F%92%E4%BB%B6/" rel="tag">chrome 插件</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nginx/" rel="tag">nginx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/node/" rel="tag">node</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/react-native/" rel="tag">react-native</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ssr/" rel="tag">ssr</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" rel="tag">工程化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BE%AE%E5%89%8D%E7%AB%AF/" rel="tag">微前端</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%80%A7%E8%83%BD/" rel="tag">性能</a></li></ul>
     </div>
   </div>
 
@@ -644,7 +682,7 @@ export default function Component(props) &#123;
   <div class="widget-wrap">
     <h3 class="widget-title">标签云</h3>
     <div class="widget tagcloud">
-      <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/nginx/" style="font-size: 12.5px;">nginx</a> <a href="/tags/node/" style="font-size: 17.5px;">node</a> <a href="/tags/react-native/" style="font-size: 15px;">react-native</a> <a href="/tags/ssr/" style="font-size: 10px;">ssr</a> <a href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" style="font-size: 20px;">工程化</a> <a href="/tags/%E5%BE%AE%E5%89%8D%E7%AB%AF/" style="font-size: 12.5px;">微前端</a> <a href="/tags/%E6%80%A7%E8%83%BD/" style="font-size: 17.5px;">性能</a>
+      <a href="/tags/chrome-%E6%8F%92%E4%BB%B6/" style="font-size: 10px;">chrome 插件</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/nginx/" style="font-size: 12.5px;">nginx</a> <a href="/tags/node/" style="font-size: 17.5px;">node</a> <a href="/tags/react-native/" style="font-size: 15px;">react-native</a> <a href="/tags/ssr/" style="font-size: 10px;">ssr</a> <a href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" style="font-size: 20px;">工程化</a> <a href="/tags/%E5%BE%AE%E5%89%8D%E7%AB%AF/" style="font-size: 12.5px;">微前端</a> <a href="/tags/%E6%80%A7%E8%83%BD/" style="font-size: 17.5px;">性能</a>
     </div>
   </div>
 
@@ -653,7 +691,7 @@ export default function Component(props) &#123;
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/11/">十一月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/09/">九月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/08/">八月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/01/">一月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/12/">十二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/11/">十一月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/10/">十月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/09/">九月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/08/">八月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">七月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/06/">六月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/05/">五月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/04/">四月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/03/">三月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/02/">二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">十一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">十月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">九月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2025/01/">一月 2025</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/11/">十一月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/09/">九月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/08/">八月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/01/">一月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/12/">十二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/11/">十一月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/10/">十月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/09/">九月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/08/">八月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">七月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/06/">六月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/05/">五月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/04/">四月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/03/">三月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/02/">二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">十一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">十月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">九月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a></li></ul>
     </div>
   </div>
 
@@ -666,7 +704,7 @@ export default function Component(props) &#123;
   
   <div class="outer">
     <div id="footer-info" class="inner">
-      &copy; 2024 ChrisIori<br>
+      &copy; 2025 ChrisIori<br>
       Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
     </div>
   </div>
