@@ -17,7 +17,7 @@
 <meta property="og:description" content="项目做了个低代码平台，复盘下，本地实现一个丐版。主要是实现渲染部分，没有做设计器，也就是拖拉拽部分。 代码地址：brick-schema-ssr 对于低代码的一些想法低代码 这个概念已经很久了，可能大家或多或少都做过类似的，很多公司也会去尝试自己内部自研。老实话，我感觉这玩意定制性挺强的，做到能开源或者通用平台真的不容易。放业界两个优秀的产品：lowcode-engine，mybricks。 个人">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2024-11-17T03:18:33.000Z">
-<meta property="article:modified_time" content="2025-01-11T13:21:18.000Z">
+<meta property="article:modified_time" content="2025-01-19T02:38:18.000Z">
 <meta property="article:author" content="ChrisIori">
 <meta property="article:tag" content="node">
 <meta property="article:tag" content="ssr">
@@ -131,6 +131,16 @@
 </li>
 </ul>
 <p><strong>对于逻辑编排的实现，我这里直接采用写代码的方式了。</strong></p>
+<h3 id="实现功能"><a href="#实现功能" class="headerlink" title="实现功能"></a>实现功能</h3><ol>
+<li>基础组件 Button Checkbox Image Radio Text。</li>
+<li>高级组件 View List，支持自定义 slot 内容，即子元素动态配置。</li>
+<li>全局样式，通过设置 class 属性，classes: { warn: true }，或者根据条件设置 classes: { warn: ‘!isLogin’ }。字段来自于 dataMap 属性声明获取相应字段。叹号表示取反。</li>
+<li>提供 api 给非子元素的组件修改 props、style、class 属性。</li>
+<li>提供全局 store，组件通过 dataMap 属性声明获取相应字段。</li>
+<li>逻辑编排，直接对各组件的 on 事件进行相关编码。</li>
+<li>支持注入自定义工具方法，比如 api 请求，可以在逻辑编排里调用。</li>
+<li>支持 i18n 国际化，支持插槽变量。国际化 t 方法需要自行注入。</li>
+</ol>
 <h3 id="后话"><a href="#后话" class="headerlink" title="后话"></a>后话</h3><p>实际上我们还支持了 <a target="_blank" rel="noopener" href="https://qwik.dev/">qwik.js</a>，据说是个 ssr 很厉害的框架。同时还支持 <a target="_blank" rel="noopener" href="https://reactnative.dev/">react-native</a>，就是把 html 的 dom 标签，替换成 rn 提供的原生组件。这个适配巨复杂，本来就是个原生应用，只是改成开发像前端。也写了相关几篇文章：《<a href="/2023/12/03/react-native-record/">react-native ios 流水账</a>》、《<a href="/2023/11/24/ios-rn-integrate/">ios 原生应用集成 react-native</a>》、《<a href="/2024/01/12/android-rn-integrate/">android 原生应用集成 react-native</a>》。</p>
 <p>其实也是为了适配而适配，真正用的就是一套就够了。而且组件库一般也不会从基础搭建起，都是使用现有的组件库，最多改点东西适配一下。</p>
 <p>真的有这种适配多框架的需求，可以用这个「<a target="_blank" rel="noopener" href="https://mitosis.builder.io/docs/overview/">Mitosis</a>」，用 jsx 写组件，可以编译成多个前端库的对应组件，包括：Angular, React, Qwik, Vue, Svelte, Solid, and React Native。也就是按照它要求的有一定约束的写法，就是写出一套适配多框架的组件库。</p>
@@ -139,9 +149,9 @@
     </div>
     <footer class="article-footer">
       
-        <a data-url="https://blog.cchealthier.com/2024/11/17/node-ssr-app/" data-id="cm5s9thvz002og99mfxkzhycp" class="article-thumbs-up">赞一个(<span class="article-thumbs-up-num">0</span>)</a>
+        <a data-url="https://blog.cchealthier.com/2024/11/17/node-ssr-app/" data-id="cm630ij0e002fep9m3ihjgoyz" class="article-thumbs-up">赞一个(<span class="article-thumbs-up-num">0</span>)</a>
       
-      <!-- <a data-url="https://blog.cchealthier.com/2024/11/17/node-ssr-app/" data-id="cm5s9thvz002og99mfxkzhycp" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2024/11/17/node-ssr-app/" data-id="cm630ij0e002fep9m3ihjgoyz" class="article-share-link">分享</a> -->
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/node/" rel="tag">node</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ssr/" rel="tag">ssr</a></li></ul>
