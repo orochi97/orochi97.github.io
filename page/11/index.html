@@ -74,6 +74,97 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-cache" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/07/02/cache/" class="article-date">
+  <time datetime="2020-07-02T15:32:38.000Z" itemprop="datePublished">2020-07-02</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/07/02/cache/">关于缓存的几个关键词</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>缓存可以看成浏览器开辟了一个区域来放缓存的东西。有些放在内存有些放在硬盘。<br>从缓存返回的状态码为304。缓存分两种</p>
+<h4 id="强缓存："><a href="#强缓存：" class="headerlink" title="强缓存："></a>强缓存：</h4><p>设定一个期限，期限的重复访问都会去缓存获取，有两个字符来表示这个期限：<br>__http1__的是__Expires__，Expires: Wed, 22 Oct 2018 08:41:00 GMT表示资源会在 Wed, 22 Oct 2018 08:41:00 GMT 后过期，需要再次请求。<br>__http1.1__的是__Cache-Control__，当Cache-Control:max-age&#x3D;300，表示5分钟缓存时间。还有其他几个值。直接看另外一个比较有影响的：no-cache。这个看做就是不强缓存，继续去判断协商缓存。</p>
+<p>Cache-Control优先级高于Expires，现在基本都是http1.1，Expires也就是兼容用。</p>
+<h4 id="协商缓存："><a href="#协商缓存：" class="headerlink" title="协商缓存："></a>协商缓存：</h4><p>首次访问资源，响应头会返回标识符（__Last-Modified&#x2F;ETag__），下次访问请求头会带上标识符（__If-Modified-Since&#x2F;If-None-Match__），去服务器查询是否启用缓存。也就是请求还是要发，但是至少东西是省发了。</p>
+<p>响应头和请求头的缓存标识符字段名不一样，但值一样。</p>
+<p>Last-Modified和If-Modified-Since，就是资源最后修改时间，发送到服务器去判断有没有更新，无则返回304。<br>缺点就很明显，如果文件有被打开或者别的什么改动了时间，那缓存失效。同时最低也是精确到秒，一秒内的改动判断不出来。</p>
+<p>ETag和If-None-Match<br>Etag可以看成根据文件算出的哈希，唯一的，文件一改肯定就改。<br>缺点就是要消耗资源去计算。</p>
+<p>当然ETag明显精度高于Last-Modified，所以优先级也是ETag高。</p>
+<h4 id="应用中的策略"><a href="#应用中的策略" class="headerlink" title="应用中的策略"></a>应用中的策略</h4><p>设定一个期限很大的强缓存，如 max-age&#x3D;31536000 (一年)。文件通过打包工具生成出来都带上哈希。只要文件内容不改哈希就不改，请求的地址就不改，命中强缓存。改了内容自然连请求地址都改了，就会返回新文件。</p>
+<h4 id="代码的角度，"><a href="#代码的角度，" class="headerlink" title="代码的角度，"></a>代码的角度，</h4><p>看到的资料几乎都是服务端的，比如node的express可以在请求资源的返回里设置响应头</p>
+<pre><code class="js">app.get(&#39;/foo.js&#39;, function (req, res) &#123;
+  res.set(&#123;
+    &#39;Content-Type&#39;: &#39;text/javascript&#39;,
+    &#39;Cache-Control&#39;: &#39;no-cache&#39;,
+    &#39;ETag&#39;: &#39;12345&#39;
+  &#125;)
+  res.sendFile(&#39;foo.js&#39;)
+&#125;)
+</code></pre>
+<p>当然每个都这样搞未免太麻烦了，在静态资源那里可以统一设置</p>
+<pre><code class="js">const options = &#123;
+  dotfiles: &#39;ignore&#39;,
+  etag: false,
+  extensions: [&#39;htm&#39;, &#39;html&#39;],
+  index: false,
+  maxAge: &#39;1d&#39;,
+  redirect: false,
+  setHeaders: function (res, path, stat) &#123;
+    res.set(&#39;x-timestamp&#39;, Date.now())
+  &#125;
+&#125;
+
+app.use(express.static(&#39;public&#39;, options))
+</code></pre>
+<p>上面是默认设置，自己也可以修改。</p>
+<p>至于前端的设置，似乎只有</p>
+<pre><code class="xml">&lt;meta http-equiv=&quot;expires&quot; content=&quot;Wed, 20 Jun 2007 22:33:00 GMT&quot;&gt;
+&lt;meta http-equiv=&quot;cache-control&quot; content=&quot;no-cache&quot;&gt;
+</code></pre>
+<p>尝试设置为强缓存好像没生效。而且这还是只是针对该份html，其他的资源似乎无能为力，可能也是了解不够。</p>
+<h4 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h4><p>上面提到的利用打包工具来做这个哈希名字的事，首先想到的当然是webpack</p>
+<pre><code class="js">module.exports = &#123;
+  output:&#123;
+    path:path.join(__dirname, &#39;/dist/js&#39;),
+    filename: &#39;[name].[chunkhash].js&#39;,
+  &#125;
+&#125;
+</code></pre>
+<p>都知道输出文件名字可配置成带哈希字符的，也就是上面的 [chunkhash] 部分，这里有三个值可以写：<br><strong>hash、chunkhash、contenthash</strong></p>
+<p>__hash：__利用整个工程内容来计算，所以改一点点全部都改。<br>__chunkhash：__计算的单独chunk（这个是webpack的概念，相当于每个要输出的文件，一般一个entry对应一个chunk）的哈希。<br>__contenthash：__在使用抽离的css插件的时候，抽离的css文件会与引用它的js共用一份chunkhash，那js一改css也得改。当然反过来也是。此时用contenthash就只针对该份文件内容做哈希，就不会互相影响到了。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      
+      <!-- <a data-url="https://blog.cchealthier.com/2020/07/02/cache/" data-id="cm8d5hlie000h1r9me8lc1cj7" class="article-share-link">分享</a> -->
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-ssl-lts" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2020/06/22/ssl-lts/" class="article-date">
@@ -106,7 +197,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2020/06/22/ssl-lts/" data-id="cm630ij0h003sep9mahot7edg" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2020/06/22/ssl-lts/" data-id="cm8d5hlio003t1r9m3b137j5a" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -148,7 +239,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2020/05/31/html-resource/" data-id="cm630ij0a001eep9mfbbjh0m8" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2020/05/31/html-resource/" data-id="cm8d5hlih00181r9mb76n79s0" class="article-share-link">分享</a> -->
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%80%A7%E8%83%BD/" rel="tag">性能</a></li></ul>
@@ -207,7 +298,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2020/05/31/protocol/" data-id="cm630ij0f0035ep9mc6rv5y71" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2020/05/31/protocol/" data-id="cm8d5hlim002z1r9mdgqi46e7" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -303,78 +394,9 @@ alter table 表名 add 字段名 字段类型 default 默认值;
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2020/05/31/database/" data-id="cm630ij07000lep9ma20z53j6" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2020/05/31/database/" data-id="cm8d5hlif000p1r9mc7eq0mx8" class="article-share-link">分享</a> -->
       
       
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-js-performance" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/05/28/js-performance/" class="article-date">
-  <time datetime="2020-05-28T15:56:30.000Z" itemprop="datePublished">2020-05-28</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/05/28/js-performance/">JS性能优化探讨</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="一、最核心一点，减少http请求，3次握手，冷启动，成本昂贵"><a href="#一、最核心一点，减少http请求，3次握手，冷启动，成本昂贵" class="headerlink" title="一、最核心一点，减少http请求，3次握手，冷启动，成本昂贵"></a>一、最核心一点，减少http请求，3次握手，冷启动，成本昂贵</h3><ol>
-<li>合并小js文件</li>
-<li>使用雪碧图</li>
-<li>小图转换成base64放到代码里</li>
-<li>设置缓存</li>
-</ol>
-<h3 id="二、加快响应"><a href="#二、加快响应" class="headerlink" title="二、加快响应"></a>二、加快响应</h3><ol>
-<li>CDN</li>
-<li>减少DNS查询次数</li>
-<li>提前加载，延迟加载</li>
-<li>首页最小内容显示，将样式表置顶渲染页面，将js放到底部不阻塞页面渲染。</li>
-</ol>
-<h3 id="三、资源层面"><a href="#三、资源层面" class="headerlink" title="三、资源层面"></a>三、资源层面</h3><ol>
-<li>能用不那么高清图片，就用体积小的图片</li>
-<li>压缩业务代码</li>
-<li>压缩减少或不要cookie，每次请求头都会带上</li>
-<li>把静态资源放在另外一个域名，根据域名划分内容。<br>浏览器一般对同一个域的下载连接数有所限制，按照域名划分下载内容可以浏览器增大并行下载连接。<br>但是注意控制域名使用在2-4个之间，不然dns查询也是个问题。<br>一般网站规划会将静态资源放在类似于static.example.com，动态内容放在<a target="_blank" rel="noopener" href="http://www.example.com上./">www.example.com上。</a><br>这样做还有一个好处是可以在静态的域名上避免使用cookie。页面内容使用无cookie域名</li>
-<li>使用小且可缓存的favicon.ico网站图标文件favicon.ico。<br>不管你服务器有还是没有，浏览器都会去尝试请求这个图标。所以我们要确保这个图标存在文件尽量小，最好小于1k设置一个长的过期时间</li>
-</ol>
-<h3 id="四、代码层面"><a href="#四、代码层面" class="headerlink" title="四、代码层面"></a>四、代码层面</h3><ol>
-<li>html尽量减少dom的数量（可以 document.getElementsByTagName(‘*’).length 查看有多少个）</li>
-<li>避免CSS表达式，CSS表达式的问题在于它被重新计算的次数远比我们想象的要多，不仅在网页绘制或大小改变时计算，即使我们滚动屏幕或者移动鼠标的时候也在计算，因此我们还是尽量避免使用它来防止使用不当而造成的性能损耗。</li>
-<li>减少对dom的操作</li>
-<li>用<link>代替@import，避免使用@import的原因很简单，因为它相当于将css放在网页内容底部。</li>
-<li>使用智能事件处理<br>这里说智能的事件处理需要开发者对事件处理有更深入的了解，通过不同的方式尽量少去触发事件，如果必要就尽早的去处理事件。比如一个div中10个按钮都需要事件句柄，那么我们可以将事件放在div上，在事件冒泡过程中捕获该事件然后判断事件来源。</li>
-</ol>
-
-      
-    </div>
-    <footer class="article-footer">
-      
-      <!-- <a data-url="https://blog.cchealthier.com/2020/05/28/js-performance/" data-id="cm630ij0b001pep9m7klydvs6" class="article-share-link">分享</a> -->
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%80%A7%E8%83%BD/" rel="tag">性能</a></li></ul>
-
     </footer>
   </div>
   
@@ -400,6 +422,10 @@ alter table 表名 add 字段名 字段类型 default 默认值;
       <ul>
         
           <li>
+            <a href="/2025/03/16/use-swr/">react 使用 swr 做数据请求</a>
+          </li>
+        
+          <li>
             <a href="/2025/01/11/chrome-extension-plugin/">chrome 插件基础模板</a>
           </li>
         
@@ -413,10 +439,6 @@ alter table 表名 add 字段名 字段类型 default 默认值;
         
           <li>
             <a href="/2024/08/17/dependency-injection-inversify/">依赖反转/注入与 IOC 容器 inversify</a>
-          </li>
-        
-          <li>
-            <a href="/2024/01/12/android-rn-integrate/">android 原生应用集成 react-native</a>
           </li>
         
       </ul>
@@ -457,7 +479,7 @@ alter table 表名 add 字段名 字段类型 default 默认值;
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2025/01/">一月 2025</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/11/">十一月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/09/">九月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/08/">八月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/01/">一月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/12/">十二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/11/">十一月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/10/">十月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/09/">九月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/08/">八月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">七月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/06/">六月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/05/">五月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/04/">四月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/03/">三月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/02/">二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">十一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">十月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">九月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2025/03/">三月 2025</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2025/01/">一月 2025</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/11/">十一月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/09/">九月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/08/">八月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/01/">一月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/12/">十二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/11/">十一月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/10/">十月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/09/">九月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/08/">八月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">七月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/06/">六月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/05/">五月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/04/">四月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/03/">三月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/02/">二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">十一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">十月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">九月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a></li></ul>
     </div>
   </div>
 

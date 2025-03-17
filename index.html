@@ -74,6 +74,108 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-use-swr" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2025/03/16/use-swr/" class="article-date">
+  <time datetime="2025-03-16T03:52:51.000Z" itemprop="datePublished">2025-03-16</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2025/03/16/use-swr/">react 使用 swr 做数据请求</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>官网介绍：<a target="_blank" rel="noopener" href="https://swr.vercel.app/">用于数据请求的 React Hooks 库</a></p>
+<p>一开始想着不就是把请求变成 hook 写法来用吗？就是多了一个方便 loading 标志位的处理。抱着试一试的心态用了，用着用着感觉还挺不错，记录下使用方法。</p>
+<h3 id="一、基础用法"><a href="#一、基础用法" class="headerlink" title="一、基础用法"></a>一、基础用法</h3><p>在一些进入页面就要请求的场景里，比如列表页，配置项什么的，特别合适。传统的写法可能是 <code>useEffect(() =&gt; &#123;&#125;, [])</code> 里触发一下接口请求。用了 swr 后就可以不用这么写了，官网示例：</p>
+<pre><code class="js">import useSWR from &#39;swr&#39;
+ 
+function Profile() &#123;
+  const &#123; data, error, isLoading, mutate &#125; = useSWR(&#39;/api/user&#39;, fetcher)
+ 
+  if (error) return &lt;div&gt;failed to load&lt;/div&gt;
+  if (isLoading) return &lt;div&gt;loading...&lt;/div&gt;
+  return &lt;div&gt;hello &#123;data.name&#125;!&lt;/div&gt;
+&#125;
+</code></pre>
+<p>在传统场景可能就需要声明一个 loading 变量，然后自行管理，先 setLoading(true) 又 setLoading(false)。同理，data 也得用 useState 处理一下。这里直接把数据、错误，等待标志位，摊平来使用。页面一多，还是便利不少的，特别是 B 端的列表页面。在编辑完信息后，需要更新内容可以主动调用一次 <code>mutate</code> 来触发一次请求。</p>
+<h3 id="二、使用场景"><a href="#二、使用场景" class="headerlink" title="二、使用场景"></a>二、使用场景</h3><p>众所周知，hook 不能写在条件里，所以这个很适合写在一开始必须请求的场景。当然 swr 也是预留了这个场景，如果开始传入的是空路径，就不会请求。也是官网示例：<a target="_blank" rel="noopener" href="https://swr.vercel.app/zh-CN/docs/conditional-fetching">条件数据请求</a></p>
+<pre><code class="js">function Profile () &#123;
+  const &#123; data &#125; = useSWR(isReady ? &#39;/api/user&#39; : null, fetcher, &#123; suspense: true &#125;)
+ 
+  // 如果 `isReady` 是 false，`data` 将会是 `undefined`
+  // ...
+&#125;
+</code></pre>
+<p>这个可以在需要有前置条件的时候，比如第二个接口依赖于第一个接口返回的某个字段，这时候就可以先这样按住第二个接口。</p>
+<p>这个也可以用于用户行为后的请求，比如按钮点击后的，登录什么的。但我觉得这种场景下，用 swr 就很别扭。而且一般都会把接口声明在一个地方，方便维护。那么此时这两种场景下的接口写法就不一样，会出现一部分接口一定是夹杂了条件判断。</p>
+<p>所以，我认为接口还是按照原来的声明，只是在列表之类的接口，要使用的时候再看情况用 swr 包装一层。如：</p>
+<pre><code class="js">const getUser = () =&gt; fetcher(&#39;/api/user&#39;)
+
+function Profile() &#123;
+  const &#123; data, error, isLoading &#125; = useSWR(&#39;/api/user&#39;, () =&gt; getUser())
+&#125;
+</code></pre>
+<h3 id="三、携带参数"><a href="#三、携带参数" class="headerlink" title="三、携带参数"></a>三、携带参数</h3><p>接口免不了要携带参数，比如列表搜索也有一堆过滤参数，可以这样写：</p>
+<pre><code class="js">import useSWR from &#39;swr&#39;
+ 
+function Profile() &#123;
+  const [formData] = useState(&#123; a: 1 &#125;)
+  const &#123; data, error, isLoading &#125; = useSWR([&#39;/api/user&#39;, formData], ([, params]) =&gt; fetcher(params))
+&#125;
+
+// 不要写成下面这种
+// function Profile() &#123;
+//   const [formData] = useState(&#123; a: 1 &#125;)
+//   const &#123; data, error, isLoading &#125; = useSWR(&#39;/api/user&#39;, () =&gt; fetcher(formData))
+// &#125;
+</code></pre>
+<p>这样可以达到修改参数 formData 的时候，就会自动触发带上新的参数一次请求。**注意不要写成上面第二种，这样参数相当于写在闭包里，再次请求会变成携带旧的参数。</p>
+<h3 id="四、工具参数"><a href="#四、工具参数" class="headerlink" title="四、工具参数"></a>四、工具参数</h3><p>有一些很实用的参数：<a target="_blank" rel="noopener" href="https://swr.vercel.app/zh-CN/docs/api#options">选项</a>，这里列举几个改到默认配置的：</p>
+<ul>
+<li><code>keepPreviousData</code> 改为 true，默认为 false，在列表重新请求时会把数据先置空，这时列表就白了。改为 true 后就是数据来了再更新，不会有这个闪的效果。</li>
+<li><code>revalidateOnFocus</code> 改为 false，默认为 true，在切换 tab 的时候，回到本页面也就是页面 focus 事件触发一次请求，可能大部分场景不需要这样。</li>
+<li><code>focusThrottleInterval</code> 如果需要聚焦时再度请求，可以搭配这个限流一下。</li>
+<li><code>refreshInterval</code> 这个就顾名思义了，开启轮询。</li>
+</ul>
+<p>可以单个使用：</p>
+<pre><code class="js">const &#123; data &#125; = useSWR(&#39;/api/user&#39;, fetcher, &#123; keepPreviousData: true &#125;)
+</code></pre>
+<p>每个都写太麻烦，可以全局配置，然后个别灵活处理：</p>
+<pre><code class="html">&lt;SWRConfig value=&#123;&#123; keepPreviousData: true &#125;&#125;&gt;
+  &lt;Page /&gt;
+&lt;/SWRConfig&gt;
+</code></pre>
+
+      
+    </div>
+    <footer class="article-footer">
+      
+      <!-- <a data-url="https://blog.cchealthier.com/2025/03/16/use-swr/" data-id="cm8d5hlip003y1r9mbbqr8b77" class="article-share-link">分享</a> -->
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-chrome-extension-plugin" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2025/01/11/chrome-extension-plugin/" class="article-date">
@@ -164,7 +266,7 @@ export default defineConfig(&#123;
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2025/01/11/chrome-extension-plugin/" data-id="cm630ij07000kep9m8jh39gof" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2025/01/11/chrome-extension-plugin/" data-id="cm8d5hlie000i1r9m1rjq2006" class="article-share-link">分享</a> -->
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/chrome-%E6%8F%92%E4%BB%B6/" rel="tag">chrome 插件</a></li></ul>
@@ -249,7 +351,7 @@ export default defineConfig(&#123;
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2024/11/17/node-ssr-app/" data-id="cm630ij0e002fep9m3ihjgoyz" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2024/11/17/node-ssr-app/" data-id="cm8d5hlil002j1r9m42c47ikv" class="article-share-link">分享</a> -->
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/node/" rel="tag">node</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ssr/" rel="tag">ssr</a></li></ul>
@@ -354,7 +456,7 @@ export default defineConfig(&#123;
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2024/09/01/import-sort/" data-id="cm630ij0b001iep9m2zh54b0i" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2024/09/01/import-sort/" data-id="cm8d5hlii001f1r9ma7gccgyj" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -457,168 +559,9 @@ public class UserService &#123;
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2024/08/17/dependency-injection-inversify/" data-id="cm630ij08000pep9m4nrg6aue" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2024/08/17/dependency-injection-inversify/" data-id="cm8d5hlif000o1r9m35d206x4" class="article-share-link">分享</a> -->
       
       
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-android-rn-integrate" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2024/01/12/android-rn-integrate/" class="article-date">
-  <time datetime="2024-01-12T12:41:01.000Z" itemprop="datePublished">2024-01-12</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2024/01/12/android-rn-integrate/">android 原生应用集成 react-native</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="一、前言"><a href="#一、前言" class="headerlink" title="一、前言"></a>一、前言</h2><p>继上次尝试了《<a href="/2023/11/24/ios-rn-integrate/">ios 原生应用集成 react-native</a>》之后。这次尝试 android 原生应用的集成。android 也分两种语言，kotlin 和 java。这里就尝试 java 就好了，不和 ios 一样尝试两种语言。全屏模式用 ReactRootView 组件，窗口模式使用 Fragment 组件做承载。有没有点眼熟，这个在 web 里代表空标签。vue 少见点， react 应该挺常见的。也有专门的 api，<code>document.createDocumentFragment</code>。</p>
-<p>这里也不多说，主要是记录下官网《<a target="_blank" rel="noopener" href="https://reactnative.dev/docs/integration-with-existing-apps?language=java">ntegration with Existing Apps</a>》教程里没有的。大部分还是跟着官网走就可以。老样子，也是建立在正常的 react-native android 环境能运行的前提下，才能继续。按照官网《<a target="_blank" rel="noopener" href="https://reactnative.dev/docs/environment-setup">Setting up the development environment</a>》说的，JDK，Android Studio 该装的装好。</p>
-<p>还是那句话，app 开发的同学应该一看就懂了，我这还是以一个只懂前端的视角记录一下。</p>
-<h2 id="二、全屏集成"><a href="#二、全屏集成" class="headerlink" title="二、全屏集成"></a>二、全屏集成</h2><img src="/2024/01/12/android-rn-integrate/android-rn-integrate-1.png" class="" title="android-rn-integrate-1">
-
-<p>创建按钮很显眼，就不用多说。这里说下两个模版，第一行第二个 <code>Empty Activity</code>，据说是新模板，开发语言只有 kotlin。第二行第二个 <code>Empty Views Activity</code>，据说是旧模板，开发语言可以选 kotlin 和 java，这里选 java。至于最下面还有个选择 build 语言的，选择第一个 <code>Kotlin DSL(build.gradle.kts)</code> 就可以了，反正三个我都看了都和官网示例对没完全对上。</p>
-<h3 id="1-MyReactActivity-java"><a href="#1-MyReactActivity-java" class="headerlink" title="1. MyReactActivity.java"></a>1. MyReactActivity.java</h3><p>创建一份 MyReactActivity.java 文件，如果是新项目的话，会有一份 MainActivity.java，放在一起就好了。</p>
-<pre><code class="java">// 记得声明自己应用
-package com.example.myapplicationrn;
-
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.os.Bundle;
-import android.view.KeyEvent;
-
-import com.facebook.react.PackageList;
-import com.facebook.react.ReactInstanceManager;
-import com.facebook.react.ReactPackage;
-import com.facebook.react.ReactRootView;
-import com.facebook.react.common.LifecycleState;
-import com.facebook.react.modules.core.DefaultHardwareBackBtnHandler;
-import com.facebook.soloader.SoLoader;
-
-import java.util.List;
-
-public class MyReactActivity extends AppCompatActivity implements DefaultHardwareBackBtnHandler &#123;
-
-    private ReactRootView mReactRootView;
-    private ReactInstanceManager mReactInstanceManager;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) &#123;
-        super.onCreate(savedInstanceState);
-        SoLoader.init(this, false);
-
-        mReactRootView = new ReactRootView(getApplication());
-        List&lt;ReactPackage&gt; packages = new PackageList(getApplication()).getPackages();
-        // 有一些第三方可能不能自动链接，对于这些包我们可以用下面的方式手动添加进来：
-        // packages.add(new MyReactNativePackage());
-        // 同时需要手动把他们添加到`settings.gradle`和 `app/build.gradle`配置文件中。
-
-        mReactInstanceManager = ReactInstanceManager.builder()
-                .setApplication(getApplication())
-                .setCurrentActivity(this)
-                .setBundleAssetName(&quot;index.android.bundle&quot;)
-                .setJSMainModulePath(&quot;index&quot;)
-                .addPackages(packages)
-                .setUseDeveloperSupport(BuildConfig.DEBUG)
-                .setInitialLifecycleState(LifecycleState.RESUMED)
-                .build();
-        // 注意这里的MyReactNativeApp 必须对应&quot;index.js&quot;中的
-        // &quot;AppRegistry.registerComponent()&quot;的第一个参数
-        mReactRootView.startReactApplication(mReactInstanceManager, &quot;reactnativeandroid&quot;, null);
-
-        setContentView(mReactRootView);
-    &#125;
-
-    @Override
-    public void invokeDefaultOnBackPressed() &#123;
-        super.onBackPressed();
-    &#125;
-
-    @Override
-    protected void onPause() &#123;
-        super.onPause();
-
-        if (mReactInstanceManager != null) &#123;
-            mReactInstanceManager.onHostPause(this);
-        &#125;
-    &#125;
-
-    @Override
-    protected void onResume() &#123;
-        super.onResume();
-
-        if (mReactInstanceManager != null) &#123;
-            mReactInstanceManager.onHostResume(this, this);
-        &#125;
-    &#125;
-
-    @Override
-    protected void onDestroy() &#123;
-        super.onDestroy();
-        if (mReactRootView != null) &#123;
-            mReactRootView.unmountReactApplication();
-        &#125;
-        if (mReactInstanceManager != null) &#123;
-            mReactInstanceManager.onHostDestroy(this);
-            mReactInstanceManager.destroy();
-        &#125;
-    &#125;
-
-    @Override
-    public void onBackPressed() &#123;
-        if (mReactInstanceManager != null) &#123;
-            mReactInstanceManager.onBackPressed();
-        &#125; else &#123;
-            super.onBackPressed();
-        &#125;
-    &#125;
-
-    @Override
-    public boolean onKeyUp(int keyCode, KeyEvent event) &#123;
-        if (keyCode == KeyEvent.KEYCODE_MENU &amp;&amp; mReactInstanceManager != null) &#123;
-            mReactInstanceManager.showDevOptionsDialog();
-            return true;
-        &#125;
-        return super.onKeyUp(keyCode, event);
-    &#125;
-&#125;
-</code></pre>
-<p>其实就是官网示例，然后整合成一份了。再把一些依赖 import 写上，不然完全新手看一堆依赖缺失还是挺不好的。</p>
-        
-          <p class="article-more-link">
-            <a href="/2024/01/12/android-rn-integrate/#more">Read More</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      
-      <!-- <a data-url="https://blog.cchealthier.com/2024/01/12/android-rn-integrate/" data-id="cm630ij040003ep9ma7zx12jk" class="article-share-link">分享</a> -->
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/react-native/" rel="tag">react-native</a></li></ul>
-
     </footer>
   </div>
   
@@ -644,6 +587,10 @@ public class MyReactActivity extends AppCompatActivity implements DefaultHardwar
       <ul>
         
           <li>
+            <a href="/2025/03/16/use-swr/">react 使用 swr 做数据请求</a>
+          </li>
+        
+          <li>
             <a href="/2025/01/11/chrome-extension-plugin/">chrome 插件基础模板</a>
           </li>
         
@@ -657,10 +604,6 @@ public class MyReactActivity extends AppCompatActivity implements DefaultHardwar
         
           <li>
             <a href="/2024/08/17/dependency-injection-inversify/">依赖反转/注入与 IOC 容器 inversify</a>
-          </li>
-        
-          <li>
-            <a href="/2024/01/12/android-rn-integrate/">android 原生应用集成 react-native</a>
           </li>
         
       </ul>
@@ -701,7 +644,7 @@ public class MyReactActivity extends AppCompatActivity implements DefaultHardwar
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2025/01/">一月 2025</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/11/">十一月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/09/">九月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/08/">八月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/01/">一月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/12/">十二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/11/">十一月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/10/">十月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/09/">九月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/08/">八月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">七月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/06/">六月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/05/">五月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/04/">四月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/03/">三月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/02/">二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">十一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">十月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">九月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2025/03/">三月 2025</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2025/01/">一月 2025</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/11/">十一月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/09/">九月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/08/">八月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/01/">一月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/12/">十二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/11/">十一月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/10/">十月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/09/">九月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/08/">八月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">七月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/06/">六月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/05/">五月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/04/">四月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/03/">三月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/02/">二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">十一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">十月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">九月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a></li></ul>
     </div>
   </div>
 

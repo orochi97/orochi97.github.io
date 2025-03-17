@@ -74,6 +74,70 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-hexo-code-highlight" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2023/09/24/hexo-code-highlight/" class="article-date">
+  <time datetime="2023-09-24T15:43:39.000Z" itemprop="datePublished">2023-09-24</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2023/09/24/hexo-code-highlight/">记录 hexo 使用 highlight.js 实现代码高亮</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>一直觉得文章代码不够醒目，虽然也确实是高亮了。想着应该是这主题原因，就打算换个高亮主题，就我最喜欢的 sublime 的 monokai 主题。即使现在用 vscode 也还是用这个主题。</p>
+<p>网上查了一下，hexo 本身就是用了 <a target="_blank" rel="noopener" href="https://highlightjs.org/">highlightjs</a> 实现代码高亮的，但是它配置的颜色实在是不太行，要换的话，得完全自己手动。</p>
+<h3 id="一、关掉-hexo-本身的-highlightjs-使用"><a href="#一、关掉-hexo-本身的-highlightjs-使用" class="headerlink" title="一、关掉 hexo 本身的 highlightjs 使用"></a>一、关掉 hexo 本身的 highlightjs 使用</h3><p>项目根目录下的 <code>_config.yml</code> 文件，<code>highlight</code> 字段 enable 改为 <strong>false</strong>。关掉原本的配置，不然会和自己手动配置冲突。</p>
+<p>可能会遇到没生效，也就是关闭后还有高亮的效果。这时候看看 hexo 版本是不是 7 以上。我就是用了 7 版本不行，后面换了 <code>npm i hexo@^6.3.0</code> 就可以了。我看了下载量最多的还是 6.3.0。换了版本后可以执行下 <code>npx hexo clean</code> 清一下缓存。</p>
+<h3 id="二、下载-js-和-css"><a href="#二、下载-js-和-css" class="headerlink" title="二、下载 js 和 css"></a>二、下载 js 和 css</h3><p>上 <a target="_blank" rel="noopener" href="https://highlightjs.org/download">官网Download</a> 挑选功能，然后下载。也可以现在 <a target="_blank" rel="noopener" href="https://highlightjs.org/demo">官网Demo</a> 看看主题效果预览。</p>
+<p>下载后的压缩包，把 <code>highlight.min.js</code> 文件放到 <u><strong>项目&#x2F;themes&#x2F;正在生效的主题&#x2F;source&#x2F;js</strong></u> 文件夹下。<br>把要用的主题 css 拿出来，当然也可以所有 css 文件放进去，我就放了 monokai 主题的 css 而已，其他的用不上。把 <code>monokai-sublime.min.css</code> 文件放到 <u><strong>项目&#x2F;themes&#x2F;正在生效的主题&#x2F;source&#x2F;css&#x2F;highlight&#x2F;styles</strong></u> 下。</p>
+<h3 id="三、引用并使用-js-和-css"><a href="#三、引用并使用-js-和-css" class="headerlink" title="三、引用并使用 js 和 css"></a>三、引用并使用 js 和 css</h3><p>在 <u><strong>项目&#x2F;themes&#x2F;正在生效的主题&#x2F;layout&#x2F;_partial&#x2F;head.ejs</strong></u> 文件里，引入刚刚放好的 css 文件，插入代码：</p>
+<pre><code class="html">&lt;link rel=&quot;stylesheet&quot; href=&quot;/css/highlight/styles/monokai-sublime.min.css&quot;&gt;
+</code></pre>
+<p>在 <u><strong>项目&#x2F;themes&#x2F;正在生效的主题&#x2F;layout&#x2F;_partial&#x2F;after-footer.ejs</strong></u> 文件里，引入刚刚放好的 js 文件，然后初始化，插入代码：</p>
+<pre><code class="html">&lt;script src=&quot;/js/highlight.min.js&quot;&gt;&lt;/script&gt;
+&lt;script src=&quot;//cdnjs.cloudflare.com/ajax/libs/highlightjs-line-numbers.js/2.8.0/highlightjs-line-numbers.min.js&quot;&gt;&lt;/script&gt;
+&lt;script&gt;
+  $(function()&#123;
+    $(&#39;pre code&#39;).each((i, el) =&gt; &#123;
+    hljs.highlightElement(el);
+  &#125;);
+  $(&#39;code.hljs&#39;).each(function(i, el) &#123;
+     hljs.lineNumbersBlock(el);
+  &#125;);
+  &#125;());
+&lt;/script&gt;
+</code></pre>
+        
+          <p class="article-more-link">
+            <a href="/2023/09/24/hexo-code-highlight/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      
+      <!-- <a data-url="https://blog.cchealthier.com/2023/09/24/hexo-code-highlight/" data-id="cm8d5hlih00121r9mepmw3kuf" class="article-share-link">分享</a> -->
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-react-basic-app-2" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2023/09/23/react-basic-app-2/" class="article-date">
@@ -173,7 +237,7 @@ export default counterSlice.reducer;
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2023/09/23/react-basic-app-2/" data-id="cm630ij0g0038ep9mcxbh6wtv" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2023/09/23/react-basic-app-2/" data-id="cm8d5hlin00391r9mauamfzba" class="article-share-link">分享</a> -->
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" rel="tag">工程化</a></li></ul>
@@ -261,7 +325,7 @@ const __dirname = path.dirname(__filename);
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2023/08/24/node-module/" data-id="cm630ij0e002iep9m93zofsz9" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2023/08/24/node-module/" data-id="cm8d5hlik002g1r9mdn6ter7f" class="article-share-link">分享</a> -->
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/node/" rel="tag">node</a></li></ul>
@@ -339,7 +403,7 @@ const __dirname = path.dirname(__filename);
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2023/08/23/webpack5-background-url/" data-id="cm630ij0m006sep9mciy8ggtr" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2023/08/23/webpack5-background-url/" data-id="cm8d5hlir004t1r9m7a9766jy" class="article-share-link">分享</a> -->
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" rel="tag">工程化</a></li></ul>
@@ -463,93 +527,10 @@ writeStream.on(&#39;close&#39;, () =&gt; &#123;
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2023/07/26/node-stream/" data-id="cm630ij0e002mep9m5tgebicz" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2023/07/26/node-stream/" data-id="cm8d5hlil002r1r9m90vjb6mx" class="article-share-link">分享</a> -->
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/node/" rel="tag">node</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-webpack-modulefederationplugin" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2023/06/07/webpack-modulefederationplugin/" class="article-date">
-  <time datetime="2023-06-07T02:34:33.000Z" itemprop="datePublished">2023-06-07</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2023/06/07/webpack-modulefederationplugin/">用 webpack ModuleFederationPlugin 搭建微前端</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>webpack5 推出了一个 <a target="_blank" rel="noopener" href="https://webpack.js.org/concepts/module-federation/">ModuleFederationPlugin</a>，“模块联邦插件”。名字上就有点微前端的意思。网上的介绍原理什么的这里就不说了，就从实际的使用来看，它的作用有：</p>
-<ol>
-<li>把本工程的一些内容单独打包成文件分享出去。</li>
-<li>使用别的工程分享出来的文件。</li>
-</ol>
-<p>用法其实也很简单，就一个插件而已，但是要实现到微前端落地还是有很多要改造的。基于此用 <strong>vue</strong> 工程做了个尝试案例，并对其中一些注意点做一些说明。</p>
-<p>代码压缩包：<a target="_blank" rel="noopener" href="https://file.cchealthier.com/file/blog/attachment/micro-fontends.tar.gz">micro-fontends.tar.gz</a></p>
-<p><strong>注意：代码里的 heal.com 网站，是我自己修改了 host，Mac 可以在 <code>/etc/hosts</code>，Windows 可以在 <code>C:\Windows\System32\drivers\etc\hosts</code> 文件里添加这一行或者改成自己喜欢的域名：<code>0.0.0.0 heal.com</code>。</strong></p>
-<h2 id="一、基础用法"><a href="#一、基础用法" class="headerlink" title="一、基础用法"></a>一、基础用法</h2><pre><code class="js">new ModuleFederationPlugin(&#123;
-  name: &#39;admin&#39;,
-  filename: &#39;remoteEntry.js&#39;,
-  remotes: &#123;
-    workforce: &#39;workforce@http://heal.com/workforce/remoteEntry.js&#39;,
-    network: &#39;network@http://heal.com/network/remoteEntry.js&#39;,
-  &#125;,
-  exposes: &#123;
-    &#39;./init&#39;: &#39;./src/main.js&#39;,
-    &#39;./layout&#39;: &#39;./src/components/Layout.vue&#39;,
-  &#125;,
-&#125;),
-</code></pre>
-<ul>
-<li><strong>name:</strong> 这个工程的模块名，比如这里是主应用，把它叫做 <code>admin</code>。 </li>
-<li><strong>filename:</strong> 这个工程分享的文件入口，也就是别的工程只需要应用这份入口文件就可以了，其他的文件会在这份文件里发出请求。</li>
-<li><strong>remotes:</strong> 使用其他工程的文件，比如使用了两个子应用 <code>workforce</code> 和 <code>network</code> 的东西，可以看到引用的就是 <code>remoteEntry.js</code>。</li>
-<li><strong>exposes:</strong> 这个工程分享的具体内容，照着格式写就好了，注意 key 值是相对路径写法。</li>
-</ul>
-<p>代码里的使用是使用 <code>import()</code> 异步动态引入的方式：<code>import(&#39;admin/layout&#39;)</code>。引用内容格式为 <code>import(&#39;模块名/exposes的key值&#39;)</code>。这也是个 promise，在 then 的回调里接收导出值即可。</p>
-<h2 id="二、用于微前端"><a href="#二、用于微前端" class="headerlink" title="二、用于微前端"></a>二、用于微前端</h2><p>使用方法看起来，是可以导出单个文件，也可以导出入口文件，让其牵出一模块代码。代码很简单，就这么一个用法。但是用于微前端的搭建还需要考虑：</p>
-<ul>
-<li>主子应用的引入。主应用也就是基座，必然由它来引用子应用的东西，然后来启动项目。那么子应用暴露什么出来好？</li>
-<li>开发问题。本地开发怎么启动，不能我开发子应用还要启动主应用吧？反过来开发主应用难道必须启动所有子应用？那还不如不拆。</li>
-<li>还是开发问题。上面那个的相反，假设现在已经达到每次只需要启动要修改的项目就好了。但是肯定会出现一个功能要同时修改主子应用的，主子项目如何联调开发。</li>
-<li>部署时的代理配置。主子应用已经是不同项目了，当然也是用不同容器承载。但是域名必须是同一个，怎么配置好代理转发可以正常访问到想要的资源？</li>
-</ul>
-<p>那么一个个来看。</p>
-        
-          <p class="article-more-link">
-            <a href="/2023/06/07/webpack-modulefederationplugin/#more">Read More</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      
-      <!-- <a data-url="https://blog.cchealthier.com/2023/06/07/webpack-modulefederationplugin/" data-id="cm630ij0j004fep9mawph7f07" class="article-share-link">分享</a> -->
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" rel="tag">工程化</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%BE%AE%E5%89%8D%E7%AB%AF/" rel="tag">微前端</a></li></ul>
 
     </footer>
   </div>
@@ -576,6 +557,10 @@ writeStream.on(&#39;close&#39;, () =&gt; &#123;
       <ul>
         
           <li>
+            <a href="/2025/03/16/use-swr/">react 使用 swr 做数据请求</a>
+          </li>
+        
+          <li>
             <a href="/2025/01/11/chrome-extension-plugin/">chrome 插件基础模板</a>
           </li>
         
@@ -589,10 +574,6 @@ writeStream.on(&#39;close&#39;, () =&gt; &#123;
         
           <li>
             <a href="/2024/08/17/dependency-injection-inversify/">依赖反转/注入与 IOC 容器 inversify</a>
-          </li>
-        
-          <li>
-            <a href="/2024/01/12/android-rn-integrate/">android 原生应用集成 react-native</a>
           </li>
         
       </ul>
@@ -633,7 +614,7 @@ writeStream.on(&#39;close&#39;, () =&gt; &#123;
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2025/01/">一月 2025</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/11/">十一月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/09/">九月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/08/">八月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/01/">一月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/12/">十二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/11/">十一月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/10/">十月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/09/">九月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/08/">八月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">七月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/06/">六月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/05/">五月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/04/">四月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/03/">三月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/02/">二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">十一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">十月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">九月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2025/03/">三月 2025</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2025/01/">一月 2025</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/11/">十一月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/09/">九月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/08/">八月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/01/">一月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/12/">十二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/11/">十一月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/10/">十月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/09/">九月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/08/">八月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">七月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/06/">六月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/05/">五月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/04/">四月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/03/">三月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/02/">二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">十一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">十月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">九月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a></li></ul>
     </div>
   </div>
 
