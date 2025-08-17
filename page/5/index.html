@@ -74,6 +74,270 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-performance-optimize" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2023/05/19/performance-optimize/" class="article-date">
+  <time datetime="2023-05-18T16:03:11.000Z" itemprop="datePublished">2023-05-19</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2023/05/19/performance-optimize/">一次前端性能优化的过程（多图）</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>性能优化听多了，又是各个注意点，又是监控什么的，如《<a href="/2020/05/28/js-performance/">JS性能优化探讨</a>》《<a href="/2021/01/09/performance-api/">前端性能监控</a>》，真正遇到了还是得具体场景具体分析。</p>
+<p>一直觉得我的<a target="_blank" rel="noopener" href="https://cchealthier.com/"><u>个人网站首页</u></a>（现在不会了）很慢，进去后背景和熊猫头渲染得特别慢。当然这个慢是相对的，就我做过的 TO B 系统单单是前置接口的获取都要几秒了，只是有 loading 效果看起来不难受。但是我这个网页啥都没有，就那么几个图片和动画，着实不该。那就实际一步步看看吧。</p>
+<h3 id="一-服务器连接速度"><a href="#一-服务器连接速度" class="headerlink" title="一. 服务器连接速度"></a>一. 服务器连接速度</h3><p>直接百度搜<code>网站访问速度测试</code>就有很多工具网站。一看都没啥问题，除了极个别的比较远的省份（我这是买的阿里云深圳的服务器）其他都在一秒以内。再 <code>ping</code> 一下，也可以看到并无延迟。也就是 <code>DNS</code> 解析和访问并没有问题。</p>
+<h3 id="二-减小图片体积"><a href="#二-减小图片体积" class="headerlink" title="二. 减小图片体积"></a>二. 减小图片体积</h3><p>那首先考虑资源图片过大，因为确实用了比较高清的图片，那就在不糊的情况下尽量缩小体积。兴冲冲地更新一看，没啥变化。还是有那个等待过程。那好吧，一不做而不休，我尝试把其他图片都去掉，只留下一个熊猫头，还是很慢，就证明不该是图片背锅。当然缩小体积是没有问题的。省流量嘛。</p>
+<h3 id="三-使用-Devtool-Performance"><a href="#三-使用-Devtool-Performance" class="headerlink" title="三. 使用 Devtool Performance"></a>三. 使用 Devtool Performance</h3><p>那就直接用工具看吧，打开开发者工具，切到 <code>Performance</code>，启动录制看看效果。找一下，在 Timings 那里看到 <code>FP</code> <code>FCP</code> 等事件，这里就是影响视觉观看的主要节点了。当然前面还有 <code>Parse HTML</code> 或者 <code>Function call</code> 等等事件。主要看 <code>Parse HTML</code>，因为要解析了 html，才会加载一系列资源，可以看出这一步并没有什么问题，也是很快就响应了。但是到 <code>FCP</code> 却隔了好几秒。也就是中间有东西耽搁了。<br>看了一下，是<strong>必要的 js 文件加载</strong>。有两个，一个是 <code>app.***.js</code>，基础的业务 js， 一个是 <code>chunk-vendor.***.js</code>，vue 框架的打包产物。毫无疑问，这两者都是不可或缺的。<code>appjs</code> 比较小还好，很快就获取完了。<code>chunk-vendorjs</code>有 300+kb，耗时几秒。可以看到它加载完后，很快就 <code>FCP</code> 了。所以它的加载就是问题关键了。</p>
+<h3 id="四-js-文件太大？"><a href="#四-js-文件太大？" class="headerlink" title="四. js 文件太大？"></a>四. js 文件太大？</h3><p>讲道理，300+kb 的 js 文件不算小，但也不能叫很大啊。怎么要好几秒才能加载完？当然我的服务器没有加速功能，如果放到 CDN 服务，我想应该效果会好点。但是没有这条件，那只能另外想想办法。我代码里用了 <code>Element-UI</code>，测试了一下确实是按需引入，去掉几个组件后，体积变小了。<br>但，这些就是要用到的，减不了。路由页面用的也是 <code>import()</code> 动态引入，也就是到了真正访问那个页面组件，才会去加载相应的 js。再说了业务代码也不会打包到 vendor 去。那体积没法减了。然后在自己本地测试了一下，以及线上的缓存状态下，页面出现都很快，更加印证了我的猜测，就是这个 “大 js 文件” 导致了页面渲染慢。（当然最好有个 CDN 什么的加速可以验证…）</p>
+<img src="/2023/05/19/performance-optimize/%E4%BC%98%E5%8C%96%E5%89%8Dnetwork.png" class="" title="优化前network">
+
+<p>事情本到这里就结束了（啥都没干，555…），结果又看到一个神奇的网站，谷歌的性能分析网站，地址：<a target="_blank" rel="noopener" href="https://pagespeed.web.dev/">https://pagespeed.web.dev</a> （可能需要科学上网）</p>
+        
+          <p class="article-more-link">
+            <a href="/2023/05/19/performance-optimize/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      
+      <!-- <a data-url="https://blog.cchealthier.com/2023/05/19/performance-optimize/" data-id="cmefuc51g002wet9m1wh022mg" class="article-share-link">分享</a> -->
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%80%A7%E8%83%BD/" rel="tag">性能</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-file-slice-upload" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2023/05/13/file-slice-upload/" class="article-date">
+  <time datetime="2023-05-13T14:25:47.000Z" itemprop="datePublished">2023-05-13</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2023/05/13/file-slice-upload/">文件切片上传（断点续传）</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>上传文件体积一大，要等很久。如果只是水管小，等一会也就算了。但是如果网络差，上传到 99% 突然断网了又重新开始，就比较难受了。所以又有了文件切片进行断点上传的方法。</p>
+<p>上传的文件对象是一个 <a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/API/File">File</a> 对象，然后它是 <a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/API/Blob">Blob</a> 对象的一个子类。再然后它有一个 <a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/API/Blob/slice">slice</a> 方法，用这个方法就可以对文件进行切片，就和数组的这个方法一样。用法如示例。</p>
+<p>话不多说直接上代码（里面代码是问了 chatgpt 然后改的，哈哈）。把下面两份代码分别保存为 <code>index.html</code> 和 <code>server.js</code>，安装好依赖，然后启动执行 <code>node server.js</code>，访问 <code>http://localhost:3000</code>。</p>
+<p>前端也大概美化了一下上传组件，支持点击选择文件或者拖拽文件上传。原生的 <code>&lt;input type=&quot;file&quot; &gt;&lt;/input&gt;</code> 组件的样式应该没人用吧，那么丑…。其中的 loading 效果出自网上大佬的《<a target="_blank" rel="noopener" href="https://juejin.cn/post/7037036742985121800">纯css实现117个Loading效果</a>》，里面挺多效果不错的。</p>
+        
+          <p class="article-more-link">
+            <a href="/2023/05/13/file-slice-upload/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      
+      <!-- <a data-url="https://blog.cchealthier.com/2023/05/13/file-slice-upload/" data-id="cmefuc519000vet9mcjg57865" class="article-share-link">分享</a> -->
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-nginx-basic" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2023/04/21/nginx-basic/" class="article-date">
+  <time datetime="2023-04-21T13:33:48.000Z" itemprop="datePublished">2023-04-21</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E6%9C%8D%E5%8A%A1/">服务</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2023/04/21/nginx-basic/">nginx 的基础用法 &amp; linux（centos）下支持 https 和 http2</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>其实之前写过一篇相关的《<a href="/2022/03/26/nginx/">记录下 nginx 使用配置</a>》，关于 nginx 的一些稍微复杂的场景。然后发现日常的基础用法，反而记不住。这里就记录一下。</p>
+<p>安装，mac 可以用 brew 下载。windows 的也很简单，去<a target="_blank" rel="noopener" href="http://nginx.org/en/download.html">官网</a>下载个压缩包就行了。至于 linux 的，就网上搜搜啦，我记得也很简单。</p>
+<h3 id="基础用法"><a href="#基础用法" class="headerlink" title="基础用法"></a>基础用法</h3><pre><code class="bash"># 安装
+brew install nginx
+
+#查看
+brew info nginx
+</code></pre>
+<p>查看信息，可以看到配置文件在 <code>/opt/homebrew/etc/nginx/nginx.conf</code>。</p>
+<p>命令</p>
+<pre><code class="bash"># 启动
+nginx
+
+# 刷新，改了 nginx.conf 文件，要重新生效
+nginx -s reload
+
+# 关闭
+nginx -s stop
+</code></pre>
+<p>默认端口是 8080。所以直接访问本地地址 <code>http://localhost:8080/</code>，看到有显示 <strong>Welcome to nginx!</strong> 字样就是启动成功了。</p>
+<p>其实 nginx.conf 已经写了例子和注释，这里只是稍微补充点。</p>
+<p>root：资源文件夹<br>index： 默认的 index 文件</p>
+<pre><code class="yaml">location / &#123;
+  root   /电脑地址/nginx;
+  index  index.html index.htm;
+&#125;
+</code></pre>
+<p>如果要配置不同路由访问不同的文件，<code>root</code> 要改成 <code>alias</code>，比如访问 <code>http://localhost:8080/page</code></p>
+<pre><code class="yaml">location /page &#123;
+  alias /电脑地址/nginx;
+  index page.html;
+&#125;
+</code></pre>
+<p>当然最好是写个兜底返回。在 vue 或者 react 使用 router 时，兜底返回默认 index.html。不然每增加一个路由就要写多一个配置很麻烦。</p>
+<pre><code class="yaml">location ~* ^/* &#123;
+  root   /电脑地址/nginx;
+  try_files $uri $uri/ /index.html;
+&#125;
+</code></pre>
+<h3 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h3><p><strong>注意 1</strong><br><code>try_files $uri $uri/ /index.html;</code> 兜底的写法，最后那个 <code>/index.html</code> 不是返回物理文件路径，而是发起重新的 url 请求，然后再来匹配规则返回。<br>比如以下这种不是根路径的配置，当我访问 <code>/new</code> 是 ok 的，但是访问 <code>/new/abc</code> 就不 ok。在使用 SPA 框架时候，我们知道有要求所有路由请求都需要返回 html，路由都是交由前端框架自己处理。</p>
+<pre><code class="yaml">location /new &#123;
+  alias   /电脑地址/nginx;
+  try_files $uri $uri/ /new/index.html; # 注意这里是 /new/index.html，不是 /index.html
+&#125;
+</code></pre>
+<p>匹配到最后的兜底是发起一个 <code>http://域名/new/index.html</code> 的请求，然后匹配到 &#x2F;new 规则，返回相应的 index.html。<br>如果写成 <code>try_files $uri $uri/ /index.html;</code>，那么兜底是发起一个 <code>http://域名/index.html</code> 的请求，这样会导致匹配不到所有规则，导致 404。</p>
+<p><strong>注意 2</strong><br>root 与 alias<br>两者区别在于 nginx 如何解释 location 后面的 url</p>
+<p><strong>root:</strong><br>语法：root path<br>默认值：root html<br>配置段：http、server、location、if<br>处理结果：root 路径＋ location 路径</p>
+<p><strong>alias:</strong><br>语法：alias path<br>配置段：location<br>处理结果：使用 alias 路径替换 location 路径</p>
+<p><strong>所以用正则匹配写路径的要注意写好 root 或 alias，不然找不到资源就会出现 403！</strong></p>
+<p><strong>注意 3</strong></p>
+<pre><code class="yaml">location ~ /api &#123;
+  proxy_pass   http://localhost:3000;
+&#125;
+</code></pre>
+<p>后面都没有斜杆，<code>/api/user</code> 会变成 <code>http://localhost:3000/api/user</code> 请求</p>
+<pre><code class="yaml">location ~ /api/ &#123;
+  proxy_pass   http://localhost:3000/;
+&#125;
+</code></pre>
+<p>后面都有斜杆，<code>/api/user</code> 会变成 <code>http://localhost:3000/user</code> 请求</p>
+<p>所以关键就是看后端接口要不要以 api 打头。</p>
+<h3 id="其它用法"><a href="#其它用法" class="headerlink" title="其它用法"></a>其它用法</h3><p>可以写多个 server，启动多个服务</p>
+<pre><code class="yaml">server &#123;
+  listen       3000;
+  server_name  0.0.0.0;
+
+  location / &#123;
+    root   /电脑地址/nginx;
+    index  3000.html 3000.htm;
+  &#125;
+&#125;
+</code></pre>
+<p>代理 ~ 为区分大小写，~*为不区分大小写，其他符号则请查询官网啦。</p>
+<pre><code class="yaml">location ~ /api/* &#123;
+  proxy_pass   http://localhost:3000;
+&#125;
+</code></pre>
+<p>https 服务，声明好证书即可。这里只是把其中证书配置列出来，实际上 nginx.conf 的例子还有挺多配置，一般我们不是运维，应该默认就够了。作为调试用，可能都不需要启动到 https server。</p>
+<pre><code class="yaml">server &#123;
+  ssl_certificate      /电脑地址/nginx/cert/cert.pem;
+  ssl_certificate_key  /电脑地址/nginx/cert/server.key;
+&#125;
+</code></pre>
+<p>开启文本压缩</p>
+<pre><code class="yaml">http &#123;
+  gzip on;
+  # 压缩比例，比例越大，压缩时间越长。默认是1
+  gzip_comp_level 6;
+  # 哪些文件可以被压缩
+  gzip_types text/xml text/plain text/css application/javascript application/x-javascript application/rss+xml;
+&#125;
+</code></pre>
+<p>linux 下支持 https 和 http2，也是网上搜集的，实操了可以，这里记录一下。</p>
+<pre><code class="bash"># 安装依赖
+yum -y install gcc zlib zlib-devel pcre-devel openssl openssl-devel
+# 解压缩
+tar -zxvf nginx-1.23.4.tar.gz
+cd nginx-1.23.4
+# 执行配置
+./configure --with-http_ssl_module --with-http_v2_module
+# 编译安装
+make
+make install
+</code></pre>
+<pre><code class="bash"># 默认安装在
+/usr/local/nginx
+# 启动
+/usr/local/nginx/sbin/nginx
+# 刷新配置启动
+/usr/local/nginx/sbin/nginx -s reload
+# 关闭
+/usr/local/nginx/sbin/nginx -s stop
+# 修改配置
+vim  /usr/local/nginx/conf/nginx.conf
+</code></pre>
+
+      
+    </div>
+    <footer class="article-footer">
+      
+      <!-- <a data-url="https://blog.cchealthier.com/2023/04/21/nginx-basic/" data-id="cmefuc51d002cet9mf2vl7eb5" class="article-share-link">分享</a> -->
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/nginx/" rel="tag">nginx</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-fontend-engineering-2" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2023/04/21/fontend-engineering-2/" class="article-date">
@@ -156,7 +420,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2023/04/21/fontend-engineering-2/" data-id="cm8d5hlig000v1r9m91ro4w97" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2023/04/21/fontend-engineering-2/" data-id="cmefuc519000yet9m0szrgm0m" class="article-share-link">分享</a> -->
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" rel="tag">工程化</a></li></ul>
@@ -223,7 +487,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2023/03/06/fontend-engineering/" data-id="cm8d5hlig000x1r9m24vw426t" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2023/03/06/fontend-engineering/" data-id="cmefuc5190010et9mfm3762bw" class="article-share-link">分享</a> -->
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" rel="tag">工程化</a></li></ul>
@@ -235,359 +499,11 @@
 
 
   
-    <article id="post-multi-function-select" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2023/02/07/multi-function-select/" class="article-date">
-  <time datetime="2023-02-07T13:17:59.000Z" itemprop="datePublished">2023-02-07</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2023/02/07/multi-function-select/">懒加载-虚拟列表-下拉菜单选择器</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>最近，遇到 <code>select</code> 表单下拉选项过多的问题。由于业务场景需要，选项是由接口请求回来，数量取决于线上数据的多少。</p>
-<p>借此，顺便记录下目前遇到 <code>select</code> 组件有哪些优化选择。附上一些例子，使用 vue 写的。当然用 react 也是类似的做法，这个和用什么框架关系不大。</p>
-<p><strong>为了文章内容不要太长，例子里的共同样式放在了最后。</strong></p>
-<h3 id="一、懒加载"><a href="#一、懒加载" class="headerlink" title="一、懒加载"></a>一、懒加载</h3><p>懒加载这个词各位应该也很熟悉。在一个古老的例子，瀑布流显示图片就有这个词语了。就是第一屏只显示几条，用户有兴趣往下拉，再继续加载（或请求）新的数据。<br>以前的话应该是监听 <code>scroll</code> 事件，判断是否要见底了，来补充新数据。后面出了一个厉害的 <a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/API/IntersectionObserver">IntersectionObserver</a> 方法。具体怎么用就不赘述了，总之就是能监听一个 dom 的显隐，来触发回调。</p>
-<p>例子可看代码，支持前端自己分批数据或者每次下拉由后端处理分批</p>
-<pre><code class="html">&lt;template&gt;
-  &lt;div ref=&quot;lazy-load-select&quot; class=&quot;lazy-load-select&quot; :class=&quot;&#123; active: active &#125;&quot;&gt;
-    &lt;a class=&quot;display-label&quot; href=&quot;javascript:;&quot; @click=&quot;active = !active&quot;&gt;&#123;&#123;
-      displayLabel
-    &#125;&#125;&lt;/a&gt;
-    &lt;div class=&quot;list&quot; v-show=&quot;active&quot;&gt;
-      &lt;input
-        type=&quot;text&quot;
-        class=&quot;select-input&quot;
-        @input=&quot;search&quot;
-        v-model=&quot;searchText&quot;
-      /&gt;
-      &lt;ul class=&quot;select-ul&quot; ref=&quot;select-ul&quot;&gt;
-        &lt;li
-          v-for=&quot;item in displayData&quot;
-          ref=&quot;select-li&quot;
-          :class=&quot;&#123; &#39;select-li&#39;: true, selected: item.value === currentValue &#125;&quot;
-          :key=&quot;item.value&quot;
-          @click=&quot;select(item.value)&quot;
-        &gt;
-          &#123;&#123; item.label &#125;&#125;
-        &lt;/li&gt;
-      &lt;/ul&gt;
-    &lt;/div&gt;
-  &lt;/div&gt;
-&lt;/template&gt;
-
-&lt;script&gt;
-function genData(&#123; pageno, count, keyword &#125;) &#123;
-  return new Array(count).fill(&#39;1&#39;).map((_, index) =&gt; &#123;
-    const value = (pageno - 1) * count + index + 1 + &#39;&#39;;
-    return &#123;
-      value,
-      label: &#39;LazyLoad-&#39; + value + (keyword || &#39;&#39;),
-    &#125;;
-  &#125;);
-&#125;
-
-const originData = genData(&#123; pageno: 1, count: 100 &#125;);
-
-// 调试用的声明，true：使用全部数据返回，由前端分批，false：分批从后端获取数据
-const defaultProps = false ? &#123;
-  originData: () =&gt; originData,
-  getData: undefined,
-&#125; : &#123;
-  originData: () =&gt; [],
-  getData: (&#123; pageno, count, keyword &#125;) =&gt; &#123;
-    return Promise.resolve(genData(&#123; pageno, count, keyword &#125;));
-  &#125;,
-&#125;;
-
-// 上面是调试示例用的代码
-
-const ONE_LOAD = 10; // 每次加载10条
-
-const LAZY_LOAD_COMP = 2; // 倒数第几个开始新的加载
-
-export default &#123;
-  name: &#39;LazyLoadSelect&#39;, // 懒加载下拉菜单，支持前端分批处理或后端分批处理
-  props: &#123;
-    originData: &#123;
-      type: Array,
-      default: defaultProps.originData,
-    &#125;,
-    getData: &#123;
-      type: Function,
-      default: defaultProps.getData,
-    &#125;,
-  &#125;,
-  data() &#123;
-    return &#123;
-      currentValue: 0,
-      active: false,
-      searchText: &#39;&#39;,
-      displayData: [],
-      filterData: [],
-      intersectionObserver: null,
-    &#125;;
-  &#125;,
-  computed: &#123;
-    displayLabel() &#123;
-      const selectd = this.originData.find(
-        item =&gt; item.value === this.currentValue
-      );
-      return selectd ? selectd.label : &#39;请选择&#39;;
-    &#125;,
-    useRemoteData() &#123;
-      return typeof this.getData === &#39;function&#39;;
-    &#125;,
-    count() &#123;
-      return ONE_LOAD;
-    &#125;,
-    pageno() &#123;
-      return this.displayData.length / this.count || 1;
-    &#125;,
-  &#125;,
-  methods: &#123;
-    async initFilterData(keyword) &#123;
-      this.displayData = [];
-      if (this.useRemoteData) &#123;
-        // 如果有外部方法，初始化则不需要过滤，直接更新接口来的数据即可
-        const data = await this.loadRemoteData();
-        this.displayData = data;
-      &#125; else &#123;
-        // 如果没有外部方法，初始化则先根据搜索词过滤得出过滤数据，然后再对过滤数据分批
-        this.filterData = this.originData.filter(item =&gt; &#123;
-          return keyword ? item.label.indexOf(keyword) !== -1 : true;
-        &#125;);
-        this.displayData = this.filterData.slice(0, 0 + ONE_LOAD);
-      &#125;
-      this.$selectUl &amp;&amp; (this.$selectUl.scrollTop = 0);
-      this.updateObserveLayzload();
-    &#125;,
-    search(event) &#123;
-      // 应防抖
-      this.initFilterData(this.searchText);
-    &#125;,
-    select(value) &#123;
-      this.currentValue = value;
-      this.active = false;
-      this.$emit(&#39;change&#39;, value);
-    &#125;,
-    updateObserveLayzload() &#123;
-      this.$nextTick(() =&gt; &#123;
-        if (this.displayData.length &gt;= this.filterData.length &amp;&amp; !this.useRemoteData) &#123;
-          this.$lazyLoadLi &amp;&amp;
-            this.intersectionObserver.unobserve(this.$lazyLoadLi);
-          return;
-        &#125;
-        const $liArr = this.$refs[&#39;select-li&#39;];
-
-        this.$lazyLoadLi &amp;&amp;
-          this.intersectionObserver.unobserve(this.$lazyLoadLi);
-        this.$lazyLoadLi = $liArr[$liArr.length - 1 - LAZY_LOAD_COMP];
-        this.intersectionObserver.observe(this.$lazyLoadLi);
-      &#125;);
-    &#125;,
-    async loadRemoteData() &#123; // 从外部方法获取数据
-      try &#123;
-        const data = await this.getData(
-            &#123; pageno: this.pageno, count: this.count, keyword: this.searchText &#125;
-        );
-        return data;
-      &#125; catch(error) &#123;
-        console.error(&#39;get data error:&#39;, error);
-      &#125;
-      return [];
-    &#125;,
-    async getNewBatchData() &#123;
-      if (this.useRemoteData) &#123;
-        // 数据（包括筛选）完全由后端处理
-        const addData = await this.loadRemoteData();
-        return addData;
-      &#125;
-      // 由前端对数据分批
-      const addData = this.filterData.slice(
-        this.displayData.length,
-        this.displayData.length + ONE_LOAD,
-      );
-      return addData;
-    &#125;,
-    async updateData() &#123;
-      const addData = await this.getNewBatchData();
-      this.displayData.push(...addData);
-      this.updateObserveLayzload();
-    &#125;,
-  &#125;,
-  created() &#123;
-    this.initFilterData(&#39;&#39;);
-  &#125;,
-  mounted() &#123;
-    this.$selectUl = this.$refs[&#39;select-ul&#39;];
-    this.intersectionObserver = new IntersectionObserver(entries =&gt; &#123;
-      if (entries[0].intersectionRatio) &#123;
-        this.updateData();
-      &#125;
-    &#125;);
-
-    const $main = this.$refs[&#39;lazy-load-select&#39;];
-    window.addEventListener(
-      &#39;click&#39;,
-      (ev) =&gt; &#123;
-        // 判断是否点击在 select 组件上
-        const isSelectComp = ev.composedPath().find(dom =&gt; $main === dom);
-        if (!isSelectComp) &#123;
-          this.active = false;
-        &#125;
-      &#125;
-    );
-  &#125;
-&#125;;
-&lt;/script&gt;
-</code></pre>
-        
-          <p class="article-more-link">
-            <a href="/2023/02/07/multi-function-select/#more">Read More</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      
-      <!-- <a data-url="https://blog.cchealthier.com/2023/02/07/multi-function-select/" data-id="cm8d5hlij00241r9m4bq82840" class="article-share-link">分享</a> -->
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%80%A7%E8%83%BD/" rel="tag">性能</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-vue-observer-dep-watcher" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2022/11/07/vue-observer-dep-watcher/" class="article-date">
-  <time datetime="2022-11-07T15:13:16.000Z" itemprop="datePublished">2022-11-07</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2022/11/07/vue-observer-dep-watcher/">vue 的里 observer、dep、watcher</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>简单梳理一下 vue 源码里，observer、dep、watcher 这三者的作用，捋清了基本上就知道 vue 的响应式操作了。看一张图：</p>
-<p><img src="https://file.cchealthier.com/file/blog/202210/vue-observer-dep-watcher.png" alt="vue-observer-dep-watcher.jpg"></p>
-<p>总结一下就是，我们在 vue 文件定义数据 data 属性，会生成一个 _data 的对象，遍历这个 _data 对象的属性，会通过 defineProperty 挂载到 vue 实例上。以图里 src 为例：</p>
-<ul>
-<li>vm.src，被 defineProperty 处理</li>
-<li>&#x3D;&gt; 读取和设置都是 vm._data.src</li>
-<li>&#x3D;&gt; vm._data.src 被 defineProperty 处理</li>
-<li>&#x3D;&gt; 在其 set get 函数进行依赖收集即更新通知</li>
-</ul>
-<h5 id="再细述两个小点"><a href="#再细述两个小点" class="headerlink" title="再细述两个小点"></a>再细述两个小点</h5><ol>
-<li><p>原来 dom 的更新是在 watcher 的 getter 里。watcher 有两种，一种是在实例上声明的 watch 对象或者主动调用 vm.$watch 方法的，这种都是属性 user&#x3D;&#x3D;&#x3D; true 的 watcher，其 getter 都是直接获取 vm 上的值。一种是生命周期由框架生成的 watcher，这个的 getter 是 updateComponent，里面包含了对 dom 的更新。当然接下来就是 diff 算法更新 dom 的事了，不属于依赖更新的内容。</p>
-</li>
-<li><p>vue 文件的 template 代码会被解析成 render 函数，对，就是那个说直接写会效率更快的 render 函数。原过程是：template &#x3D;&gt; ast &#x3D;&gt; render，这一步还是比较消耗。直接写 render 函数相当于省去前面两步。然后 render 执行后会生成虚拟 dom，也就是 VNode。接下来就是 vm.<em>patch</em> 里通过双指针的 diff 算法，来对比新旧 VNode 的差别，算出变更的地方，然后执行 js 原生的元素操作语句进行 dom 的修改。</p>
-</li>
-</ol>
-
-      
-    </div>
-    <footer class="article-footer">
-      
-      <!-- <a data-url="https://blog.cchealthier.com/2022/11/07/vue-observer-dep-watcher/" data-id="cm8d5hliq004d1r9m6mmuf5xr" class="article-share-link">分享</a> -->
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-2022-autumn" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2022/10/19/2022-autumn/" class="article-date">
-  <time datetime="2022-10-18T16:11:02.000Z" itemprop="datePublished">2022-10-19</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E6%97%85%E8%A1%8C/">旅行</a>►<a class="article-category-link" href="/categories/%E6%97%85%E8%A1%8C/%E8%AE%B0%E5%BD%95/">记录</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2022/10/19/2022-autumn/">最近看到的一些美景</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h4 id="泉州"><a href="#泉州" class="headerlink" title="泉州"></a>泉州</h4><p><img src="https://file.cchealthier.com/file/blog/202210/2022_10_01.jpg" alt="1.jpg"></p>
-<p><img src="https://file.cchealthier.com/file/blog/202210/2022_10_02.jpg" alt="2.jpg"></p>
-        
-          <p class="article-more-link">
-            <a href="/2022/10/19/2022-autumn/#more">Read More</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      
-      <!-- <a data-url="https://blog.cchealthier.com/2022/10/19/2022-autumn/" data-id="cm8d5hli800001r9m4s715vgt" class="article-share-link">分享</a> -->
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
 
 
   <nav id="page-nav">
     
-    <a class="extend prev" rel="prev" href="/page/4/">« 上一页</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><a class="page-number" href="/page/7/">7</a><span class="space">&hellip;</span><a class="page-number" href="/page/13/">13</a><a class="extend next" rel="next" href="/page/6/">下一页 »</a>
+    <a class="extend prev" rel="prev" href="/page/4/">« 上一页</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><a class="page-number" href="/page/7/">7</a><span class="space">&hellip;</span><a class="page-number" href="/page/14/">14</a><a class="extend next" rel="next" href="/page/6/">下一页 »</a>
   </nav>
 
 </section>
@@ -601,23 +517,23 @@ export default &#123;
       <ul>
         
           <li>
+            <a href="/2025/08/17/react-native-ffmpegkit-3/">react-native 集成 FFmpeg 能力 - 使用 FFmpegKit（三）</a>
+          </li>
+        
+          <li>
+            <a href="/2025/08/02/react-native-ffmpegkit-2/">react-native 集成 FFmpeg 能力 - 使用 FFmpegKit（二）</a>
+          </li>
+        
+          <li>
+            <a href="/2025/07/27/react-native-ffmpegkit/">react-native 集成 FFmpeg 能力 - 使用 FFmpegKit（一）</a>
+          </li>
+        
+          <li>
             <a href="/2025/03/16/use-swr/">react 使用 swr 做数据请求</a>
           </li>
         
           <li>
             <a href="/2025/01/11/chrome-extension-plugin/">chrome 插件基础模板</a>
-          </li>
-        
-          <li>
-            <a href="/2024/11/17/node-ssr-app/">react、vue、solid 实现低代码 ssr 页面渲染</a>
-          </li>
-        
-          <li>
-            <a href="/2024/09/01/import-sort/">js 几种导入依赖排序 import sort</a>
-          </li>
-        
-          <li>
-            <a href="/2024/08/17/dependency-injection-inversify/">依赖反转/注入与 IOC 容器 inversify</a>
           </li>
         
       </ul>
@@ -639,7 +555,7 @@ export default &#123;
   <div class="widget-wrap">
     <h3 class="widget-title">标签</h3>
     <div class="widget">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/chrome-%E6%8F%92%E4%BB%B6/" rel="tag">chrome 插件</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nginx/" rel="tag">nginx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/node/" rel="tag">node</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/react-native/" rel="tag">react-native</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ssr/" rel="tag">ssr</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" rel="tag">工程化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BE%AE%E5%89%8D%E7%AB%AF/" rel="tag">微前端</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%80%A7%E8%83%BD/" rel="tag">性能</a></li></ul>
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/chrome-%E6%8F%92%E4%BB%B6/" rel="tag">chrome 插件</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ffmpegkit/" rel="tag">ffmpegkit</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nginx/" rel="tag">nginx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/node/" rel="tag">node</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/react-native/" rel="tag">react-native</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ssr/" rel="tag">ssr</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" rel="tag">工程化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BE%AE%E5%89%8D%E7%AB%AF/" rel="tag">微前端</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%80%A7%E8%83%BD/" rel="tag">性能</a></li></ul>
     </div>
   </div>
 
@@ -649,7 +565,7 @@ export default &#123;
   <div class="widget-wrap">
     <h3 class="widget-title">标签云</h3>
     <div class="widget tagcloud">
-      <a href="/tags/chrome-%E6%8F%92%E4%BB%B6/" style="font-size: 10px;">chrome 插件</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/nginx/" style="font-size: 12.5px;">nginx</a> <a href="/tags/node/" style="font-size: 17.5px;">node</a> <a href="/tags/react-native/" style="font-size: 15px;">react-native</a> <a href="/tags/ssr/" style="font-size: 10px;">ssr</a> <a href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" style="font-size: 20px;">工程化</a> <a href="/tags/%E5%BE%AE%E5%89%8D%E7%AB%AF/" style="font-size: 12.5px;">微前端</a> <a href="/tags/%E6%80%A7%E8%83%BD/" style="font-size: 17.5px;">性能</a>
+      <a href="/tags/chrome-%E6%8F%92%E4%BB%B6/" style="font-size: 10px;">chrome 插件</a> <a href="/tags/ffmpegkit/" style="font-size: 14px;">ffmpegkit</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/nginx/" style="font-size: 12px;">nginx</a> <a href="/tags/node/" style="font-size: 16px;">node</a> <a href="/tags/react-native/" style="font-size: 18px;">react-native</a> <a href="/tags/ssr/" style="font-size: 10px;">ssr</a> <a href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" style="font-size: 20px;">工程化</a> <a href="/tags/%E5%BE%AE%E5%89%8D%E7%AB%AF/" style="font-size: 12px;">微前端</a> <a href="/tags/%E6%80%A7%E8%83%BD/" style="font-size: 16px;">性能</a>
     </div>
   </div>
 
@@ -658,7 +574,7 @@ export default &#123;
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2025/03/">三月 2025</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2025/01/">一月 2025</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/11/">十一月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/09/">九月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/08/">八月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/01/">一月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/12/">十二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/11/">十一月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/10/">十月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/09/">九月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/08/">八月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">七月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/06/">六月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/05/">五月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/04/">四月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/03/">三月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/02/">二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">十一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">十月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">九月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2025/08/">八月 2025</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2025/07/">七月 2025</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2025/03/">三月 2025</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2025/01/">一月 2025</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/11/">十一月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/09/">九月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/08/">八月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/01/">一月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/12/">十二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/11/">十一月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/10/">十月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/09/">九月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/08/">八月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">七月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/06/">六月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/05/">五月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/04/">四月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/03/">三月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/02/">二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">十一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">十月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">九月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a></li></ul>
     </div>
   </div>
 

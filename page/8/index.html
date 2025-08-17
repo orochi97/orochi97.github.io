@@ -74,6 +74,215 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-performance-api" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2021/01/09/performance-api/" class="article-date">
+  <time datetime="2021-01-09T13:52:41.000Z" itemprop="datePublished">2021-01-09</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/01/09/performance-api/">前端性能监控</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>前端性能参数，可以直接敲 <code>performance</code>。里面记录了各个性能指标。具体的各个参数，可以查看大佬们的<a target="_blank" rel="noopener" href="http://www.alloyteam.com/2015/09/explore-performance/#prettyPhoto">总结</a>。</p>
+<p>这里记录几个参数</p>
+<h4 id="1、首屏绘制（First-Paint，FP）"><a href="#1、首屏绘制（First-Paint，FP）" class="headerlink" title="1、首屏绘制（First Paint，FP）"></a>1、首屏绘制（First Paint，FP）</h4><p>就是白屏时间啦。</p>
+<pre><code class="js">performance.getEntriesByType(&#39;paint&#39;)[0]
+</code></pre>
+<h4 id="2、首屏内容绘制（First-Contentful-Paint，FCP）"><a href="#2、首屏内容绘制（First-Contentful-Paint，FCP）" class="headerlink" title="2、首屏内容绘制（First Contentful Paint，FCP）"></a>2、首屏内容绘制（First Contentful Paint，FCP）</h4><p>就是首屏加载时间啦</p>
+<pre><code class="js">performance.getEntriesByType(&#39;paint&#39;)[1]
+</code></pre>
+        
+          <p class="article-more-link">
+            <a href="/2021/01/09/performance-api/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      
+      <!-- <a data-url="https://blog.cchealthier.com/2021/01/09/performance-api/" data-id="cmefuc51g002tet9m42l14h63" class="article-share-link">分享</a> -->
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%80%A7%E8%83%BD/" rel="tag">性能</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-autumn" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/12/06/autumn/" class="article-date">
+  <time datetime="2020-12-06T04:09:51.000Z" itemprop="datePublished">2020-12-06</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%97%85%E8%A1%8C/">旅行</a>►<a class="article-category-link" href="/categories/%E6%97%85%E8%A1%8C/%E8%AE%B0%E5%BD%95/">记录</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/12/06/autumn/">我言秋日胜春朝</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>10月11月交界去了趟北京，看看红叶枫叶。不得不说，北方就是比南方有秋意。毕竟广东没秋天，哈哈。</p>
+<p><img src="https://file.cchealthier.com/file/blog/autumn/beijing1.jpg" alt="1.jpg"></p>
+        
+          <p class="article-more-link">
+            <a href="/2020/12/06/autumn/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      
+      <!-- <a data-url="https://blog.cchealthier.com/2020/12/06/autumn/" data-id="cmefuc5150006et9ma0n2a1qj" class="article-share-link">分享</a> -->
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-webpack-speed" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/12/06/webpack-speed/" class="article-date">
+  <time datetime="2020-12-06T02:34:40.000Z" itemprop="datePublished">2020-12-06</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/12/06/webpack-speed/">webpack 的快</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>现在啥都离不开性能。性能其实就是讲快的问题。一般 webpack 的快，都是讲它的构建（打包）的速度，但其实也可以有辅助运行时候的快的。<br>简单记录一下。</p>
+<h3 id="构建速度"><a href="#构建速度" class="headerlink" title="构建速度"></a>构建速度</h3><h4 id="一、缓存"><a href="#一、缓存" class="headerlink" title="一、缓存"></a>一、缓存</h4><p>基本上只要讲到快的肯定都有缓存。</p>
+<ol>
+<li><p><a target="_blank" rel="noopener" href="https://webpack.js.org/configuration/other-options/#cache">webpack5 的持久化缓存</a></p>
+</li>
+<li><p>各类 loader 自带的缓存功能（比如 babel-loader的 cacheDirectory: true）</p>
+</li>
+<li><p>cache-loader</p>
+</li>
+<li><p>hard-source-webpack-plugin</p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://webpack.js.org/plugins/dll-plugin">DllPlugin 和 DllReferencePlugin</a></p>
+</li>
+</ol>
+<p>前面四个是编译一次后产生缓存，也就是用以第二次缓存。<br>最后一个 Dll 是把一些不常变化的先打包好，然后引进来就可以了，不要每次都花时间构建。另类缓存。</p>
+<h4 id="二、加速文件查找"><a href="#二、加速文件查找" class="headerlink" title="二、加速文件查找"></a>二、加速文件查找</h4><ol>
+<li>对文件进行编译，那文件多少，找文件也是个耗时的工作。webpack 配置的 resolve 字段，就是用来告诉查找规则。</li>
+</ol>
+<pre><code class="js">module.exports = &#123;
+  resolve: &#123; // 配置一系列搜索资源的规则
+    alias: &#123; // 起别名，相当于转换成绝对路径了，所以比相对路径快
+      @src: path.resolve(process.cwd(), &#39;src&#39;)
+    &#125;,
+    // 引用的文件可以不加后缀，会找这些后缀的文件，引用文件详细到后缀名最快了
+    // 但是一般也习惯不写后缀名，但这字段不要太多吧
+    extensions: [&#39;.wasm&#39;, &#39;.mjs&#39;, &#39;.js&#39;, &#39;.json&#39;],
+    // 明确告诉 webpack 搜索哪个依赖文件，可以用绝对路径写死
+    modules: [&#39;node_modules&#39;]
+  &#125;
+&#125;
+</code></pre>
+<ol start="2">
+<li>以及 loader 配置里的 <code>include</code> 和 <code>exclude</code> 来告诉 webpack 哪些需要编译哪些不需要，不干活当然最省时间。</li>
+</ol>
+<h4 id="三、多进程打包"><a href="#三、多进程打包" class="headerlink" title="三、多进程打包"></a>三、多进程打包</h4><ol>
+<li><p>happypack（作者都推荐用 thread-loader 了。。。）</p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://webpack.js.org/loaders/thread-loader/">thread-loader</a></p>
+</li>
+</ol>
+<h3 id="运行速度"><a href="#运行速度" class="headerlink" title="运行速度"></a>运行速度</h3><h4 id="一、缓存-1"><a href="#一、缓存-1" class="headerlink" title="一、缓存"></a>一、缓存</h4><p>还是避不开缓存，这个结合《<a href="2020/07/02/cache/">关于缓存的几个关键词</a>》最下面内容来看。就是跟浏览器的缓存策略搭配起来。</p>
+<h4 id="二、花样减少代码"><a href="#二、花样减少代码" class="headerlink" title="二、花样减少代码"></a>二、花样减少代码</h4><ol>
+<li><p>压缩代码，现在 prodcution 模式，webpack 会自定开启混淆压缩功能了。（当然也可以自己<a target="_blank" rel="noopener" href="https://webpack.js.org/configuration/optimization/">配置压缩功能</a>）</p>
+</li>
+<li><p>减去不被触及的代码，<a target="_blank" rel="noopener" href="https://webpack.js.org/guides/tree-shaking">Tree Shaking</a>，但我想还是尽量不要写这种代码吧，Tree Shaking 也不是百分百靠谱。</p>
+</li>
+<li><p>按需加载，配合 ES6 的 <code>import export</code>，webpack就会处理了。没有用到的模块就不打包进来。<br><strong>注意：</strong>这里提一下，require 也可以使用，但并不是浏览器支持 require，而是 webpack 对其做了方法处理。<br>无论是 import 还是 require，最终都会变成 <code>__webpack_require__</code>。使用 require 就没有按需这种功效了。代码都会全部打进去。<br>而且因为 import 语法原因，所以需要放在最上面声明，是静态解析，所以才能分析出哪些要不要。（其实这部分是 babel 干的活）<br>当然 require 也有用处，代码虽然都打进来，但是不会一开始就运行（调用 require 了才会），也就是省去一开始的解析时间，最关键的还是，可以条件引入：</p>
+</li>
+</ol>
+<pre><code class="js">function getModule(flag) &#123;
+  if (flag) &#123;
+    return require(&#39;./a.js&#39;)
+  &#125;
+  return require(&#39;./b.js&#39;)
+&#125;
+</code></pre>
+<ol start="4">
+<li><p>抽出公共js，虽然大部分工程都会打成一个 js，但有些还是会有多份，就可能存在重复代码，然后这个相当复杂的 <a target="_blank" rel="noopener" href="https://webpack.js.org/plugins/split-chunks-plugin">SplitChunksPlugin</a> （<a target="_blank" rel="noopener" href="https://webpack.js.org/plugins/commons-chunk-plugin/">CommonsChunkPlugin</a>的升级版，不过这家伙已经是时代的眼泪了）就出场了。可以抽出公共组件，可以很精细地配置，当然官网说他们的默认配置最优了，没什么事就不要瞎改了。</p>
+</li>
+<li><p>异步加载，这个就跟上面那个有千丝的关系。我们运行性能讲究一个最小展示，可以看下<a href="/2020/05/28/js-performance/">JS性能优化探讨</a>里的加快响应。<br>有些功能不一定会被点到，那这部分功能就可以延后初始化。那相关的 js 就可以延迟加载。也即是动态加载，对应上面说的 import 是静态加载。使用 webpack 的语法 <a target="_blank" rel="noopener" href="https://webpack.js.org/guides/code-splitting/#dynamic-imports">import()</a>。这个跟 require 不同，不会被打包进去，而是抽多一份 js 出来。延迟去下载。</p>
+</li>
+<li><p>合并js文件，这个就跟上面那两个有万缕的关系。抽的 js 太多就会增多 http 请求，这是最耗性能的，走多一次 http 的消耗可能比一次请求多点内容更消耗，当然 http2 的多路复用另说。<br><a target="_blank" rel="noopener" href="https://webpack.js.org/plugins/limit-chunk-count-plugin/">LimitChunkCountPlugin</a> 和 <a target="_blank" rel="noopener" href="https://webpack.js.org/plugins/min-chunk-size-plugin/">MinChunkSizePlugin</a>（LimitChunkCountPlugin功能多一点，没具体使用过） 用于合并小 js 文件。实际场景中，我们就曾在使用 monaco-editor（vscode的网页版）的时候，打包出来有很多细碎的 js，然后用了 MinChunkSizePlugin 把小 js 文件给合成一份。</p>
+</li>
+</ol>
+
+      
+    </div>
+    <footer class="article-footer">
+      
+      <!-- <a data-url="https://blog.cchealthier.com/2020/12/06/webpack-speed/" data-id="cmefuc51l0053et9m3xeqbttm" class="article-share-link">分享</a> -->
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" rel="tag">工程化</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-api-defference" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2020/11/29/api-defference/" class="article-date">
@@ -143,7 +352,7 @@ arr.slice(-2, -1) // [3]
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2020/11/29/api-defference/" data-id="cm8d5hlif000m1r9m757vbg6t" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2020/11/29/api-defference/" data-id="cmefuc5140004et9m7bbwcpof" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -335,7 +544,7 @@ module.exports = CustomPlugin
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2020/11/22/webpack-config/" data-id="cm8d5hliq004g1r9m1fwh4na7" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2020/11/22/webpack-config/" data-id="cmefuc51l004xet9m9qrc1jkm" class="article-share-link">分享</a> -->
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" rel="tag">工程化</a></li></ul>
@@ -347,397 +556,11 @@ module.exports = CustomPlugin
 
 
   
-    <article id="post-search" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/11/15/search/" class="article-date">
-  <time datetime="2020-11-15T02:41:59.000Z" itemprop="datePublished">2020-11-15</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E7%AE%97%E6%B3%95/">算法</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/11/15/search/">深度优先遍历(DFS)-栈和广度优先遍历(BFS)-队列的理解</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>JS版本的，概念什么的就不赘述了。参考了这位大佬的<a target="_blank" rel="noopener" href="https://segmentfault.com/a/1190000018706578">文章（JS算法之深度优先遍历(DFS)和广度优先遍历(BFS)）</a>。<br>在这里记录下自己的理解，为啥一个是栈，一个是队列。看码：</p>
-<pre><code class="html">&lt;div id=&quot;box&quot;&gt;
-  &lt;ul&gt;
-    &lt;li&gt;&lt;div&gt;&lt;p&gt;&lt;/p&gt;&lt;/div&gt;&lt;/li&gt;
-    &lt;li&gt;&lt;img /&gt;&lt;/li&gt;
-    &lt;li&gt;&lt;a&gt;&lt;/a&gt;&lt;/li&gt;
-  &lt;/ul&gt;
-  &lt;div&gt;
-    &lt;p&gt;1&lt;/p&gt;
-    &lt;p&gt;&lt;span&gt;&lt;strong&gt;&lt;/strong&gt;&lt;/span&gt;&lt;/p&gt;
-    &lt;p&gt;3&lt;/p&gt;
-  &lt;/div&gt;
-  &lt;button&gt;&lt;strong&gt;&lt;/strong&gt;&lt;/button&gt;
-&lt;/div&gt;
-</code></pre>
-<pre><code class="js">// 深度优先，用的是栈，同一边进出，后入先出
-function deepFirstSearch(node) &#123;
-  var nodes = []
-  if (node != null) &#123;
-    var stack = []
-    stack.push(node) // 第一个元素无论 push 还是 unshift 都一样，这里只是为了相呼应。
-    while(stack.length != 0) &#123;
-      // 最核心的差别在这里了
-      // 第一次进来：是[$box]，弹出来后都是为空
-      // 第二次进来: [button, div, ul]，然后 ul 被 pop 出去，收进结果数组 nodes 里
-      var item = stack.pop()
-      nodes.push(item)
-      var children = item.children
-      for (var i = children.length - 1; i &gt;= 0; i--) &#123;
-        // 这一步也是一样，把每个子节点放进去待遍历数组
-        // 把 $box 的子节点放进待选数组，此时是 [button, div, ul]
-        // 第一次 while 进来都是一样
-        // 这里先收集左边还是右边的子级意义都是一样的
-        // 这里是从先把 button 放进来，ul 最后，等下 pop 出去就是 ul 最先
-        stack.push(children[i])
-        // 点出 ul 的子级，收进 stack 的最后，下次 while 进来，pop 就会是 ul 的子级，也即是 li
-        // 然后再继续下去，还是会把 ul 的子级的子级，也就是 div，收进 stack 最后
-        // 也就是不断的子级优先，达成深挖
-      &#125;
-    &#125;
-  &#125;
-  return nodes
-&#125;
-
-// 广度优先，用的是队列，一边进另一边出，先入先出
-function breadthFirstSearch(node) &#123;
-  var nodes = []
-  if (node != null) &#123;
-    var queue = []
-    // 第一次进来：是[$box]，弹出来后都是为空
-    // 第二次进来：[button, div, ul]，然后 button 被 unshift 出去，收进结果数组 nodes 里
-    // 第三次进来：[div, ul, strong]，然后 div 被 unshift 出去，收进结果数组 nodes 里
-    // 第四次进来：[ul, strong, p, p, p]，然后 ul 被 unshift 出去，收进结果数组 nodes 里
-    // 可以看出跟深度的差别，点出子级都是排进待选数组的最后
-    // 但是深度是栈pop，加塞在数组最后的子级优先
-    // 广度是队列unshift，一起放进数组的兄弟级优先
-    queue.unshift(node)
-    while(queue.length != 0) &#123;
-      var item = queue.shift()
-      nodes.push(item)
-      var children = item.children
-      for (var i = children.length - 1; i &gt;= 0; i--) &#123;
-        queue.push(children[i])
-        // 对应上面第二次进来：点出 button 的子级，也就是 strong，收进 queue 的最后
-        // 但对 unshift 的结果没影响，下次 while 进来，unshift 依然是 div
-        // 对应上面第三次进来：点出 div 的子级，也就是 p，收进 queue 的最后
-      &#125;
-    &#125;
-  &#125;
-  return nodes
-&#125;
-</code></pre>
-<p>可以看出，就是在遍历时候暂存的数据结构不一样。<br><strong>深度优先</strong>，就是一直深挖，孩子的孩子的孩子…。<br><strong>广度优先</strong>，就是兄弟兄弟兄弟孩子兄弟…。需要注意的是，同级的就算兄弟。意思是相对于根级为孙子辈，就算不是同个父级，也算是兄弟级。</p>
-<p><strong>2022-10-18 21:31:18</strong><br>更新了一篇用 js 做遍历的<a href="/2022/10/18/deepth-breadth-traversal/">《深广度优先遍历》</a>。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      
-      <!-- <a data-url="https://blog.cchealthier.com/2020/11/15/search/" data-id="cm8d5hlio003k1r9m7uyg6ep0" class="article-share-link">分享</a> -->
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-algorithm" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/10/21/algorithm/" class="article-date">
-  <time datetime="2020-10-21T15:51:13.000Z" itemprop="datePublished">2020-10-21</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E7%AE%97%E6%B3%95/">算法</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/10/21/algorithm/">记录一些基础算法</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>开始补充一些算法和数据结构的知识</p>
-<h3 id="冒泡排序"><a href="#冒泡排序" class="headerlink" title="冒泡排序"></a>冒泡排序</h3><pre><code class="js">const arr = [162, 6, 3, 8, 90, 234, 5, 7, 31, 45, 12, 1, 98, 23, 87, 40]
-function sort(arr) &#123;
-  const len = arr.length - 1
-  for (let x = 0, y = len; x &lt; y; x++) &#123;
-    // 把第一个跟后面那个对比，如果比后面的数大，就交换位置，到最后就可以确定最大的数在最后
-    // 也就是在 length 的位置
-    // 在第一轮的时候，x=1，也就是遍历到倒数第二个就好，因为取到 i+1 的数
-    for (let i = 0, l = len - x; i &lt; l; i++) &#123;
-      const first = arr[i], second = arr[i+1]
-      if (first &gt; second) &#123;
-        [arr[i], arr[i+1]] = [second, first]
-      &#125;
-    &#125;
-    // 假设没有第一层，最大的数已经在最后，那么第二轮就是要在剩下的数找到最大，并放到倒数第二位置
-    // 也就是在 length-1 的位置
-    // 此时 x=2，因为依然是当轮最后数（第二轮为length-1）的前一个
-    // for (var i = 0, l = arr.length - 2; i &lt; l; i++) &#123;
-    //  if (arr[i] &gt; arr[i+1]) &#123;
-    //    [arr[i], arr[i+1]] = [arr[i+1], arr[i]]
-    //  &#125;
-    // &#125;
-    // 第三轮 x=3
-    // for (var i = 0, l = arr.length - 3; i &lt; l; i++) &#123;
-    //  if (arr[i] &gt; arr[i+1]) &#123;
-    //    [arr[i], arr[i+1]] = [arr[i+1], arr[i]]
-    //  &#125;
-    // &#125;
-    // 第四轮 x=4
-    // for (var i = 0, l = arr.length - 4; i &lt; l; i++) &#123;
-    //  if (arr[i] &gt; arr[i+1]) &#123;
-    //    [arr[i], arr[i+1]] = [arr[i+1], arr[i]]
-    //  &#125;
-    // &#125;
-    // 所以循环个遍，就成了外面一层的循环
-  &#125;
-  return arr
-&#125;
-console.log(sort(arr))
-</code></pre>
-<h3 id="二分法"><a href="#二分法" class="headerlink" title="二分法"></a>二分法</h3><p>就是在一个有序的序列中迅速找到要找的那个数的索引。一个一个遍历当然也可以找到，但是不确定性导致复杂度。<br>二分法就是中间砍一刀，这样数列就成了两半。看看中间值是不是，是那就刚好了。不是的话，判断目标数是在前一半还是后一半，如此这般的循环即可。</p>
-<p>这种思想应该在现实生活中还是经常用到的，比如<code>git bisect</code>（<a target="_blank" rel="noopener" href="http://www.ruanyifeng.com/blog/2018/12/git-bisect.html">看看大佬的介绍</a>）。<br>以及，让我想起以前 TVB 的《超级无敌掌门人》里面有个游戏叫“超级无敌开口中”，轮流在在100里面瞎说一个数，中了就受罚。特别是轮到说最后一个必中的数字时那种视死如归的神情，超搞笑。</p>
-<pre><code class="js">function getRandomNum(numMin, numMax) &#123;
-  return Math.round( Math.random()*(numMax-numMin) + numMin )
-&#125;  
-function getArr() &#123;
-  const arr = []
-  for(let i = 1, l = 100; i &lt;= l; i++) &#123;
-    arr.push(i)
-  &#125;
-  return arr
-&#125;
-// 随机生成 1 ~ 100 中的某数
-const num = getRandomNum(1, 100)
-// 生成 1 - 100 的数组
-const arr = getArr()
-function binarySearch(num, arr) &#123;
-  let start = arr.length
-  let end = 0
-  const getHalf = () =&gt; &#123;
-    let length = start + end
-    return (length % 2 === 0) ? (length / 2) : (length + 1) / 2
-  &#125;
-  // 取中值
-  let half = getHalf()
-  let current = arr[half]
-  while (current !== num) &#123;
-    if (current &gt; num) &#123;
-      start = half
-    &#125; else if (current &lt; num) &#123;
-      end = half
-    &#125;
-    half = getHalf()
-    current = arr[half]
-  &#125;
-  return half
-&#125;
-const idx = binarySearch(num, arr)
-console.log(idx, arr[idx], num)
-</code></pre>
-<h3 id="斐波那契数列"><a href="#斐波那契数列" class="headerlink" title="斐波那契数列"></a>斐波那契数列</h3><p>具体的数学意义就不说了，我也不懂，总而言之是满足这样的一个数列：F(0)&#x3D;0，F(1)&#x3D;1，F(n)&#x3D;F(n - 1)+F(n - 2)（n ≥ 3，n ∈ N*）</p>
-<pre><code class="js">// 第一反应就是递归，最简单最明晰。但效率最低，其实就是每次算出来的值没存起来，导致每个 n 位的值传进去都要重新递归的算
-function fibonacci(n) &#123;
-  if(n === 0 || n === 1) &#123;
-    return n
-  &#125;
-  return fibonacci(n-1) + fibonacci(n-2)
-&#125;
-// 改进一些，是个数列自然就可以用个数组来存
-// 把之前获得 n 位的值存起来，下次要拿就直接取就好
-function fibonacci2(n) &#123;
-  if(n === 0 || n === 1) &#123;
-    return n
-  &#125;
-  const arr = [0, 1]
-  for(let i = 2; i &lt;= n; i++) &#123;
-    arr[i] = arr[i-1] + arr[i-2]
-  &#125;
-  return arr[n]
-&#125;
-// 改进一些，其实每次都是需要上两位就可以了，不需要用整个数组来存全部
-function fibonacci3(n) &#123;
-  if(n === 0 || n === 1) &#123;
-    return n
-  &#125;
-  let lastOne = 1 // n-1
-  let lastTwo = 0 // n-2
-  for(let i = 2; i &lt;= n; i++) &#123;
-    var current = lastOne + lastTwo
-    // n-2 和 n-1 分别获取后一位的值
-    lastTwo = lastOne
-    lastOne = current
-  &#125;
-  return current
-&#125;
-// 第一种递归的方法，在浏览器 40 以后基本快跑不出来了
-// 第三种还是比第二种快那么些许
-console.time(&#39;fibonacci&#39;)
-console.log(fibonacci(40))
-console.timeEnd(&#39;fibonacci&#39;)
-</code></pre>
-
-      
-    </div>
-    <footer class="article-footer">
-      
-      <!-- <a data-url="https://blog.cchealthier.com/2020/10/21/algorithm/" data-id="cm8d5hlic00061r9mcdrwadwg" class="article-share-link">分享</a> -->
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-puppeteer" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/08/30/puppeteer/" class="article-date">
-  <time datetime="2020-08-30T09:48:13.000Z" itemprop="datePublished">2020-08-30</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/08/30/puppeteer/">玩一玩puppeteer</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p><a target="_blank" rel="noopener" href="https://zhaoqize.github.io/puppeteer-api-zh_CN/">puppeteer</a>官网上写着：</p>
-<blockquote>
-<p>Puppeteer 是一个 Node 库，它提供了一个高级 API 来通过 DevTools 协议控制 Chromium 或 Chrome。Puppeteer 默认以 headless 模式运行，但是可以通过修改配置文件运行“有头”模式。</p>
-</blockquote>
-<p>其实就是个浏览器，给了许多方法让我们可以控制这个浏览器，比如打开某某网页，输入什么字符，点击哪个按钮。看起来就像是用程序来模拟人工的行为。<br>这样就表示了它可以用来自动化测试。搭配 jest 或 mocha 之类的测试框架，进行e2e测试，模拟一个人去访问网站，进行一些操作。<br>当然不止这一个方案，还有 <a target="_blank" rel="noopener" href="http://www.selenium.org.cn/">selenium</a> 和在这之上的 <a target="_blank" rel="noopener" href="https://nightwatchjs.org/">night-watch</a>，也是干 web 自动化测试的活。</p>
-<p>我们项目上使用它来跑自动化测试的，我自己用它来做爬虫，奸笑~<br>可能也不叫爬虫，就是上新闻网站扫一下热搜，到图片库搜点图片之类的。</p>
-<h3 id="安装："><a href="#安装：" class="headerlink" title="安装："></a>安装：</h3><p>安装是个蛋疼的事，因为这个用到chromium，这玩意在谷歌仓库。所以如果不能科学上网，那就只能修改为淘宝源。</p>
-<pre><code class="bash">env puppeteer_download_host=https://npm.taobao.org/mirrors npm i puppeteer
-
-npm config set puppeteer_download_host  https://npm.taobao.org/mirrors
-npm i puppeteer
-</code></pre>
-<p>年代久远，记得都是可以的。不保证时效性…</p>
-<p>我们项目一开始使用它来截图</p>
-<pre><code class="js">const puppeteer = require(&#39;puppeteer&#39;)
-;(async () =&gt; &#123;
-  const browser = await puppeteer.launch(&#123;
-    headless: true // 无头就是不要弹出浏览器
-  &#125;)
-  const page = await browser.newPage()
-  await page.goto(&#39;https://www.baidu.com&#39;)
-  await page.setViewport(&#123;
-    width: 1200,
-    height: 800
-  &#125;)
-  await page.screenshot(&#123;
-    path: &#39;puppeteer.png&#39;,
-    fullPage: true
-  &#125;)
-  await browser.close()
-&#125;)()
-</code></pre>
-<p>来看下用它来搜百度热搜，之所以对 puppeteer 感兴趣，就是同事写了一篇这个教程，里面就是演示了爬热搜。</p>
-<pre><code class="js">const puppeteer = require(&#39;puppeteer&#39;)
-;(async () =&gt; &#123;
-  const browser = await puppeteer.launch(&#123;
-    headless: true // 无头就是不要弹出浏览器
-  &#125;)
-  const page = await browser.newPage()
-  await page.goto(&#39;http://top.baidu.com/buzz?b=1&amp;fr=topindex&#39;, &#123;
-    timeout: 0, // 设置超时时间为0
-    waitUntil: &#39;domcontentloaded&#39; // 有多个状态可设置，这里设置为 dom 渲染完成
-  &#125;)
-  // 有时候网速卡，加载慢，容易超时报错，所以上面把超时时间去掉
-  // 同时网页渲染也需要时间，可以等一下，
-  // 比如 await page.waitFor(1000) 等待1000ms
-  // 比如我之前爬图片的时候，都知道图片是相当耗时的
-  // 所以我写成等图片的 dom 可见即可，可见包括了它已经被赋予 src，不需要等到图片下载并渲染完成
-  // 然后获取其 src，再通过别的方法下载
-  // await page.waitForSelector(dom, &#123; visible: true, timeout: 0 &#125;)
-  const list = await page.evaluate((dom) =&gt; &#123;  // 爬取内容
-    // 这个 dom 需要去网站上看实际结构，很好找，跟 jQuery 一样
-    const $doms = document.querySelectorAll(&#39;.mainBody .keyword a&#39;)
-    const list = Array.from($doms).map(($dom) =&gt; &#123;
-      return &#123;
-        href: $dom.href,
-        text: $dom.innerText
-      &#125;
-    &#125;)
-    return list
-  &#125;)
-  // 这个 list 就记录了热搜的标题和网址
-  await page.close()
-  await browser.close()
-&#125;)()
-</code></pre>
-<p>对网页的抓取还有这个<a target="_blank" rel="noopener" href="https://github.com/cheeriojs/cheerio/wiki/Chinese-README">cheerio</a>，在 node 里面像 jQuery 一样获取dom。<br>不过好像对单页面的网站比较麻烦。因为是抓了整个网页内容下来，再来分析页面。那对于 SPA 抓下来也是一个容器一个js，没有实体dom。所以具体看用途啦。</p>
-<p>puppeteer还有很多牛的功能，这里只是用到了冰山一角，还能做更多有趣的事。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      
-      <!-- <a data-url="https://blog.cchealthier.com/2020/08/30/puppeteer/" data-id="cm8d5hlin00361r9m75thajcs" class="article-share-link">分享</a> -->
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
 
 
   <nav id="page-nav">
     
-    <a class="extend prev" rel="prev" href="/page/7/">« 上一页</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><a class="page-number" href="/page/7/">7</a><span class="page-number current">8</span><a class="page-number" href="/page/9/">9</a><a class="page-number" href="/page/10/">10</a><span class="space">&hellip;</span><a class="page-number" href="/page/13/">13</a><a class="extend next" rel="next" href="/page/9/">下一页 »</a>
+    <a class="extend prev" rel="prev" href="/page/7/">« 上一页</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><a class="page-number" href="/page/7/">7</a><span class="page-number current">8</span><a class="page-number" href="/page/9/">9</a><a class="page-number" href="/page/10/">10</a><span class="space">&hellip;</span><a class="page-number" href="/page/14/">14</a><a class="extend next" rel="next" href="/page/9/">下一页 »</a>
   </nav>
 
 </section>
@@ -751,23 +574,23 @@ npm i puppeteer
       <ul>
         
           <li>
+            <a href="/2025/08/17/react-native-ffmpegkit-3/">react-native 集成 FFmpeg 能力 - 使用 FFmpegKit（三）</a>
+          </li>
+        
+          <li>
+            <a href="/2025/08/02/react-native-ffmpegkit-2/">react-native 集成 FFmpeg 能力 - 使用 FFmpegKit（二）</a>
+          </li>
+        
+          <li>
+            <a href="/2025/07/27/react-native-ffmpegkit/">react-native 集成 FFmpeg 能力 - 使用 FFmpegKit（一）</a>
+          </li>
+        
+          <li>
             <a href="/2025/03/16/use-swr/">react 使用 swr 做数据请求</a>
           </li>
         
           <li>
             <a href="/2025/01/11/chrome-extension-plugin/">chrome 插件基础模板</a>
-          </li>
-        
-          <li>
-            <a href="/2024/11/17/node-ssr-app/">react、vue、solid 实现低代码 ssr 页面渲染</a>
-          </li>
-        
-          <li>
-            <a href="/2024/09/01/import-sort/">js 几种导入依赖排序 import sort</a>
-          </li>
-        
-          <li>
-            <a href="/2024/08/17/dependency-injection-inversify/">依赖反转/注入与 IOC 容器 inversify</a>
           </li>
         
       </ul>
@@ -789,7 +612,7 @@ npm i puppeteer
   <div class="widget-wrap">
     <h3 class="widget-title">标签</h3>
     <div class="widget">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/chrome-%E6%8F%92%E4%BB%B6/" rel="tag">chrome 插件</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nginx/" rel="tag">nginx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/node/" rel="tag">node</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/react-native/" rel="tag">react-native</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ssr/" rel="tag">ssr</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" rel="tag">工程化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BE%AE%E5%89%8D%E7%AB%AF/" rel="tag">微前端</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%80%A7%E8%83%BD/" rel="tag">性能</a></li></ul>
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/chrome-%E6%8F%92%E4%BB%B6/" rel="tag">chrome 插件</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ffmpegkit/" rel="tag">ffmpegkit</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nginx/" rel="tag">nginx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/node/" rel="tag">node</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/react-native/" rel="tag">react-native</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ssr/" rel="tag">ssr</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" rel="tag">工程化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BE%AE%E5%89%8D%E7%AB%AF/" rel="tag">微前端</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%80%A7%E8%83%BD/" rel="tag">性能</a></li></ul>
     </div>
   </div>
 
@@ -799,7 +622,7 @@ npm i puppeteer
   <div class="widget-wrap">
     <h3 class="widget-title">标签云</h3>
     <div class="widget tagcloud">
-      <a href="/tags/chrome-%E6%8F%92%E4%BB%B6/" style="font-size: 10px;">chrome 插件</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/nginx/" style="font-size: 12.5px;">nginx</a> <a href="/tags/node/" style="font-size: 17.5px;">node</a> <a href="/tags/react-native/" style="font-size: 15px;">react-native</a> <a href="/tags/ssr/" style="font-size: 10px;">ssr</a> <a href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" style="font-size: 20px;">工程化</a> <a href="/tags/%E5%BE%AE%E5%89%8D%E7%AB%AF/" style="font-size: 12.5px;">微前端</a> <a href="/tags/%E6%80%A7%E8%83%BD/" style="font-size: 17.5px;">性能</a>
+      <a href="/tags/chrome-%E6%8F%92%E4%BB%B6/" style="font-size: 10px;">chrome 插件</a> <a href="/tags/ffmpegkit/" style="font-size: 14px;">ffmpegkit</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/nginx/" style="font-size: 12px;">nginx</a> <a href="/tags/node/" style="font-size: 16px;">node</a> <a href="/tags/react-native/" style="font-size: 18px;">react-native</a> <a href="/tags/ssr/" style="font-size: 10px;">ssr</a> <a href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" style="font-size: 20px;">工程化</a> <a href="/tags/%E5%BE%AE%E5%89%8D%E7%AB%AF/" style="font-size: 12px;">微前端</a> <a href="/tags/%E6%80%A7%E8%83%BD/" style="font-size: 16px;">性能</a>
     </div>
   </div>
 
@@ -808,7 +631,7 @@ npm i puppeteer
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2025/03/">三月 2025</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2025/01/">一月 2025</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/11/">十一月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/09/">九月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/08/">八月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/01/">一月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/12/">十二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/11/">十一月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/10/">十月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/09/">九月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/08/">八月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">七月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/06/">六月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/05/">五月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/04/">四月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/03/">三月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/02/">二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">十一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">十月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">九月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2025/08/">八月 2025</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2025/07/">七月 2025</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2025/03/">三月 2025</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2025/01/">一月 2025</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/11/">十一月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/09/">九月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/08/">八月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/01/">一月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/12/">十二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/11/">十一月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/10/">十月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/09/">九月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/08/">八月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">七月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/06/">六月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/05/">五月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/04/">四月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/03/">三月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/02/">二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">十一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">十月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">九月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a></li></ul>
     </div>
   </div>
 

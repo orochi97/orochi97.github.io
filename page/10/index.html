@@ -74,6 +74,676 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-webpackJsonp" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/08/16/webpackJsonp/" class="article-date">
+  <time datetime="2020-08-16T13:59:15.000Z" itemprop="datePublished">2020-08-16</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/08/16/webpackJsonp/">webpack通过webpackJsonp来连接多文件依赖</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>webpack一般是打成一份文件，但有时也需要打成几份，生成的文件可以把其中的公共部分抽取出来，省点代码。<br>这里就免不了依赖文件顺序的问题。这里用了很巧妙的方法，来连接不同的文件，以及依赖的前置性问题。<br>相当用心思，这里稍微记录下。</p>
+<p>先准备两份文件 foo.js，bar.js，util.js：</p>
+<pre><code class="js">// foo.js
+import util from &#39;./util&#39;
+
+console.log(&#39;foo&#39;)
+console.log(util(&#39;foo&#39;))
+
+// bar.js
+import util from &#39;./util&#39;
+
+console.log(util(&#39;bar&#39;))
+console.log(&#39;bar&#39;)
+
+export default function () &#123;
+    return &#39;bar-function&#39;
+&#125;
+
+// util.js
+console.log(&#39;util&#39;)
+
+export default function (flag) &#123;
+    return &#39;util&#39; + flag
+&#125;
+</code></pre>
+<p>webpack配置文件：</p>
+<pre><code class="js">const &#123; execSync &#125; = require(&#39;child_process&#39;)
+var webpack = require(&#39;webpack&#39;);
+
+execSync(`rm -rf build`)
+
+module.exports = &#123;
+    mode: &#39;development&#39;,
+    devtool: &#39;none&#39;,//配置生成Source Maps，选择合适的选项
+    entry:  &#123; 
+        foo: __dirname + &quot;/foo.js&quot;,
+        bar: __dirname + &quot;/bar.js&quot;
+    &#125;,//已多次提及的唯一入口文件
+    output: &#123;
+        path: __dirname + &quot;/build&quot;,//打包后的文件存放的地方
+        filename: &quot;[name].js&quot;//打包后输出文件的文件名
+    &#125;,
+     optimization: &#123;
+        splitChunks: &#123;
+          chunks: &#39;all&#39;,
+          minSize: 1,
+          maxSize: 0,
+          minChunks: 1,
+          maxAsyncRequests: 6,
+          maxInitialRequests: 4,
+          automaticNameDelimiter: &#39;~&#39;,
+          automaticNameMaxLength: 30,
+          cacheGroups: &#123;
+            vendors: &#123;
+              test: /[\\/]node_modules[\\/]/,
+              priority: -10
+            &#125;,
+            default: &#123;
+              minChunks: 2,
+              priority: -20,
+              reuseExistingChunk: true
+            &#125;
+          &#125;
+        &#125;
+      &#125;
+&#125;
+</code></pre>
+<p>会在 dist 文件夹生成三个文件：foo.js，bar.js，default<del>bar</del>foo.js<br>看得出 default-bar-foo.js 就是共用代码，这里就是 util.js，代码是：</p>
+<pre><code class="js">// window[&quot;webpackJsonp&quot;]是个数组，push了一个数组。元素1还是一个数组，里面只有一个值&quot;default~bar~foo&quot;
+// 其实就是这份文件名字，或者说是这份chunk名字
+// 而第二个值就又是各个module的集合。比如这里只有一个util.js，结合chunk名就很明显了，
+// util.js就是foo.js和bar.js共同用到的。如果还有其他共用到的，那么还有多几个字段
+(window[&quot;webpackJsonp&quot;] = window[&quot;webpackJsonp&quot;] || []).push([[&quot;default~bar~foo&quot;],&#123;
+/***/ &quot;./util.js&quot;:
+/*!*****************!*\
+  !*** ./util.js ***!
+  \*****************/
+/*! exports provided: default */
+      // __webpack_exports__=module.exports
+/***/ (function(module, __webpack_exports__, __webpack_require__) &#123;
+&quot;use strict&quot;;
+__webpack_require__.r(__webpack_exports__);
+console.log(&#39;util&#39;)
+/* harmony default export */ __webpack_exports__[&quot;default&quot;] = (function (flag) &#123;
+    return &#39;util&#39; + flag
+&#125;);
+/***/ &#125;)
+&#125;]);
+</code></pre>
+<p>如果平时有看过 webpack 生成的代码的话，就能很明显看出与入口文件打出来的内容很不一样，缺少了<code>webpackBootstrap</code>。<br>看看 foo.js，（bar.js也长得差不多），几个名词先说一下：</p>
+<p><strong>module：</strong>每一份文件的js代码。比如a.js引入了b.js，把a.js作为entry。那么到时打出来的就是只有一份a.js（该输出文件就是一份chunk，输出文件名字可变）。里面有两个模module，a.js和b.js。<br><strong>chunk：</strong>要输出的每一份文件就是一个chunk（一个或多个module组成一份chunk），一般是一个entry对应一个chunk。如果像这种抽离公共js的，也是一个chunk，也会多于entry数。</p>
+<p><strong>foo.js是</strong><br>一个自执行的函数，传入一个json对象。只有一个key值，是”.&#x2F;foo.js”。相对应的value其实是一个函数模块，就是foo.js的代码内容。<br>打包出来的js靠全局变量维系，window[“webpackJsonp”]。在每个entry chunk的最上面都有webpack加载代码，而附属chunk则没有，只有看起来像数组push的代码，如default-bar-foo.js文件所示。</p>
+<pre><code class="js">/******/ (function(modules) &#123; // webpackBootstrap
+/******/ 	// install a JSONP callback for chunk loading
+                    // 这data就是window[&quot;webpackJsonp&quot;] push进来的东西
+/******/ 	function webpackJsonpCallback(data) &#123;
+/******/ 		var chunkIds = data[0];// chunkId=&quot;default~bar~foo&quot;
+/******/ 		var moreModules = data[1];// &#123;&#39;./util.js&#39;:f&#125;
+/******/ 		var executeModules = data[2]; // 暂不知何用
+/******/
+/******/ 		// add &quot;moreModules&quot; to the modules object,
+/******/ 		// then flag all &quot;chunkIds&quot; as loaded and fire callback
+/******/ 		var moduleId, chunkId, i = 0, resolves = [];
+/******/ 		for(;i &lt; chunkIds.length; i++) &#123;
+/******/ 			chunkId = chunkIds[i];
+/******/ 			if(Object.prototype.hasOwnProperty.call(installedChunks, chunkId) &amp;&amp; installedChunks[chunkId]) &#123;
+                // resolves暂不知作何用
+/******/ 				resolves.push(installedChunks[chunkId][0]);
+/******/ 			&#125;
+              // 标记chunk安装
+/******/ 			installedChunks[chunkId] = 0;
+/******/ 		&#125;
+/******/ 		for(moduleId in moreModules) &#123;
+/******/ 			if(Object.prototype.hasOwnProperty.call(moreModules, moduleId)) &#123;
+                // 把每个chunk的每份module记录在modules，用以调用运行
+/******/ 				modules[moduleId] = moreModules[moduleId];
+/******/ 			&#125;
+/******/ 		&#125;
+            // 当有parentJsonpFunction这方法适合，就执行这个方法，参数为每个chunk代码
+            // window[&quot;webpackJsonp&quot;]里面的元素其实就是非入口chunk代码块
+            // parentJsonpFunction取自上一个window[&quot;webpackJsonp&quot;]的push的方法，
+            // 当第一个script的入口chunk，它的parentJsonpFunction就是普通数组的push
+            // 同时在第一个script的入口chunk，把window[&quot;webpackJsonp&quot;]的push改写为第一个script的入口chunk的webpackJsonpCallback方法
+            // 也就是第二个script的入口chunk里，这个parentJsonpFunction就是第一个script的入口chunk的webpackJsonpCallback方法
+            // 这样就把两份chunk的代码通过这种方式联系起来
+            // 当push（改写后的push）了非入口chunk，可以通过这种联系一层层传递到各个chunk的webpackJsonpCallback方法
+            // webpackJsonpCallback里面再调用checkDeferredModules方法，来检查并执行相应的模块代码
+            // 这样一来无论script顺序怎样，只要调用webpackJsonpCallback方法，就能达到加载的模块（chunk即为模块合集）传递到各个入口chunk
+/******/ 		if(parentJsonpFunction) parentJsonpFunction(data);
+/******/
+/******/ 		while(resolves.length) &#123;
+/******/ 			resolves.shift()();
+/******/ 		&#125;
+/******/
+/******/ 		// add entry modules from loaded chunk to deferred list
+            // 看原注释是添加新的前置依赖
+            // 暂不知为何是添加executeModules而不是一开始就写在deferredModules
+/******/ 		deferredModules.push.apply(deferredModules, executeModules || []);
+/******/
+/******/ 		// run deferred modules when all chunks ready
+/******/ 		return checkDeferredModules();
+/******/ 	&#125;;
+          // 检查依赖到齐没有，并执行
+          // 在主流程里会运行一次
+          // 在webpackJsonpCallback里最后再运行一次，也就是每次有chunk的加载都会检查运行一次
+/******/ 	function checkDeferredModules() &#123;
+/******/ 		var result;
+/******/ 		for(var i = 0; i &lt; deferredModules.length; i++) &#123;
+/******/ 			var deferredModule = deferredModules[i];
+/******/ 			var fulfilled = true;
+/******/ 			for(var j = 1; j &lt; deferredModule.length; j++) &#123;
+                // depId=&quot;./foo.js&quot;,&quot;default~bar~foo&quot;
+/******/ 				var depId = deferredModule[j];
+                // 是否已安装记录在installedChunks
+/******/ 				if(installedChunks[depId] !== 0) fulfilled = false;
+/******/ 			&#125;
+              // 全部安装完毕
+/******/ 			if(fulfilled) &#123;
+                // 把 deferredModules 清空
+/******/ 				deferredModules.splice(i--, 1);
+                // deferredModule[0]本chunk的名字，这里是&quot;./foo.js&quot;
+/******/ 				result = __webpack_require__(__webpack_require__.s = deferredModule[0]);
+/******/ 			&#125;
+/******/ 		&#125;
+/******/
+/******/ 		return result;
+/******/ 	&#125;
+/******/
+          // 先看同步代码，从这里开始看起
+/******/ 	// The module cache
+/******/ 	var installedModules = &#123;&#125;;
+/******/
+/******/ 	// object to store loaded and loading chunks
+/******/ 	// undefined = chunk not loaded, null = chunk preloaded/prefetched
+/******/ 	// Promise = chunk loading, 0 = chunk loaded
+          // 执行到这里，代表本身这个chunk也就是这个文件已加载
+          // 这里同时也会标记别的chunk加载了没有，来判断前置依赖有了没有
+/******/ 	var installedChunks = &#123;
+/******/ 		&quot;foo&quot;: 0
+/******/ 	&#125;;
+/******/
+/******/ 	var deferredModules = [];
+/******/
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) &#123;
+/******/
+/******/ 		// Check if module is in cache
+/******/ 		if(installedModules[moduleId]) &#123;
+/******/ 			return installedModules[moduleId].exports;
+/******/ 		&#125;
+/******/ 		// Create a new module (and put it into the cache)
+            // 每个加载的模块结果缓存起来
+            // 这里每个module就是未打包前的每一份js
+/******/ 		var module = installedModules[moduleId] = &#123;
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: &#123;&#125;
+/******/ 		&#125;;
+/******/
+/******/ 		// Execute the module function
+            // 这里注意到具体模块去看，会把这个模块的导出值赋值到module.exports
+            // 然后再 return 出去，所以 __webpack_require__ 模块会返回加载运行模块的结果
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/
+/******/ 		// Flag the module as loaded
+            // 标记这个 module 加载过
+/******/ 		module.l = true;
+/******/
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	&#125;
+/******/
+/******/  // 部分 __webpack_require__.字段 这里未体现作用
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__webpack_require__.m = modules;
+/******/
+/******/ 	// expose the module cache
+/******/ 	__webpack_require__.c = installedModules;
+/******/
+/******/ 	// define getter function for harmony exports
+/******/ 	__webpack_require__.d = function(exports, name, getter) &#123;
+/******/ 		if(!__webpack_require__.o(exports, name)) &#123;
+/******/ 			Object.defineProperty(exports, name, &#123; enumerable: true, get: getter &#125;);
+/******/ 		&#125;
+/******/ 	&#125;;
+/******/
+/******/ 	// define __esModule on exports
+          // 打上 ES6 
+/******/ 	__webpack_require__.r = function(exports) &#123;
+/******/ 		if(typeof Symbol !== &#39;undefined&#39; &amp;&amp; Symbol.toStringTag) &#123;
+/******/ 			Object.defineProperty(exports, Symbol.toStringTag, &#123; value: &#39;Module&#39; &#125;);
+/******/ 		&#125;
+/******/ 		Object.defineProperty(exports, &#39;__esModule&#39;, &#123; value: true &#125;);
+/******/ 	&#125;;
+/******/
+/******/ 	// create a fake namespace object
+/******/ 	// mode &amp; 1: value is a module id, require it
+/******/ 	// mode &amp; 2: merge all properties of value into the ns
+/******/ 	// mode &amp; 4: return value when already ns object
+/******/ 	// mode &amp; 8|1: behave like require
+/******/ 	__webpack_require__.t = function(value, mode) &#123;
+/******/ 		if(mode &amp; 1) value = __webpack_require__(value);
+/******/ 		if(mode &amp; 8) return value;
+/******/ 		if((mode &amp; 4) &amp;&amp; typeof value === &#39;object&#39; &amp;&amp; value &amp;&amp; value.__esModule) return value;
+/******/ 		var ns = Object.create(null);
+/******/ 		__webpack_require__.r(ns);
+/******/ 		Object.defineProperty(ns, &#39;default&#39;, &#123; enumerable: true, value: value &#125;);
+/******/ 		if(mode &amp; 2 &amp;&amp; typeof value != &#39;string&#39;) for(var key in value) __webpack_require__.d(ns, key, function(key) &#123; return value[key]; &#125;.bind(null, key));
+/******/ 		return ns;
+/******/ 	&#125;;
+/******/
+/******/ 	// getDefaultExport function for compatibility with non-harmony modules
+/******/ 	__webpack_require__.n = function(module) &#123;
+/******/ 		var getter = module &amp;&amp; module.__esModule ?
+/******/ 			function getDefault() &#123; return module[&#39;default&#39;]; &#125; :
+/******/ 			function getModuleExports() &#123; return module; &#125;;
+/******/ 		__webpack_require__.d(getter, &#39;a&#39;, getter);
+/******/ 		return getter;
+/******/ 	&#125;;
+/******/
+/******/ 	// Object.prototype.hasOwnProperty.call
+/******/ 	__webpack_require__.o = function(object, property) &#123; return Object.prototype.hasOwnProperty.call(object, property); &#125;;
+/******/
+/******/ 	// __webpack_public_path__
+/******/ 	__webpack_require__.p = &quot;&quot;;
+/******/
+          // 初始化window[&quot;webpackJsonp&quot;]为一个数组
+/******/ 	var jsonpArray = window[&quot;webpackJsonp&quot;] = window[&quot;webpackJsonp&quot;] || [];
+          // 把旧的window[&quot;webpackJsonp&quot;]的push方法缓存起来，当然第一个就是数组的push方法
+/******/ 	var oldJsonpFunction = jsonpArray.push.bind(jsonpArray);
+          // 改写window[&quot;webpackJsonp&quot;]的push方法为webpackJsonpCallback
+/******/ 	jsonpArray.push = webpackJsonpCallback;
+/******/ 	jsonpArray = jsonpArray.slice();
+          // 把window[&quot;webpackJsonp&quot;]的chunk传入webpackJsonpCallback执行一下
+/******/ 	for(var i = 0; i &lt; jsonpArray.length; i++) webpackJsonpCallback(jsonpArray[i]);
+          // 这里再次把旧的window[&quot;webpackJsonp&quot;]的push方法赋值到parentJsonpFunction
+          // parentJsonpFunction会存在在这个chunk的作用域，在这个chunk的webpackJsonpCallback里被调用
+/******/ 	var parentJsonpFunction = oldJsonpFunction;
+/******/
+/******/
+/******/ 	// add entry module to deferred list
+                    // 首位为本身chunk，后面为所依赖的chunk
+                    // 所以可以得知靠着installedChunks和deferredModules这两个变量来判断到底所需的文件加载好了没有
+                    // 以至于在script标签里的引入顺序会干扰到依赖加载从而影响执行
+          // 注意这里是二维数组
+/******/ 	deferredModules.push([&quot;./foo.js&quot;,&quot;default~bar~foo&quot;]);
+/******/ 	// run deferred modules when ready
+/******/ 	return checkDeferredModules();
+/******/ &#125;)
+/************************************************************************/
+/******/ (&#123;
+
+/***/ &quot;./foo.js&quot;:
+/*!****************!*\
+  !*** ./foo.js ***!
+  \****************/
+/*! no exports provided */
+/***/ (function(module, __webpack_exports__, __webpack_require__) &#123;
+
+&quot;use strict&quot;;
+// 标记为 ES6 模块
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _util__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./util */ &quot;./util.js&quot;);
+
+console.log(&#39;foo&#39;)
+console.log(Object(_util__WEBPACK_IMPORTED_MODULE_0__[&quot;default&quot;])(&#39;foo&#39;))
+
+/***/ &#125;)
+
+/******/ &#125;);
+</code></pre>
+<p>通过全局的 webpackJsonp 这个数组来连接多份文件。改写了这个数组的 push 方法。让其在每次 push 的时候，都一层一层找上之前加载过的文件。<br>触发每份入口文件里的<code>检查依赖（checkDeferredModules）</code>，来判断前置依赖是否准备好。好则开始执行。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      
+      <!-- <a data-url="https://blog.cchealthier.com/2020/08/16/webpackJsonp/" data-id="cmefuc51n007cet9mb3ufdhiy" class="article-share-link">分享</a> -->
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" rel="tag">工程化</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-next-tick" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/08/16/next-tick/" class="article-date">
+  <time datetime="2020-08-16T13:20:00.000Z" itemprop="datePublished">2020-08-16</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/08/16/next-tick/">vue的nextTick解析</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>用过 vue 的同学应该都知道，双向绑定中，更改了数据会去更新dom，但不是马上更新的。<br>直接跟在修改数据后，拿到的 dom 还是旧的。<br>vue有个<code>this.$nextTick</code>用法，用这个的回调可以保证拿到更新后的dom。</p>
+<p>直接看看 <a target="_blank" rel="noopener" href="https://github.com/vuejs/vue/blob/dev/src/core/util/next-tick.js">next-tick</a> 源码</p>
+<pre><code class="js">import &#123; noop &#125; from &#39;shared/util&#39;
+import &#123; handleError &#125; from &#39;./error&#39;
+import &#123; isIE, isIOS, isNative &#125; from &#39;./env&#39;
+
+export let isUsingMicroTask = false
+const callbacks = []
+let pending = false
+
+// 清异步队列，全部执行
+function flushCallbacks () &#123;
+  pending = false
+  const copies = callbacks.slice(0)
+  callbacks.length = 0
+  for (let i = 0; i &lt; copies.length; i++) &#123;
+    copies[i]()
+  &#125;
+&#125;
+let timerFunc
+if (typeof Promise !== &#39;undefined&#39; &amp;&amp; isNative(Promise)) &#123;
+  // 判断有没有 promise 且有没有被重写过，
+  // promise完好无损就使用 promise 做异步队列的触发，设置使用微任务标志为true
+  const p = Promise.resolve()
+  timerFunc = () =&gt; &#123;
+    p.then(flushCallbacks)
+    if (isIOS) setTimeout(noop)
+  &#125;
+  isUsingMicroTask = true
+&#125; else if (!isIE &amp;&amp; typeof MutationObserver !== &#39;undefined&#39; &amp;&amp; (
+  isNative(MutationObserver) ||
+  // PhantomJS and iOS 7.x
+  // 特殊场景用MutationObserver
+  MutationObserver.toString() === &#39;[object MutationObserverConstructor]&#39;
+)) &#123;
+  // Use MutationObserver where native Promise is not available,
+  // e.g. PhantomJS, iOS7, Android 4.4
+  // (#6466 MutationObserver is unreliable in IE11)
+  let counter = 1
+  const observer = new MutationObserver(flushCallbacks)
+  const textNode = document.createTextNode(String(counter))
+  observer.observe(textNode, &#123;
+    characterData: true
+  &#125;)
+  timerFunc = () =&gt; &#123;
+    counter = (counter + 1) % 2
+    textNode.data = String(counter)
+  &#125;
+  isUsingMicroTask = true
+&#125; else if (typeof setImmediate !== &#39;undefined&#39; &amp;&amp; isNative(setImmediate)) &#123;
+  // Fallback to setImmediate.
+  // Techinically it leverages the (macro) task queue,
+  // but it is still a better choice than setTimeout.
+  // 再不济看看有没有 setImmediate，虽然也是宏任务，但总比 setTimeout 强
+  timerFunc = () =&gt; &#123;
+    setImmediate(flushCallbacks)
+  &#125;
+&#125; else &#123;
+  // Fallback to setTimeout.
+  // 实在没办法了，setTimeout 兜底
+  timerFunc = () =&gt; &#123;
+    setTimeout(flushCallbacks, 0)
+  &#125;
+&#125;
+// nextTick 具体操作所在，其他队列方法也是用这个，比如 data 改动后通知 dom 修改，也是用这个
+// 即 vue 里面的响应式，不是实时更新的，而是存在一个队列，在下一回合进行任务更新。不然太耗损性能
+// 也就是解释了，在修改了 data 之后，dom 是没有马上更新，而在 $nextTick 的回调后，则可以看到 dom 更新
+// 原因就在于同样的异步任务，$nextTick 的回调，是在 dom 修改的操作后面，所以 $nextTick 能看到 dom 更新
+// 以下以 this.$nextTick(()=&gt;&#123;&#125;) 为例子，cb 为回调，ctx 为 vue 实例
+export function nextTick (cb?: Function, ctx?: Object) &#123;
+  let _resolve
+  // 把任务塞进异步队列
+  callbacks.push(() =&gt; &#123;
+    // 有回调就触发回调
+    if (cb) &#123;
+      try &#123;
+        cb.call(ctx)
+      &#125; catch (e) &#123;
+        handleError(e, ctx, &#39;nextTick&#39;)
+      &#125; 
+      // 这里注意，结合下面来看
+      //用 promise 的 resolve 触发，把 vue 实例当成参数传进去
+    &#125; else if (_resolve) &#123;
+      _resolve(ctx)
+    &#125;
+  &#125;)
+  // 在清任务 flushCallbacks 里赋值 pending 为 false
+  // 目的为了 timerFunc 在周期内只触发一次
+  // 执行 timerFunc，让其下一周期执行清异步队列任务
+  if (!pending) &#123;
+    pending = true
+    timerFunc()
+  &#125;
+  // 当没有回调且 Promise 正常
+  // $nextTick 返回的是一个 promise，触发时机与上面有回调一样
+  if (!cb &amp;&amp; typeof Promise !== &#39;undefined&#39;) &#123;
+    return new Promise(resolve =&gt; &#123;
+      _resolve = resolve
+    &#125;)
+  &#125;
+&#125;
+</code></pre>
+<p>除了常规的回调用法之外，还可以这样用</p>
+<pre><code class="js">this.$nextTick().then( vue实例 =&gt; &#123; console.log(vue实例 === this) &#125;) // =&gt; true
+</code></pre>
+<p>如果不传入回调，则返回promise，因为是 promise，也可以直接就 await 等待。参考<a target="_blank" rel="noopener" href="https://cn.vuejs.org/v2/guide/reactivity.html#%E5%BC%82%E6%AD%A5%E6%9B%B4%E6%96%B0%E9%98%9F%E5%88%97">官网</a>。</p>
+<p>接着来个简陋版简单模拟一下这个 nextTick 的实现。这其中还涉及到<a href="/2020/05/27/eventloop/">事件循环</a>的知识。</p>
+<pre><code class="js">// 模拟vue nextTick
+// 存储所有$nextTick的回调，变量的set修改后通知dom更新的，与$nextTick的回调进入同个微队列
+const callbacks = []
+// 微队列的触发载体，这里是Promise.resolve()
+// vue是先找Promise.resolve，没有就找setTimeout
+let run = null
+
+function next() &#123;
+  callbacks.forEach((cb) =&gt; &#123;
+    cb()
+  &#125;)
+&#125;
+// 这里的change可以看成修改了变量，里面的回调就是与nextTick的回调如出一辙
+function change() &#123;
+  nextTick(() =&gt; &#123;
+    // 这里面是同步
+    console.log(&#39;update dom -- 1&#39;)
+    const child = document.createElement(&#39;div&#39;)
+    child.id = &#39;new&#39;
+    document.getElementById(&#39;box&#39;).appendChild(child)
+    console.log(&#39;update dom&#39;)
+    console.log(&#39;update dom -- 2&#39;)
+  &#125;)
+&#125;
+
+function nextTick(cb) &#123;
+  if(!run) &#123;
+    // 初始化下个队列
+    run = Promise.resolve()
+    // 把next方法放在下个队列运行
+    // 看上面的next函数，是把callbacks的函数遍历执行
+    run.then(next)
+  &#125;
+  // nextTick的回调加入数组等着，遍历触发里面的每个函数
+  // 由于是同步，所以其实只是一个微任务，
+  callbacks.push(cb)
+&#125;
+
+// 调用了第一次nextTick
+nextTick(() =&gt; &#123;
+  // 表示该次微队列任务开始
+  console.log(&#39;nextTick -- 1&#39;)
+&#125;)
+Promise.resolve().then(() =&gt; &#123;
+  console.log(&#39;then -- &#39;)
+&#125;)
+// 修改变量，更改了dom
+change()
+// 同步任务，最早打印，但此时没有new元素
+console.log(&#39;script -- &#39;, document.getElementById(&#39;new&#39;))
+// 调用了第二次nextTick
+nextTick(() =&gt; &#123;
+  // 在修改变量之后调nextTick，已有new元素
+  console.log(&#39;nextTick -- 2&#39;, document.getElementById(&#39;new&#39;))
+&#125;)
+// nextTick -- 2 之所以在 then -- 前打印，是因为回调都放在callbacks里，同步触发了
+</code></pre>
+<br>
+<img src="/2020/08/16/next-tick/next.PNG" class="" title="next">
+<br>
+      
+    </div>
+    <footer class="article-footer">
+      
+      <!-- <a data-url="https://blog.cchealthier.com/2020/08/16/next-tick/" data-id="cmefuc51d002aet9mat1oalzd" class="article-share-link">分享</a> -->
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-vertical-middle" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/07/29/vertical-middle/" class="article-date">
+  <time datetime="2020-07-29T14:30:18.000Z" itemprop="datePublished">2020-07-29</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/07/29/vertical-middle/">垂直居中的几个方法</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>四种方法，先在外面放四个容器, 赋予 “.container” 类。让其子元素居中，先赋予 “.box” 类，水平居中。</p>
+<pre><code class="xml">&lt;!DOCTYPE&gt;
+&lt;html xmlns=&quot;http://www.w3.org/1999/xhtml&quot;&gt;
+&lt;head&gt;
+&lt;meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=utf-8&quot; /&gt;
+&lt;title&gt;baidu&lt;/title&gt;
+&lt;/head&gt;
+&lt;style type=&quot;text/css&quot;&gt;
+.container &#123;
+  width: 22%;
+  height: 300px;
+  float: left;
+  background-color: #abcdef;
+  margin: 0 10px;
+  position: relative;
+&#125;
+.box &#123;
+  width: 100px;
+  height: 100px;
+  background-color: red;
+  text-align: center;
+&#125;
+&lt;!-- 绝对定位大法，设置为绝对定位，四个方向位移为0，外边距设为auto --&gt;
+.middle1 &#123;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+&#125;
+&lt;!-- flex弹性布局，特别容易完成这个事 --&gt;
+.middle2 &#123;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+&#125;
+&lt;!-- 利用表格居中，注意的是还要多一层table-cell，真正居中是在table-cell --&gt;
+.middle3 &#123;
+  display: table-cell;
+  vertical-align: middle;
+  background-color: initial;
+&#125;
+.block &#123;
+  display: inline-block;
+&#125;
+&lt;!-- 绝对定位加translate大法，水平垂直位移50%，translate里面的50%是相对于自己的，所以不知宽高也可以使用 --&gt;
+.middle4 &#123;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translateX(-50%) translateY(-50%);
+&#125;
+&lt;/style&gt;
+&lt;body&gt;
+&lt;div class=&quot;container&quot;&gt;&lt;div class=&quot;box middle1&quot;&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;div class=&quot;container middle2&quot;&gt;&lt;div class=&quot;box&quot;&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;div class=&quot;container&quot; style=&quot;display: table;&quot;&gt;
+  &lt;div class=&quot;box middle3&quot;&gt;
+    &lt;p class=&quot;box block&quot;&gt;&lt;/p&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;container&quot;&gt;&lt;div class=&quot;box middle4&quot;&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+<p>总结：个人觉得，首先 <a target="_blank" rel="noopener" href="http://www.ruanyifeng.com/blog/2015/07/flex-grammar.html">flex</a> 布局最方便也最帅气。然后绝对定位加 <a target="_blank" rel="noopener" href="https://developer.mozilla.org/en-US/docs/Web/CSS/transform-function/translate">translate</a> 也好理解。至于第一种绝对定位加四个方向位移为0，其实不太理解其原理~ &#x3D; &#x3D;！</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      
+      <!-- <a data-url="https://blog.cchealthier.com/2020/07/29/vertical-middle/" data-id="cmefuc51k004het9m8gzx6k7r" class="article-share-link">分享</a> -->
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-vue-life" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2020/07/26/vue-life/" class="article-date">
@@ -232,7 +902,7 @@ var app = new Vue(&#123;
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2020/07/26/vue-life/" data-id="cm8d5hliq004a1r9mb3ib5ejg" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2020/07/26/vue-life/" data-id="cmefuc51k004qet9m3ea8anvp" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -406,453 +1076,7 @@ console.log(Object.prototype.toString.call(t1)) // [object Object]
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2020/07/25/variable-type/" data-id="cm8d5hlip00411r9mb8hv0llu" class="article-share-link">分享</a> -->
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-traversal-property" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/07/25/traversal-property/" class="article-date">
-  <time datetime="2020-07-25T04:00:18.000Z" itemprop="datePublished">2020-07-25</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/07/25/traversal-property/">遍历属性的几个方法</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>这里列出五个</p>
-<ul>
-<li>for in</li>
-<li>Object.keys</li>
-<li>Object.getOwnPropertyNames</li>
-<li>Object.getOwnPropertySymbols</li>
-<li>Reflect.ownKeys</li>
-</ul>
-<pre><code class="js">Object.prototype.allattr = true
-Object.prototype.allFn = function()&#123;&#125;
-
-// 普通对象
-const obj1 = &#123;
-  a: 1,
-  b: 2,
-  [Symbol(&#39;c&#39;)]: 3
-&#125;
-Object.defineProperty(obj1, &#39;d&#39;, &#123;
-  enumerable: false,
-  value: 4
-&#125;)
-
-// 原型对象
-function Obj2 () &#123;
-  this.a = 1
-  this[Symbol(&#39;b&#39;)] = 1
-&#125;
-Obj2.prototype.c = 2
-Obj2.prototype.d = function() &#123;&#125;
-Obj2.e = 1
-
-// 对象实例
-const obj3 = new Obj2()
-
-function show(obj) &#123;
-  let arr = []
-  // 会打出原型的属性，可以用 hasOwnProperty 去除
-  for (const attr in obj) &#123;
-    arr.push(attr)
-  &#125;
-  console.log(&#39;--- for in ---&#39;, arr)
-
-  arr = []
-  // 不会打出原型的属性，相当于 for in 用 hasOwnProperty 去除
-  Object.keys(obj).forEach((attr) =&gt; &#123;
-    arr.push(attr)
-  &#125;)
-  console.log(&#39;--- Object.keys ---&#39;, arr)
-
-  arr = []
-  // 上面两个只打出可枚举的，这个不可枚举也可以打出来，不会打出原型的属性
-  Object.getOwnPropertyNames(obj).forEach((attr) =&gt; &#123;
-    arr.push(attr)
-  &#125;)
-  console.log(&#39;--- Object.getOwnPropertyNames ---&#39;, arr)
-
-  arr = []
-  // 打出 Symbols 属性
-  Object.getOwnPropertySymbols(obj).forEach((attr) =&gt; &#123;
-    arr.push(attr)
-  &#125;)
-  console.log(&#39;--- Object.getOwnPropertySymbols ---&#39;, arr)
-
-  arr = []
-  // Reflect.ownKeys = Object.getOwnPropertyNames + Object.getOwnPropertySymbols
-  Reflect.ownKeys(obj).forEach((attr) =&gt; &#123;
-    arr.push(attr)
-  &#125;)
-  console.log(&#39;--- Reflect.ownKeys ---&#39;, arr)
-&#125;
-
-show(obj1)
-console.log(&#39;%c --------------- 分割线 ---------------&#39;, &#39;background:#aaa;color:red&#39;)
-show(Obj2)
-console.log(&#39;%c --------------- 分割线 ---------------&#39;, &#39;background:#aaa;color:red&#39;)
-show(obj3)
-</code></pre>
-<br/>
-<img src="/2020/07/25/traversal-property/traversal-property.PNG" class="" title="遍历对象属性">
-      
-    </div>
-    <footer class="article-footer">
-      
-      <!-- <a data-url="https://blog.cchealthier.com/2020/07/25/traversal-property/" data-id="cm8d5hlip003w1r9md6rcd6pq" class="article-share-link">分享</a> -->
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-lazyload" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/07/12/lazyload/" class="article-date">
-  <time datetime="2020-07-11T16:48:49.000Z" itemprop="datePublished">2020-07-12</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/07/12/lazyload/">简单实现图片懒加载、预加载、分批加载</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>图片我这里是随便找了十张图片，起名 0~9 的名字，方便获取。</p>
-<p><strong>懒加载：</strong>原理就是先放一批空图片占位，当图片进入可视区，再来赋予图片src值，让其显示。<br><strong>预加载：</strong>提前请求一批图片资源。下载缓存里。到真的渲染图片时候就可以快速获取到图片。用 new Image() 来请求资源，就不用先创建dom。<br><strong>分批加载：</strong>设定一个距离值，在滑动到距离底部小于这个距离值，则请求下一批图片。</p>
-<p>分批加载可以与其他两者混用，懒加载与预加载应该不混用了，一个减低服务器压力，一个是增加服务器压力换取体验。</p>
-<pre><code class="xml">&lt;!DOCTYPE&gt;
-&lt;head&gt;
-&lt;meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=utf-8&quot; /&gt;
-&lt;title&gt;lazyload&lt;/title&gt;
-&lt;/head&gt;
-&lt;style type=&quot;text/css&quot;&gt;
-  #box &#123;
-    width: 100%;
-    background: black;
-    border-radius: 10px;
-  &#125;
-  ul &#123;
-    padding: 0;
-    margin: 0;
-  &#125;
-  li &#123;
-    margin: 5px;
-    background: gray;
-    text-align: center;
-  &#125;
-  img &#123;
-    height: 300px;
-    width: auto;
-  &#125;
-&lt;/style&gt;
-&lt;body&gt;
-&lt;script type=&quot;text/javascript&quot;&gt;
-// 简单节流
-function throttle(fn, time) &#123;
-  let timer
-  return (ev) =&gt; &#123;
-    if (timer) &#123;
-      return
-    &#125;
-    timer = setTimeout(() =&gt; &#123;
-      timer = null
-      fn(ev)
-    &#125;, time)
-  &#125;
-&#125;
-function getNum(numMin, numMax) &#123;
-  return Math.round( Math.random()*(numMax-numMin) + numMin );
-&#125;
-function getImg (len) &#123;
-  const arr = []
-  for (let i = 0; i &lt; len; i++) &#123;
-    arr.push(getNum(0, 9))
-  &#125;
-  // 模拟异步获取图片资源
-  return Promise.resolve(arr)
-&#125;
-window.onload = function () &#123;
-  const $ui = document.querySelector(&#39;#box ul&#39;)
-  const loading = &#39;./img/loading.gif&#39;
-  const distance = 20
-  function initImg() &#123;
-    return getImg(5).then((imgs) =&gt;&#123;
-      imgs.forEach((img) =&gt; &#123;
-        const url = `./img/$&#123;img&#125;.JPG`
-        // 先预加载，演示一下，不然这里懒加载没什么意义了，都是发了请求
-        // 用一个img对象来先对资源进行请求
-        const imgObj = new Image()
-        imgObj.src = url
-        // 创建图片dom
-        const $li = document.createElement(&#39;li&#39;)
-        $ui.appendChild($li)
-        const $img = document.createElement(&#39;img&#39;)
-        $img.src = loading
-        $img.dataset.src = `./img/$&#123;img&#125;.JPG`
-        $li.appendChild($img)
-      &#125;)
-    &#125;)    
-  &#125;
-  function checkImg() &#123;
-    const $imgs = document.querySelectorAll(&#39;#box li img&#39;)
-    $imgs.forEach((dom) =&gt; &#123;
-      const dataSrc = dom.getAttribute(&#39;data-src&#39;)
-      // 此top为该元素距离窗口顶部距离，
-      // 所以直接判断该值是否小于窗口可视区的值，即在可视区内
-      const &#123; top &#125; = dom.getBoundingClientRect()
-      // 先判断有没有data-src，防止不断修改图片src
-      if (dataSrc &amp;&amp; (top &lt; window.innerHeight)) &#123;
-        dom.src = dataSrc
-        dom.removeAttribute(&#39;data-src&#39;)
-      &#125;
-    &#125;)
-  &#125;
-  window.addEventListener(&#39;scroll&#39;, throttle(function(ev) &#123;
-    // 距离底部还有20px
-    const &#123; scrollTop, clientHeight, offsetHeight &#125; = document.documentElement
-    if (offsetHeight - ( scrollTop + clientHeight ) &lt; distance) &#123;
-      initImg()
-    &#125;
-    checkImg()
-  &#125;, 200))
-  // 进行首次的资源获取
-  initImg().then(() =&gt; &#123;
-    checkImg()
-  &#125;)
-&#125;
-&lt;/script&gt;
-&lt;div id=&quot;box&quot;&gt;
-  &lt;ul&gt;&lt;/ul&gt;
-&lt;/div&gt;
-&lt;/body&gt;
-&lt;/html&gt;
-</code></pre>
-<p>除此之外还有个 api 专门来处理这种可视回调的<a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/API/IntersectionObserver">IntersectionObserver</a>。<br>具体可参阅下<a target="_blank" rel="noopener" href="http://www.ruanyifeng.com/blog/2016/11/intersectionobserver_api.html">阮老师的文章</a>。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      
-      <!-- <a data-url="https://blog.cchealthier.com/2020/07/12/lazyload/" data-id="cm8d5hlij001s1r9mbr1o71zv" class="article-share-link">分享</a> -->
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-callapplybind" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/07/09/callapplybind/" class="article-date">
-  <time datetime="2020-07-09T14:58:38.000Z" itemprop="datePublished">2020-07-09</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/07/09/callapplybind/">自己实现call，apply，bind</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>这三个都是改变函数里的 this 指向<br>第一个参数都是用来替换 this 的对象，后面是原来函数的参数，不定个数<br>当第一个参数为 null 或 undefined，则里面 this 指向 window</p>
-<p>call，apply用法一样，区别在于</p>
-<pre><code class="js">func.call(obj, a, b, c, ...) // 后面的参数是一个一个
-func.apply(obj, []) // 后面的参数是一个数组
-// 这里有个帅气的找出数组最大值
-Math.max.apply(null, [1,2,3,4,1,2,3])
-</code></pre>
-<p>bind 比较特别，返回的是个函数，不执行</p>
-<pre><code class="js">// 后面的参数也是一个一个，同时会被锁住，成为原函数的前几个参数
-const newFn = bind.call(obj, a, b, c, ...)
-// 再调用的时候，参数为原函数的第n+1个参数
-newFn(e, f, g, ...)
-</code></pre>
-<h3 id="上码"><a href="#上码" class="headerlink" title="上码"></a>上码</h3><pre><code class="js">var name = &#39;windowname&#39;
-var age = &#39;windowage&#39;  
-const boy = &#123;
-  name: &#39;xiaoming&#39;,
-  age: 18,
-  show (a, b, c) &#123;
-    console.log(`$&#123;this.name&#125; is $&#123;this.age&#125;`, a, b, c)
-  &#125;
-&#125;
-const girl = &#123;
-  name: &#39;xiaohong&#39;,
-  age: 16
-&#125;
-boy.show(7, 8, 9) // xiaoming is 18 7 8 9
-
-// 先来正常的结果
-console.log(&#39;------------------- 对比 -------------------&#39;)
-boy.show.call(girl, 17, 18, 19, 10) // xiaohong is 16 17 18 19
-boy.show.apply(girl, [27, 28, 29, 20]) // xiaohong is 16 27 28 29
-boy.show.call(null, 17, 18, 19, 10) // windowname is windowage 17 18 19
-boy.show.apply(undefined, [27, 28, 29, 20]) // windowname is windowage 27 28 29
-
-const bindFn1 = boy.show.bind(girl, 17, 18, 19, 10)
-bindFn1() // xiaohong is 16 17 18 19
-bindFn1(1, 2, 3) // xiaohong is 16 17 18 19
-
-const bindFn2 = boy.show.bind(girl, 27)
-bindFn2() // xiaohong is 16 27 undefined undefined
-bindFn2(1, 2, 3) // xiaohong is 16 27 1 2
-
-const bindFn3 = boy.show.bind(null, 27)
-bindFn3() // windowname is windowage 27 undefined undefined
-bindFn3(12, 13, 14) // windowname is windowage 27 12 13
-
-console.log(&#39;------------------- 分割线 -------------------&#39;)
-// 通俗来讲就是哪个对象调用了函数，this就指向谁，当前面没有谁调用则是window
-// 绑定对象赋予一个字段为函数，来调用这个函数
-// 当绑定对象为 null 或者 undefined，则让这个函数单独运行，自然 this 会指向window
-// 随机数的为了不要不小心覆盖到绑定对象原来的属性
-// 不能绑定后对象多了个新属性，要删掉多出来的字段函数，雁过不留痕
-Function.prototype._call = function(context, ...param) &#123;
-  // 随便的随机名字
-  const functionName = Math.floor(Math.random() * 100000)
-  let result
-  if (context) &#123;
-    context[functionName] = this
-    result = context[functionName](...param)
-    delete context[functionName]
-  &#125; else &#123;
-    result = this(...param)
-  &#125;
-  return result
-&#125;
-
-// 当不能用 ES6 的解构时候，就用字符串拼接起来，然后用 eval 触发
-Function.prototype._call2 = function() &#123;
-  const functionName = Math.floor(Math.random() * 100000)
-  const params = []
-  let _context
-  for (let i = 1, l = arguments.length; i &lt; l; i++) &#123;
-    params.push(arguments[i])
-  &#125;
-  if (arguments[0]) &#123;
-    _context = arguments[0]
-    _context[functionName] = this
-    paramStr = `_context[functionName]($&#123;params.join(&#39;, &#39;)&#125;)`
-  &#125; else &#123;
-    _context = this
-    paramStr = `_context($&#123;params.join(&#39;, &#39;)&#125;)`
-  &#125;
-  const result = eval(paramStr)
-  delete _context[functionName]
-  return result
-&#125;
-
-Function.prototype._apply = function(context, arr) &#123;
-  const functionName = Math.floor(Math.random() * 100000)
-  let result
-  if (context) &#123;
-    context[functionName] = this
-    result = context[functionName](...arr)
-    delete context[functionName]
-  &#125; else &#123;
-    result = this(...arr)
-  &#125;
-  return result
-&#125;
-
-Function.prototype._bind = function(context, ...oldParam) &#123;
-  const fn = this
-  if (context) &#123;
-    return (...newParam) =&gt; &#123;
-      const functionName = Math.floor(Math.random() * 100000)
-      context[functionName] = fn
-      const result = context[functionName](...oldParam, ...newParam)
-      delete context[functionName]
-      return result
-    &#125;
-  &#125;
-  return (...newParam) =&gt; &#123;
-    return fn(...oldParam, ...newParam)
-  &#125;
-&#125;
-
-boy.show._call(girl, 17, 18, 19, 10)
-boy.show._apply(girl, [27, 28, 29, 20])
-boy.show._call(null, 17, 18, 19, 10)
-boy.show._apply(undefined, [27, 28, 29, 20])
-
-const _bindFn1 = boy.show._bind(girl, 17, 18, 19, 10)
-_bindFn1()
-_bindFn1(1, 2, 3)
-
-const _bindFn2 = boy.show._bind(girl, 27)
-_bindFn2()
-_bindFn2(1, 2, 3)
-
-const _bindFn3 = boy.show._bind(null, 27)
-_bindFn3()
-_bindFn3(12, 13, 14)
-</code></pre>
-
-      
-    </div>
-    <footer class="article-footer">
-      
-      <!-- <a data-url="https://blog.cchealthier.com/2020/07/09/callapplybind/" data-id="cm8d5hlie000e1r9m7tnc9yte" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2020/07/25/variable-type/" data-id="cmefuc51k004ket9mao2p5pj5" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -866,7 +1090,7 @@ _bindFn3(12, 13, 14)
 
   <nav id="page-nav">
     
-    <a class="extend prev" rel="prev" href="/page/9/">« 上一页</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><a class="page-number" href="/page/9/">9</a><span class="page-number current">10</span><a class="page-number" href="/page/11/">11</a><a class="page-number" href="/page/12/">12</a><a class="page-number" href="/page/13/">13</a><a class="extend next" rel="next" href="/page/11/">下一页 »</a>
+    <a class="extend prev" rel="prev" href="/page/9/">« 上一页</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><a class="page-number" href="/page/9/">9</a><span class="page-number current">10</span><a class="page-number" href="/page/11/">11</a><a class="page-number" href="/page/12/">12</a><span class="space">&hellip;</span><a class="page-number" href="/page/14/">14</a><a class="extend next" rel="next" href="/page/11/">下一页 »</a>
   </nav>
 
 </section>
@@ -880,23 +1104,23 @@ _bindFn3(12, 13, 14)
       <ul>
         
           <li>
+            <a href="/2025/08/17/react-native-ffmpegkit-3/">react-native 集成 FFmpeg 能力 - 使用 FFmpegKit（三）</a>
+          </li>
+        
+          <li>
+            <a href="/2025/08/02/react-native-ffmpegkit-2/">react-native 集成 FFmpeg 能力 - 使用 FFmpegKit（二）</a>
+          </li>
+        
+          <li>
+            <a href="/2025/07/27/react-native-ffmpegkit/">react-native 集成 FFmpeg 能力 - 使用 FFmpegKit（一）</a>
+          </li>
+        
+          <li>
             <a href="/2025/03/16/use-swr/">react 使用 swr 做数据请求</a>
           </li>
         
           <li>
             <a href="/2025/01/11/chrome-extension-plugin/">chrome 插件基础模板</a>
-          </li>
-        
-          <li>
-            <a href="/2024/11/17/node-ssr-app/">react、vue、solid 实现低代码 ssr 页面渲染</a>
-          </li>
-        
-          <li>
-            <a href="/2024/09/01/import-sort/">js 几种导入依赖排序 import sort</a>
-          </li>
-        
-          <li>
-            <a href="/2024/08/17/dependency-injection-inversify/">依赖反转/注入与 IOC 容器 inversify</a>
           </li>
         
       </ul>
@@ -918,7 +1142,7 @@ _bindFn3(12, 13, 14)
   <div class="widget-wrap">
     <h3 class="widget-title">标签</h3>
     <div class="widget">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/chrome-%E6%8F%92%E4%BB%B6/" rel="tag">chrome 插件</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nginx/" rel="tag">nginx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/node/" rel="tag">node</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/react-native/" rel="tag">react-native</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ssr/" rel="tag">ssr</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" rel="tag">工程化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BE%AE%E5%89%8D%E7%AB%AF/" rel="tag">微前端</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%80%A7%E8%83%BD/" rel="tag">性能</a></li></ul>
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/chrome-%E6%8F%92%E4%BB%B6/" rel="tag">chrome 插件</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ffmpegkit/" rel="tag">ffmpegkit</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nginx/" rel="tag">nginx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/node/" rel="tag">node</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/react-native/" rel="tag">react-native</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ssr/" rel="tag">ssr</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" rel="tag">工程化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BE%AE%E5%89%8D%E7%AB%AF/" rel="tag">微前端</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%80%A7%E8%83%BD/" rel="tag">性能</a></li></ul>
     </div>
   </div>
 
@@ -928,7 +1152,7 @@ _bindFn3(12, 13, 14)
   <div class="widget-wrap">
     <h3 class="widget-title">标签云</h3>
     <div class="widget tagcloud">
-      <a href="/tags/chrome-%E6%8F%92%E4%BB%B6/" style="font-size: 10px;">chrome 插件</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/nginx/" style="font-size: 12.5px;">nginx</a> <a href="/tags/node/" style="font-size: 17.5px;">node</a> <a href="/tags/react-native/" style="font-size: 15px;">react-native</a> <a href="/tags/ssr/" style="font-size: 10px;">ssr</a> <a href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" style="font-size: 20px;">工程化</a> <a href="/tags/%E5%BE%AE%E5%89%8D%E7%AB%AF/" style="font-size: 12.5px;">微前端</a> <a href="/tags/%E6%80%A7%E8%83%BD/" style="font-size: 17.5px;">性能</a>
+      <a href="/tags/chrome-%E6%8F%92%E4%BB%B6/" style="font-size: 10px;">chrome 插件</a> <a href="/tags/ffmpegkit/" style="font-size: 14px;">ffmpegkit</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/nginx/" style="font-size: 12px;">nginx</a> <a href="/tags/node/" style="font-size: 16px;">node</a> <a href="/tags/react-native/" style="font-size: 18px;">react-native</a> <a href="/tags/ssr/" style="font-size: 10px;">ssr</a> <a href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" style="font-size: 20px;">工程化</a> <a href="/tags/%E5%BE%AE%E5%89%8D%E7%AB%AF/" style="font-size: 12px;">微前端</a> <a href="/tags/%E6%80%A7%E8%83%BD/" style="font-size: 16px;">性能</a>
     </div>
   </div>
 
@@ -937,7 +1161,7 @@ _bindFn3(12, 13, 14)
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2025/03/">三月 2025</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2025/01/">一月 2025</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/11/">十一月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/09/">九月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/08/">八月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/01/">一月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/12/">十二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/11/">十一月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/10/">十月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/09/">九月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/08/">八月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">七月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/06/">六月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/05/">五月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/04/">四月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/03/">三月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/02/">二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">十一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">十月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">九月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2025/08/">八月 2025</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2025/07/">七月 2025</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2025/03/">三月 2025</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2025/01/">一月 2025</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/11/">十一月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/09/">九月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/08/">八月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/01/">一月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/12/">十二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/11/">十一月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/10/">十月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/09/">九月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/08/">八月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">七月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/06/">六月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/05/">五月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/04/">四月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/03/">三月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/02/">二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">十一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">十月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">九月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a></li></ul>
     </div>
   </div>
 

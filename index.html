@@ -74,6 +74,374 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-react-native-ffmpegkit-3" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2025/08/17/react-native-ffmpegkit-3/" class="article-date">
+  <time datetime="2025-08-17T14:34:28.000Z" itemprop="datePublished">2025-08-17</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2025/08/17/react-native-ffmpegkit-3/">react-native 集成 FFmpeg 能力 - 使用 FFmpegKit（三）</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>相关文章：<br>《<a href="/2025/07/27/react-native-ffmpegkit/">react-native 集成 FFmpeg 能力 - 使用 FFmpegKit（一）</a>》<br>《<a href="/2025/08/02/react-native-ffmpegkit-2/">react-native 集成 FFmpeg 能力 - 使用 FFmpegKit（二）</a>》</p>
+<p><strong><u>这一篇主要记录自己尝试打包 FFmpegKit 遇到的一些问题</u></strong></p>
+<p>FFmpegKit <a target="_blank" rel="noopener" href="https://github.com/arthenica/ffmpeg-kit/tree/main">仓库地址</a></p>
+<p>网上可以找到一些大佬打好的全功能包，但是有些功能可能用不上，自己不需要的话，可以尝试自己本地编译一个。<br>仓库作者大佬也把怎么打写在文档里了，包括多平台的。这里我只尝试打包 apple 和 android 的。</p>
+<h3 id="0、"><a href="#0、" class="headerlink" title="0、"></a>0、</h3><p>首先最后一步是需要 x86 架构才能打出来，如果是苹果芯片电脑，需要安装 <a target="_blank" rel="noopener" href="https://support.apple.com/zh-cn/guide/motion/aside/motnd9f51338/5.6.6/mac/13.4">Rosetta</a> 工具。否则会报这样的错：<br><code>arch: posix_spawnp: zsh: Bad CPU type in executable</code></p>
+<p>先查看自己电脑有没有安装：</p>
+<pre><code class="bash">pgrep -q oahd &amp;&amp; echo &quot;Rosetta 已安装&quot; || echo &quot;Rosetta 未安装&quot;
+</code></pre>
+<p>没有的话就进行安装</p>
+<pre><code class="bash">softwareupdate --install-rosetta
+</code></pre>
+<p>接着安装文档安装一系列必备的依赖和一些环境变量的设置，比如 android 需要设置 sdk 和 ndk 的路径。</p>
+<p>其他问题：</p>
+<h3 id="1、"><a href="#1、" class="headerlink" title="1、"></a>1、</h3><p>可能会遇到需要升级 bison 的问题，电脑自带的可能才 2.3，可以用 homebrew 下载新的版本，然后覆盖电脑自带的<br>相关 issue 《<a target="_blank" rel="noopener" href="https://github.com/arthenica/ffmpeg-kit/issues/201">fails to build with –enable-gnutls</a>》。</p>
+<h3 id="2、"><a href="#2、" class="headerlink" title="2、"></a>2、</h3><p>可能会遇到 cmake 最低版本要求，报错：CMake Error at CMakeLists.txt:29 (cmake_minimum_required):<br>去相应的 CMakeLists.txt 文件，把 cmake_minimum_required (VERSION 3.1 FATAL_ERROR)  这一句的那个 3.1 数据改成 3.5</p>
+<h3 id="3、"><a href="#3、" class="headerlink" title="3、"></a>3、</h3><p>用 —full 的时候，可能最后打包会报错，openssl 和 gnutls 不能同时启动。所以改成不要用 —full，按官网 readme 把所需要的参数一个个 enable 进去。二选一，deepseek 推荐用 openssl</p>
+<h3 id="4、"><a href="#4、" class="headerlink" title="4、"></a>4、</h3><p>Android ndk 版本最好用 25.1.8937393，其他版本我试了都报错。</p>
+<h3 id="5、"><a href="#5、" class="headerlink" title="5、"></a>5、</h3><p>报了一个缺失库的错误，记不太清楚了。是有一份文件有关于头文件引入的判断，大概是判断要引入类似于这样的库： &lt;f.h&gt; 还是 &lt;math.h&gt;，然后条件判断是要引入 &lt;f.h&gt;。结果这个库比较老导致报错了。我就尝试都改成使用 &lt;math.h&gt; 就通过了。具体是哪一份文件的哪一行记不住了。<br>本来文章就是想记录这个，结果却忘了。&#x3D; &#x3D;!</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      
+      <!-- <a data-url="https://blog.cchealthier.com/2025/08/17/react-native-ffmpegkit-3/" data-id="cmefuc51i003let9mh0ly8c4z" class="article-share-link">分享</a> -->
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ffmpegkit/" rel="tag">ffmpegkit</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/react-native/" rel="tag">react-native</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-react-native-ffmpegkit-2" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2025/08/02/react-native-ffmpegkit-2/" class="article-date">
+  <time datetime="2025-08-02T07:36:21.000Z" itemprop="datePublished">2025-08-02</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2025/08/02/react-native-ffmpegkit-2/">react-native 集成 FFmpeg 能力 - 使用 FFmpegKit（二）</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>相关文章：<br>《<a href="/2025/07/27/react-native-ffmpegkit/">react-native 集成 FFmpeg 能力 - 使用 FFmpegKit（一）</a>》<br>《<a href="/2025/08/17/react-native-ffmpegkit-3/">react-native 集成 FFmpeg 能力 - 使用 FFmpegKit（三）</a>》</p>
+<p><strong><u>这一篇主要记录对于 react-native 项目里，直接使用原生模块。</u></strong></p>
+<p>其实 react-native 能用起来，那就意味着原生的引入已经成功了。但是我以为和上一篇处理 react-native 库一样，在根目录的 ios 和 android 文件夹引入声明，相当于全局声明，自定义原生模块就可以直接使用了，但实际上不是，还需要在相应的自定义原生模块里再引入声明。</p>
+<p>expo 项目有可以协助创建自定义原生模块的 <a target="_blank" rel="noopener" href="https://docs.expo.dev/modules/native-module-tutorial/">create-expo-module</a>。然后前提还是先把 ffmpegkit 的库下到本地来引入。</p>
+<h3 id="1-expo-项目-Android-引入"><a href="#1-expo-项目-Android-引入" class="headerlink" title="1. expo 项目 Android 引入"></a>1. expo 项目 Android 引入</h3><p>在 <code>modules/native-module/android/build.gradle</code> 加上：</p>
+<pre><code>dependencies &#123;
+    // 1. 直接引入 AAR，位置合理放置就行
+    implementation files(&#39;libs/ffmpeg-kit-full-6.0-2.aar&#39;)
+    // 2. 添加传递依赖（必须）
+    implementation &#39;com.arthenica:smart-exception-java:0.2.1&#39;
+&#125;
+</code></pre>
+<p>在代码里使用：</p>
+<pre><code class="kotlin">package expo.modules.settings
+
+// 引入下面这三个
+import com.arthenica.ffmpegkit.FFmpegKit
+import com.arthenica.ffmpegkit.FFmpegSession
+import com.arthenica.ffmpegkit.ReturnCode
+
+import expo.modules.kotlin.modules.Module
+import expo.modules.kotlin.modules.ModuleDefinition
+
+class ExpoSettingsModule : Module() &#123;
+  override fun definition() = ModuleDefinition &#123;
+    Name(&quot;ExpoSettings&quot;)
+
+    Function(&quot;getTheme&quot;) &#123;
+      return@Function &quot;system&quot;
+    &#125;
+  &#125;
+&#125;
+</code></pre>
+<h3 id="2-expo-项目-IOS-引入"><a href="#2-expo-项目-IOS-引入" class="headerlink" title="2. expo 项目 IOS 引入"></a>2. expo 项目 IOS 引入</h3><p>在 <code>modules/native-module/ios/NativeModule.podspec</code> 加上：</p>
+<pre><code class="pod">Pod::Spec.new do |s|
+  s.name           = &#39;NativeModule&#39;
+  s.version        = &#39;1.0.0&#39;
+  s.summary        = &#39;&#39;
+  s.description    = &#39;&#39;
+  s.author         = &#39;&#39;
+  s.homepage       = &#39;https://docs.expo.dev/modules/&#39;
+  s.platforms      = &#123;
+    :ios =&gt; &#39;15.1&#39;,
+    :tvos =&gt; &#39;15.1&#39;
+  &#125;
+  s.source         = &#123; git: &#39;&#39; &#125;
+  s.static_framework = true
+
+  s.dependency &#39;ExpoModulesCore&#39;
+
+  # Swift/Objective-C compatibility
+  s.pod_target_xcconfig = &#123;
+    &#39;DEFINES_MODULE&#39; =&gt; &#39;YES&#39;,
+  &#125;
+
+  s.source_files = &quot;src/**/*.&#123;h,m,mm,swift,hpp,cpp&#125;&quot;
+  // 直接引入 xcframework， 位置合理放置就行
+  s.vendored_frameworks = &#39;libs/*.xcframework&#39;
+end
+</code></pre>
+<p>在代码里使用：</p>
+<pre><code class="swift">import ExpoModulesCore
+
+// 加上这句引用
+import ffmpegkit
+
+public class ExpoSettingsModule: Module &#123;
+  public func definition() -&gt; ModuleDefinition &#123;
+    Name(&quot;ExpoSettings&quot;)
+
+    Function(&quot;getTheme&quot;) &#123; () -&gt; String in
+      &quot;system&quot;
+    &#125;
+  &#125;
+&#125;
+</code></pre>
+<p><strong>下面两个只是尝试，然后记录一下，实际上用的上面 expo 项目</strong></p>
+<h3 id="3-react-native-项目-IOS-引入，-使用-swift-语法"><a href="#3-react-native-项目-IOS-引入，-使用-swift-语法" class="headerlink" title="3. react-native 项目 IOS 引入， 使用 swift 语法"></a>3. react-native 项目 IOS 引入， 使用 swift 语法</h3><p>本质上差别不大，只是没有 expo 的辅助，改回 react-native 要求的语法。</p>
+<p>在 <code>modules/native-module/src/NativeModule.ts</code> 改成：</p>
+<pre><code class="ts">// expo 改成 react-native 的模块引入方式
+import &#123; NativeModules &#125; from &#39;react-native&#39;;
+export const NewVideoEditor = NativeModules.NewVideoEditorModule;
+</code></pre>
+<p><code>podspec</code> 文件和 expo 项目一样就行。</p>
+<p>新增 <code>modules/new-module/ios/src/NativeModule.m</code> 文件：</p>
+<pre><code class="Objective-c">#import &lt;React/RCTBridgeModule.h&gt;
+#import &lt;FFmpegKit/FFmpegKit.h&gt;
+
+@interface RCT_EXTERN_MODULE(NewVideoEditorModule, NSObject)
+
+// 同步方法 - getName
+RCT_EXTERN_METHOD(getName)
+
+// 异步方法 - getFFmpegVersion
+RCT_EXTERN_METHOD(getFFmpegVersion:(RCTPromiseResolveBlock)resolve
+                  rejecter:(RCTPromiseRejectBlock)reject)
+
+@end
+</code></pre>
+<p>新增 <code>modules/new-module/ios/src/NativeModule.swift</code> 文件：</p>
+<pre><code class="swift">import Foundation
+import React
+import ffmpegkit
+
+@objc(NewVideoEditorModule)
+class NewVideoEditorModule: NSObject, RCTBridgeModule &#123;
+    // MARK: - RCTBridgeModule
+    static func moduleName() -&gt; String! &#123;
+        return &quot;NewVideoEditorModule&quot;
+    &#125;
+    static func requiresMainQueueSetup() -&gt; Bool &#123;
+        return false
+    &#125;
+    // MARK: - Exported Methods
+    // 导出同步方法 - 使用 @objc 标记，React Native 会自动发现
+    @objc
+    func getName() -&gt; String &#123;
+        return &quot;NewVideoEditor-Name&quot;
+    &#125;
+    @objc
+    func getFFmpegVersion(_ resolve: @escaping RCTPromiseResolveBlock,
+                         rejecter reject: @escaping RCTPromiseRejectBlock) &#123;
+        let version = FFmpegKitConfig.getFFmpegVersion()
+        resolve(version)
+    &#125;
+&#125;
+</code></pre>
+<p>上面的代码也是问 AI 问出来的，仅供参考，模块名和文件名需要按实际填写。这里的注意点还是原生 ios 的问题吧，据说 ios 提供给 react-native 的库是用 Objective-c 写的。所以在 react-native 里自定义原生 ios 模块里写 swift 也要包装成 Objective-c。</p>
+<h3 id="4-react-native-项目-IOS-引入，-使用-Objective-c-语法"><a href="#4-react-native-项目-IOS-引入，-使用-Objective-c-语法" class="headerlink" title="4. react-native 项目 IOS 引入， 使用 Objective-c 语法"></a>4. react-native 项目 IOS 引入， 使用 Objective-c 语法</h3><p>参考 <a target="_blank" rel="noopener" href="https://github.com/arthenica/ffmpeg-kit/tree/main/react-native/ios">FFmpegKit 仓库</a> 的写法就行，就是用 Objective-c 写的。<br>ios 的声明文件 podspec 文件和 ts 的导出文件 NativeModule.ts 和 swift 写法的一样就行。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      
+      <!-- <a data-url="https://blog.cchealthier.com/2025/08/02/react-native-ffmpegkit-2/" data-id="cmefuc51h003iet9mhqjh1dl5" class="article-share-link">分享</a> -->
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ffmpegkit/" rel="tag">ffmpegkit</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/react-native/" rel="tag">react-native</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-react-native-ffmpegkit" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2025/07/27/react-native-ffmpegkit/" class="article-date">
+  <time datetime="2025-07-27T03:20:53.000Z" itemprop="datePublished">2025-07-27</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2025/07/27/react-native-ffmpegkit/">react-native 集成 FFmpeg 能力 - 使用 FFmpegKit（一）</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>相关文章：<br>《<a href="/2025/08/02/react-native-ffmpegkit-2/">react-native 集成 FFmpeg 能力 - 使用 FFmpegKit（二）</a>》<br>《<a href="/2025/08/17/react-native-ffmpegkit-3/">react-native 集成 FFmpeg 能力 - 使用 FFmpegKit（三）</a>》</p>
+<p><strong><u>这一篇主要记录对于 react-native 库的使用。</u></strong></p>
+<p>最近在做 react-native 的需求，需要做一些视频剪辑。ios 上使用的是 AVFoundation，询问了 AI 还比较顺利，功能实现了。Android 上使用的是 MediaCodec，就是怎么都调试不出来。AI 也直接建议用 FFmpeg 了。</p>
+<h3 id="一、现状调研"><a href="#一、现状调研" class="headerlink" title="一、现状调研"></a>一、现状调研</h3><p><a target="_blank" rel="noopener" href="https://ffmpeg.org/">FFmpeg</a> 也是个很知名很强大的音视频处理工具了，一般用在命令行。在这个基础上，网上有大佬封装适配了多个平台的库，其中也包括 react-native，仓库地址 <a target="_blank" rel="noopener" href="https://github.com/arthenica/ffmpeg-kit">ffmpeg-kit</a>。很遗憾的是，今年年初因为人力资源问题，大佬停止了更新。</p>
+<p>这里提到了：《<a target="_blank" rel="noopener" href="https://tanersener.medium.com/saying-goodbye-to-ffmpegkit-33ae939767e1">Saying Goodbye to FFmpegKit</a>》。感谢大佬们的用爱发电啊。</p>
+<p>截止到当前，FFmpeg 版本是 7，FFmpegKit 封装的版本是 6。同时 FFmpegKit 也删除了 IOS 和 Android 仓库里的库，所以 react-native 的也用不了了。但是仓库源码还在。所以目前还想继续使用 FFmpegKit 的话，可以：</p>
+<ol>
+<li>找之前网上保留过的资源，或者其他大佬私下打包出来分享的。</li>
+<li>自己根据源码打包，因为不维护了，自己解决打包出现的问题。</li>
+</ol>
+<h3 id="二、资源准备"><a href="#二、资源准备" class="headerlink" title="二、资源准备"></a>二、资源准备</h3><p>当然找到了资源包，也得自己引入，因为正常的安装流程已经报错了，得本地引入（自己打包放到网上仓库也可以），首先：</p>
+<p><strong>Android</strong> - <a target="_blank" rel="noopener" href="https://artifactory.appodeal.com/appodeal-public/com/arthenica/ffmpeg-kit-full-gpl/6.0-2.LTS/">aar 下载</a>，然后在本地引入。<br><strong>IOS</strong> - <a target="_blank" rel="noopener" href="https://luthviar.medium.com/%EF%B8%8F-resolved-ffmpegkit-retirement-issue-in-ios-a-complete-guide-with-cocoapods-support-e3caac7192e0">参考文章</a>，可以将 podFile 指向 FFmpegKit 原仓库的地址改成指向「<a target="_blank" rel="noopener" href="https://raw.githubusercontent.com/luthviar/ffmpeg-kit-ios-full/main/ffmpeg-kit-ios-full.podspec">别的地址</a>」（其实就是这个文章作者大佬自己的仓库），保证能下载到依赖压缩包就行，也可以根据这份 podspec 文件里面指向的 zip 包地址，把依赖包下载下来，放在自己本地引入。</p>
+<h3 id="三、react-native-库引入使用"><a href="#三、react-native-库引入使用" class="headerlink" title="三、react-native 库引入使用"></a>三、react-native 库引入使用</h3><p>react-native 库：《<a target="_blank" rel="noopener" href="https://www.npmjs.com/package/ffmpeg-kit-react-native">ffmpeg-kit-react-native</a>》，原《<a target="_blank" rel="noopener" href="https://github.com/arthenica/ffmpeg-kit/tree/main/react-native">使用文档</a>》，现在安装这个库会报已经废弃的警告。</p>
+<p>现在在获得 IOS 和 Android 依赖包的情况下，进行本地引入，使得 react-native 库也能用起来。当然相应的 IOS 和 Android 库也能用。<br>首先在项目根目录放置两个依赖库（地址随意，用的时候正确使用就行）：</p>
+<img src="/2025/07/27/react-native-ffmpegkit/%E4%BE%9D%E8%B5%96%E5%8C%85%E6%96%87%E4%BB%B6%E8%B7%AF%E5%BE%84.png" class="" title="依赖包文件路径">
+
+<p>ios 文件夹有一个 <strong>ffmpeg-kit-ios-video.podspec</strong> 文件，这不是资源包下载下来附带的，要自己添加，相当于依赖声明。</p>
+<h4 id="Android-端修复使用"><a href="#Android-端修复使用" class="headerlink" title="Android 端修复使用"></a>Android 端修复使用</h4><p>Android 端的使用还是比较简单的，直接打 patch 修改 node_modules 里的文件内容就行：找到 node_modules&#x2F;ffmpeg-kit-react-native&#x2F;android&#x2F;build.gradle 文件，修改成一下这样即可：</p>
+<pre><code>dependencies &#123;
+  api &#39;com.facebook.react:react-native:+&#39;
+  // 这句注释：implementation &#39;com.arthenica:ffmpeg-kit-&#39; + safePackageName(safeExtGet(&#39;ffmpegKitPackage&#39;, &#39;https&#39;)) + &#39;:&#39; + safePackageVersion(safeExtGet(&#39;ffmpegKitPackage&#39;, &#39;https&#39;))
+  // 添加下面两句，引入本地依赖和其他依赖
+  implementation files(&#39;../../../libs/android/ffmpeg-kit.aar&#39;)
+  implementation &#39;com.arthenica:smart-exception-java:0.2.1&#39;
+&#125;
+</code></pre>
+<h4 id="IOS-端修复使用"><a href="#IOS-端修复使用" class="headerlink" title="IOS 端修复使用"></a>IOS 端修复使用</h4><h5 id="1、"><a href="#1、" class="headerlink" title="1、"></a>1、</h5><p>首先上面提到的 <strong>ffmpeg-kit-ios-video.podspec</strong>：</p>
+<pre><code>Pod::Spec.new do |s|
+  s.name         = &#39;ffmpeg-kit-ios-video&#39;
+  s.version      = &#39;6.0&#39;
+  s.summary      = &#39;FFmpeg Kit for React Native&#39;
+  s.homepage     = &#39;https://github.com/arthenica/ffmpeg-kit&#39;
+  s.license      = &#39;LGPL-3.0&#39;
+  s.authors      = &#39;author&#39;
+  s.platform          = :ios
+  s.requires_arc      = true
+  s.static_framework  = true
+  s.source       = &#123; path: &#39;.&#39; &#125;
+  s.dependency &quot;React-Core&quot;
+  s.vendored_frameworks = &#39;*.xcframework&#39;
+end
+</code></pre>
+<h5 id="2、"><a href="#2、" class="headerlink" title="2、"></a>2、</h5><p>然后项目下找到 <strong>ios&#x2F;Podfile</strong> 文件，修改：</p>
+<pre><code>// 备用：pod &#39;ffmpeg-kit-ios-full&#39;, :podspec =&gt; &#39;https://raw.githubusercontent.com/luthviar/ffmpeg-kit-ios-full/main/ffmpeg-kit-ios-full.podspec&#39;
+pod &#39;ffmpeg-kit-ios-video&#39;, :path =&gt; &#39;../libs/ios/ffmpeg-kit-ios-video&#39;
+pod &#39;ffmpeg-kit-react-native&#39;, :subspecs =&gt; [&#39;video&#39;], :podspec =&gt; &#39;../node_modules/ffmpeg-kit-react-native/ffmpeg-kit-react-native.podspec&#39;
+// 找到下面这一句，然后在这一句上面添加上面那两句，顺序严格
+config = use_native_modules!(config_command)
+</code></pre>
+<p>注意：这里的依赖库名是 <code>ffmpeg-kit-ios-video</code>，是因为我自己本地打了个 video 包出来，所以命名为 video 后缀。如果自己打出来了别的包，或者网上找的包是 full 或者别的名字，只要把所有相应的名字改了就行。</p>
+<p>比如 <code>ffmpeg-kit-ios-video</code> 全改成 <code>ffmpeg-kit-ios-full</code>，包括那个 libs&#x2F;ios 下的 podspec 文件。<br><code>:subspecs =&gt; [&#39;video&#39;]</code> 理论上应该也没影响了，不过也最好改一下，改成：<code>:subspecs =&gt; [&#39;full&#39;]</code>。</p>
+<h5 id="3、"><a href="#3、" class="headerlink" title="3、"></a>3、</h5><p>如果是 expo 项目，这里有个小问题。ios 文件夹都是每次 build 生成的，当然里面的 Podfile 文件也是，也就是每次重新创建文件，都要自己去打这个补丁。太麻烦了，所以得换另外方式。<br><strong>注意下面示例我是用了 ffmpeg-kit-ios-full 的包，这个和自己本地引入的实际包名保持一致就好了。</strong></p>
+<p>用官方的工具 <a target="_blank" rel="noopener" href="https://docs.expo.dev/versions/unversioned/sdk/build-properties/">expo-build-properties</a>，在 app.config.ts 文件加上：</p>
+<pre><code class="ts">const config = &#123;
+  // 其他省略
+  plugins: [
+    [
+      &#39;expo-build-properties&#39;,
+      &#123;
+        ios: &#123;
+          extraPods: [
+            &#123;
+              name: &#39;ffmpeg-kit-ios-full&#39;,
+              path: &#39;../libs/ios/ffmpeg-kit-ios-full&#39;, // 本地路径（相对于 ios/Podfile）
+            &#125;,
+            &#123;
+              name: &#39;ffmpeg-kit-react-native&#39;,
+              podspec:
+                  &#39;../node_modules/ffmpeg-kit-react-native/ffmpeg-kit-react-native.podspec&#39;, // 本地路径（相对于 ios/Podfile）
+            &#125;,
+          ],
+        &#125;,
+      &#125;,
+    ],
+  ],
+&#125;
+</code></pre>
+<p>这样，每次 build 创建 ios&#x2F;Podfile 文件时候，就会打上上面的补丁。可以看到上面是打了两份补丁，一个 ffmpeg-kit 本身，自己使用本地引入的。一个是对应的 react-native 库，指向了 node_modules 里的文件，但是这个 react-native 库 podspec 文件已经知道是有问题的。<br>所以还要再对 node_modules 的 ffmpeg-kit-react-native 依赖包再打一份针对 ios 的 patch：</p>
+<pre><code>Pod::Spec.new do |s|
+  s.source       = &#123; :git =&gt; &quot;https://github.com/arthenica/ffmpeg-kit.git&quot;, :tag =&gt; &quot;react.native.v#&#123;s.version&#125;&quot; &#125;
+  s.dependency &quot;React-Core&quot;
+  s.source_files      = &#39;**/FFmpegKitReactNativeModule.m&#39;,
+    &#39;**/FFmpegKitReactNativeModule.h&#39;
+  s.dependency &#39;ffmpeg-kit-ios-full&#39;, &quot;6.0&quot;
+  s.ios.deployment_target = &#39;10&#39;
+end
+</code></pre>
+<h3 id="四、测试使用"><a href="#四、测试使用" class="headerlink" title="四、测试使用"></a>四、测试使用</h3><p>本地库和配置文件都准备完毕，因为改了原生依赖，所以最好重新编译一遍。我使用的是 expo 项目，可以执行：<code>npx expo prebuild --clean</code> 重新安装一遍。<br>如果用的纯 react-native 项目，就用 xcode 和 Android Studio 重新安装。</p>
+<p>在代码里测试是否引用成功：</p>
+<pre><code class="js">import &#123; ReturnCode &#125; from &#39;ffmpeg-kit-react-native&#39;;
+FFmpegKitConfig.getFFmpegVersion().then(v =&gt; console.log(&#39;getFFmpegVersion&#39;, v))
+</code></pre>
+
+      
+    </div>
+    <footer class="article-footer">
+      
+      <!-- <a data-url="https://blog.cchealthier.com/2025/07/27/react-native-ffmpegkit/" data-id="cmefuc51i003pet9md4h4haiy" class="article-share-link">分享</a> -->
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ffmpegkit/" rel="tag">ffmpegkit</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/react-native/" rel="tag">react-native</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-use-swr" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2025/03/16/use-swr/" class="article-date">
@@ -166,7 +534,7 @@ function Profile() &#123;
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2025/03/16/use-swr/" data-id="cm8d5hlip003y1r9mbbqr8b77" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2025/03/16/use-swr/" data-id="cmefuc51k004eet9m84qjd4bk" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -266,7 +634,7 @@ export default defineConfig(&#123;
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2025/01/11/chrome-extension-plugin/" data-id="cm8d5hlie000i1r9m1rjq2006" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2025/01/11/chrome-extension-plugin/" data-id="cmefuc517000ket9m5oeb5ue2" class="article-share-link">分享</a> -->
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/chrome-%E6%8F%92%E4%BB%B6/" rel="tag">chrome 插件</a></li></ul>
@@ -278,302 +646,11 @@ export default defineConfig(&#123;
 
 
   
-    <article id="post-node-ssr-app" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2024/11/17/node-ssr-app/" class="article-date">
-  <time datetime="2024-11-17T03:18:33.000Z" itemprop="datePublished">2024-11-17</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2024/11/17/node-ssr-app/">react、vue、solid 实现低代码 ssr 页面渲染</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>项目做了个低代码平台，复盘下，本地实现一个丐版。主要是实现渲染部分，没有做设计器，也就是拖拉拽部分。</p>
-<p>代码地址：<a target="_blank" rel="noopener" href="https://github.com/orochi97/brick-schema-ssr">brick-schema-ssr</a></p>
-<h3 id="对于低代码的一些想法"><a href="#对于低代码的一些想法" class="headerlink" title="对于低代码的一些想法"></a>对于低代码的一些想法</h3><p><code>低代码</code> 这个概念已经很久了，可能大家或多或少都做过类似的，很多公司也会去尝试自己内部自研。老实话，我感觉这玩意定制性挺强的，做到能开源或者通用平台真的不容易。放业界两个优秀的产品：<a target="_blank" rel="noopener" href="https://lowcode-engine.cn/index">lowcode-engine</a>，<a target="_blank" rel="noopener" href="https://www.mybricks.world/">mybricks</a>。</p>
-<p>个人觉得还是 schema 的设计，决定了设计器应该怎么交互。毕竟设计器最终就是为了产出相应的 schema。而且最复杂的其实是“动起来”。也就是界面拖拉拽拼接好后，怎么加上逻辑编排，让页面动起来。这是个麻烦活，设置简单了，功能不够强大。设置复杂了，上手难，还得了解怎么用。</p>
-<p>可以从场景出发，一个是快速上新一些小的单页面活动页，减少重复工作。一个是可以交由设计师来直接制作页面，有点像以前的 Dreamweaver 啊。说白了都是快，为了提效。当然这里的快还包含了上线快，毕竟改了 schema 就可以生效了，不然直接拷贝代码也很快。其他的复杂页面，我认为还不如直接写代码，出问题还不好排查，甚至还不好维护。但如果写一大堆代码，那还叫低代码么。</p>
-<h3 id="工程介绍"><a href="#工程介绍" class="headerlink" title="工程介绍"></a>工程介绍</h3><p>工程使用了 pnpm + monorepo，打包工具用 vite，前端各自用 react、vue、solid，后端用 koa。</p>
-<ul>
-<li>packages<ul>
-<li>core<ul>
-<li>app：提供 <code>App.tsx</code>，给各个框架做入门组件使用。</li>
-<li>components：各个组件的主要实现，包括 props、styles、classes 等处理，不多，就实现了五个做 demo。</li>
-<li>library：一些需要外部注入的工具，比如一些 hooks，<code>useState</code> 等。</li>
-<li>sdk：各框架渲染 sdk 的基类，就是实现一些公共方法，剩下的框架相关的各自去实现。</li>
-<li>types：类型声明，其中的 dom.d.ts 声明，是从 vue3 抄过来的。</li>
-</ul>
-</li>
-<li><a target="_blank" rel="noopener" href="https://react.dev/">react</a>：react 渲染 sdk，提供 <code>createRoot</code>、<code>hydrate</code>、<code>renderToString</code> 等功能，继承自 core 里的 sdk 基类，同时实现并注入框架相关的 hook。</li>
-<li><a target="_blank" rel="noopener" href="https://vuejs.org/">vue</a>： 同 react，引擎改为 vue。</li>
-<li><a target="_blank" rel="noopener" href="https://www.solidjs.com/">solid</a>：同 react，引擎改为 solid。</li>
-<li>client：前端项目，react、vue、solid 三个框架结合各自 sdk，接受 schema 做 demo 展示，顺便提供打包后的 index 给后端做返回页面用。</li>
-<li>server<ul>
-<li>render：使用 react、vue、solid 三个 sdk 提供的 <code>renderToString</code> 方法，加上编译处理，用于生产。</li>
-<li>src：koa 服务，使用 render 文件夹导出的 <code>renderToString</code> 方法，返回不同框架的 schema ssr 页面。以及其他的接口支持。</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-<p><strong>对于逻辑编排的实现，我这里直接采用写代码的方式了。</strong></p>
-<h3 id="实现功能"><a href="#实现功能" class="headerlink" title="实现功能"></a>实现功能</h3><ol>
-<li>基础组件 Button Checkbox Image Radio Text。</li>
-<li>高级组件 View List，支持自定义 slot 内容，即子元素动态配置。</li>
-<li>全局样式，通过设置 class 属性，classes: { warn: true }，或者根据条件设置 classes: { warn: ‘!isLogin’ }。字段来自于 dataMap 属性声明获取相应字段。叹号表示取反。</li>
-<li>提供 api 给非子元素的组件修改 props、style、class 属性。</li>
-<li>提供全局 store，组件通过 dataMap 属性声明获取相应字段。</li>
-<li>逻辑编排，直接对各组件的 on 事件进行相关编码。</li>
-<li>支持注入自定义工具方法，比如 api 请求，可以在逻辑编排里调用。</li>
-<li>支持 i18n 国际化，支持插槽变量。国际化 t 方法需要自行注入。</li>
-</ol>
-<h3 id="后话"><a href="#后话" class="headerlink" title="后话"></a>后话</h3><p>实际上我们还支持了 <a target="_blank" rel="noopener" href="https://qwik.dev/">qwik.js</a>，据说是个 ssr 很厉害的框架。同时还支持 <a target="_blank" rel="noopener" href="https://reactnative.dev/">react-native</a>，就是把 html 的 dom 标签，替换成 rn 提供的原生组件。这个适配巨复杂，本来就是个原生应用，只是改成开发像前端。也写了相关几篇文章：《<a href="/2023/12/03/react-native-record/">react-native ios 流水账</a>》、《<a href="/2023/11/24/ios-rn-integrate/">ios 原生应用集成 react-native</a>》、《<a href="/2024/01/12/android-rn-integrate/">android 原生应用集成 react-native</a>》。</p>
-<p>其实也是为了适配而适配，真正用的就是一套就够了。而且组件库一般也不会从基础搭建起，都是使用现有的组件库，最多改点东西适配一下。</p>
-<p>真的有这种适配多框架的需求，可以用这个「<a target="_blank" rel="noopener" href="https://mitosis.builder.io/docs/overview/">Mitosis</a>」，用 jsx 写组件，可以编译成多个前端库的对应组件，包括：Angular, React, Qwik, Vue, Svelte, Solid, and React Native。也就是按照它要求的有一定约束的写法，就是写出一套适配多框架的组件库。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      
-      <!-- <a data-url="https://blog.cchealthier.com/2024/11/17/node-ssr-app/" data-id="cm8d5hlil002j1r9m42c47ikv" class="article-share-link">分享</a> -->
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/node/" rel="tag">node</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ssr/" rel="tag">ssr</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-import-sort" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2024/09/01/import-sort/" class="article-date">
-  <time datetime="2024-09-01T02:58:11.000Z" itemprop="datePublished">2024-09-01</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2024/09/01/import-sort/">js 几种导入依赖排序 import sort</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>现在前端工程化一般都会加上 eslint + prettier （<a href="/2023/04/21/fontend-engineering-2/">从零搭建前端工程（下）</a>）做格式化，为了团队风格，美观，还有为了减少不必要的冲突，比如 import 文件的顺序。合并代码的时候，冲突无可避免，但是能尽量减少最好。能够统一排序，添加的文件的改动也比较一目了然。相应的工具其实也不少，大同小异，选择适合自己的而用之。</p>
-<h3 id="一、eslint-自带的-sort-imports"><a href="#一、eslint-自带的-sort-imports" class="headerlink" title="一、eslint 自带的 sort-imports"></a>一、eslint 自带的 sort-imports</h3><p>《<a target="_blank" rel="noopener" href="https://eslint.org/docs/latest/rules/sort-imports">sort-imports</a>》。不看了，自定义差，还几乎不能 auto fix。</p>
-<h3 id="二、eslint-插件-eslint-plugin-import"><a href="#二、eslint-插件-eslint-plugin-import" class="headerlink" title="二、eslint 插件 eslint-plugin-import"></a>二、eslint 插件 eslint-plugin-import</h3><p>《<a target="_blank" rel="noopener" href="https://github.com/import-js/eslint-plugin-import/blob/HEAD/docs/rules/order.md">eslint-plugin-import</a>》。支持自定义配置，支持 auto fix，后面说的都是，不然没啥意义了。示例代码：</p>
-<pre><code class="js">module.exports = &#123;
-  parser: &#39;@typescript-eslint/parser&#39;,
-  parserOptions: &#123;
-    sourceType: &#39;module&#39;,
-    ecmaVersion: &#39;latest&#39;,
-  &#125;,
-  plugins: [&#39;import&#39;],
-  rules: &#123;
-    &#39;import/order&#39;: [
-      &#39;error&#39;,
-      &#123;
-        groups: [
-          &#39;index&#39;,
-          &#39;builtin&#39;,
-          &#39;external&#39;,
-          &#39;internal&#39;,
-          &#39;object&#39;,
-          &#39;type&#39;,
-          &#39;unknown&#39;,
-          [&#39;parent&#39;, &#39;sibling&#39;],
-        ],
-        pathGroups: [
-          &#123;
-            pattern: &#39;react*&#39;,
-            group: &#39;builtin&#39;,
-            position: &#39;after&#39;,
-          &#125;,
-          &#123;
-            pattern: &#39;@/*&#39;,
-            group: &#39;internal&#39;,
-            position: &#39;after&#39;,
-          &#125;,
-          &#123;
-            pattern: &#39;@*/**&#39;,
-            group: &#39;internal&#39;,
-            position: &#39;before&#39;,
-          &#125;,
-        ],
-        pathGroupsExcludedImportTypes: [],
-        distinctGroup: false,
-        &#39;newlines-between&#39;: &#39;always&#39;,
-        alphabetize: &#123;
-          order: &#39;asc&#39;,
-          orderImportKind: &#39;asc&#39;,
-          caseInsensitive: true,
-        &#125;,
-        warnOnUnassignedImports: false,
-      &#125;,
-    ],
-  &#125;,
-&#125;;
-</code></pre>
-<p>大部分配置都很好理解，就是这个 <code>pathGroupsExcludedImportTypes</code> 实在不明所以。</p>
-<p><a target="_blank" rel="noopener" href="https://github.com/import-js/eslint-plugin-import/pull/2156#issuecomment-927559466">Issue#2156</a> 有个老哥给出答案：<br><u>想要 <code>pathGroups</code> 的配置生效，那么它原本所属的类型就不要出现在 <code>pathGroupsExcludedImportTypes</code> react* 属于 <code>external</code>，而这个属性的默认值是 [‘buildin’, ‘external’]，所以配置了 react* 的话，就要重定义这个值。</u> 所以示例代码是空数组。<br>老哥又提到：<u>But now, it has been applied exactly the opposite way.</u></p>
-<p>囧，确实我理解反了，我以为是要使其生效才要写在里面。而且理解成是 pattern 定义的分类是属于下面 group 的，也就是一开始以为是指定 react* 属于 builtin。而其实不是，而是说 react* 在 builtin 类型的相对位置。&#x3D; &#x3D;!</p>
-        
-          <p class="article-more-link">
-            <a href="/2024/09/01/import-sort/#more">Read More</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      
-      <!-- <a data-url="https://blog.cchealthier.com/2024/09/01/import-sort/" data-id="cm8d5hlii001f1r9ma7gccgyj" class="article-share-link">分享</a> -->
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-dependency-injection-inversify" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2024/08/17/dependency-injection-inversify/" class="article-date">
-  <time datetime="2024-08-17T02:10:28.000Z" itemprop="datePublished">2024-08-17</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2024/08/17/dependency-injection-inversify/">依赖反转/注入与 IOC 容器 inversify</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="一、概念"><a href="#一、概念" class="headerlink" title="一、概念"></a>一、概念</h2><p>先看看概念释义（百度）- 依赖反转原则：</p>
-<blockquote>
-<p>在面向对象编程领域中，依赖反转原则（Dependency inversion principle，DIP）是指一种特定的解耦（传统的依赖关系创建在高层次上，而具体的策略设置则应用在低层次的模块上）形式，使得高层次的模块不依赖于低层次的模块的实现细节，依赖关系被颠倒（反转），从而使得低层次模块依赖于高层次模块的需求抽象。</p>
-</blockquote>
-<p>我第一个想法就是反转什么？再看看释义（chatgpt）：</p>
-<blockquote>
-<p>“反转” 指的是将依赖关系从具体实现转向抽象，这样高层模块就不会直接依赖低层模块的实现细节，而是依赖于抽象接口或抽象类。依赖注入则是实现这一反转原则的一个具体手段，通过将依赖项注入到类中，减少了类与其依赖项之间的耦合。</p>
-</blockquote>
-<p>结合给的例子，虽然是 java 的例子，不过大同小异。</p>
-<p><strong>传统实现：</strong></p>
-<pre><code class="java">public class UserService &#123;
-    private UserRepository userRepository;
-    public UserService() &#123;
-        this.userRepository = new UserRepository(); // 依赖于具体实现
-    &#125;
-    public void someServiceMethod() &#123;
-        userRepository.someMethod();
-    &#125;
-&#125;
-</code></pre>
-<p><strong>应用依赖反转原则的实现：</strong></p>
-<pre><code class="java">// 定义抽象
-public interface UserRepository &#123;
-    void someMethod();
-&#125;
-// 实现具体细节
-public class UserRepositoryImpl implements UserRepository &#123;
-    public void someMethod() &#123;
-        // 实现细节
-    &#125;
-&#125;
-// 高层模块依赖于抽象
-public class UserService &#123;
-    private UserRepository userRepository;
-    // 依赖注入
-    public UserService(UserRepository userRepository) &#123;
-        this.userRepository = userRepository;
-    &#125;
-    public void someServiceMethod() &#123;
-        userRepository.someMethod();
-    &#125;
-&#125;
-</code></pre>
-<p>那么依赖注入又是什么，如果接触过 angular 的话，应该会知道这个概念。释义（chatgpt）：</p>
-<blockquote>
-<p>依赖注入是一种实现依赖反转的方法，通过将依赖项（如 UserRepository）注入到 UserService 中，而不是由 UserService 自行创建依赖项。依赖注入可以通过多种方式实现，例如：</p>
-</blockquote>
-<ul>
-<li>构造器注入：通过构造函数将依赖项注入类。</li>
-<li>属性注入：通过类的属性（setter 方法）注入依赖项。</li>
-<li>接口注入：通过实现特定接口注入依赖项（这种方式在实践中不太常见）。</li>
-</ul>
-<p><strong>个人理解：依赖反转是一种编程思想，而依赖注入是其原则的一种实现方式。反转了对依赖的使用。</strong></p>
-<ul>
-<li><strong>传统：</strong>直接在类里面声明使用一个依赖。如果需求上要改动依赖，就得改动调用方，或者重写一个新的调用方，去调用新的一个依赖。</li>
-<li><strong>依赖反转：</strong>给调用方传递一个依赖，大家约定好依赖要实现某个接口（方法），调用方就直接用。如此一来，如果需要更改依赖方法，就传递一个新的依赖进去就好。调用方的代码就不用改。<br>比如：跑自动化测试和正式使用，就可以给某些功能注入不同的 service，来达到适配不同环境。</li>
-</ul>
-<p>个人觉得叫依赖注入还好理解点。不过一个是指导思想，一个是实施方案嘛。</p>
-        
-          <p class="article-more-link">
-            <a href="/2024/08/17/dependency-injection-inversify/#more">Read More</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      
-      <!-- <a data-url="https://blog.cchealthier.com/2024/08/17/dependency-injection-inversify/" data-id="cm8d5hlif000o1r9m35d206x4" class="article-share-link">分享</a> -->
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
 
 
   <nav id="page-nav">
     
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/13/">13</a><a class="extend next" rel="next" href="/page/2/">下一页 »</a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/14/">14</a><a class="extend next" rel="next" href="/page/2/">下一页 »</a>
   </nav>
 
 </section>
@@ -587,23 +664,23 @@ public class UserService &#123;
       <ul>
         
           <li>
+            <a href="/2025/08/17/react-native-ffmpegkit-3/">react-native 集成 FFmpeg 能力 - 使用 FFmpegKit（三）</a>
+          </li>
+        
+          <li>
+            <a href="/2025/08/02/react-native-ffmpegkit-2/">react-native 集成 FFmpeg 能力 - 使用 FFmpegKit（二）</a>
+          </li>
+        
+          <li>
+            <a href="/2025/07/27/react-native-ffmpegkit/">react-native 集成 FFmpeg 能力 - 使用 FFmpegKit（一）</a>
+          </li>
+        
+          <li>
             <a href="/2025/03/16/use-swr/">react 使用 swr 做数据请求</a>
           </li>
         
           <li>
             <a href="/2025/01/11/chrome-extension-plugin/">chrome 插件基础模板</a>
-          </li>
-        
-          <li>
-            <a href="/2024/11/17/node-ssr-app/">react、vue、solid 实现低代码 ssr 页面渲染</a>
-          </li>
-        
-          <li>
-            <a href="/2024/09/01/import-sort/">js 几种导入依赖排序 import sort</a>
-          </li>
-        
-          <li>
-            <a href="/2024/08/17/dependency-injection-inversify/">依赖反转/注入与 IOC 容器 inversify</a>
           </li>
         
       </ul>
@@ -625,7 +702,7 @@ public class UserService &#123;
   <div class="widget-wrap">
     <h3 class="widget-title">标签</h3>
     <div class="widget">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/chrome-%E6%8F%92%E4%BB%B6/" rel="tag">chrome 插件</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nginx/" rel="tag">nginx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/node/" rel="tag">node</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/react-native/" rel="tag">react-native</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ssr/" rel="tag">ssr</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" rel="tag">工程化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BE%AE%E5%89%8D%E7%AB%AF/" rel="tag">微前端</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%80%A7%E8%83%BD/" rel="tag">性能</a></li></ul>
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/chrome-%E6%8F%92%E4%BB%B6/" rel="tag">chrome 插件</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ffmpegkit/" rel="tag">ffmpegkit</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nginx/" rel="tag">nginx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/node/" rel="tag">node</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/react-native/" rel="tag">react-native</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ssr/" rel="tag">ssr</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" rel="tag">工程化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BE%AE%E5%89%8D%E7%AB%AF/" rel="tag">微前端</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%80%A7%E8%83%BD/" rel="tag">性能</a></li></ul>
     </div>
   </div>
 
@@ -635,7 +712,7 @@ public class UserService &#123;
   <div class="widget-wrap">
     <h3 class="widget-title">标签云</h3>
     <div class="widget tagcloud">
-      <a href="/tags/chrome-%E6%8F%92%E4%BB%B6/" style="font-size: 10px;">chrome 插件</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/nginx/" style="font-size: 12.5px;">nginx</a> <a href="/tags/node/" style="font-size: 17.5px;">node</a> <a href="/tags/react-native/" style="font-size: 15px;">react-native</a> <a href="/tags/ssr/" style="font-size: 10px;">ssr</a> <a href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" style="font-size: 20px;">工程化</a> <a href="/tags/%E5%BE%AE%E5%89%8D%E7%AB%AF/" style="font-size: 12.5px;">微前端</a> <a href="/tags/%E6%80%A7%E8%83%BD/" style="font-size: 17.5px;">性能</a>
+      <a href="/tags/chrome-%E6%8F%92%E4%BB%B6/" style="font-size: 10px;">chrome 插件</a> <a href="/tags/ffmpegkit/" style="font-size: 14px;">ffmpegkit</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/nginx/" style="font-size: 12px;">nginx</a> <a href="/tags/node/" style="font-size: 16px;">node</a> <a href="/tags/react-native/" style="font-size: 18px;">react-native</a> <a href="/tags/ssr/" style="font-size: 10px;">ssr</a> <a href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" style="font-size: 20px;">工程化</a> <a href="/tags/%E5%BE%AE%E5%89%8D%E7%AB%AF/" style="font-size: 12px;">微前端</a> <a href="/tags/%E6%80%A7%E8%83%BD/" style="font-size: 16px;">性能</a>
     </div>
   </div>
 
@@ -644,7 +721,7 @@ public class UserService &#123;
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2025/03/">三月 2025</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2025/01/">一月 2025</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/11/">十一月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/09/">九月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/08/">八月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/01/">一月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/12/">十二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/11/">十一月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/10/">十月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/09/">九月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/08/">八月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">七月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/06/">六月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/05/">五月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/04/">四月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/03/">三月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/02/">二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">十一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">十月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">九月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2025/08/">八月 2025</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2025/07/">七月 2025</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2025/03/">三月 2025</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2025/01/">一月 2025</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/11/">十一月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/09/">九月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/08/">八月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/01/">一月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/12/">十二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/11/">十一月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/10/">十月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/09/">九月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/08/">八月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">七月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/06/">六月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/05/">五月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/04/">四月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/03/">三月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/02/">二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">十一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">十月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">九月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a></li></ul>
     </div>
   </div>
 

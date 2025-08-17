@@ -74,6 +74,203 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-html-resource" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/05/31/html-resource/" class="article-date">
+  <time datetime="2020-05-31T04:12:50.000Z" itemprop="datePublished">2020-05-31</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/05/31/html-resource/">HTML几个资源异步属性</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h4 id="async"><a href="#async" class="headerlink" title="async"></a>async</h4><p>异步加载，乱序，只要它加载完了就会立刻执行。不阻塞页面解析。在window.onload前执行完。</p>
+<h4 id="defer"><a href="#defer" class="headerlink" title="defer"></a>defer</h4><p>异步加载，DOMContentLoaded 事件触发之前完成，并且是安装加载顺序运行，相当于把js放在body最后。</p>
+<h4 id="prefetch"><a href="#prefetch" class="headerlink" title="prefetch"></a>prefetch</h4><p>用于告诉浏览器，这段资源将会在未来某个导航或者功能要用到，但是本资源的下载顺序权重比较低。也就是说prefetch通常用于加速下一次导航，而不是本次的。被标记为prefetch的资源，将会被浏览器在空闲时间加载。</p>
+<h4 id="preload"><a href="#preload" class="headerlink" title="preload"></a>preload</h4><p>通常用于本页面要用到的关键资源，包括关键js、字体、css文件。preload将会把资源得下载顺序权重提高，使得关键数据提前下载好，优化页面打开速度。</p>
+<p>__注：__这个影响到浏览器下载资源的优先级，具体可参阅下这篇文章：<br><a target="_blank" rel="noopener" href="https://www.cnblogs.com/xiaohuochai/p/9183874.html">https://www.cnblogs.com/xiaohuochai/p/9183874.html</a><br>css的优先级居然比js高…</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      
+      <!-- <a data-url="https://blog.cchealthier.com/2020/05/31/html-resource/" data-id="cmefuc51a001det9m2h0ohwjn" class="article-share-link">分享</a> -->
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%80%A7%E8%83%BD/" rel="tag">性能</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-protocol" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/05/31/protocol/" class="article-date">
+  <time datetime="2020-05-31T02:50:08.000Z" itemprop="datePublished">2020-05-31</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/http%E5%8D%8F%E8%AE%AE/">http协议</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/05/31/protocol/">http协议等内容</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="注：资料来源于网络，省得到处找"><a href="#注：资料来源于网络，省得到处找" class="headerlink" title="注：资料来源于网络，省得到处找"></a>注：资料来源于网络，省得到处找</h3><h4 id="TCP冷启动："><a href="#TCP冷启动：" class="headerlink" title="TCP冷启动："></a>TCP冷启动：</h4><p>TCP连接有一个预热和保护的过程，先检查数据是否传送成功，一旦成功过，则慢慢加大传输速度。因此对应瞬时并发的连接，服务器的响应就会变慢。所以最好能使用一个建立好的连接，并且这个连接可以支持瞬时并发的请求。</p>
+<h4 id="HTTP1-1"><a href="#HTTP1-1" class="headerlink" title="HTTP1.1"></a>HTTP1.1</h4><p><strong>1、长连接</strong><br>        在一个TCP连接上可以传送多个HTTP请求和响应，减少了建立和关闭连接的消耗和延迟。<br>一个包含有许多图像的网页文件的多个请求和应答可以在一个连接中传输，但每个单独的网页文件的请求和应答仍<br>然需要使用各自的连接。HTTP 1.1还允许客户端不用等待上一次请求结果返回，就可以发出下一次请求，但服务器<br>端必须按照接收到客户端请求的先后顺序依次回送响应结果，以保证客户端能够区分出每次请求的响应内容，这样<br>也显著地减少了整个下载过程所需要的时间。基于HTTP 1.1协议的客户机与服务器的信息交换过程。</p>
+<p><strong>2、丰富缓存</strong><br>        在HTTP1.0中主要使用header里的If-Modified-Since,Expires来做为缓存判断的标准，HTTP1.1则引入了<br>更多的缓存控制策略例如Entity tag，If-Unmodified-Since, If-Match,<br>If-None-Match等更多可供选择的缓存头来控制缓存策略。</p>
+<p><strong>3、节约带宽</strong><br>HTTP 1.1支持只发送header信息(不带任何body信息)，如果服务器认为客户端有权限请求服务器，则返回100，<br>否则返回401。客户端如果接受到100，才开始把请求body发送到服务器。<br>这样当服务器返回401的时候，客户端就可以不用发送请求body了，节约了带宽。<br>另外HTTP还支持传送内容的一部分。这样当客户端已经有一部分的资源后，只需要跟服务器请求另外的部分资源即可。这是支持文件断点续传的基础。</p>
+<p><strong>4、host域</strong><br>在HTTP1.0中认为每台服务器都绑定一个唯一的IP地址，因此，请求消息中的URL并没有传递主机名（hostname），HTTP1.0没有host域。随着虚拟主机技术的发展，在一台物理服务器上可以存在多个虚拟主机（Multi-homed Web Servers），并且它们共享一个IP地址。HTTP1.1的请求消息和响应消息都支持host域，且请求消息中如果没有host域会报告一个错误（400 Bad Request）。</p>
+<p><strong>5、丰富报错码</strong><br>在HTTP1.1中新增了24个错误状态响应码。</p>
+<h4 id="HTTP2-0"><a href="#HTTP2-0" class="headerlink" title="HTTP2.0"></a>HTTP2.0</h4><p><strong>1、多路复用</strong><br>所有的HTTP2.0通信都在一个TCP连接上完成，这个连接可以承载任意数量的双向数据流。<br>每个数据流以消息的形式发送，而消息由一或多个帧组成。这些帧可以乱序发送，然后再根据每个帧头部的流标识符（stream id）重新组装。</p>
+<p>举个例子，每个请求是一个数据流，数据流以消息的方式发送，而消息又分为多个帧，帧头部记录着stream id用来标识所属的数据流，不同属的帧可以在连接中随机混杂在一起。接收方可以根据stream id将帧再归属到各自不同的请求当中去。</p>
+<p>另外，多路复用（连接共享）可能会导致关键请求被阻塞。HTTP2.0里每个数据流都可以设置优先级和依赖，优先级高的数据流会被服务器优先处理和返回给客户端，数据流还可以依赖其他的子数据流。<br>可见，HTTP2.0实现了真正的并行传输，它能够在一个TCP上进行任意数量HTTP请求。而这个强大的功能则是基于“二进制分帧”的特性。</p>
+<p><strong>2、头部数据压缩</strong><br>在HTTP1.1中，HTTP请求和响应都是由状态行、请求&#x2F;响应头部、消息主体三部分组成。一般而言，消息主体都会经过gzip压缩，或者本身传输的就是压缩过后的二进制文件，但状态行和头部却没有经过任何压缩，直接以纯文本传输。随着Web功能越来越复杂，每个页面产生的请求数也越来越多，导致消耗在头部的流量越来越多，尤其是每次都要传输UserAgent、Cookie这类不会频繁变动的内容，完全是一种浪费。<br>HTTP1.1不支持header数据的压缩，HTTP2.0使用HPACK算法对header的数据进行压缩，这样数据体积小了，在网络上传输就会更快。</p>
+<p><strong>3、服务器推送</strong><br>当我们对支持HTTP2.0的web server请求数据的时候，服务器会顺便把一些客户端需要的资源一起推送到客户端，免得客户端再次创建连接发送请求到服务器端获取。这种方式非常合适加载静态资源。<br>服务器端推送的这些资源其实存在客户端的某处地方，客户端直接从本地加载这些资源就可以了，不用走网络，速度自然是快很多的。</p>
+<h4 id="UDP和TCP的区别"><a href="#UDP和TCP的区别" class="headerlink" title="UDP和TCP的区别"></a>UDP和TCP的区别</h4><p><strong>1、连接方面区别</strong><br>TCP面向连接（如打电话要先拨号建立连接）。<br>UDP是无连接的，即发送数据之前不需要建立连接。</p>
+<p><strong>2、安全方面的区别</strong><br>TCP提供可靠的服务，通过TCP连接传送的数据，无差错，不丢失，不重复，且按序到达。<br>UDP尽最大努力交付，即不保证可靠交付。</p>
+<p><strong>3、传输效率的区别</strong><br>TCP传输效率相对较低。<br>UDP传输效率高，适用于对高速传输和实时性有较高的通信或广播通信。</p>
+<p><strong>4、连接对象数量的区别</strong><br>TCP连接只能是点到点、一对一的。<br>UDP支持一对一，一对多，多对一和多对多的交互通信。</p>
+<p>TCP 是面向字节流（流模式）的，UDP 是基于数据报的</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      
+      <!-- <a data-url="https://blog.cchealthier.com/2020/05/31/protocol/" data-id="cmefuc51g0034et9mcg7s4slc" class="article-share-link">分享</a> -->
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-database" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/05/31/database/" class="article-date">
+  <time datetime="2020-05-31T02:32:42.000Z" itemprop="datePublished">2020-05-31</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/05/31/database/">MySql 基本指令</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>不做后端开发，不常操作数据库，很容易忘记。记录下自己用到过几条数据库命令。（持续）</p>
+<p>连上数据库</p>
+<pre><code class="bash">// -u 指向用户， -p 需要密码
+mysql -u root -p
+</code></pre>
+<p>显示数据库</p>
+<pre><code class="bash">show databases;
+</code></pre>
+<p>创建数据库</p>
+<pre><code class="bash">create database 数据库名字;
+</code></pre>
+<p>删除数据库</p>
+<pre><code class="bash">drop table 数据库名字;
+</code></pre>
+<p>选择数据库</p>
+<pre><code class="bash">use 数据库名字;
+</code></pre>
+<p>显示表</p>
+<pre><code class="bash">show tables;
+</code></pre>
+<p>创建表</p>
+<pre><code class="bash">create table 表名字;
+</code></pre>
+<p>删除表</p>
+<pre><code class="bash">drop table 表名字;
+</code></pre>
+<p>查看表结构</p>
+<pre><code class="bash">show create table 表名字;
+</code></pre>
+<p>查看表内容</p>
+<pre><code class="bash">select * from 表名字;
+</code></pre>
+<p>查看表条数</p>
+<pre><code class="bash">select count(*) from 表名字;
+</code></pre>
+<p>查看表索引</p>
+<pre><code class="bash">show index table 表名字;
+</code></pre>
+<p>清空表</p>
+<pre><code class="bash">truncate table 表名字;
+</code></pre>
+<p>更新数据，注意搜索的值字符串的话要加引号</p>
+<pre><code class="bash">update table_name set 要更新的字段=要更新的值 where 搜索的字段=搜索的值;
+</code></pre>
+<p>设置密码</p>
+<pre><code class="bash">// set password for 用户名@localhost = password(‘新密码’);
+set password for root@localhost = password(&#39;123456&#39;);
+</code></pre>
+<p>更新数据是从另外一张表拿的值</p>
+<pre><code class="bash">update 表A,表B set 表A.字段A=表B.字段A where 表A.字段B=表B.字段B and 表A.字段A=字段值;
+</code></pre>
+<p>增加字段名</p>
+<pre><code class="bash">// 字段类型可以先看表结构参考其他字段 show create table 表名字;
+alter table 表名 add 字段名 字段类型 default 默认值;
+</code></pre>
+
+      
+    </div>
+    <footer class="article-footer">
+      
+      <!-- <a data-url="https://blog.cchealthier.com/2020/05/31/database/" data-id="cmefuc518000let9mc81i0vc8" class="article-share-link">分享</a> -->
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-js-performance" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2020/05/28/js-performance/" class="article-date">
@@ -131,7 +328,7 @@
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2020/05/28/js-performance/" data-id="cm8d5hlii001p1r9m763ke1p3" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2020/05/28/js-performance/" data-id="cmefuc51c001ret9mcemz1a83" class="article-share-link">分享</a> -->
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%80%A7%E8%83%BD/" rel="tag">性能</a></li></ul>
@@ -281,408 +478,7 @@ process.nextTick(() =&gt; &#123;
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2020/05/27/eventloop/" data-id="cm8d5hlig000t1r9m67xofxm0" class="article-share-link">分享</a> -->
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-new-object" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/05/25/new-object/" class="article-date">
-  <time datetime="2020-05-25T15:59:18.000Z" itemprop="datePublished">2020-05-25</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/05/25/new-object/">JS new 一个对象干了什么事</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <br>
-
-<pre><code class="js">function Person(name, age) &#123;
-  this.name = name
-  this.age = age
-&#125;
-Person.prototype.attr = &#39;human&#39;
-const man1 = new Person(&#39;123&#39;, 18)
-console.log(man1.name)
-console.log(man1.age)
-console.log(man1.attr)
-
-function _new(Constructor, ...param) &#123;
-  // 新建一个对象
-  const obj = &#123;&#125; // Object.create(null)
-  // 建立继承关系，__proto__指向构造函数原型，获得原型属性与方法
-  // 这里获得 attr 属性
-  obj.__proto__ = Constructor.prototype
-  // 开始执行这个构造函数，就是这个构造函数的this方法属性挂到这个新对象上
-  // 这里就是把 name 和 age 挂上去
-  const ret = Constructor.call(obj, ...param)
-  // const ret = Constructor.apply(obj, param)
-  // 若构造函数中没有返回值或返回值是基本类型（Number、String、Boolean）的值，则返回新实例对象；
-  // 若返回值是引用类型的值，则实际返回值为这个引用类型。
-  return typeof ret === &#39;object&#39; ? ret : obj
-&#125;
-const man2 = _new(Person, &#39;456&#39;, 20)
-console.log(man2.name)
-console.log(man2.age)
-console.log(man2.attr)
-</code></pre>
-
-      
-    </div>
-    <footer class="article-footer">
-      
-      <!-- <a data-url="https://blog.cchealthier.com/2020/05/25/new-object/" data-id="cm8d5hlij00221r9m33i80el0" class="article-share-link">分享</a> -->
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-js-inherit" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/05/21/js-inherit/" class="article-date">
-  <time datetime="2020-05-21T15:26:20.000Z" itemprop="datePublished">2020-05-21</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/05/21/js-inherit/">JS的继承方式</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="1、原型链继承"><a href="#1、原型链继承" class="headerlink" title="1、原型链继承"></a>1、原型链继承</h3><pre><code class="js">function SuperType(type) &#123;
-  this.property = true
-  this.colors = [&#39;red&#39;, &#39;blue&#39;]
-  this.type = type
-&#125;
-SuperType.prototype.getSuperValue = function() &#123;
-  console.log(this.property)
-&#125;
-
-function SubType(type) &#123;
-  this.subproperty = false
-  this.subtype = type
-&#125;
-
-// 如果这里是 SubType.prototype = SuperType.prototype
-// 则 this.property 值为 undefined
-SubType.prototype = new SuperType(&#39;super&#39;)
-
-SubType.prototype.getSubValue = function() &#123;
-  console.log(this.subproperty)
-&#125;
-
-const instance = new SubType(&#39;one&#39;)
-
-instance.getSuperValue()
-instance.getSubValue()
-
-console.log(instance instanceof SubType, instance.constructor)
-console.log(instance instanceof SuperType)
-
-instance.colors.push(&#39;black&#39;)
-console.log(instance.colors, instance.type, instance.subtype)
-
-const instance2 = new SubType(&#39;two&#39;)
-console.log(instance2.colors, instance2.type, instance2.subtype)
-
-// 所有实例的 colors 属性指向同一个对象，一改全改
-// 如果父类有参数，没法带进去
-</code></pre>
-<br>
-<img src="/2020/05/21/js-inherit/%E5%8E%9F%E5%9E%8B%E9%93%BE%E7%BB%A7%E6%89%BF.PNG" class="" title="原型链继承">
-
-<h3 id="2、构造函数继承"><a href="#2、构造函数继承" class="headerlink" title="2、构造函数继承"></a>2、构造函数继承</h3><pre><code class="js">function SuperType(type) &#123;
-  this.property = true
-  this.colors = [&#39;red&#39;, &#39;blue&#39;]
-  this.type = type
-&#125;
-SuperType.prototype.getSuperValue = function() &#123;
-  console.log(this.property)
-&#125;
-
-function SubType(type) &#123;
-  SuperType.call(this, type)
-  // 为了确保不被父级的属性覆盖，可以在这之后再赋值子类的属性
-  this.subproperty = true
-&#125;
-
-const instance1 = new SubType(&#39;one&#39;)
-
-console.log(instance1 instanceof SubType, instance1.constructor)
-console.log(instance1 instanceof SuperType, instance1.type)
-
-// 没有用到原型的方法属性
-// instance1.getSuperValue()
-
-instance1.colors.push(&#39;black&#39;)
-console.log(instance1.colors)
-
-const instance2 = new SubType(&#39;two&#39;)
-console.log(instance2.colors, instance2.type)
-</code></pre>
-<br>
-<img src="/2020/05/21/js-inherit/%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0%E7%BB%A7%E6%89%BF.PNG" class="" title="构造函数继承">
-
-<h3 id="3、组合继承（原型链继承-构造函数继承）"><a href="#3、组合继承（原型链继承-构造函数继承）" class="headerlink" title="3、组合继承（原型链继承 + 构造函数继承）"></a>3、组合继承（原型链继承 + 构造函数继承）</h3><pre><code class="js">function SuperType(type) &#123;
-  this.property = &#39;true111&#39;
-  this.colors = [&#39;red&#39;, &#39;blue&#39;]
-  this.type = type
-&#125;
-SuperType.prototype.getSuperValue = function() &#123;
-  console.log(this.property)
-&#125;
-
-function SubType(type) &#123;
-  SuperType.call(this, type) // 调用一次
-  // 为了确保不被父级的属性覆盖，可以在这之后再赋值子类的属性
-  this.subproperty = true
-&#125;
-
-SubType.prototype = new SuperType() // 调用两次
-
-// 如果没有这一步，最终顺着父类的原型链指向父类SuperType
-SubType.prototype.constructor = SubType
-
-const instance1 = new SubType(&#39;one&#39;)
-
-console.log(instance1 instanceof SubType, instance1.constructor)
-console.log(instance1 instanceof SuperType, instance1.type)
-
-instance1.getSuperValue()
-
-instance1.colors.push(&#39;black&#39;)
-console.log(instance1.colors)
-
-const instance2 = new SubType(&#39;two&#39;)
-console.log(instance2.colors, instance2.type)
-</code></pre>
-<br>
-<img src="/2020/05/21/js-inherit/%E7%BB%84%E5%90%88%E7%BB%A7%E6%89%BF.PNG" class="" title="组合继承">
-
-<h3 id="4、原型式继承"><a href="#4、原型式继承" class="headerlink" title="4、原型式继承"></a>4、原型式继承</h3><pre><code class="js">// 缺点：引用类型属性依然是共享的
-function object(o) &#123;
-  function F()&#123;&#125;
-  F.prototype = o
-  return new F()
-&#125;
-
-const person = &#123;
-  name: &#39;xiaoming&#39;,
-  colors: [&#39;1&#39;, &#39;2&#39;]
-&#125;
-
-const p1 = object(person)
-const p2 = object(person)
-
-console.log(p1.colors, p2.colors)
-
-p2.colors.push(&#39;3&#39;)
-
-console.log(p1.colors, p2.colors)
-
-// 等同于
-const p3 = Object.create(person, &#123;
-  name1: &#123;
-    value: &#39;xiaohong&#39;
-  &#125;
-&#125;)
-
-console.log(p1, p2, p3, p3.name)
-</code></pre>
-<br>
-<img src="/2020/05/21/js-inherit/%E5%8E%9F%E5%9E%8B%E5%BC%8F%E7%BB%A7%E6%89%BF.PNG" class="" title="原型式继承">
-
-<h3 id="5、寄生式继承"><a href="#5、寄生式继承" class="headerlink" title="5、寄生式继承"></a>5、寄生式继承</h3><pre><code class="js">function object(o) &#123;
-  function F()&#123;&#125;
-  F.prototype = o
-  return new F()
-&#125;
-
-// 包了一层，定义了个方法增强对象，
-// 缺点是函数没法复用，引用类型属性依然是共享的
-function createObject(o) &#123;
-  const clone = object(o)
-  clone.say = function() &#123;
-    console.log(this.colors)
-  &#125;
-  return clone
-&#125;
-
-const person = &#123;
-  name: &#39;xiaoming&#39;,
-  colors: [&#39;1&#39;, &#39;2&#39;]
-&#125;
-
-const p1 = createObject(person)
-const p2 = createObject(person)
-
-console.log(p1.colors, p2.colors)
-
-p2.colors.push(&#39;3&#39;)
-
-console.log(p1.colors, p2.colors)
-
-p2.say()
-</code></pre>
-<br>
-<img src="/2020/05/21/js-inherit/%E5%AF%84%E7%94%9F%E5%BC%8F%E7%BB%A7%E6%89%BF.PNG" class="" title="寄生式继承">
-
-<h3 id="6、寄生式组合继承"><a href="#6、寄生式组合继承" class="headerlink" title="6、寄生式组合继承"></a>6、寄生式组合继承</h3><pre><code class="js">function SuperType(type) &#123;
-  this.name = &#39;true111&#39;
-  this.colors = [&#39;red&#39;, &#39;blue&#39;]
-&#125;
-SuperType.prototype.getSuperValue = function() &#123;
-  console.log(this.colors)
-&#125;
-
-function SubType(name, age) &#123;
-  SuperType.call(this, name) // 调用一次
-  // 为了确保不被父级的属性覆盖，可以在这之后再赋值子类的属性
-  this.age = age
-&#125;
-
-SubType.prototype = new SuperType() // 调用两次
-
-// 如果没有这一步，最终顺着父类的原型链指向父类SuperType
-SubType.prototype.constructor = SubType
-
-const s1 = new SubType(&#39;saaa&#39;, 18)
-const s2 = new SubType(&#39;sbbb&#39;, 19)
-
-console.log(&#39;~1~&#39;, s1, s2)
-
-s2.colors.push(&#39;yellow&#39;)
-
-console.log(&#39;~2~&#39;, s1, s2)
-
-// 这样每个 SubType 实例都有两组 name 和 colors，
-// 一组是自身属性下，一组是原型链指向父类实例的
-
-function inherit(newType, superType) &#123;
-  newType.prototype = Object.create(superType.prototype)
-  newType.prototype.constructor = newType
-&#125;
-
-function NewType(name, age) &#123;
-  SuperType.call(this, name) // 调用一次
-  // 为了确保不被父级的属性覆盖，可以在这之后再赋值子类的属性
-  this.age = age
-&#125;
-
-inherit(NewType, SuperType)
-
-const n1 = new NewType(&#39;nbbb&#39;, 20)
-const n2 = new NewType(&#39;nccc&#39;, 21)
-
-console.log(&#39;~3~&#39;, n1, n2, n1.constructor)
-
-n1.colors.push(&#39;yellow&#39;)
-
-console.log(&#39;~4~&#39;, n1, n2)
-</code></pre>
-<br>
-<img src="/2020/05/21/js-inherit/%E5%AF%84%E7%94%9F%E7%BB%84%E5%90%88%E5%BC%8F%E7%BB%A7%E6%89%BF-1.PNG" class="" title="寄生组合式继承">
-<br>
-<img src="/2020/05/21/js-inherit/%E5%AF%84%E7%94%9F%E7%BB%84%E5%90%88%E5%BC%8F%E7%BB%A7%E6%89%BF-2.PNG" class="" title="寄生组合式继承">
-<br>
-<img src="/2020/05/21/js-inherit/%E5%AF%84%E7%94%9F%E7%BB%84%E5%90%88%E5%BC%8F%E7%BB%A7%E6%89%BF-3.PNG" class="" title="寄生组合式继承">
-<br>
-<img src="/2020/05/21/js-inherit/%E5%AF%84%E7%94%9F%E7%BB%84%E5%90%88%E5%BC%8F%E7%BB%A7%E6%89%BF-4.PNG" class="" title="寄生组合式继承">
-
-<h3 id="7、ES6-Class-继承（略）"><a href="#7、ES6-Class-继承（略）" class="headerlink" title="7、ES6 Class 继承（略）"></a>7、ES6 Class 继承（略）</h3><h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>&amp;emsp;&amp;emsp;寄生式组合继承是 ES5 最完善的继承方式。细细一看，不就是跟 new 一个实例所做的操作差不多吗。不同之处在于复制的对象原型不一样。当然具体还是有差别，一个是原型，一个实例化。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      
-      <!-- <a data-url="https://blog.cchealthier.com/2020/05/21/js-inherit/" data-id="cm8d5hlii001k1r9m2wcwh0we" class="article-share-link">分享</a> -->
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-mood" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/05/14/mood/" class="article-date">
-  <time datetime="2020-05-14T15:55:33.000Z" itemprop="datePublished">2020-05-14</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E9%9A%8F%E6%83%B3/">随想</a>►<a class="article-category-link" href="/categories/%E9%9A%8F%E6%83%B3/%E5%BF%83%E6%83%85/">心情</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/05/14/mood/">空间起源</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>&amp;emsp;&amp;emsp;好记性不如烂笔头。从小听到大，真的很有道理。但其实小时候仗着记忆力好，就懒得动笔。无论是记作业还是上课记笔记。当然所谓的好记忆其实那一瞬间，犹如内存，断电就没了。随着年纪增大，可能记忆力变差，可能经历的事多，确实遗忘的东西变多了。所以琢磨着找个地方给记下来。当然这种地方很多，自己搭建一个纯属好（第四声）玩。记录一些心情随想，所见所闻，所接触到的开发技术，烹饪煮食。<br>&amp;emsp;&amp;emsp;另外一个就是照片，以前老是觉得在于精不在于多，明明身处随时随地可照相的时代。后来在看一些地方旅游照片的时候，发现自己喜欢的街头巷尾照片太少了，就感觉缺失了那一环一样。以后也多给拍下来。<br>&amp;emsp;&amp;emsp;放两张偶然拍的自己觉得好的照片。</p>
-<img src="/2020/05/14/mood/suzhou.JPG" class="" title="苏州公车站">
-</br>
-</br>
-</br>
-<img src="/2020/05/14/mood/taibei.JPG" class="" title="台北淡水捷运站">
-
-      
-    </div>
-    <footer class="article-footer">
-      
-      <!-- <a data-url="https://blog.cchealthier.com/2020/05/14/mood/" data-id="cm8d5hlij001z1r9m4wvcb5gu" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2020/05/27/eventloop/" data-id="cmefuc518000set9mfisi4dsm" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -696,7 +492,7 @@ console.log(&#39;~4~&#39;, n1, n2)
 
   <nav id="page-nav">
     
-    <a class="extend prev" rel="prev" href="/page/11/">« 上一页</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/10/">10</a><a class="page-number" href="/page/11/">11</a><span class="page-number current">12</span><a class="page-number" href="/page/13/">13</a><a class="extend next" rel="next" href="/page/13/">下一页 »</a>
+    <a class="extend prev" rel="prev" href="/page/11/">« 上一页</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/10/">10</a><a class="page-number" href="/page/11/">11</a><span class="page-number current">12</span><a class="page-number" href="/page/13/">13</a><a class="page-number" href="/page/14/">14</a><a class="extend next" rel="next" href="/page/13/">下一页 »</a>
   </nav>
 
 </section>
@@ -710,23 +506,23 @@ console.log(&#39;~4~&#39;, n1, n2)
       <ul>
         
           <li>
+            <a href="/2025/08/17/react-native-ffmpegkit-3/">react-native 集成 FFmpeg 能力 - 使用 FFmpegKit（三）</a>
+          </li>
+        
+          <li>
+            <a href="/2025/08/02/react-native-ffmpegkit-2/">react-native 集成 FFmpeg 能力 - 使用 FFmpegKit（二）</a>
+          </li>
+        
+          <li>
+            <a href="/2025/07/27/react-native-ffmpegkit/">react-native 集成 FFmpeg 能力 - 使用 FFmpegKit（一）</a>
+          </li>
+        
+          <li>
             <a href="/2025/03/16/use-swr/">react 使用 swr 做数据请求</a>
           </li>
         
           <li>
             <a href="/2025/01/11/chrome-extension-plugin/">chrome 插件基础模板</a>
-          </li>
-        
-          <li>
-            <a href="/2024/11/17/node-ssr-app/">react、vue、solid 实现低代码 ssr 页面渲染</a>
-          </li>
-        
-          <li>
-            <a href="/2024/09/01/import-sort/">js 几种导入依赖排序 import sort</a>
-          </li>
-        
-          <li>
-            <a href="/2024/08/17/dependency-injection-inversify/">依赖反转/注入与 IOC 容器 inversify</a>
           </li>
         
       </ul>
@@ -748,7 +544,7 @@ console.log(&#39;~4~&#39;, n1, n2)
   <div class="widget-wrap">
     <h3 class="widget-title">标签</h3>
     <div class="widget">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/chrome-%E6%8F%92%E4%BB%B6/" rel="tag">chrome 插件</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nginx/" rel="tag">nginx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/node/" rel="tag">node</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/react-native/" rel="tag">react-native</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ssr/" rel="tag">ssr</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" rel="tag">工程化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BE%AE%E5%89%8D%E7%AB%AF/" rel="tag">微前端</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%80%A7%E8%83%BD/" rel="tag">性能</a></li></ul>
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/chrome-%E6%8F%92%E4%BB%B6/" rel="tag">chrome 插件</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ffmpegkit/" rel="tag">ffmpegkit</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nginx/" rel="tag">nginx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/node/" rel="tag">node</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/react-native/" rel="tag">react-native</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ssr/" rel="tag">ssr</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" rel="tag">工程化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BE%AE%E5%89%8D%E7%AB%AF/" rel="tag">微前端</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%80%A7%E8%83%BD/" rel="tag">性能</a></li></ul>
     </div>
   </div>
 
@@ -758,7 +554,7 @@ console.log(&#39;~4~&#39;, n1, n2)
   <div class="widget-wrap">
     <h3 class="widget-title">标签云</h3>
     <div class="widget tagcloud">
-      <a href="/tags/chrome-%E6%8F%92%E4%BB%B6/" style="font-size: 10px;">chrome 插件</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/nginx/" style="font-size: 12.5px;">nginx</a> <a href="/tags/node/" style="font-size: 17.5px;">node</a> <a href="/tags/react-native/" style="font-size: 15px;">react-native</a> <a href="/tags/ssr/" style="font-size: 10px;">ssr</a> <a href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" style="font-size: 20px;">工程化</a> <a href="/tags/%E5%BE%AE%E5%89%8D%E7%AB%AF/" style="font-size: 12.5px;">微前端</a> <a href="/tags/%E6%80%A7%E8%83%BD/" style="font-size: 17.5px;">性能</a>
+      <a href="/tags/chrome-%E6%8F%92%E4%BB%B6/" style="font-size: 10px;">chrome 插件</a> <a href="/tags/ffmpegkit/" style="font-size: 14px;">ffmpegkit</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/nginx/" style="font-size: 12px;">nginx</a> <a href="/tags/node/" style="font-size: 16px;">node</a> <a href="/tags/react-native/" style="font-size: 18px;">react-native</a> <a href="/tags/ssr/" style="font-size: 10px;">ssr</a> <a href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" style="font-size: 20px;">工程化</a> <a href="/tags/%E5%BE%AE%E5%89%8D%E7%AB%AF/" style="font-size: 12px;">微前端</a> <a href="/tags/%E6%80%A7%E8%83%BD/" style="font-size: 16px;">性能</a>
     </div>
   </div>
 
@@ -767,7 +563,7 @@ console.log(&#39;~4~&#39;, n1, n2)
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2025/03/">三月 2025</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2025/01/">一月 2025</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/11/">十一月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/09/">九月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/08/">八月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/01/">一月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/12/">十二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/11/">十一月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/10/">十月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/09/">九月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/08/">八月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">七月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/06/">六月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/05/">五月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/04/">四月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/03/">三月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/02/">二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">十一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">十月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">九月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2025/08/">八月 2025</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2025/07/">七月 2025</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2025/03/">三月 2025</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2025/01/">一月 2025</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/11/">十一月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/09/">九月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/08/">八月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/01/">一月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/12/">十二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/11/">十一月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/10/">十月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/09/">九月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/08/">八月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">七月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/06/">六月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/05/">五月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/04/">四月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/03/">三月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/02/">二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">十一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">十月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">九月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a></li></ul>
     </div>
   </div>
 

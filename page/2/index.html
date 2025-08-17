@@ -74,6 +74,297 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-node-ssr-app" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2024/11/17/node-ssr-app/" class="article-date">
+  <time datetime="2024-11-17T03:18:33.000Z" itemprop="datePublished">2024-11-17</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2024/11/17/node-ssr-app/">react、vue、solid 实现低代码 ssr 页面渲染</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>项目做了个低代码平台，复盘下，本地实现一个丐版。主要是实现渲染部分，没有做设计器，也就是拖拉拽部分。</p>
+<p>代码地址：<a target="_blank" rel="noopener" href="https://github.com/orochi97/brick-schema-ssr">brick-schema-ssr</a></p>
+<h3 id="对于低代码的一些想法"><a href="#对于低代码的一些想法" class="headerlink" title="对于低代码的一些想法"></a>对于低代码的一些想法</h3><p><code>低代码</code> 这个概念已经很久了，可能大家或多或少都做过类似的，很多公司也会去尝试自己内部自研。老实话，我感觉这玩意定制性挺强的，做到能开源或者通用平台真的不容易。放业界两个优秀的产品：<a target="_blank" rel="noopener" href="https://lowcode-engine.cn/index">lowcode-engine</a>，<a target="_blank" rel="noopener" href="https://www.mybricks.world/">mybricks</a>。</p>
+<p>个人觉得还是 schema 的设计，决定了设计器应该怎么交互。毕竟设计器最终就是为了产出相应的 schema。而且最复杂的其实是“动起来”。也就是界面拖拉拽拼接好后，怎么加上逻辑编排，让页面动起来。这是个麻烦活，设置简单了，功能不够强大。设置复杂了，上手难，还得了解怎么用。</p>
+<p>可以从场景出发，一个是快速上新一些小的单页面活动页，减少重复工作。一个是可以交由设计师来直接制作页面，有点像以前的 Dreamweaver 啊。说白了都是快，为了提效。当然这里的快还包含了上线快，毕竟改了 schema 就可以生效了，不然直接拷贝代码也很快。其他的复杂页面，我认为还不如直接写代码，出问题还不好排查，甚至还不好维护。但如果写一大堆代码，那还叫低代码么。</p>
+<h3 id="工程介绍"><a href="#工程介绍" class="headerlink" title="工程介绍"></a>工程介绍</h3><p>工程使用了 pnpm + monorepo，打包工具用 vite，前端各自用 react、vue、solid，后端用 koa。</p>
+<ul>
+<li>packages<ul>
+<li>core<ul>
+<li>app：提供 <code>App.tsx</code>，给各个框架做入门组件使用。</li>
+<li>components：各个组件的主要实现，包括 props、styles、classes 等处理，不多，就实现了五个做 demo。</li>
+<li>library：一些需要外部注入的工具，比如一些 hooks，<code>useState</code> 等。</li>
+<li>sdk：各框架渲染 sdk 的基类，就是实现一些公共方法，剩下的框架相关的各自去实现。</li>
+<li>types：类型声明，其中的 dom.d.ts 声明，是从 vue3 抄过来的。</li>
+</ul>
+</li>
+<li><a target="_blank" rel="noopener" href="https://react.dev/">react</a>：react 渲染 sdk，提供 <code>createRoot</code>、<code>hydrate</code>、<code>renderToString</code> 等功能，继承自 core 里的 sdk 基类，同时实现并注入框架相关的 hook。</li>
+<li><a target="_blank" rel="noopener" href="https://vuejs.org/">vue</a>： 同 react，引擎改为 vue。</li>
+<li><a target="_blank" rel="noopener" href="https://www.solidjs.com/">solid</a>：同 react，引擎改为 solid。</li>
+<li>client：前端项目，react、vue、solid 三个框架结合各自 sdk，接受 schema 做 demo 展示，顺便提供打包后的 index 给后端做返回页面用。</li>
+<li>server<ul>
+<li>render：使用 react、vue、solid 三个 sdk 提供的 <code>renderToString</code> 方法，加上编译处理，用于生产。</li>
+<li>src：koa 服务，使用 render 文件夹导出的 <code>renderToString</code> 方法，返回不同框架的 schema ssr 页面。以及其他的接口支持。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p><strong>对于逻辑编排的实现，我这里直接采用写代码的方式了。</strong></p>
+<h3 id="实现功能"><a href="#实现功能" class="headerlink" title="实现功能"></a>实现功能</h3><ol>
+<li>基础组件 Button Checkbox Image Radio Text。</li>
+<li>高级组件 View List，支持自定义 slot 内容，即子元素动态配置。</li>
+<li>全局样式，通过设置 class 属性，classes: { warn: true }，或者根据条件设置 classes: { warn: ‘!isLogin’ }。字段来自于 dataMap 属性声明获取相应字段。叹号表示取反。</li>
+<li>提供 api 给非子元素的组件修改 props、style、class 属性。</li>
+<li>提供全局 store，组件通过 dataMap 属性声明获取相应字段。</li>
+<li>逻辑编排，直接对各组件的 on 事件进行相关编码。</li>
+<li>支持注入自定义工具方法，比如 api 请求，可以在逻辑编排里调用。</li>
+<li>支持 i18n 国际化，支持插槽变量。国际化 t 方法需要自行注入。</li>
+</ol>
+<h3 id="后话"><a href="#后话" class="headerlink" title="后话"></a>后话</h3><p>实际上我们还支持了 <a target="_blank" rel="noopener" href="https://qwik.dev/">qwik.js</a>，据说是个 ssr 很厉害的框架。同时还支持 <a target="_blank" rel="noopener" href="https://reactnative.dev/">react-native</a>，就是把 html 的 dom 标签，替换成 rn 提供的原生组件。这个适配巨复杂，本来就是个原生应用，只是改成开发像前端。也写了相关几篇文章：《<a href="/2023/12/03/react-native-record/">react-native ios 流水账</a>》、《<a href="/2023/11/24/ios-rn-integrate/">ios 原生应用集成 react-native</a>》、《<a href="/2024/01/12/android-rn-integrate/">android 原生应用集成 react-native</a>》。</p>
+<p>其实也是为了适配而适配，真正用的就是一套就够了。而且组件库一般也不会从基础搭建起，都是使用现有的组件库，最多改点东西适配一下。</p>
+<p>真的有这种适配多框架的需求，可以用这个「<a target="_blank" rel="noopener" href="https://mitosis.builder.io/docs/overview/">Mitosis</a>」，用 jsx 写组件，可以编译成多个前端库的对应组件，包括：Angular, React, Qwik, Vue, Svelte, Solid, and React Native。也就是按照它要求的有一定约束的写法，就是写出一套适配多框架的组件库。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      
+      <!-- <a data-url="https://blog.cchealthier.com/2024/11/17/node-ssr-app/" data-id="cmefuc51e002let9mgz247xdz" class="article-share-link">分享</a> -->
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/node/" rel="tag">node</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ssr/" rel="tag">ssr</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-import-sort" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2024/09/01/import-sort/" class="article-date">
+  <time datetime="2024-09-01T02:58:11.000Z" itemprop="datePublished">2024-09-01</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2024/09/01/import-sort/">js 几种导入依赖排序 import sort</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>现在前端工程化一般都会加上 eslint + prettier （<a href="/2023/04/21/fontend-engineering-2/">从零搭建前端工程（下）</a>）做格式化，为了团队风格，美观，还有为了减少不必要的冲突，比如 import 文件的顺序。合并代码的时候，冲突无可避免，但是能尽量减少最好。能够统一排序，添加的文件的改动也比较一目了然。相应的工具其实也不少，大同小异，选择适合自己的而用之。</p>
+<h3 id="一、eslint-自带的-sort-imports"><a href="#一、eslint-自带的-sort-imports" class="headerlink" title="一、eslint 自带的 sort-imports"></a>一、eslint 自带的 sort-imports</h3><p>《<a target="_blank" rel="noopener" href="https://eslint.org/docs/latest/rules/sort-imports">sort-imports</a>》。不看了，自定义差，还几乎不能 auto fix。</p>
+<h3 id="二、eslint-插件-eslint-plugin-import"><a href="#二、eslint-插件-eslint-plugin-import" class="headerlink" title="二、eslint 插件 eslint-plugin-import"></a>二、eslint 插件 eslint-plugin-import</h3><p>《<a target="_blank" rel="noopener" href="https://github.com/import-js/eslint-plugin-import/blob/HEAD/docs/rules/order.md">eslint-plugin-import</a>》。支持自定义配置，支持 auto fix，后面说的都是，不然没啥意义了。示例代码：</p>
+<pre><code class="js">module.exports = &#123;
+  parser: &#39;@typescript-eslint/parser&#39;,
+  parserOptions: &#123;
+    sourceType: &#39;module&#39;,
+    ecmaVersion: &#39;latest&#39;,
+  &#125;,
+  plugins: [&#39;import&#39;],
+  rules: &#123;
+    &#39;import/order&#39;: [
+      &#39;error&#39;,
+      &#123;
+        groups: [
+          &#39;index&#39;,
+          &#39;builtin&#39;,
+          &#39;external&#39;,
+          &#39;internal&#39;,
+          &#39;object&#39;,
+          &#39;type&#39;,
+          &#39;unknown&#39;,
+          [&#39;parent&#39;, &#39;sibling&#39;],
+        ],
+        pathGroups: [
+          &#123;
+            pattern: &#39;react*&#39;,
+            group: &#39;builtin&#39;,
+            position: &#39;after&#39;,
+          &#125;,
+          &#123;
+            pattern: &#39;@/*&#39;,
+            group: &#39;internal&#39;,
+            position: &#39;after&#39;,
+          &#125;,
+          &#123;
+            pattern: &#39;@*/**&#39;,
+            group: &#39;internal&#39;,
+            position: &#39;before&#39;,
+          &#125;,
+        ],
+        pathGroupsExcludedImportTypes: [],
+        distinctGroup: false,
+        &#39;newlines-between&#39;: &#39;always&#39;,
+        alphabetize: &#123;
+          order: &#39;asc&#39;,
+          orderImportKind: &#39;asc&#39;,
+          caseInsensitive: true,
+        &#125;,
+        warnOnUnassignedImports: false,
+      &#125;,
+    ],
+  &#125;,
+&#125;;
+</code></pre>
+<p>大部分配置都很好理解，就是这个 <code>pathGroupsExcludedImportTypes</code> 实在不明所以。</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/import-js/eslint-plugin-import/pull/2156#issuecomment-927559466">Issue#2156</a> 有个老哥给出答案：<br><u>想要 <code>pathGroups</code> 的配置生效，那么它原本所属的类型就不要出现在 <code>pathGroupsExcludedImportTypes</code> react* 属于 <code>external</code>，而这个属性的默认值是 [‘buildin’, ‘external’]，所以配置了 react* 的话，就要重定义这个值。</u> 所以示例代码是空数组。<br>老哥又提到：<u>But now, it has been applied exactly the opposite way.</u></p>
+<p>囧，确实我理解反了，我以为是要使其生效才要写在里面。而且理解成是 pattern 定义的分类是属于下面 group 的，也就是一开始以为是指定 react* 属于 builtin。而其实不是，而是说 react* 在 builtin 类型的相对位置。&#x3D; &#x3D;!</p>
+        
+          <p class="article-more-link">
+            <a href="/2024/09/01/import-sort/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      
+      <!-- <a data-url="https://blog.cchealthier.com/2024/09/01/import-sort/" data-id="cmefuc51b001fet9mas0jd4z6" class="article-share-link">分享</a> -->
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-dependency-injection-inversify" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2024/08/17/dependency-injection-inversify/" class="article-date">
+  <time datetime="2024-08-17T02:10:28.000Z" itemprop="datePublished">2024-08-17</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2024/08/17/dependency-injection-inversify/">依赖反转/注入与 IOC 容器 inversify</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="一、概念"><a href="#一、概念" class="headerlink" title="一、概念"></a>一、概念</h2><p>先看看概念释义（百度）- 依赖反转原则：</p>
+<blockquote>
+<p>在面向对象编程领域中，依赖反转原则（Dependency inversion principle，DIP）是指一种特定的解耦（传统的依赖关系创建在高层次上，而具体的策略设置则应用在低层次的模块上）形式，使得高层次的模块不依赖于低层次的模块的实现细节，依赖关系被颠倒（反转），从而使得低层次模块依赖于高层次模块的需求抽象。</p>
+</blockquote>
+<p>我第一个想法就是反转什么？再看看释义（chatgpt）：</p>
+<blockquote>
+<p>“反转” 指的是将依赖关系从具体实现转向抽象，这样高层模块就不会直接依赖低层模块的实现细节，而是依赖于抽象接口或抽象类。依赖注入则是实现这一反转原则的一个具体手段，通过将依赖项注入到类中，减少了类与其依赖项之间的耦合。</p>
+</blockquote>
+<p>结合给的例子，虽然是 java 的例子，不过大同小异。</p>
+<p><strong>传统实现：</strong></p>
+<pre><code class="java">public class UserService &#123;
+    private UserRepository userRepository;
+    public UserService() &#123;
+        this.userRepository = new UserRepository(); // 依赖于具体实现
+    &#125;
+    public void someServiceMethod() &#123;
+        userRepository.someMethod();
+    &#125;
+&#125;
+</code></pre>
+<p><strong>应用依赖反转原则的实现：</strong></p>
+<pre><code class="java">// 定义抽象
+public interface UserRepository &#123;
+    void someMethod();
+&#125;
+// 实现具体细节
+public class UserRepositoryImpl implements UserRepository &#123;
+    public void someMethod() &#123;
+        // 实现细节
+    &#125;
+&#125;
+// 高层模块依赖于抽象
+public class UserService &#123;
+    private UserRepository userRepository;
+    // 依赖注入
+    public UserService(UserRepository userRepository) &#123;
+        this.userRepository = userRepository;
+    &#125;
+    public void someServiceMethod() &#123;
+        userRepository.someMethod();
+    &#125;
+&#125;
+</code></pre>
+<p>那么依赖注入又是什么，如果接触过 angular 的话，应该会知道这个概念。释义（chatgpt）：</p>
+<blockquote>
+<p>依赖注入是一种实现依赖反转的方法，通过将依赖项（如 UserRepository）注入到 UserService 中，而不是由 UserService 自行创建依赖项。依赖注入可以通过多种方式实现，例如：</p>
+</blockquote>
+<ul>
+<li>构造器注入：通过构造函数将依赖项注入类。</li>
+<li>属性注入：通过类的属性（setter 方法）注入依赖项。</li>
+<li>接口注入：通过实现特定接口注入依赖项（这种方式在实践中不太常见）。</li>
+</ul>
+<p><strong>个人理解：依赖反转是一种编程思想，而依赖注入是其原则的一种实现方式。反转了对依赖的使用。</strong></p>
+<ul>
+<li><strong>传统：</strong>直接在类里面声明使用一个依赖。如果需求上要改动依赖，就得改动调用方，或者重写一个新的调用方，去调用新的一个依赖。</li>
+<li><strong>依赖反转：</strong>给调用方传递一个依赖，大家约定好依赖要实现某个接口（方法），调用方就直接用。如此一来，如果需要更改依赖方法，就传递一个新的依赖进去就好。调用方的代码就不用改。<br>比如：跑自动化测试和正式使用，就可以给某些功能注入不同的 service，来达到适配不同环境。</li>
+</ul>
+<p>个人觉得叫依赖注入还好理解点。不过一个是指导思想，一个是实施方案嘛。</p>
+        
+          <p class="article-more-link">
+            <a href="/2024/08/17/dependency-injection-inversify/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      
+      <!-- <a data-url="https://blog.cchealthier.com/2024/08/17/dependency-injection-inversify/" data-id="cmefuc518000pet9m9zsb2nu5" class="article-share-link">分享</a> -->
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-android-rn-integrate" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2024/01/12/android-rn-integrate/" class="article-date">
@@ -221,7 +512,7 @@ public class MyReactActivity extends AppCompatActivity implements DefaultHardwar
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2024/01/12/android-rn-integrate/" data-id="cm8d5hlia00011r9m059l2bav" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2024/01/12/android-rn-integrate/" data-id="cmefuc5140003et9m4msshm6u" class="article-share-link">分享</a> -->
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/react-native/" rel="tag">react-native</a></li></ul>
@@ -287,206 +578,10 @@ export default function Component(props) &#123;
     </div>
     <footer class="article-footer">
       
-      <!-- <a data-url="https://blog.cchealthier.com/2023/12/10/babel-ast-transform/" data-id="cm8d5hlic00051r9m10u32zq9" class="article-share-link">分享</a> -->
+      <!-- <a data-url="https://blog.cchealthier.com/2023/12/10/babel-ast-transform/" data-id="cmefuc5150008et9m9410hhcw" class="article-share-link">分享</a> -->
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/node/" rel="tag">node</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-react-native-record" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2023/12/03/react-native-record/" class="article-date">
-  <time datetime="2023-12-03T02:44:55.000Z" itemprop="datePublished">2023-12-03</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2023/12/03/react-native-record/">react-native ios 流水账</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>示例工程：<a target="_blank" rel="noopener" href="https://github.com/orochi97/awesome-react-native/tree/main">sample project</a></p>
-<h2 id="一、前言"><a href="#一、前言" class="headerlink" title="一、前言"></a>一、前言</h2><p>现在跨端的开发采取了前端的 DSL，也变成前端人员必备的开发技能之一了。</p>
-<p>当前：</p>
-<ol>
-<li>react-native，weex，快应用（严格讲是跨手机）这种使用前端语言，视图部分交由原生渲染，所以 css 都是酌情支持。交互部分交由另外启动的 js 引擎来执行。</li>
-<li>各类小程序这种使用前端语言，视图部分由 webview 渲染，所以大部分 css 都是支持。交互部分交由另外启动的 js 引擎来执行。</li>
-<li>fluter，自己整的渲染器和逻辑解析器，开发语言也是自己一套。硬要说也是和小程序一类吧，只不过小程序用的终端落地方案是现成的，fluter 都自己弄新的。</li>
-</ol>
-<p>有了跨端解决方案，就有了跨端写法统一解决方案。比如：uni-app taro mpvue，chamelon，就是采用 vue 或者 react 的技术栈，然后可以编译成 rn，小程序等的编译产物。主打一个殊归同途。</p>
-<p>前两种其实都是大同小异，都是前端 DSL，只不过是可用的标签和样式不一，一通百通，看看文档就可以了。fluter 都是完全不同的语言，有接触到再说。</p>
-<h2 id="二、启动"><a href="#二、启动" class="headerlink" title="二、启动"></a>二、启动</h2><p>react-native ios 开发的第一个难点就是搭环境。参考官网《<a target="_blank" rel="noopener" href="https://reactnative.dev/docs/environment-setup">environment-setup</a>》。</p>
-<p>里面提到可以用沙盒模式开发，也就是先跳掉一系列的系统环境安装。但是我想这只适合体验一下，如果真的要开发 react-native，还是得配好一系列环境。何况<a target="_blank" rel="noopener" href="https://reactnative.cn/docs/environment-setup">中文官网</a>还说了：</p>
-<blockquote>
-<p>译注：沙盒环境大量依赖于国外网络环境，也不能直接安装第三方原生组件。不建议国内用户使用</p>
-</blockquote>
-<p>所以还是老老实实从 Xcode 安装起吧。其中可能需要科学上网才能安装完，比如这个 CocoaPods，这个 ios 依赖包管理工具，就要下载很久。</p>
-<h4 id="ruby-版本"><a href="#ruby-版本" class="headerlink" title="ruby 版本"></a>ruby 版本</h4><p>mac 默认的 ruby 版本是 2.6.8，当前 react-native 中用到的 ruby 版本是 2.7.5，需要更新。可以参考网上大佬的文章《<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/663328137">React-native初始化项目（Installing Ruby Gems）</a>》。</p>
-<h4 id="ios-依赖"><a href="#ios-依赖" class="headerlink" title="ios 依赖"></a>ios 依赖</h4><p>在准备好工具后，就会开始初始化项目。会很久，安装完前端的依赖后，会进行 ios 的依赖的安装。这一步可能会有各种失败，比如安装 hermes 引擎就很容易失败。<br>这时候不用重新创建项目，确保外层的前端 node_modules 安装完后，进入 <code>ios</code> 文件夹执行 <code>pod install</code>，或者在根目录执行 <code>npx pod-install</code>，重试一直到完成。</p>
-        
-          <p class="article-more-link">
-            <a href="/2023/12/03/react-native-record/#more">Read More</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      
-      <!-- <a data-url="https://blog.cchealthier.com/2023/12/03/react-native-record/" data-id="cm8d5hlin003d1r9maefw1jde" class="article-share-link">分享</a> -->
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/react-native/" rel="tag">react-native</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-ios-rn-integrate" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2023/11/24/ios-rn-integrate/" class="article-date">
-  <time datetime="2023-11-24T12:43:44.000Z" itemprop="datePublished">2023-11-24</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2023/11/24/ios-rn-integrate/">ios 原生应用集成 react-native</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>其实官方文档《<a target="_blank" rel="noopener" href="https://reactnative.dev/docs/integration-with-existing-apps?language=objc">Integration with Existing Apps</a>》讲得挺详细，但是有点面向 ios 开发，对于 ios 开发的同学应该很容易看懂吧。不熟悉的我摸索了很久，记录一下。</p>
-<p><strong>重要！！！</strong></p>
-<p>先参考官网《<a target="_blank" rel="noopener" href="https://reactnative.dev/docs/environment-setup">Setting up the development environment</a>》把 react-native 的开发环境搭建起来，因为基本如出一辙。对于 ios 而言， react-native 像是它的一部分子应用，本质上还是原生应用。<br>因为就是要用到原生的东西，所以不要用 Expo 这种方式。这个是方便开发用的，最后应该要回到原生来。</p>
-<p>能成功启动 react-native，想必也搞定了 CocoaPods 这个麻烦的工具，用来下载原生相关依赖的。</p>
-<h2 id="创建-ios-app"><a href="#创建-ios-app" class="headerlink" title="创建 ios app"></a>创建 ios app</h2><p>Xcode Version 14.3 (14E222b)</p>
-<h3 id="1、创建一个-ios-app"><a href="#1、创建一个-ios-app" class="headerlink" title="1、创建一个 ios app"></a>1、创建一个 ios app</h3><img src="/2023/11/24/ios-rn-integrate/ios-rn-integrate-1.png" class="" title="ios-rn-integrate-1">
-
-<h3 id="2、填写相关信息"><a href="#2、填写相关信息" class="headerlink" title="2、填写相关信息"></a>2、填写相关信息</h3><img src="/2023/11/24/ios-rn-integrate/ios-rn-integrate-2.png" class="" title="ios-rn-integrate-2">
-
-<p>Product Name：顾名思义，这个应用的名字，随便填，自己记住。<br>Team：没有就先跳过，苹果开发要求的，上线要用到。<br>Organization Identifier：组织标识，公司或者产品网址倒着写，随便填。<br><strong>Interface：有 SwiftUI 和 Storyboard 可选，选择 Storyboard。</strong><br>Language：选 Swift 或 Objective-C 都可以。</p>
-<h3 id="3、操作-xcode"><a href="#3、操作-xcode" class="headerlink" title="3、操作 xcode"></a>3、操作 xcode</h3><img src="/2023/11/24/ios-rn-integrate/ios-rn-integrate-3.png" class="" title="ios-rn-integrate-3">
-
-<p>上图为例</p>
-<p>先点击中间的“分屏按钮”，编辑器就会变成两个编辑区，一个打开 <code>ViewController.m</code> 文件，一个打开 <code>Main</code> 文件。虽然显示是 Main 文件，但硬盘上可以看到是叫 <code>Main.storyboard</code> 文件。</p>
-<p>然后点击右边的“组件库按钮”，打开组件库，拖拽一个 button 组件到 storyboard 编辑区，也就是生成一个按钮到应用上。</p>
-<p>最后点击左边的“运行按钮”，看到弹出来的手机模拟器上有自己加的 button 就算成功了。</p>
-        
-          <p class="article-more-link">
-            <a href="/2023/11/24/ios-rn-integrate/#more">Read More</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      
-      <!-- <a data-url="https://blog.cchealthier.com/2023/11/24/ios-rn-integrate/" data-id="cm8d5hlii001i1r9m44li3j99" class="article-share-link">分享</a> -->
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/react-native/" rel="tag">react-native</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-react-vite-qiankun" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2023/10/15/react-vite-qiankun/" class="article-date">
-  <time datetime="2023-10-15T02:53:31.000Z" itemprop="datePublished">2023-10-15</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/">开发</a>►<a class="article-category-link" href="/categories/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/">前端</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2023/10/15/react-vite-qiankun/">react 用 vite 构建 &amp; 用 qiankun 做微前端</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>工程不经常改动，就不建仓库了，弄个压缩包完事。<br>代码压缩包：<a target="_blank" rel="noopener" href="https://file.cchealthier.com/file/blog/attachment/micro-qiankun.tar.gz">micro-qiankun.tar.gz</a></p>
-<h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><p>文章不是为了讲怎么用 react &amp; vite &amp; qiankun 结合搭建。搭建也不复杂，直接看示例代码就可以了。主要是这其中遇到的一个问题：</p>
-<blockquote>
-<p>qiankun.js:17 [import-html-entry]: error occurs while executing normal script &lt;script type&#x3D;”module”&gt;</p>
-</blockquote>
-<p>详情如图：</p>
-<img src="/2023/10/15/react-vite-qiankun/qiankun-error.png" class="" title="qiankun-error">
-
-<p>记录下这个问题的产生及解决。</p>
-<h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p><a target="_blank" rel="noopener" href="https://qiankun.umijs.org/zh/guide">qiankun.js</a> 是一个微前端框架。对于微前端，之前也尝试过《<a href="/2023/06/07/webpack-modulefederationplugin/">用 webpack ModuleFederationPlugin 搭建微前端</a>》。</p>
-<p>两者差别的话：</p>
-<ol>
-<li>如果用 vite，那 webpack5 MF 肯定用不了（废话~）。</li>
-<li>对于 qiankun，是不论框架的，基座和各个子应用可以完全不同框架，因为用的沙箱机制，可以可以云云（详看官网介绍）。</li>
-<li>而 webpack MF 其实也不是为了微前端出来，而是共享一部分功能出来，恰好能用作微前端。最终形式是暴露出一份 js 文件给主应用引用。那就最好基座和子应用都是同框架。</li>
-</ol>
-<p>个人理解：</p>
-<ul>
-<li>如果是成熟的几个不同项目，要揉在一起，但是彼此关联又不是很大，可以用 qiankun。</li>
-<li>如果是本身就是同一个大项目，要拆成不同模块分工维护。有很多共享的数据，可以用 webpack ModuleFederationPlugin。</li>
-</ul>
-        
-          <p class="article-more-link">
-            <a href="/2023/10/15/react-vite-qiankun/#more">Read More</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      
-      <!-- <a data-url="https://blog.cchealthier.com/2023/10/15/react-vite-qiankun/" data-id="cm8d5hlio003n1r9mfhhg4ehq" class="article-share-link">分享</a> -->
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" rel="tag">工程化</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%BE%AE%E5%89%8D%E7%AB%AF/" rel="tag">微前端</a></li></ul>
 
     </footer>
   </div>
@@ -499,7 +594,7 @@ export default function Component(props) &#123;
 
   <nav id="page-nav">
     
-    <a class="extend prev" rel="prev" href="/">« 上一页</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/13/">13</a><a class="extend next" rel="next" href="/page/3/">下一页 »</a>
+    <a class="extend prev" rel="prev" href="/">« 上一页</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/14/">14</a><a class="extend next" rel="next" href="/page/3/">下一页 »</a>
   </nav>
 
 </section>
@@ -513,23 +608,23 @@ export default function Component(props) &#123;
       <ul>
         
           <li>
+            <a href="/2025/08/17/react-native-ffmpegkit-3/">react-native 集成 FFmpeg 能力 - 使用 FFmpegKit（三）</a>
+          </li>
+        
+          <li>
+            <a href="/2025/08/02/react-native-ffmpegkit-2/">react-native 集成 FFmpeg 能力 - 使用 FFmpegKit（二）</a>
+          </li>
+        
+          <li>
+            <a href="/2025/07/27/react-native-ffmpegkit/">react-native 集成 FFmpeg 能力 - 使用 FFmpegKit（一）</a>
+          </li>
+        
+          <li>
             <a href="/2025/03/16/use-swr/">react 使用 swr 做数据请求</a>
           </li>
         
           <li>
             <a href="/2025/01/11/chrome-extension-plugin/">chrome 插件基础模板</a>
-          </li>
-        
-          <li>
-            <a href="/2024/11/17/node-ssr-app/">react、vue、solid 实现低代码 ssr 页面渲染</a>
-          </li>
-        
-          <li>
-            <a href="/2024/09/01/import-sort/">js 几种导入依赖排序 import sort</a>
-          </li>
-        
-          <li>
-            <a href="/2024/08/17/dependency-injection-inversify/">依赖反转/注入与 IOC 容器 inversify</a>
           </li>
         
       </ul>
@@ -551,7 +646,7 @@ export default function Component(props) &#123;
   <div class="widget-wrap">
     <h3 class="widget-title">标签</h3>
     <div class="widget">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/chrome-%E6%8F%92%E4%BB%B6/" rel="tag">chrome 插件</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nginx/" rel="tag">nginx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/node/" rel="tag">node</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/react-native/" rel="tag">react-native</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ssr/" rel="tag">ssr</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" rel="tag">工程化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BE%AE%E5%89%8D%E7%AB%AF/" rel="tag">微前端</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%80%A7%E8%83%BD/" rel="tag">性能</a></li></ul>
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/chrome-%E6%8F%92%E4%BB%B6/" rel="tag">chrome 插件</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ffmpegkit/" rel="tag">ffmpegkit</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nginx/" rel="tag">nginx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/node/" rel="tag">node</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/react-native/" rel="tag">react-native</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ssr/" rel="tag">ssr</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" rel="tag">工程化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BE%AE%E5%89%8D%E7%AB%AF/" rel="tag">微前端</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%80%A7%E8%83%BD/" rel="tag">性能</a></li></ul>
     </div>
   </div>
 
@@ -561,7 +656,7 @@ export default function Component(props) &#123;
   <div class="widget-wrap">
     <h3 class="widget-title">标签云</h3>
     <div class="widget tagcloud">
-      <a href="/tags/chrome-%E6%8F%92%E4%BB%B6/" style="font-size: 10px;">chrome 插件</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/nginx/" style="font-size: 12.5px;">nginx</a> <a href="/tags/node/" style="font-size: 17.5px;">node</a> <a href="/tags/react-native/" style="font-size: 15px;">react-native</a> <a href="/tags/ssr/" style="font-size: 10px;">ssr</a> <a href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" style="font-size: 20px;">工程化</a> <a href="/tags/%E5%BE%AE%E5%89%8D%E7%AB%AF/" style="font-size: 12.5px;">微前端</a> <a href="/tags/%E6%80%A7%E8%83%BD/" style="font-size: 17.5px;">性能</a>
+      <a href="/tags/chrome-%E6%8F%92%E4%BB%B6/" style="font-size: 10px;">chrome 插件</a> <a href="/tags/ffmpegkit/" style="font-size: 14px;">ffmpegkit</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/nginx/" style="font-size: 12px;">nginx</a> <a href="/tags/node/" style="font-size: 16px;">node</a> <a href="/tags/react-native/" style="font-size: 18px;">react-native</a> <a href="/tags/ssr/" style="font-size: 10px;">ssr</a> <a href="/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/" style="font-size: 20px;">工程化</a> <a href="/tags/%E5%BE%AE%E5%89%8D%E7%AB%AF/" style="font-size: 12px;">微前端</a> <a href="/tags/%E6%80%A7%E8%83%BD/" style="font-size: 16px;">性能</a>
     </div>
   </div>
 
@@ -570,7 +665,7 @@ export default function Component(props) &#123;
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2025/03/">三月 2025</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2025/01/">一月 2025</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/11/">十一月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/09/">九月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/08/">八月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/01/">一月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/12/">十二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/11/">十一月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/10/">十月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/09/">九月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/08/">八月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">七月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/06/">六月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/05/">五月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/04/">四月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/03/">三月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/02/">二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">十一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">十月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">九月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2025/08/">八月 2025</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2025/07/">七月 2025</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2025/03/">三月 2025</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2025/01/">一月 2025</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/11/">十一月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/09/">九月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/08/">八月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/01/">一月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/12/">十二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/11/">十一月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/10/">十月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/09/">九月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/08/">八月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">七月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/06/">六月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/05/">五月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/04/">四月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/03/">三月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/02/">二月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">十一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">十月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">九月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a></li></ul>
     </div>
   </div>
 
